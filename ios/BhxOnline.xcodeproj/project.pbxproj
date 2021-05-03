@@ -1,0 +1,705 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A0603D1BCFF4817A04876DF /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 285EF651151E4127942C3F3E /* FontAwesome5_Regular.ttf */; };
+		29CFEED2E2BB4E0A99B8DA9F /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E7B806773ADB42F6B6582449 /* Roboto-BlackItalic.ttf */; };
+		2D07FDD028AA497E8BCD2EB0 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB498F2F2243488696BF646A /* Entypo.ttf */; };
+		3380448287234A6082414FF9 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDA8F500BA424A17BC1CF5E1 /* Roboto-MediumItalic.ttf */; };
+		3918053D78C4434585B7102A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BD133524E1A440D8F3B11D3 /* EvilIcons.ttf */; };
+		47C8DED446C6402180D08450 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A44287F7E80448169ECF515A /* Roboto-Bold.ttf */; };
+		4ACB0014495C4C399029A53C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D1FEF06D396F4C1EB6444C8E /* MaterialIcons.ttf */; };
+		4C7F3420008249C780725BA7 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C38684625F3402CB0BEE332 /* FontAwesome5_Solid.ttf */; };
+		4F78777C1D4C41D68E254FC8 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F609D7174CF64801A2E619DF /* Octicons.ttf */; };
+		5B74EF3A5B484D1B9DF42DD2 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C6C3E242F8C481AB4F5CDFC /* Roboto-ThinItalic.ttf */; };
+		7B78A6FBFA4646518CE59EFC /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 128E818F4DB34A6087E872A9 /* Roboto-Black.ttf */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		845EE18746E74523961ABE10 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD216DF4CE264083B7179640 /* MaterialCommunityIcons.ttf */; };
+		848BB2B4FE9A42CAB5A80133 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 511239C9F42346289291ED41 /* Roboto-Italic.ttf */; };
+		859449791FE74F969CA35989 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5637785827AE468CB69C7CE3 /* Ionicons.ttf */; };
+		8B6B23AB402D4F3BB194C359 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9F4AEA55D5D9414795F27ED0 /* Roboto-Thin.ttf */; };
+		8BED6539115A43A68FC2211E /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 669E9B4961D64B46BDDEAC2B /* Roboto-BoldItalic.ttf */; };
+		98F9A1E490D5ADE21514915A /* libPods-BhxOnline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DFBB1FF4F718BA26965B8D70 /* libPods-BhxOnline.a */; };
+		AE34FE1C94A741E9996B524C /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF9FC079C33F4FD59B97A741 /* Roboto-Regular.ttf */; };
+		B37B0F68021B49478F1BB5BC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C6D3933ABFDE4BF2A9325AB5 /* SimpleLineIcons.ttf */; };
+		BB420A1C8D7B480BB4CC26FC /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE089A27B8974FE4A7B84047 /* FontAwesome5_Brands.ttf */; };
+		C797EE0411B044AEA5AD6359 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5CAADD12ED2043D696AF8CC9 /* AntDesign.ttf */; };
+		D1295F865BD34E6184F86B1F /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5A9B6456BCA94D96B682C908 /* Roboto-Light.ttf */; };
+		E1BD46F324BA41A68163930E /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A08B78441954F399445F79E /* Fontisto.ttf */; };
+		EA0E2D77BD7F4401BB715919 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B69B7BFD5CA4C4CA523245A /* Roboto-LightItalic.ttf */; };
+		EFDAEEE01C0745DDA00CC226 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE9FBBE9E0154D34BDBE55C9 /* FontAwesome.ttf */; };
+		F0B03EA0EEC04BC48ED32B1E /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7B5EBAF411ED47C082915EF6 /* Foundation.ttf */; };
+		F5F6238A136B4D9EB8980E2E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0945569B4E704446BE8E8104 /* Feather.ttf */; };
+		F75E404285084E48A4930B16 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C2F52C4B9C24217BF87320D /* Zocial.ttf */; };
+		F7906458BC8541DD99FAB7F2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13AB19AB369041B5B38DE4DB /* Roboto-Medium.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* BhxOnlineTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BhxOnlineTests.m; sourceTree = "<group>"; };
+		0945569B4E704446BE8E8104 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../assets/vector-icon-fonts/Feather.ttf"; sourceTree = "<group>"; };
+		0B69B7BFD5CA4C4CA523245A /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
+		0C38684625F3402CB0BEE332 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../assets/vector-icon-fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		128E818F4DB34A6087E872A9 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
+		13AB19AB369041B5B38DE4DB /* Roboto-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Medium.ttf"; path = "../assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* BhxOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BhxOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BhxOnline/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BhxOnline/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = BhxOnline/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BhxOnline/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BhxOnline/main.m; sourceTree = "<group>"; };
+		285EF651151E4127942C3F3E /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../assets/vector-icon-fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		3BD133524E1A440D8F3B11D3 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../assets/vector-icon-fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		511239C9F42346289291ED41 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
+		5637785827AE468CB69C7CE3 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../assets/vector-icon-fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		5A9B6456BCA94D96B682C908 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
+		5CAADD12ED2043D696AF8CC9 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../assets/vector-icon-fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		669E9B4961D64B46BDDEAC2B /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
+		7B5EBAF411ED47C082915EF6 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../assets/vector-icon-fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		7C2F52C4B9C24217BF87320D /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../assets/vector-icon-fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = BhxOnline/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9A08B78441954F399445F79E /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../assets/vector-icon-fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		9C6C3E242F8C481AB4F5CDFC /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
+		9F4AEA55D5D9414795F27ED0 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
+		A0B48852C2A4F0D9C75D761A /* Pods-BhxOnline.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BhxOnline.release.xcconfig"; path = "Target Support Files/Pods-BhxOnline/Pods-BhxOnline.release.xcconfig"; sourceTree = "<group>"; };
+		A44287F7E80448169ECF515A /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		AB498F2F2243488696BF646A /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../assets/vector-icon-fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		BD216DF4CE264083B7179640 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../assets/vector-icon-fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		BDA8F500BA424A17BC1CF5E1 /* Roboto-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-MediumItalic.ttf"; path = "../assets/fonts/Roboto-MediumItalic.ttf"; sourceTree = "<group>"; };
+		BFE6791B79E49A2C0BA81049 /* Pods-BhxOnline.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BhxOnline.staging.xcconfig"; path = "Target Support Files/Pods-BhxOnline/Pods-BhxOnline.staging.xcconfig"; sourceTree = "<group>"; };
+		C6D3933ABFDE4BF2A9325AB5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../assets/vector-icon-fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		D1FEF06D396F4C1EB6444C8E /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../assets/vector-icon-fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		DE089A27B8974FE4A7B84047 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../assets/vector-icon-fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		DFBB1FF4F718BA26965B8D70 /* libPods-BhxOnline.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BhxOnline.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7B806773ADB42F6B6582449 /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../assets/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EE9FBBE9E0154D34BDBE55C9 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../assets/vector-icon-fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		F609D7174CF64801A2E619DF /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../assets/vector-icon-fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		F88ECE176B8E5453121E48BA /* Pods-BhxOnline.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BhxOnline.debug.xcconfig"; path = "Target Support Files/Pods-BhxOnline/Pods-BhxOnline.debug.xcconfig"; sourceTree = "<group>"; };
+		FF9FC079C33F4FD59B97A741 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98F9A1E490D5ADE21514915A /* libPods-BhxOnline.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00E356EF1AD99517003FC87E /* BhxOnlineTests */ = {
+			isa = PBXGroup;
+			children = (
+				00E356F21AD99517003FC87E /* BhxOnlineTests.m */,
+				00E356F01AD99517003FC87E /* Supporting Files */,
+			);
+			path = BhxOnlineTests;
+			sourceTree = "<group>";
+		};
+		00E356F01AD99517003FC87E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				00E356F11AD99517003FC87E /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		13B07FAE1A68108700A75B9A /* BhxOnline */ = {
+			isa = PBXGroup;
+			children = (
+				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				13B07FB61A68108700A75B9A /* Info.plist */,
+				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				13B07FB71A68108700A75B9A /* main.m */,
+			);
+			name = BhxOnline;
+			sourceTree = "<group>";
+		};
+		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				DFBB1FF4F718BA26965B8D70 /* libPods-BhxOnline.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		419595A9A91F47BF25963B7A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F88ECE176B8E5453121E48BA /* Pods-BhxOnline.debug.xcconfig */,
+				A0B48852C2A4F0D9C75D761A /* Pods-BhxOnline.release.xcconfig */,
+				BFE6791B79E49A2C0BA81049 /* Pods-BhxOnline.staging.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		58EFF20382F14F05AD2A71B8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				128E818F4DB34A6087E872A9 /* Roboto-Black.ttf */,
+				E7B806773ADB42F6B6582449 /* Roboto-BlackItalic.ttf */,
+				A44287F7E80448169ECF515A /* Roboto-Bold.ttf */,
+				669E9B4961D64B46BDDEAC2B /* Roboto-BoldItalic.ttf */,
+				511239C9F42346289291ED41 /* Roboto-Italic.ttf */,
+				5A9B6456BCA94D96B682C908 /* Roboto-Light.ttf */,
+				0B69B7BFD5CA4C4CA523245A /* Roboto-LightItalic.ttf */,
+				13AB19AB369041B5B38DE4DB /* Roboto-Medium.ttf */,
+				BDA8F500BA424A17BC1CF5E1 /* Roboto-MediumItalic.ttf */,
+				FF9FC079C33F4FD59B97A741 /* Roboto-Regular.ttf */,
+				9F4AEA55D5D9414795F27ED0 /* Roboto-Thin.ttf */,
+				9C6C3E242F8C481AB4F5CDFC /* Roboto-ThinItalic.ttf */,
+				5CAADD12ED2043D696AF8CC9 /* AntDesign.ttf */,
+				AB498F2F2243488696BF646A /* Entypo.ttf */,
+				3BD133524E1A440D8F3B11D3 /* EvilIcons.ttf */,
+				0945569B4E704446BE8E8104 /* Feather.ttf */,
+				EE9FBBE9E0154D34BDBE55C9 /* FontAwesome.ttf */,
+				DE089A27B8974FE4A7B84047 /* FontAwesome5_Brands.ttf */,
+				285EF651151E4127942C3F3E /* FontAwesome5_Regular.ttf */,
+				0C38684625F3402CB0BEE332 /* FontAwesome5_Solid.ttf */,
+				9A08B78441954F399445F79E /* Fontisto.ttf */,
+				7B5EBAF411ED47C082915EF6 /* Foundation.ttf */,
+				5637785827AE468CB69C7CE3 /* Ionicons.ttf */,
+				BD216DF4CE264083B7179640 /* MaterialCommunityIcons.ttf */,
+				D1FEF06D396F4C1EB6444C8E /* MaterialIcons.ttf */,
+				F609D7174CF64801A2E619DF /* Octicons.ttf */,
+				C6D3933ABFDE4BF2A9325AB5 /* SimpleLineIcons.ttf */,
+				7C2F52C4B9C24217BF87320D /* Zocial.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		83CBB9F61A601CBA00E9B192 = {
+			isa = PBXGroup;
+			children = (
+				13B07FAE1A68108700A75B9A /* BhxOnline */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				00E356EF1AD99517003FC87E /* BhxOnlineTests */,
+				83CBBA001A601CBA00E9B192 /* Products */,
+				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				419595A9A91F47BF25963B7A /* Pods */,
+				58EFF20382F14F05AD2A71B8 /* Resources */,
+			);
+			indentWidth = 2;
+			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 0;
+		};
+		83CBBA001A601CBA00E9B192 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13B07F961A680F5B00A75B9A /* BhxOnline.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		13B07F861A680F5B00A75B9A /* BhxOnline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BhxOnline" */;
+			buildPhases = (
+				A718B505885C256E5B455451 /* [CP] Check Pods Manifest.lock */,
+				FD10A7F022414F080027D42C /* Start Packager */,
+				13B07F871A680F5B00A75B9A /* Sources */,
+				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				13B07F8E1A680F5B00A75B9A /* Resources */,
+				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				E61E5D3840AD6154CD739CDD /* [CP] Embed Pods Frameworks */,
+				EC00A07A0F6FA5916D932384 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BhxOnline;
+			productName = BhxOnline;
+			productReference = 13B07F961A680F5B00A75B9A /* BhxOnline.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		83CBB9F71A601CBA00E9B192 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						LastSwiftMigration = 1120;
+					};
+				};
+			};
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BhxOnline" */;
+			compatibilityVersion = "Xcode 12.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 83CBB9F61A601CBA00E9B192;
+			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				13B07F861A680F5B00A75B9A /* BhxOnline */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13B07F8E1A680F5B00A75B9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				7B78A6FBFA4646518CE59EFC /* Roboto-Black.ttf in Resources */,
+				29CFEED2E2BB4E0A99B8DA9F /* Roboto-BlackItalic.ttf in Resources */,
+				47C8DED446C6402180D08450 /* Roboto-Bold.ttf in Resources */,
+				8BED6539115A43A68FC2211E /* Roboto-BoldItalic.ttf in Resources */,
+				848BB2B4FE9A42CAB5A80133 /* Roboto-Italic.ttf in Resources */,
+				D1295F865BD34E6184F86B1F /* Roboto-Light.ttf in Resources */,
+				EA0E2D77BD7F4401BB715919 /* Roboto-LightItalic.ttf in Resources */,
+				F7906458BC8541DD99FAB7F2 /* Roboto-Medium.ttf in Resources */,
+				3380448287234A6082414FF9 /* Roboto-MediumItalic.ttf in Resources */,
+				AE34FE1C94A741E9996B524C /* Roboto-Regular.ttf in Resources */,
+				8B6B23AB402D4F3BB194C359 /* Roboto-Thin.ttf in Resources */,
+				5B74EF3A5B484D1B9DF42DD2 /* Roboto-ThinItalic.ttf in Resources */,
+				C797EE0411B044AEA5AD6359 /* AntDesign.ttf in Resources */,
+				2D07FDD028AA497E8BCD2EB0 /* Entypo.ttf in Resources */,
+				3918053D78C4434585B7102A /* EvilIcons.ttf in Resources */,
+				F5F6238A136B4D9EB8980E2E /* Feather.ttf in Resources */,
+				EFDAEEE01C0745DDA00CC226 /* FontAwesome.ttf in Resources */,
+				BB420A1C8D7B480BB4CC26FC /* FontAwesome5_Brands.ttf in Resources */,
+				1A0603D1BCFF4817A04876DF /* FontAwesome5_Regular.ttf in Resources */,
+				4C7F3420008249C780725BA7 /* FontAwesome5_Solid.ttf in Resources */,
+				E1BD46F324BA41A68163930E /* Fontisto.ttf in Resources */,
+				F0B03EA0EEC04BC48ED32B1E /* Foundation.ttf in Resources */,
+				859449791FE74F969CA35989 /* Ionicons.ttf in Resources */,
+				845EE18746E74523961ABE10 /* MaterialCommunityIcons.ttf in Resources */,
+				4ACB0014495C4C399029A53C /* MaterialIcons.ttf in Resources */,
+				4F78777C1D4C41D68E254FC8 /* Octicons.ttf in Resources */,
+				B37B0F68021B49478F1BB5BC /* SimpleLineIcons.ttf in Resources */,
+				F75E404285084E48A4930B16 /* Zocial.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		A718B505885C256E5B455451 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BhxOnline-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E61E5D3840AD6154CD739CDD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC00A07A0F6FA5916D932384 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BhxOnline/Pods-BhxOnline-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD10A7F022414F080027D42C /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13B07F871A680F5B00A75B9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				13B07FC11A68108700A75B9A /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		04409D50263D05DD001C2A35 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Staging;
+		};
+		04409D51263D05DD001C2A35 /* Staging */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BFE6791B79E49A2C0BA81049 /* Pods-BhxOnline.staging.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = BhxOnline/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.9;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_NAME = BhxOnline;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Staging;
+		};
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F88ECE176B8E5453121E48BA /* Pods-BhxOnline.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = BhxOnline/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.9;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_NAME = BhxOnline;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		13B07F951A680F5B00A75B9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0B48852C2A4F0D9C75D761A /* Pods-BhxOnline.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = BhxOnline/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.9;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_NAME = BhxOnline;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		83CBBA201A601CBA00E9B192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		83CBBA211A601CBA00E9B192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BhxOnline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B07F941A680F5B00A75B9A /* Debug */,
+				13B07F951A680F5B00A75B9A /* Release */,
+				04409D51263D05DD001C2A35 /* Staging */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BhxOnline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CBBA201A601CBA00E9B192 /* Debug */,
+				83CBBA211A601CBA00E9B192 /* Release */,
+				04409D50263D05DD001C2A35 /* Staging */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
+}
