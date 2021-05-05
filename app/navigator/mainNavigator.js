@@ -10,6 +10,7 @@ import Profile from '../container/profile';
 import Product from '../container/product';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
+import { translate } from '@app/translate';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -85,22 +86,22 @@ class MainTabComponent extends Component {
                 <Tab.Screen
                     name="Product"
                     component={Product}
-                    options={{ title: 'Sản phẩm' }}
+                    options={{ title: translate('Product') }}
                 />
                 <Tab.Screen
                     name="Promotion"
                     component={Promotion}
-                    options={{ title: 'Khuyến mãi' }}
+                    options={{ title: translate('Promotion') }}
                 />
                 <Tab.Screen
                     name="Notification"
                     component={Notification}
-                    options={{ title: 'Thông báo' }}
+                    options={{ title: translate('Notification') }}
                 />
                 <Tab.Screen
                     name="Profile"
                     component={Profile}
-                    options={{ title: 'Tài khoản' }}
+                    options={{ title: translate('Account') }}
                 />
             </Tab.Navigator>
         );

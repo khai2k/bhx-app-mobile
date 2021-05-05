@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { translate } from '@app/translate';
 
 const white = 'green';
 const styles = StyleSheet.create({
@@ -17,7 +18,11 @@ class Product extends Component {
     }
 
     render() {
-        return <View style={styles.container} />;
+        return (
+            <View style={styles.container}>
+                <Text style={{fontSize: 30}}>{translate('Product')}</Text>
+            </View>
+        );
     }
 }
 
