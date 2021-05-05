@@ -8,6 +8,7 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
+import ProductDetail from '../container/productDetail';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
 import { translate } from '@app/translate';
@@ -25,6 +26,15 @@ const MainNavigator = () => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
                     return { title: 'Bách hóa xanh' };
+                }}
+            />
+            <MainStack.Screen
+                name="ProductDetail"
+                component={ProductDetail}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { title: 'Chi tiết sản phẩm' };
                 }}
             />
         </MainStack.Navigator>
