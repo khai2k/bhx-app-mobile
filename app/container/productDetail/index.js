@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Dimensions, ScrollView, Modal, Image } from 'react-native';
 // eslint-disable-next-line import/no-absolute-path
 import FlatListSlider from '/components/imageSlider/flatListSlider';
-import GallerySwiper from 'react-native-gallery-swiper';
-
+import SmartGallery from 'react-native-smart-gallery';
 class ProductDetail extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +41,7 @@ class ProductDetail extends Component {
         return (
             <ScrollView>
                 <FlatListSlider
-                    data={this.state.data}
+                    data={data}
                     timer={10000}
                     imageKey="uri"
                     local={false}
@@ -60,8 +59,15 @@ class ProductDetail extends Component {
                     showArrow
                     totalNumberStyle
                 />
-                <Modal visible>
-                    <GallerySwiper images={data} />
+                <Modal visible={isShowModal}>
+                    <SmartGallery
+                        images={data}
+                        index={crrImgIdx}
+                        sensitiveScroll={false}
+                        onSwipeDownReleased={() => this.setModalVisible(false)}
+                        onSwipeUpReleased={() => this.setModalVisible(false)}
+                        onPageSelected={(index) => this.setCrrImageIndex(index)}
+                    />
                 </Modal>
             </ScrollView>
         );
@@ -73,6 +79,7 @@ class ProductDetail extends Component {
 
     setCrrImageIndex = (idx) => {
         this.setState({ crrImgIdx: idx });
+        console.log(idx);
     };
 
     handleEventSliderClick = (idx) => {
