@@ -40,6 +40,7 @@
 		F5F6238A136B4D9EB8980E2E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0945569B4E704446BE8E8104 /* Feather.ttf */; };
 		F75E404285084E48A4930B16 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C2F52C4B9C24217BF87320D /* Zocial.ttf */; };
 		F7906458BC8541DD99FAB7F2 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13AB19AB369041B5B38DE4DB /* Roboto-Medium.ttf */; };
+		88A54A5053924B74A717D588 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 715B7E0F19B34D368E419B89 /* libRNPhotoView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,8 @@
 		F609D7174CF64801A2E619DF /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../assets/vector-icon-fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		F88ECE176B8E5453121E48BA /* Pods-BhxOnline.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BhxOnline.debug.xcconfig"; path = "Target Support Files/Pods-BhxOnline/Pods-BhxOnline.debug.xcconfig"; sourceTree = "<group>"; };
 		FF9FC079C33F4FD59B97A741 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		19542C25C6E944118C47DFED /* RNPhotoView.xcodeproj */ = {isa = PBXFileReference; name = "RNPhotoView.xcodeproj"; path = "../node_modules/react-native-photo-view/ios/RNPhotoView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		715B7E0F19B34D368E419B89 /* libRNPhotoView.a */ = {isa = PBXFileReference; name = "libRNPhotoView.a"; path = "libRNPhotoView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98F9A1E490D5ADE21514915A /* libPods-BhxOnline.a in Frameworks */,
+				88A54A5053924B74A717D588 /* libRNPhotoView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +190,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				19542C25C6E944118C47DFED /* RNPhotoView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -496,6 +501,14 @@
 				PRODUCT_NAME = BhxOnline;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/BhxOnline\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Staging;
 		};
@@ -524,6 +537,14 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/BhxOnline\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Debug;
 		};
@@ -550,6 +571,14 @@
 				PRODUCT_NAME = BhxOnline;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/BhxOnline\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/..",
+				);
 			};
 			name = Release;
 		};

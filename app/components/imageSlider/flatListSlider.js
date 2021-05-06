@@ -7,8 +7,7 @@ import {
     Platform,
     UIManager,
     Dimensions,
-    TouchableOpacity,
-    Text
+    TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Indicator from './indicator';
@@ -35,40 +34,40 @@ export default class FlatListSlider extends Component {
         indicatorInActiveColor: '#bdc3c7',
         indicatorActiveWidth: 6,
         animation: true,
-        autoscroll: false,
+        autoScroll: false,
         showArrow: true,
         timer: 10000,
         onPress: {},
         contentContainerStyle: {},
-        component: <ChildItem />,
+        component: <ChildItem />
     };
 
     constructor(props) {
         super(props);
         this.state = {
             index: 0,
-            data: this.props.data,
+            data: this.props.data
         };
         if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental(true);
+            //UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }
 
     componentDidMount() {
-        if (this.props.autoscroll) {
+        if (this.props.autoScroll) {
             this.startAutoPlay();
         }
     }
 
     componentWillUnmount() {
-        if (this.props.autoscroll) {
+        if (this.props.autoScroll) {
             this.stopAutoPlay();
         }
     }
 
     render() {
         const itemWidth = this.props.width;
-        const separatorWidth = this.props.separatorWidth;
+        const { separatorWidth } = this.props;
         const totalItemWidth = itemWidth + separatorWidth;
 
         return (
@@ -76,7 +75,7 @@ export default class FlatListSlider extends Component {
                 <FlatList
                     ref={this.slider}
                     horizontal
-                    pagingEnabled={true}
+                    pagingEnabled={false}
                     snapToInterval={totalItemWidth}
                     decelerationRate="fast"
                     bounces={false}
@@ -86,13 +85,13 @@ export default class FlatListSlider extends Component {
                     renderItem={({ item, index }) =>
                         React.cloneElement(this.props.component, {
                             style: { width: this.props.width },
-                            item: item,
+                            item,
                             imageKey: this.props.imageKey,
                             onPress: this.props.onPress,
                             index: this.state.index % this.props.data.length,
                             active: index === this.state.index,
                             local: this.props.local,
-                            height: this.props.height,
+                            height: this.props.height
                         })
                     }
                     ItemSeparatorComponent={() => (
@@ -100,34 +99,52 @@ export default class FlatListSlider extends Component {
                     )}
                     keyExtractor={(item, index) => item.toString() + index}
                     onViewableItemsChanged={this.onViewableItemsChanged}
-                    viewabilityConfig={this.viewabilityConfig}
+                    viewAbilityConfig={this.viewAbilityConfig}
                     getItemLayout={(data, index) => ({
                         length: totalItemWidth,
                         offset: totalItemWidth * index,
-                        index,
+                        index
                     })}
                     windowSize={1}
                     initialNumToRender={1}
                     maxToRenderPerBatch={1}
-                    removeClippedSubviews={true}
+                    removeClippedSubViews
                 />
                 {this.props.showArrow && (
-                    <View style={[styles.btnArrowContainer, styles.btnPreviousContainer]}>
+                    <View
+                        style={[
+                            styles.btnArrowContainer,
+                            styles.btnPreviousContainer
+                        ]}>
                         <TouchableOpacity
-                            style={[styles.btnChangeSlider, styles.btnChangeSliderPrevious]}
-                            activeOpacity={.7}
-                            onPress={() => this.onHandleChangeSliderPostion(false)}>
-                            <Icon name='angle-left' size={26} color='#fff' />
+                            style={[
+                                styles.btnChangeSlider,
+                                styles.btnChangeSliderPrevious
+                            ]}
+                            activeOpacity={0.7}
+                            onPress={() =>
+                                this.onHandleChangeSliderPosition(false)
+                            }>
+                            <Icon name="angle-left" size={26} color="#fff" />
                         </TouchableOpacity>
                     </View>
                 )}
                 {this.props.showArrow && (
-                    <View style={[styles.btnArrowContainer, styles.btnNextContainer]}>
+                    <View
+                        style={[
+                            styles.btnArrowContainer,
+                            styles.btnNextContainer
+                        ]}>
                         <TouchableOpacity
-                            style={[styles.btnChangeSlider, styles.btnChangeSliderNext]}
-                            activeOpacity={.7}
-                            onPress={() => this.onHandleChangeSliderPostion(true)}>
-                            <Icon name='angle-right' size={26} color='#fff' />
+                            style={[
+                                styles.btnChangeSlider,
+                                styles.btnChangeSliderNext
+                            ]}
+                            activeOpacity={0.7}
+                            onPress={() =>
+                                this.onHandleChangeSliderPosition(true)
+                            }>
+                            <Icon name="angle-right" size={26} color="#fff" />
                         </TouchableOpacity>
                     </View>
                 )}
@@ -138,34 +155,42 @@ export default class FlatListSlider extends Component {
                         indicatorStyle={this.props.indicatorStyle}
                         indicatorContainerStyle={[
                             styles.indicatorContainerStyle,
-                            this.props.indicatorContainerStyle,
+                            this.props.indicatorContainerStyle
                         ]}
                         indicatorActiveColor={this.props.indicatorActiveColor}
-                        indicatorInActiveColor={this.props.indicatorInActiveColor}
+                        indicatorInActiveColor={
+                            this.props.indicatorInActiveColor
+                        }
                         indicatorActiveWidth={this.props.indicatorActiveWidth}
-                        style={{ ...styles.indicator, ...this.props.indicatorStyle }}
+                        style={{
+                            ...styles.indicator,
+                            ...this.props.indicatorStyle
+                        }}
                     />
                 )}
                 {this.props.showTotalNumber && !this.props.indicator && (
                     <TotalNumber
                         itemCount={this.props.data.length}
                         currentIndex={this.state.index % this.props.data.length}
-                        totalNumberStyle={this.props.totalNumberStyle} />
+                        totalNumberStyle={this.props.totalNumberStyle}
+                    />
                 )}
             </View>
         );
-    };
+    }
 
-    onViewableItemsChanged = ({ viewableItems, changed }) => {
+    onViewableItemsChanged = ({ viewableItems }) => {
         if (viewableItems.length > 0) {
-            let currentIndex = viewableItems[0].index;
+            const currentIndex = viewableItems[0].index;
             if (
-                currentIndex % this.props.data.length === this.props.data.length - 1 &&
+                currentIndex % this.props.data.length ===
+                    this.props.data.length - 1 &&
                 this.props.loop
             ) {
                 this.setState({
                     index: currentIndex,
-                    data: [...this.state.data, ...this.props.data],
+                    // eslint-disable-next-line react/no-access-state-in-setstate
+                    data: [...this.state.data, ...this.props.data]
                 });
             } else {
                 this.setState({ index: currentIndex });
@@ -177,38 +202,40 @@ export default class FlatListSlider extends Component {
         }
     };
 
-    viewabilityConfig = {
-        viewAreaCoveragePercentThreshold: 50,
+    viewAbilityConfig = {
+        viewAreaCoveragePercentThreshold: 50
     };
 
     changeSliderListIndex = () => {
         if (this.props.animation) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeIn);
         }
+        // eslint-disable-next-line react/no-access-state-in-setstate
         this.setState({ index: this.state.index + 1 });
         this.slider.current.scrollToIndex({
             index: this.state.index,
-            animated: true,
+            animated: true
         });
     };
 
-    onHandleChangeSliderPostion = (isNext) => {
+    onHandleChangeSliderPosition = (isNext) => {
         if (this.props.animation) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeIn);
         }
+        // eslint-disable-next-line react/no-access-state-in-setstate
         let idx = isNext ? this.state.index + 1 : this.state.index - 1;
         idx = idx < 0 ? this.props.data.length - 1 : idx;
         this.setState({ index: idx });
         this.slider.current.scrollToIndex({
             index: idx,
-            animated: true,
+            animated: true
         });
-    }
+    };
 
     startAutoPlay = () => {
         this.sliderTimer = setInterval(
             this.changeSliderListIndex,
-            this.props.timer,
+            this.props.timer
         );
     };
 
@@ -221,28 +248,23 @@ export default class FlatListSlider extends Component {
 }
 
 const styles = StyleSheet.create({
+    // eslint-disable-next-line react-native/no-unused-styles
     image: {
         height: 230,
-        resizeMode: 'stretch',
+        resizeMode: 'stretch'
     },
     indicatorContainerStyle: {
-        marginTop: 18,
+        marginTop: 18
     },
-    shadow: {
-        ...Platform.select({
-            ios: {
-                shadowColor: 'black',
-                shadowOffset: { width: 3, height: 3 },
-                shadowOpacity: 0.4,
-                shadowRadius: 10,
-            },
-            android: {
-                elevation: 5,
-            },
-        }),
-    },
+    // eslint-disable-next-line react-native/sort-styles
     btnArrowContainer: {
-        position: 'absolute', top: 0, bottom: 22, width: 29, display: 'flex', justifyContent: 'center', alignItems: 'center'
+        alignItems: 'center',
+        bottom: 22,
+        display: 'flex',
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: 29
     },
     btnPreviousContainer: {
         left: 0
@@ -250,8 +272,11 @@ const styles = StyleSheet.create({
     btnNextContainer: {
         right: 0
     },
+    // eslint-disable-next-line react-native/no-color-literals
     btnChangeSlider: {
-        backgroundColor: 'rgba(34, 43, 69, 0.5)', paddingHorizontal: 10, paddingVertical: 20
+        backgroundColor: 'rgba(34, 43, 69, 0.5)',
+        paddingHorizontal: 10,
+        paddingVertical: 20
     },
     btnChangeSliderPrevious: {
         borderBottomRightRadius: 5,
