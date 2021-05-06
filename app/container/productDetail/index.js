@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, ScrollView, Modal, Image } from 'react-native';
+import { Dimensions, ScrollView, Modal, SafeAreaView, View, Text } from 'react-native';
 // eslint-disable-next-line import/no-absolute-path
 import FlatListSlider from '/components/imageSlider/flatListSlider';
 import SmartGallery from 'react-native-smart-gallery';
@@ -36,7 +36,7 @@ class ProductDetail extends Component {
     }
 
     render() {
-        const screenWidth = Math.round(Dimensions.get('window').width);
+        const { width, height } = Dimensions.get('window');
         const { isShowModal, data, crrImgIdx } = this.state;
         return (
             <ScrollView>
@@ -45,7 +45,7 @@ class ProductDetail extends Component {
                     timer={10000}
                     imageKey="uri"
                     local={false}
-                    width={screenWidth}
+                    width={width}
                     separator={0}
                     loop
                     autoScroll={false}
@@ -59,18 +59,36 @@ class ProductDetail extends Component {
                     showArrow
                     totalNumberStyle
                 />
-                <Modal visible={isShowModal}>
-                    <SmartGallery
-                        images={data}
-                        index={crrImgIdx}
-                        sensitiveScroll={false}
-                        onSwipeDownReleased={() => this.setModalVisible(false)}
-                        onSwipeUpReleased={() => this.setModalVisible(false)}
-                        onPageSelected={(index) => this.setCrrImageIndex(index)}
-                    />
-                </Modal>
+                <SafeAreaView>
+                    <Modal
+                        visible={isShowModal}
+                        onRequestClose={() => this.setModalVisible(false)}
+                    >
+                        <View style={{ width: width, height: height }}>
+                            <View
+                                style={{ height: height }}>
+                                <SmartGallery
+                                    images={data}
+                                    index={crrImgIdx}
+                                    sensitiveScroll={false}
+                                    onSwipeDownReleased={() => this.setModalVisible(false)}
+                                    onSwipeUpReleased={() => this.setModalVisible(false)}
+                                    onPageSelected={(index) => this.setCrrImageIndex(index)}
+                                />
+                            </View>
+                            <Text
+                                style={{ position: 'absolute', left: 0, right: 10, bottom: 40, color: '#fff', textAlign: 'right' }}>
+                                {crrImgIdx + 1}/{data.length}
+                            </Text>
+                        </View>
+                    </Modal>
+                </SafeAreaView>
             </ScrollView>
         );
+    }
+
+    renderThumbnail = () => {
+
     }
 
     setModalVisible = (visible) => {
