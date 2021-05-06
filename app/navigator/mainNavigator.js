@@ -55,32 +55,38 @@ const MainDrawer = () => {
 class MainTabComponent extends Component {
     render() {
         return (
-            <Tab.Navigator initialRouteName="Product" 
+            <Tab.Navigator
+                initialRouteName="Product"
                 screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, image, color }) => {
+                    tabBarIcon: ({ focused, image }) => {
                         if (route.name === 'Product') {
                             image = focused
                                 ? require('../../assets/images/grid.png')
                                 : require('../../assets/images/grid.png');
                         } else if (route.name === 'Promotion') {
-                            image = focused 
-                                ? require('../../assets/images/promotion.png') 
+                            image = focused
+                                ? require('../../assets/images/promotion.png')
                                 : require('../../assets/images/promotion.png');
                         } else if (route.name === 'Notification') {
-                            image = focused 
-                                ? require('../../assets/images/notification.png') 
+                            image = focused
+                                ? require('../../assets/images/notification.png')
                                 : require('../../assets/images/notification.png');
                         } else if (route.name === 'Profile') {
-                            image = focused 
-                                ? require('../../assets/images/user.png') 
+                            image = focused
+                                ? require('../../assets/images/user.png')
                                 : require('../../assets/images/user.png');
-                        }          
-                        return <Image source={image} style={{width: 20, height: 20}} />;
-                    },
+                        }
+                        return (
+                            <Image
+                                source={image}
+                                style={{ width: 20, height: 20 }}
+                            />
+                        );
+                    }
                 })}
                 tabBarOptions={{
                     activeTintColor: 'red',
-                    inactiveTintColor: 'gray',
+                    inactiveTintColor: 'gray'
                 }}>
                 <Tab.Screen
                     name="Product"

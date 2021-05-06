@@ -17,6 +17,9 @@ export const GAINSBORO = 'rgba(221,221,221,1)';
 export const ALICE_BLUE = 'rgba(245,246,247,1)';
 export const CHARCOAL = '#444444';
 export const COLOR_000000 = '#000000';
+export const TROUT = '#515764';
+export const GALLERY = '#ECECEC';
+export const MINE_SHAFT = '#333';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';
@@ -29,6 +32,10 @@ export const MATTERHORN = '#575757';
 export const LIGHT_GREY = '#D3D3D3';
 export const ZAMBEZI = '#5C5C5C';
 export const NOBEL = '#9F9F9F';
+export const CATSKILL_WHITE = '#E4E9F2';
+export const LINK_WATER = '#ECF2FB';
+export const LINK_WATER_2 = '#F5F8FD';
+export const LINK_WATER_3 = '#EBF0F9';
 
 // RED
 export const BRIGHT_RED = 'rgba(240,68,68,1)';
@@ -49,12 +56,11 @@ export const DANDELION_1 = 'rgba(255, 209, 92,1)';
 export const SAFFRON = '#FFC226';
 export const CORN_SILK = '#FEF8E1';
 export const MILAN = '#F5F896';
-
 export const ORANGE_1 = '#FFA803';
+export const TURBO = '#FFF101';
+
 // PURPLE
-
 export const JACKSONS_PURPLE = 'rgba(53,56,138,1)';
-
 export const PRUSSIAN_BLUE = 'rgba(51,88,138,1)';
 export const SILVER_TREE_LIGHT = 'rgba(150, 208, 140,1)';
 export const SILVER_TREE = 'rgba(111, 207, 151,1)';
@@ -77,6 +83,7 @@ export const ARAPAWA = '#2D4A64';
 
 export const PERANO = 'rgba(155,165,255,1)';
 export const CURIOUS_BLUE = 'rgba(40, 138, 214,1)';
+export const CLOUD_BURST = '#222B45';
 
 // ORANGE
 export const YELLOW_ORANGE = 'rgba(255,175,66,1)';
@@ -93,3 +100,7 @@ export const SEA_BUCKTHORN = '#F2994A';
 
 export const MATTERHORN_1 = 'rgba(85,85,85,1)';
 export const COLOR_353638 = 'rgba(35,36,38,0.5)';
+
+// GREEN
+export const JADE = '#00AC5B';
+export const EUCALYPTUS = '#1F884C';

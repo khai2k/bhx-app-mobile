@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
+import ProductBox from '../../components/ProductBox/ProductBox';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const white = 'green';
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: white,
-        flex: 1
+        backgroundColor: Colors.WHITE,
+        flexWrap: 'wrap',
+        flexDirection: 'row'
     }
 });
 
@@ -17,7 +19,15 @@ class Product extends Component {
     }
 
     render() {
-        return <View style={styles.container} />;
+        return (
+            <View style={styles.container}>
+                <ProductBox />
+                <ProductBox />
+                <ProductBox />
+                <ProductBox />
+                <ProductBox />
+            </View>
+        );
     }
 }
 
