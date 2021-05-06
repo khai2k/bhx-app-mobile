@@ -6531,11 +6531,6 @@ react-native-vector-icons@^8.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-vscode-settings@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.npmjs.org/react-native-vscode-settings/-/react-native-vscode-settings-0.0.9.tgz"
-  integrity sha512-lzJtxcs8+ivpZnooxP4V0hYEPVss+Us8W1rIbd/JA+UfMiGDMKaPzi3Foh0pMVXGeexVuEe/PSG03JC+VxkfYg==
-
 react-native@0.64.0:
   version "0.64.0"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.64.0.tgz"
