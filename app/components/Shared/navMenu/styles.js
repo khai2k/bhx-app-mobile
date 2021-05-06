@@ -1,0 +1,79 @@
+import { StyleSheet } from 'react-native';
+import { Colors } from '../../../styles';
+
+const styles = StyleSheet.create({
+    btnClose: {
+        alignItems: 'center',
+        borderBottomColor: Colors.GRAY_E4E9F2,
+        borderBottomWidth: 1,
+        borderRightColor: Colors.GRAY_E4E9F2,
+        borderRightWidth: 1,
+        flex: 1.1,
+        flexDirection: 'row',
+        height: 50,
+        justifyContent: 'center'
+    },
+    btnHome: {
+        alignItems: 'center',
+        borderBottomColor: Colors.GRAY_E4E9F2,
+        borderBottomWidth: 1,
+        flex: 1,
+        height: 50,
+        justifyContent: 'center'
+    },
+    container: {
+        backgroundColor: Colors.GRAY_EAEEF7,
+        flexDirection: 'row',
+        flex: 1
+    },
+    iconClose: {
+        height: 16,
+        marginRight: 7,
+        width: 16
+    },
+    iconHome: {
+        height: 25,
+        width: 25
+    },
+    iconPromotion: {
+        height: 16,
+        marginRight: 7,
+        width: 16
+    },
+    itemCate: {
+        flexDirection: 'row',
+        padding: 15
+    },
+    itemCateActive: {
+        backgroundColor: Colors.WHITE,
+        borderLeftColor: Colors.GREEN_00AC5B,
+        borderLeftWidth: 5
+    },
+    navLeft: {
+        flex: 2
+    },
+    navLeftBottom: {
+        fontSize: 11,
+        lineHeight: 16
+    },
+    navLeftTop: {
+        flexDirection: 'row'
+    },
+    navRight: {
+        backgroundColor: Colors.WHITE,
+        flex: 3,
+        flexDirection: 'row-reverse'
+    },
+    textBtnClose: {
+        color: Colors.GRAY_222B45,
+        fontSize: 13,
+        fontWeight: 'bold'
+    },
+    txtCate: {
+        color: Colors.GRAY_222B45,
+        fontSize: 14,
+        fontWeight: 'bold',
+        lineHeight: 17
+    }
+});
+export default styles;

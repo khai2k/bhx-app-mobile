@@ -13,5 +13,31 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "prettier.trailingComma": "none"
+  "prettier.trailingComma": "none",
+  "cSpell.words": [
+    "B",
+    "Bánh",
+    "Khuy",
+    "Khuyến",
+    "Th",
+    "Thịt",
+    "ch",
+    "cháo",
+    "i",
+    "lo",
+    "loại",
+    "m",
+    "n",
+    "ng",
+    "nh",
+    "nhân",
+    "nhóm",
+    "o",
+    "t",
+    "tr",
+    "trứng",
+    "u",
+    "uống",
+    "đình"
+  ]
 }

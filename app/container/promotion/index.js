@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
+import { NavMenu } from '@app/components';
 
 const white = 'yellow';
 const styles = StyleSheet.create({
@@ -17,7 +18,11 @@ class Promotion extends Component {
     }
 
     render() {
-        return <View style={styles.container} />;
+        return (
+            <View style={styles.container}>
+                <NavMenu />
+            </View>
+        );
     }
 }
 

@@ -7,6 +7,9 @@ export const BLACK_08 = 'rgba(0, 0, 0, 0.8)';
 export const GRAY_LIGHT = '#e6e6e6';
 export const GRAY_MEDIUM = '#cacaca';
 export const GRAY_DARK = '#8a8a8a';
+export const GRAY_222B45 = '#222B45';
+export const GRAY_EAEEF7 = '#EAEEF7';
+export const GRAY_E4E9F2 = '#E4E9F2';
 
 export const DIM_GRAY = 'rgba(107,107,107,1)';
 export const NIGHT_RIDER = 'rgba(51, 51, 51,1)';
@@ -93,3 +96,6 @@ export const SEA_BUCKTHORN = '#F2994A';
 
 export const MATTERHORN_1 = 'rgba(85,85,85,1)';
 export const COLOR_353638 = 'rgba(35,36,38,0.5)';
+
+// GREEN
+export const GREEN_00AC5B = '#00AC5B';
