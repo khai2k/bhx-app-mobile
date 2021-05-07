@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dimensions, ScrollView, Modal, SafeAreaView, View, Text } from 'react-native';
-// eslint-disable-next-line import/no-absolute-path
-import FlatListSlider from '/components/imageSlider/flatListSlider';
-import SmartGallery from 'react-native-smart-gallery';
+import { Dimensions, View, Text, Image, FlatList } from 'react-native';
 class ProductDetail extends Component {
     constructor(props) {
         super(props);
@@ -29,80 +26,42 @@ class ProductDetail extends Component {
                     uri:
                         'https://images.unsplash.com/photo-1584271854089-9bb3e5168e32?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80'
                 }
-            ],
-            isShowModal: false,
-            crrImgIdx: 0
+            ]
         };
     }
 
     render() {
-        const { width, height } = Dimensions.get('window');
+        const { screenWidth, screenHeight } = Dimensions.get('window');
         const { isShowModal, data, crrImgIdx } = this.state;
         return (
-            <ScrollView>
-                <FlatListSlider
+            <View style={{ width: screenWidth, height: screenHeight, backgroundColor: '#000' }}>
+                <Text>1234567890</Text>
+                <FlatList
+                    style={{ width: screenWidth, height: screenHeight, backgroundColor: '#000' }}
                     data={data}
-                    timer={10000}
-                    imageKey="uri"
-                    local={false}
-                    width={width}
-                    separator={0}
-                    loop
-                    autoScroll={false}
-                    currentIndexCallback={(index) => {
-                        this.setCrrImageIndex(index);
-                    }}
-                    onPress={(item) => this.handleEventSliderClick(item)}
-                    indicator={false}
-                    showTotalNumber
-                    animation={false}
-                    showArrow
-                    totalNumberStyle
-                />
-                <SafeAreaView>
-                    <Modal
-                        visible={isShowModal}
-                        onRequestClose={() => this.setModalVisible(false)}
-                    >
-                        <View style={{ width: width, height: height }}>
-                            <View
-                                style={{ height: height }}>
-                                <SmartGallery
-                                    images={data}
-                                    index={crrImgIdx}
-                                    sensitiveScroll={false}
-                                    onSwipeDownReleased={() => this.setModalVisible(false)}
-                                    onSwipeUpReleased={() => this.setModalVisible(false)}
-                                    onPageSelected={(index) => this.setCrrImageIndex(index)}
+                    keyExtractor={item => item.uri}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => {
+                        console.log(item.uri);
+                        return (
+                            <View style={{ width: screenWidth, height: screenHeight, backgroundColor: '#000' }}>
+                                <Image
+                                    style={{ width: 200, height: 200 }}
+                                    source={{ uri: item.uri }}
                                 />
                             </View>
-                            <Text
-                                style={{ position: 'absolute', left: 0, right: 10, bottom: 40, color: '#fff', textAlign: 'right' }}>
-                                {crrImgIdx + 1}/{data.length}
-                            </Text>
-                        </View>
-                    </Modal>
-                </SafeAreaView>
-            </ScrollView>
+                        )
+                    }}
+                />
+            </View>
         );
     }
 
     renderThumbnail = () => {
 
     }
-
-    setModalVisible = (visible) => {
-        this.setState({ isShowModal: visible });
-    };
-
-    setCrrImageIndex = (idx) => {
-        this.setState({ crrImgIdx: idx });
-        console.log(idx);
-    };
-
-    handleEventSliderClick = (idx) => {
-        this.setState({ isShowModal: true, crrImgIdx: idx });
-    };
 }
 
 const mapStateToProps = function () {

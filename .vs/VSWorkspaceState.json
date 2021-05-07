@@ -1,16 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\android",
-    "\\android\\app",
-    "\\android\\app\\src",
-    "\\android\\app\\src\\debug",
-    "\\android\\app\\src\\main",
-    "\\app\\components\\imageSlider",
-    "\\app\\container\\product",
-    "\\app\\container\\profile",
-    "\\app\\styles"
+    "\\app",
+    "\\app\\components",
+    "\\app\\container",
+    "\\app\\container\\productDetail"
   ],
-  "SelectedNode": "\\android\\app\\src\\debug\\AndroidManifest.xml",
+  "SelectedNode": "\\app\\container\\productDetail\\index.js",
   "PreviewInSolutionExplorer": false
 }
