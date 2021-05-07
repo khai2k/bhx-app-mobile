@@ -49,7 +49,7 @@ export default class FlatListSlider extends Component {
             data: this.props.data
         };
         if (Platform.OS === 'android') {
-            //UIManager.setLayoutAnimationEnabledExperimental(true);
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }
 
