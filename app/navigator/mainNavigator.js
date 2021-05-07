@@ -8,8 +8,10 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
+import ProductDetail from '../container/productDetail';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
+import { translate } from '@app/translate';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -24,6 +26,15 @@ const MainNavigator = () => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
                     return { title: 'Bách hóa xanh' };
+                }}
+            />
+            <MainStack.Screen
+                name="ProductDetail"
+                component={ProductDetail}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { title: 'Chi tiết sản phẩm' };
                 }}
             />
         </MainStack.Navigator>
@@ -91,22 +102,22 @@ class MainTabComponent extends Component {
                 <Tab.Screen
                     name="Product"
                     component={Product}
-                    options={{ title: 'Sản phẩm' }}
+                    options={{ title: translate('Product') }}
                 />
                 <Tab.Screen
                     name="Promotion"
                     component={Promotion}
-                    options={{ title: 'Khuyến mãi' }}
+                    options={{ title: translate('Promotion') }}
                 />
                 <Tab.Screen
                     name="Notification"
                     component={Notification}
-                    options={{ title: 'Thông báo' }}
+                    options={{ title: translate('Notification') }}
                 />
                 <Tab.Screen
                     name="Profile"
                     component={Profile}
-                    options={{ title: 'Tài khoản' }}
+                    options={{ title: translate('Account') }}
                 />
             </Tab.Navigator>
         );

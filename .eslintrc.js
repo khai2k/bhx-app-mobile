@@ -5,7 +5,8 @@ module.exports = {
         'template-curly-spacing': [2, 'never'],
         'react/jsx-props-no-spreading': ['error', { custom: 'ignore' }],
         'arrow-parens': ['error', 'always'],
-        'react-native/no-inline-styles': 0
+        'react-native/no-inline-styles': 0,
+        'prettier/prettier': ['error', { endOfLine: 'auto' }]
     },
     settings: {
         'import/resolver': {

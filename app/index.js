@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
         flex: 1
     }
 });
+
 class App extends Component {
     render() {
         return (

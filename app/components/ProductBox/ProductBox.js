@@ -1,11 +1,14 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Image, TextInput } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import styles from './style';
 
 export default class ProductBox extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {};
+    }
+    _onPressBuy(){
+        alert('Pressed');
     }
 
     render() {
@@ -28,15 +31,16 @@ export default class ProductBox extends PureComponent {
                             </View>
                         </View>
                 </View>
-                <View className="productInfo" style={styles.productInfo}>
-                        <Text style={styles.productName}>
-                            Mì tôm chua cay Hảo Hảo
-                        </Text>
-                        {/* <View className="price">
-                            <Text>3.000đ</Text>
-                        </View> */}
-                </View>
-                <View className="boxBuy" style={styles.boxBuy}>
+                <TouchableOpacity onPress={this._onPressBuy}>
+                    <View className="productInfo" style={styles.productInfo}>
+                            <Text style={styles.productName}>
+                                Mì tôm chua cay Hảo Hảo
+                            </Text>
+                            {/* <View className="price">
+                                <Text>3.000đ</Text>
+                            </View> */}
+                    </View>
+                    <View className="boxBuy" style={styles.boxBuy}>
                         <View className="priceInfo" style={styles.priceInfo}>
                             <View className="price" style={styles.price}>
                                 <Text>3.000đ</Text>
@@ -59,7 +63,8 @@ export default class ProductBox extends PureComponent {
                             </View>
                         </View>
                     </View>
-                </View>
+                </TouchableOpacity>
+            </View>
         );
     }
 }
