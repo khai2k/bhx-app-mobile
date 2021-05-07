@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { translate } from '@app/translate';
+import { Header } from '@app/components';
 
-const white = 'green';
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: white,
         flex: 1
     }
 });
@@ -20,7 +19,7 @@ class Product extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={{fontSize: 30}}>{translate('Product')}</Text>
+                <Header></Header>
             </View>
         );
     }
