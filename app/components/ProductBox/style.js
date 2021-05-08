@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '@app/styles';
 
 const win = Dimensions.get('window');
-const ratio = win.width/3/300; //product image width
+const ratio = win.width / 3 / 300; //product image width
 
 const styles = StyleSheet.create({
     boxBuy: {
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         marginLeft: 0,
         marginRight: 0,
         marginTop: 8,
-        textTransform: 'uppercase',
+        textTransform: 'uppercase'
     },
     down: {
         backgroundColor: Colors.WHITE,
@@ -47,7 +47,32 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         position: 'relative',
         textAlign: 'center',
-        width: '33%'
+        width: '33%',
+        borderBottomLeftRadius: 8
+    },
+    up: {
+        backgroundColor: Colors.WHITE,
+        borderColor: Colors.GALLERY,
+        borderTopWidth: 0,
+        borderWidth: 1,
+        fontStyle: 'normal',
+        height: 34,
+        lineHeight: 30,
+        position: 'relative',
+        textAlign: 'center',
+        width: '33%',
+        borderBottomRightRadius: 8
+    },
+    inputBuy: {
+        fontSize: 16,
+        color: Colors.MINE_SHAFT,
+        width: '33%',
+        height: 34,
+        textAlign: 'center',
+        lineHeight: 30,
+        borderWidth: 0,
+        borderRadius: 0,
+        backgroundColor: Colors.LINK_WATER_2
     },
     imageProduct: {
         borderTopLeftRadius: 7,
@@ -71,12 +96,18 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
         paddingTop: 0,
-        textAlign: 'center',
+        textAlign: 'center'
     },
     priceInfo: {
         justifyContent: 'space-between',
         width: '100%',
         flexDirection: 'row'
+    },
+    priceInfoHide: {
+        justifyContent: 'space-between',
+        width: '100%',
+        flexDirection: 'row',
+        display: 'none'
     },
     product: {
         backgroundColor: Colors.WHITE,
@@ -93,7 +124,7 @@ const styles = StyleSheet.create({
         shadowColor: Colors.LINK_WATER,
         shadowOffset: { height: 3, width: 0 },
         shadowOpacity: 0.5,
-        width: win.width/3 - 6,
+        width: win.width / 3 - 6,
         height: 'auto'
     },
     productImg: {
@@ -101,7 +132,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         overflow: 'hidden',
         position: 'relative',
-        width: '100%',
+        width: '100%'
     },
     productInfo: {
         height: 32,
@@ -119,8 +150,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%'
     },
-    updown: {
+    upDown: {
         display: 'none'
+    },
+    upDownShow: {
+        display: 'flex',
+        height: 35,
+        flexDirection: 'row'
     },
     boxLabel: {
         position: 'relative'
