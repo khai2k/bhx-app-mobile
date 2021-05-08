@@ -9,70 +9,80 @@ import {
     TouchableOpacity,
     StyleSheet,
     Modal,
+    StatusBar,
     SafeAreaView
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { ScrollView } from 'react-native-gesture-handler'
+import Carousel from 'react-native-snap-carousel'
 
 const THUMB_SIZE = 50
 const { width, height } = Dimensions.get('window')
+const IMG_HEIGHT = width * .75
+const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 export default class ProductGallery extends Component {
     silderRef = createRef()
     galleryRef = createRef()
     thumbRef = createRef()
 
-    constructor (props) {
+    constructor(props) {
         super(props)
         this.state = {
             data: [
                 {
                     uri:
-                        'https://images.unsplash.com/photo-1567226475328-9d6baaf565cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60'
+                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-202103162327047901.jpg'
                 },
                 {
                     uri:
-                        'https://images.unsplash.com/photo-1455620611406-966ca6889d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1130&q=80'
+                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281438314972.jpg'
                 },
                 {
                     uri:
-                        'https://images.unsplash.com/photo-1477587458883-47145ed94245?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80'
+                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281439182449.jpg'
                 },
                 {
                     uri:
-                        'https://images.unsplash.com/photo-1568700942090-19dc36fab0c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80'
+                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281439185091.jpg'
                 },
                 {
                     uri:
-                        'https://images.unsplash.com/photo-1584271854089-9bb3e5168e32?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80'
+                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/thung-24-lon-strongbow-dau-den-330ml-202103162237023532.jpg'
                 },
                 {
                     uri:
-                        'https://znews-photo.zadn.vn/w860/Uploaded/mfnuy/2021_05_07/1.jpg'
+                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/nuoc-ep-len-men-strongbow-dark-fruit-thung-24-lon-1511201815836.jpg'
                 },
                 {
                     uri:
-                        'https://znews-photo.zadn.vn/w860/Uploaded/mfnuy/2021_05_07/r.jpg'
+                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/nuoc-ep-len-men-strongbow-dark-fruit-thung-24-lon-1511201815843.jpg'
+                },
+                {
+                    uri:
+                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/thung-24-lon-strongbow-dau-den-330ml-201905221021440177.jpg'
                 }
             ],
             crrImgIdx: 0,
-            isShowModal: false
+            isShowModal: false,
+            crrThumb: 0,
+            isShowFromSlider: false
         }
         if (Platform.OS === 'android') {
             UIManager.setLayoutAnimationEnabledExperimental(true)
         }
     }
 
-    render () {
+    render() {
         const { data, crrImgIdx, isShowModal } = this.state
         const DATA_IMAGES_LENGTH = data.length
 
         return (
-            <ScrollView style={{ width: width, height: 255 }}>
+            <ScrollView style={{ width: width, marginTop: STATUSBAR_HEIGHT }}>
                 <View>
                     <View>
                         <FlatList
                             ref={this.silderRef}
-                            style={{ width: width, height: 230 }}
+                            style={{ width: width, height: IMG_HEIGHT }}
                             snapToInterval={width}
                             bounces={false}
                             decelerationRate='fast'
@@ -84,7 +94,7 @@ export default class ProductGallery extends Component {
                             horizontal
                             pagingEnabled
                             showsHorizontalScrollIndicator={false}
-                            onViewableItemsChanged={this.onViewableItemsChanged}
+                            onViewableItemsChanged={this.onViewableItemsChangedSlider}
                             renderItem={({ item }) => {
                                 return (
                                     <TouchableOpacity
@@ -99,7 +109,7 @@ export default class ProductGallery extends Component {
                                         <Image
                                             style={{
                                                 width: width,
-                                                height: 230
+                                                height: IMG_HEIGHT
                                             }}
                                             source={{ uri: item.uri }}
                                         />
@@ -123,7 +133,6 @@ export default class ProductGallery extends Component {
                                         crrImgIdx - 1 < 0
                                             ? DATA_IMAGES_LENGTH - 1
                                             : crrImgIdx - 1
-                                    this.setActiveIndex(tmpcrridx)
                                     this.changeOffsetSlider(tmpcrridx)
                                 }}>
                                 <Icon
@@ -149,7 +158,6 @@ export default class ProductGallery extends Component {
                                         crrImgIdx + 1 >= DATA_IMAGES_LENGTH
                                             ? 0
                                             : crrImgIdx + 1
-                                    this.setActiveIndex(tmpcrridx)
                                     this.changeOffsetSlider(tmpcrridx)
                                 }}>
                                 <Icon
@@ -182,12 +190,13 @@ export default class ProductGallery extends Component {
                             onShow={() => this.onModalChangingShow()}
                             swipeDirection='bottom'
                             swipeThreshold={50}
+                            animationType='slide'
                             onSwipeComplete={() => this.setModalVisible(false)}
                             style={{ width: width, height: height }}>
                             <View style={{ width: width, height: height }}>
                                 <FlatList
                                     keyboardShouldPersistTaps='always'
-                                    style={{ height: 230 }}
+                                    style={{ height: IMG_HEIGHT }}
                                     contentContainerStyle={{
                                         flexGrow: 1,
                                         justifyContent: 'center',
@@ -206,15 +215,13 @@ export default class ProductGallery extends Component {
                                     horizontal
                                     pagingEnabled
                                     showsHorizontalScrollIndicator={false}
-                                    onViewableItemsChanged={
-                                        this.onViewableItemsChanged
-                                    }
+                                    onViewableItemsChanged={this.onViewableItemsChangedGallery}
                                     renderItem={({ item }) => {
                                         return (
                                             <Image
                                                 style={{
                                                     width: width,
-                                                    height: 230
+                                                    height: IMG_HEIGHT
                                                 }}
                                                 source={{ uri: item.uri }}
                                             />
@@ -249,16 +256,23 @@ export default class ProductGallery extends Component {
                                         viewAreaCoveragePercentThreshold: 50
                                     }}
                                     data={data}
-                                    keyExtractor={item => item.uri}
+                                    keyExtractor={item => `thumbRef_${item.uri}`}
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
+                                    onMomentumScrollBegin={() => {
+                                        this.onEndReachedCalledDuringMomentum = false;
+                                    }}
+                                    onMomentumScrollEnd={ev => {
+                                        if (!this.onEndReachedCalledDuringMomentum) {
+                                            this.onEndReachedCalledDuringMomentum = true;
+                                        }
+                                    }}
                                     renderItem={({ item, index }) => {
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    this.changeOffsetGallery(
-                                                        index
-                                                    )
+                                                    this.setState({ crrThumb: index })
+                                                    this.changeOffsetGallery(index)
                                                 }}
                                                 activeOpacity={0.85}
                                                 style={{
@@ -270,7 +284,8 @@ export default class ProductGallery extends Component {
                                                     style={{
                                                         width: THUMB_SIZE,
                                                         height: THUMB_SIZE,
-                                                        borderRadius: 4
+                                                        borderRadius: 4,
+                                                        opacity: index === this.state.crrThumb ? 1 : .5
                                                     }}
                                                     source={{ uri: item.uri }}
                                                 />
@@ -298,22 +313,22 @@ export default class ProductGallery extends Component {
     }
 
     onModalChangingShow = () => {
-        console.log(this.galleryRef?.current?.index)
+        this.setState({ isShowFromSlider: true });
         this.changeOffsetGallery(this.state.crrImgIdx)
     }
 
     changeOffsetSlider = index => {
         this.silderRef?.current?.scrollToIndex({
-            index: index
+            index: index,
+            animation: false
         })
     }
 
     changeOffsetGallery = index => {
         this.galleryRef?.current?.scrollToIndex({
-            index: index
+            index: index,
+            animation: false
         })
-
-        this.changeOffsetThumb(index)
     }
 
     changeOffsetThumb = index => {
@@ -322,16 +337,36 @@ export default class ProductGallery extends Component {
 
         this.thumbRef?.current?.scrollToOffset({
             offset: THUMB_SIZE * index + mnus,
-            viewPosition: 1
+            viewPosition: 0
         })
     }
 
-    onViewableItemsChanged = ({ viewableItems }) => {
-        if (
-            viewableItems.length > 0 &&
-            viewableItems[0].index !== this.state.crrImgIdx
-        ) {
-            this.setActiveIndex(viewableItems[0].index)
+    onViewableItemsChangedSlider = ({ viewableItems }) => {
+        let idxCheck = 0;
+        if (viewableItems.length === 1) {
+            idxCheck++;
+            if (idxCheck === 1) {
+                idxCheck = 0;
+                this.setActiveIndex(viewableItems[0].index)
+                this.setState({ crrThumb: viewableItems[0].index });
+            }
+        }
+    }
+
+    onViewableItemsChangedGallery = ({ viewableItems }) => {
+        if (viewableItems.length === 2)
+            return;
+        if (this.state.isShowFromSlider) {
+            this.setState({ isShowFromSlider: false });
+            return;
+        }
+
+
+        if (viewableItems.length === 1) {
+            const index = viewableItems[0].index;
+            this.setState({ crrThumb: index });
+            this.changeOffsetThumb(index);
+            this.setActiveIndex(index);
         }
     }
 }
