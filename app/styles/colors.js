@@ -1,8 +1,8 @@
 export const PRIMARY = 'rgba(255,194,38,1)';
-
 export const BLACK = '#000000';
 export const BLACK_05 = 'rgba(0, 0, 0, 0.5)';
 export const BLACK_08 = 'rgba(0, 0, 0, 0.8)';
+
 // GRAYSCALE
 export const GRAY_LIGHT = '#e6e6e6';
 export const GRAY_MEDIUM = '#cacaca';
@@ -54,7 +54,6 @@ export const ORANGE_1 = '#FFA803';
 // PURPLE
 
 export const JACKSONS_PURPLE = 'rgba(53,56,138,1)';
-
 export const PRUSSIAN_BLUE = 'rgba(51,88,138,1)';
 export const SILVER_TREE_LIGHT = 'rgba(150, 208, 140,1)';
 export const SILVER_TREE = 'rgba(111, 207, 151,1)';
@@ -70,11 +69,10 @@ export const NAVY_BLUE = '#0057BE';
 export const BLUE_CHALK = 'rgba(237,202,251,1)';
 export const BLUE_ASTRONAUT = 'rgba(19,69,99,1)';
 export const APPLE = '#6AB04C';
+
 // BLUE
 export const LUCKY_POINT = 'rgba(44, 48, 81,1)';
-
 export const ARAPAWA = '#2D4A64';
-
 export const PERANO = 'rgba(155,165,255,1)';
 export const CURIOUS_BLUE = 'rgba(40, 138, 214,1)';
 
@@ -93,3 +91,5 @@ export const SEA_BUCKTHORN = '#F2994A';
 
 export const MATTERHORN_1 = 'rgba(85,85,85,1)';
 export const COLOR_353638 = 'rgba(35,36,38,0.5)';
+
+export const GREEN_KEY = '#037841';
