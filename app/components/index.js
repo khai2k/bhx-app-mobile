@@ -1,5 +1,7 @@
 import NavMenu from './Shared/navMenu';
 import MyText from './MyText';
 import CodePushUpdate from './CodePushUpdate';
+import Header from './Header';
 
-export { MyText, CodePushUpdate, NavMenu };
+
+export { MyText, Header, CodePushUpdate,NavMenu };

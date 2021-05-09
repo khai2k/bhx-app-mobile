@@ -1,54 +1,30 @@
 {
-  "eslint.alwaysShowStatus": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "prettier.singleQuote": true,
+  // The number of spaces in a tab.
+  "editor.tabSize": 2,
+  // Specifies workbench icon theme.
+  "workbench.iconTheme": "vscode-icons",
+  // Format a file on save.
   "editor.formatOnSave": true,
-  "[erb]": {
-    "editor.formatOnSave": true
-  },
-  "files.autoSave": "onFocusChange",
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "prettier.trailingComma": "none",
-  "cSpell.words": [
-    "B",
-    "Bánh",
-    "Khuy",
-    "Khuyến",
-    "Mu",
-    "Muối",
-    "N",
-    "Nước",
-    "Th",
-    "Thịt",
-    "c",
-    "ch",
-    "cháo",
-    "gi",
-    "giải",
-    "i",
-    "lo",
-    "loại",
-    "m",
-    "n",
-    "ng",
-    "ngành",
-    "ngọt",
-    "nh",
-    "nhân",
-    "nhóm",
-    "o",
-    "t",
-    "tr",
-    "trứng",
-    "tươi",
-    "u",
-    "uống",
-    "Đường",
-    "đình"
-  ]
+  // Support using flow through your node_modules folder. (For Flow)
+  "flow.useNPMPackagedFlow": true,
+  // Enable/disable JavaScript validation. (For Flow)
+  "javascript.validate.enable": false,
+  // Enable/disable default JavaScript formatter. (For Prettier)
+  "javascript.format.enable": false,
+  // vscode-icons extension will restart automatically on project detection. (For vscode-icons)
+  "vsicons.projectDetection.autoReload": true,
+  // Controls how the editor should render whitespace characters.
+  "editor.renderWhitespace": "boundary",
+  // Quickly toggle between hiding and showing folders and files. (For Peep)
+  // To quickly hide/show files execute the Peep Toggle in Command Palette.
+  "files.exclude": {
+    ".*": false,
+    "ios/": false,
+    "*.lo*": false,
+    "*.json": false,
+    "LICENSE": false,
+    "android/": false,
+    "__tests__": false,
+    "node_modules/": false
+  }
 }

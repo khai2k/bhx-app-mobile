@@ -6,12 +6,7 @@ module.exports = {
         'react/jsx-props-no-spreading': ['error', { custom: 'ignore' }],
         'arrow-parens': ['error', 'always'],
         'react-native/no-inline-styles': 0,
-        'prettier/prettier': [
-            'error',
-            {
-                endOfLine: 'auto'
-            }
-        ]
+        'prettier/prettier': ['error', { endOfLine: 'auto' }]
     },
     settings: {
         'import/resolver': {
