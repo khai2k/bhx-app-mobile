@@ -94,7 +94,13 @@ export default class ProductBox extends PureComponent {
                             ? styles.unvisibleProductBuy
                             : styles.visibleProductBuy
                     }>
-                    <View className="productInfo" style={styles.productInfo}>
+                    <View
+                        className="productInfo"
+                        style={
+                            this.props.bhxProduct.isExpired
+                                ? styles.productInfoExpired
+                                : styles.productInfo
+                        }>
                         <Text style={styles.productName}>
                             {this.props.bhxProduct.shortName}
                         </Text>
@@ -112,6 +118,21 @@ export default class ProductBox extends PureComponent {
                             </View>
                         </View>
                     </View>
+                    {this.props.bhxProduct.isExpired ? (
+                        <TouchableOpacity
+                            className="nearlyExpired"
+                            style={styles.nearlyExpired}>
+                            <View style={styles.expiredLine}>
+                                <Text style={styles.expiredText}>Hoặc </Text>
+                                <Text style={styles.expiredPrice}>
+                                    MUA 4.700đ{'\n'}
+                                </Text>
+                            </View>
+                            <Text style={styles.expiredText}>
+                                HSD còn 15 ngày
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
                 </TouchableOpacity>
                 <View
                     onPress={() =>
@@ -124,7 +145,13 @@ export default class ProductBox extends PureComponent {
                             ? styles.visibleProductBuy
                             : styles.unvisibleProductBuy
                     }>
-                    <View className="productInfo" style={styles.productInfo}>
+                    <View
+                        className="productInfo"
+                        style={
+                            this.props.bhxProduct.isExpired
+                                ? styles.productInfoExpired
+                                : styles.productInfo
+                        }>
                         <Text style={styles.productNameSelected}>
                             {this.props.bhxProduct.shortName}
                         </Text>
@@ -170,6 +197,21 @@ export default class ProductBox extends PureComponent {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    {this.props.bhxProduct.isExpired ? (
+                        <TouchableOpacity
+                            className="nearlyExpired"
+                            style={styles.nearlyExpired}>
+                            <View style={styles.expiredLine}>
+                                <Text style={styles.expiredText}>Hoặc </Text>
+                                <Text style={styles.expiredPrice}>
+                                    MUA 4.700đ{'\n'}
+                                </Text>
+                            </View>
+                            <Text style={styles.expiredText}>
+                                HSD còn 15 ngày
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
             </View>
         );

@@ -3,7 +3,6 @@ export const BLACK = '#000000';
 export const BLACK_05 = 'rgba(0, 0, 0, 0.5)';
 export const BLACK_08 = 'rgba(0, 0, 0, 0.8)';
 // GRAYSCALE
-// GRAYSCALE
 export const GRAY_LIGHT = '#e6e6e6';
 export const GRAY_MEDIUM = '#cacaca';
 export const GRAY_DARK = '#8a8a8a';
@@ -20,6 +19,7 @@ export const COLOR_000000 = '#000000';
 export const TROUT = '#515764';
 export const GALLERY = '#ECECEC';
 export const MINE_SHAFT = '#333';
+export const BALI_HAI = '#8F9BB3';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';
@@ -36,6 +36,7 @@ export const CATSKILL_WHITE = '#E4E9F2';
 export const LINK_WATER = '#ECF2FB';
 export const LINK_WATER_2 = '#F5F8FD';
 export const LINK_WATER_3 = '#EBF0F9';
+export const MYSTIC = '#E1E5EE';
 
 // RED
 export const BRIGHT_RED = 'rgba(240,68,68,1)';

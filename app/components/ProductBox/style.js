@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     imageProduct: {
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
-        width: win.width / 3,
+        width: win.width / 3 - 6,
         height: ratio * 300
     },
     imgContent: {
@@ -194,6 +194,16 @@ const styles = StyleSheet.create({
     productInfo: {
         height: 32,
         position: 'relative',
+        width: '100%'
+    },
+    productInfoExpired: {
+        height: 40,
+        bottom: 65,
+        backgroundColor: Colors.WHITE,
+        padding: 0,
+        paddingTop: 3,
+        paddingBottom: 0,
+        position: 'absolute',
         width: '100%'
     },
     productName: {
@@ -296,6 +306,38 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         width: 48,
         height: 48
+    },
+    nearlyExpired: {
+        height: 31,
+        backgroundColor: Colors.MYSTIC,
+        borderBottomRightRadius: 7,
+        borderBottomLeftRadius: 7,
+        textAlign: 'center',
+        padding: 0,
+        paddingTop: 1,
+        paddingBottom: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        position: 'relative',
+        color: Colors.BALI_HAI
+    },
+    expiredLine: {
+        flexDirection: 'row'
+    },
+    expiredText: {
+        color: Colors.BALI_HAI,
+        height: 13,
+        padding: 0,
+        lineHeight: 14,
+        fontSize: 11
+    },
+    expiredPrice: {
+        color: Colors.CLOUD_BURST,
+        height: 13,
+        padding: 0,
+        lineHeight: 14,
+        fontSize: 11
     }
 });
 

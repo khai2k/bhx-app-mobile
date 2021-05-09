@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     productList: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     }
 });
 
@@ -46,6 +47,15 @@ class Product extends Component {
                     maxQuantityOnBill: 1,
                     shortName: '100 gói mì tôm đặc biệt Miliket 65g',
                     price: '228.000đ'
+                },
+                {
+                    expiredDateDisplay: '6 tháng',
+                    avatar:
+                        'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg',
+                    maxQuantityOnBill: 0,
+                    shortName: 'Phở chay vina Bích Chi gói 60g',
+                    price: '4.700đ',
+                    isExpired: true
                 }
             ]
         };
