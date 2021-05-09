@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, StyleSheet } from 'react-native';
 import { translate } from '@app/translate';
+import { Header } from '@app/components';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.WHITE,
-        flexWrap: 'wrap',
+        flex: 1
+    },
+    productList: {
         flexDirection: 'row'
     }
 });
@@ -27,11 +29,11 @@ class Product extends Component {
         // );
         return (
             <View style={styles.container}>
-                <ProductBox />
-                <ProductBox />
-                <ProductBox />
-                <ProductBox />
-                <ProductBox />
+                <Header />
+                <View style={styles.productList}>
+                    <ProductBox />
+                    <ProductBox />
+                </View>
             </View>
         );
     }

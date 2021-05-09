@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, Button } from 'react-native';
+import { Header } from '@app/components';
 
 const white = 'red';
 const styles = StyleSheet.create({
@@ -19,6 +20,7 @@ class Profile extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Header></Header>
                 <Button
                     onPress={() =>
                         this.props.navigation.navigate('ProductDetail')

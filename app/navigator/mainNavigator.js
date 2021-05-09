@@ -12,6 +12,7 @@ import ProductDetail from '../container/productDetail';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
 import { translate } from '@app/translate';
+import { Header } from '@app/components';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -25,7 +26,7 @@ const MainNavigator = () => {
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
-                    return { title: 'Bách hóa xanh' };
+                    return { headerShown: false };
                 }}
             />
             <MainStack.Screen
@@ -34,7 +35,7 @@ const MainNavigator = () => {
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
-                    return { title: 'Chi tiết sản phẩm' };
+                    return { headerShown: false };
                 }}
             />
         </MainStack.Navigator>

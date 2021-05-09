@@ -40,8 +40,10 @@ const styles = StyleSheet.create({
     down: {
         backgroundColor: Colors.WHITE,
         borderColor: Colors.GALLERY,
-        borderTopWidth: 0,
         borderWidth: 1,
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderBottomWidth: 0,
         fontStyle: 'normal',
         height: 34,
         lineHeight: 30,
@@ -50,11 +52,23 @@ const styles = StyleSheet.create({
         width: '33%',
         borderBottomLeftRadius: 8
     },
+    downIcon: {
+        width: 14,
+        height: 2,
+        backgroundColor: Colors.EUCALYPTUS,
+        marginTop: 15,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: 15,
+        borderRadius: 4
+    },
     up: {
         backgroundColor: Colors.WHITE,
         borderColor: Colors.GALLERY,
-        borderTopWidth: 0,
         borderWidth: 1,
+        borderTopWidth: 0,
+        borderRightWidth: 0,
+        borderBottomWidth: 0,
         fontStyle: 'normal',
         height: 34,
         lineHeight: 30,
@@ -63,16 +77,41 @@ const styles = StyleSheet.create({
         width: '33%',
         borderBottomRightRadius: 8
     },
+    upIcon1: {
+        width: 14,
+        height: 2,
+        backgroundColor: Colors.EUCALYPTUS,
+        marginTop: 15,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: 15,
+        borderRadius: 4
+    },
+    upIcon2: {
+        width: 2,
+        height: 14,
+        backgroundColor: Colors.EUCALYPTUS,
+        marginTop: -23,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginBottom: 0,
+        borderRadius: 4
+    },
     inputBuy: {
         fontSize: 16,
         color: Colors.MINE_SHAFT,
         width: '33%',
-        height: 34,
         textAlign: 'center',
-        lineHeight: 30,
         borderWidth: 0,
         borderRadius: 0,
-        backgroundColor: Colors.LINK_WATER_2
+        borderColor: Colors.GALLERY,
+        backgroundColor: Colors.LINK_WATER_2,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        height: 34,
+        lineHeight: 30,
+        padding: 0,
+        margin: 0
     },
     imageProduct: {
         borderTopLeftRadius: 7,
@@ -127,6 +166,24 @@ const styles = StyleSheet.create({
         width: win.width / 3 - 6,
         height: 'auto'
     },
+    productSelected: {
+        backgroundColor: Colors.WHITE,
+        borderColor: Colors.TROPICAL_RAIN_FOREST,
+        borderRadius: 8,
+        borderWidth: 1,
+        marginBottom: 0,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 7,
+        minHeight: 175,
+        padding: 0,
+        position: 'relative',
+        shadowColor: Colors.LINK_WATER,
+        shadowOffset: { height: 3, width: 0 },
+        shadowOpacity: 0.5,
+        width: win.width / 3 - 6,
+        height: 'auto'
+    },
     productImg: {
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
@@ -149,6 +206,28 @@ const styles = StyleSheet.create({
         padding: 3,
         textAlign: 'center',
         width: '100%'
+    },
+    productNameSelected: {
+        backgroundColor: Colors.WHITE,
+        color: Colors.TROUT,
+        fontSize: 12,
+        lineHeight: 14,
+        overflow: 'hidden',
+        padding: 3,
+        textAlign: 'center',
+        width: '100%',
+        height: 16,
+        margin: 0,
+        padding: 0,
+        paddingTop: 2
+    },
+    priceSelected: {
+        textAlign: 'center',
+        fontSize: 12,
+        color: Colors.CLOUD_BURST,
+        height: 15,
+        width: '100%',
+        backgroundColor: Colors.WHITE
     },
     upDown: {
         display: 'none'
@@ -175,6 +254,28 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         overflow: 'hidden',
         height: 18
+    },
+    visibleProductBuy: {
+        display: 'flex'
+    },
+    unvisibleProductBuy: {
+        display: 'none'
+    },
+    boxExpired: {
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        position: 'absolute',
+        zIndex: 1,
+        width: '100%',
+        height: 20,
+        textAlign: 'center',
+        backgroundColor: Colors.TROUT,
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 10,
+        color: Colors.WHITE,
+        padding: 3,
+        opacity: 0.9
     }
 });
 

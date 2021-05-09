@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { CodePushUpdate } from '@app/components';
 import { store } from './store';
 import AppContainer from './navigator/appNavigator';
+import { Colors } from '@app/styles';
 
 const styles = StyleSheet.create({
     container: {
@@ -18,9 +19,9 @@ class App extends Component {
             <SafeAreaProvider>
                 <View style={styles.container}>
                     <StatusBar
-                        barStyle="dark-content"
+                        barStyle="hight-content"
                         translucent
-                        backgroundColor="transparent"
+                        backgroundColor={Colors.GREEN_KEY}
                     />
                     <Provider store={store}>
                         <AppContainer />
