@@ -31,21 +31,18 @@ export default class ProductBox extends PureComponent {
                     style={styles.productImg}>
                     <View className="boxImg" style={styles.boxImg}>
                         <Text className="boxExpired" style={styles.boxExpired}>
-                            HSD còn 5 tháng
+                            HSD còn {this.props.bhxProduct.expiredDateDisplay}
                         </Text>
                         <View className="imgContent" style={styles.imgContent}>
                             <Image
                                 style={styles.imageProduct}
-                                source={{
-                                    uri:
-                                        'https://cdn.tgdd.vn/Products/Images/2386/219025/bhx/sua-tuoi-nguyen-kem-khong-duong-inex-hop-1-lit-202104081044194338_300x300.jpg'
-                                }}
-                                resizeMode="contain"
+                                source={{ uri: this.props.bhxProduct.avatar }}
                             />
                         </View>
                         <View className="boxLabel" style={styles.boxLabel}>
                             <Text style={styles.boxLabelText}>
-                                Tối đa 3SP/đơn
+                                Tối đa {this.props.bhxProduct.maxQuantityOnBill}
+                                SP/đơn
                             </Text>
                         </View>
                     </View>
@@ -64,7 +61,7 @@ export default class ProductBox extends PureComponent {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productName}>
-                            Mì tôm chua cay Hảo Hảo
+                            {this.props.bhxProduct.shortName}
                         </Text>
                         {/* <View className="price">
                                 <Text>3.000đ</Text>
@@ -73,7 +70,7 @@ export default class ProductBox extends PureComponent {
                     <View className="boxBuy" style={styles.boxBuy}>
                         <View className="priceInfo" style={styles.priceInfo}>
                             <View className="price" style={styles.price}>
-                                <Text>3.000đ</Text>
+                                <Text>{this.props.bhxProduct.price}</Text>
                             </View>
                             <View className="buy" style={styles.buy}>
                                 <Text>MUA</Text>
@@ -94,10 +91,10 @@ export default class ProductBox extends PureComponent {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productNameSelected}>
-                            Mì tôm chua cay Hảo Hảo
+                            {this.props.bhxProduct.shortName}
                         </Text>
                         <Text className="price" style={styles.priceSelected}>
-                            3.000đ
+                            {this.props.bhxProduct.price}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
