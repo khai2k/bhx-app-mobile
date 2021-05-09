@@ -2,7 +2,7 @@
   // The number of spaces in a tab.
   "editor.tabSize": 2,
   // Specifies workbench icon theme.
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "vscode-icons",
   // Format a file on save.
   "editor.formatOnSave": true,
   // Support using flow through your node_modules folder. (For Flow)
