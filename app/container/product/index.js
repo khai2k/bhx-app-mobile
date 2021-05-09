@@ -32,9 +32,12 @@ class Product extends Component {
                     expiredDateDisplay: '3 tháng',
                     avatar:
                         'https://cdn.tgdd.vn/Products/Images/2947/79219/bhx/sua-trai-cay-nutriboost-huong-dau-1-lit-202103290229582034_300x300.jpg',
-                    maxQuantityOnBill: 5,
+                    maxQuantityOnBill: 0,
                     shortName: 'Sữa trái cây Nutriboost dâu 1 lít',
-                    price: '19.000đ'
+                    price: '19.000đ',
+                    promotionText: 'Mua 1 tặng quà',
+                    promotionGiftImgs:
+                        'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg'
                 },
                 {
                     expiredDateDisplay: '23 ngày',

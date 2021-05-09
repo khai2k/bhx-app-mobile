@@ -253,7 +253,8 @@ const styles = StyleSheet.create({
         paddingTop: 0,
         borderTopRightRadius: 8,
         overflow: 'hidden',
-        height: 18
+        height: 18,
+        zIndex: 1
     },
     visibleProductBuy: {
         display: 'flex'
@@ -275,7 +276,26 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: Colors.WHITE,
         padding: 3,
-        opacity: 0.9
+        opacity: 0.8
+    },
+    imagePromotion: {
+        padding: 0,
+        paddingLeft: 3,
+        paddingRight: 3,
+        borderBottomRightRadius: 7,
+        borderBottomLeftRadius: 7,
+        zIndex: 0,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        borderWidth: 1,
+        borderColor: Colors.MONZA,
+        backgroundColor: Colors.WHITE,
+        shadowColor: Colors.LINK_WATER,
+        shadowOffset: { height: 3, width: 0 },
+        shadowOpacity: 0.5,
+        width: 48,
+        height: 48
     }
 });
 

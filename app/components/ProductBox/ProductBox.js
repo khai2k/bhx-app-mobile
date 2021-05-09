@@ -15,6 +15,46 @@ export default class ProductBox extends PureComponent {
             numberItems: +number
         });
     };
+    boxLabel() {
+        if (this.props.bhxProduct.maxQuantityOnBill > 0)
+            return (
+                <View className="boxLabel" style={styles.boxLabel}>
+                    <Text style={styles.boxLabelText}>
+                        Tối đa {this.props.bhxProduct.maxQuantityOnBill}
+                        SP/đơn
+                    </Text>
+                </View>
+            );
+        else if (this.props.bhxProduct.promotionText)
+            return (
+                <View className="boxLabel" style={styles.boxLabel}>
+                    <Text style={styles.boxLabelText}>
+                        {this.props.bhxProduct.promotionText}
+                    </Text>
+                    {this.props.bhxProduct.promotionGiftImgs !== null &&
+                    this.props.bhxProduct.promotionGiftImgs.trim().length >
+                        0 ? (
+                        <Image
+                            style={styles.imagePromotion}
+                            source={{
+                                uri: this.props.bhxProduct.promotionGiftImgs
+                            }}
+                        />
+                    ) : null}
+                </View>
+            );
+        if (
+            this.props.bhxProduct.isPreOrder &&
+            this.props.bhxProduct.preAmount > 0
+        )
+            return (
+                <View className="boxLabel" style={styles.boxLabel}>
+                    <Text style={styles.boxLabelText}>
+                        Còn {this.props.bhxProduct.preAmount} túi
+                    </Text>
+                </View>
+            );
+    }
     render() {
         return (
             <View
@@ -39,13 +79,8 @@ export default class ProductBox extends PureComponent {
                                 source={{ uri: this.props.bhxProduct.avatar }}
                             />
                         </View>
-                        <View className="boxLabel" style={styles.boxLabel}>
-                            <Text style={styles.boxLabelText}>
-                                Tối đa {this.props.bhxProduct.maxQuantityOnBill}
-                                SP/đơn
-                            </Text>
-                        </View>
                     </View>
+                    {this.boxLabel()}
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() =>

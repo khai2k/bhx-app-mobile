@@ -42,6 +42,7 @@ export const BRIGHT_RED = 'rgba(240,68,68,1)';
 export const CORAL_RED = '#F04444';
 export const RADICAL_RED = '#FB325D';
 export const ORCHID = '#DE7BD7';
+export const MONZA = '#C50017';
 
 // FONT
 export const PRIMARY_COLOR_FONT = 'rgba(109,109,109,1)';
