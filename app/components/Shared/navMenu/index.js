@@ -1,66 +1,144 @@
-import React, { PureComponent } from 'react';
-import { TouchableOpacity, View, Text, Image, FlatList } from 'react-native';
-import styles from './styles';
+import React, { useState } from 'react';
+import {
+    TouchableOpacity,
+    View,
+    Text,
+    Image,
+    FlatList,
+    TextInput,
+    ScrollView,
+    SectionList
+} from 'react-native';
+import { styles } from './styles';
+import { ImageNavMenu, ImageCateDemo } from '../../../images';
+import * as action from './action';
 
 const ListCate = [
-    { key: 'Thịt, cá, rau, trứng' },
-    { key: 'Đồ uống các loại' },
-    { key: 'Sữa uống các loại' },
-    { key: 'Bánh kẹo các loại' },
-    { key: 'Mì cháo phở bún' },
-    { key: 'Dầu ăn gia vị' },
-    { key: 'Vệ sinh nhà cửa' },
-    { key: 'Đồ dùng cá nhân' },
-    { key: 'Đồ dùng gia đình' },
-    { key: 'Khuyến mãi hot' }
+    {
+        Id: '1100',
+        TextName: 'Thịt, cá, tôm, trứng',
+        ChildCategory: [
+            {
+                Id: '1101',
+                TextName: 'Thịt tươi sống',
+                UrlImage: ImageCateDemo.imgCate1
+            },
+            {
+                Id: '1102',
+                TextName: 'Tôm tươi sống',
+                UrlImage: ImageCateDemo.imgCate2
+            },
+            {
+                Id: '1103',
+                TextName: 'Cá tươi sống',
+                UrlImage: ImageCateDemo.imgCate3
+            }
+        ]
+    },
+    {
+        Id: '1200',
+        TextName: 'Đồ uống các loại',
+        ChildCategory: [
+            {
+                Id: '1201',
+                TextName: 'Nước ngọt có ga',
+                UrlImage: ImageCateDemo.imgCate4
+            },
+            {
+                Id: '1202',
+                TextName: 'Nước trà giải khát',
+                UrlImage: ImageCateDemo.imgCate5
+            },
+            {
+                Id: '1203',
+                TextName: 'Trà sữa đóng chai',
+                UrlImage: ImageCateDemo.imgCate6
+            }
+        ]
+    },
+    {
+        Id: '1300',
+        TextName: 'Dầu ăn, gia vị',
+        ChildCategory: [
+            {
+                Id: '1301',
+                TextName: 'Dầu ăn',
+                UrlImage: ImageCateDemo.imgCate7
+            },
+            {
+                Id: '1302',
+                TextName: 'Muối',
+                UrlImage: ImageCateDemo.imgCate8
+            },
+            {
+                Id: '1303',
+                TextName: 'Đường',
+                UrlImage: ImageCateDemo.imgCate9
+            }
+        ]
+    },
+    {
+        Id: '1400',
+        TextName: 'Khuyến mãi hot',
+        ChildCategory: null
+    }
 ];
 
-const imgIconClose = require('../../../../assets/Images/Icon/IconClose.png');
-const imgIconPromotion = require('../../../../assets/Images/Icon/IconPromotion.png');
-const imgIconHome = require('../../../../assets/Images/Icon/IconHome.png');
-
-const renderCateItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemCate}>
-        {item.key === 'Khuyến mãi hot' ? (
-            <Image style={styles.iconPromotion} source={imgIconPromotion} />
-        ) : null}
-        <Text style={styles.txtCate}>{item.key}</Text>
-    </TouchableOpacity>
-);
-
-class NavMenu extends PureComponent {
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.navLeft}>
-                    <View style={styles.navLeftTop}>
-                        <TouchableOpacity style={styles.btnClose}>
-                            <Image
-                                style={styles.iconClose}
-                                source={imgIconClose}
-                            />
-                            <Text style={styles.textBtnClose}>Đóng</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnHome}>
-                            <Image
-                                source={imgIconHome}
-                                style={styles.iconHome}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                    <FlatList
-                        style={styles.navLeftBottom}
-                        data={ListCate}
-                        renderItem={renderCateItem}
+const NavMenu = () => {
+    const [textSearch, setTextSearch] = useState('');
+    // const [cateIndex, setCateIndex] = useState('1100');
+    return (
+        <View style={styles.container}>
+            <View style={styles.navLeft}>
+                <View style={styles.navLeftTop}>
+                    <TouchableOpacity style={styles.btnClose}>
+                        <Image
+                            style={styles.iconClose}
+                            source={ImageNavMenu.imgIconClose}
+                        />
+                        <Text style={styles.textBtnClose}>Đóng</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnHome}>
+                        <Image
+                            source={ImageNavMenu.imgIconHome}
+                            style={styles.iconHome}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <FlatList
+                    style={styles.navLeftBottom}
+                    data={ListCate}
+                    renderItem={action.renderCateItem}
+                />
+            </View>
+            <View style={styles.navRight}>
+                <View style={styles.navRightTop}>
+                    <TextInput
+                        style={styles.inputSearch}
+                        placeholder="Tìm nhóm hàng"
+                        onChangeText={() => setTextSearch(textSearch)}
+                    />
+                    <Image
+                        style={styles.iconSearch}
+                        source={ImageNavMenu.imgIconSearch}
                     />
                 </View>
-                <View style={styles.navRight}>
-                    <View style={styles.navRightTop} />
-                    <View style={styles.navRightBottom} />
-                </View>
+                <ScrollView>
+                    {/* <FlatList
+                        style={styles.navRightBottom}
+                        data={ListCate}
+                        renderItem={action.renderCateChildItem}
+                    /> */}
+                    <SectionList
+                        sections={ListCate}
+                        renderItem={({ item }) => (
+                            <action.renderCateChildItem ChildCategory={item} />
+                        )}
+                    />
+                </ScrollView>
             </View>
-        );
-    }
-}
+        </View>
+    );
+};
 
 export default NavMenu;

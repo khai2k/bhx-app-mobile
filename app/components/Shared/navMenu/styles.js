@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Colors } from '../../../styles';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     btnClose: {
         alignItems: 'center',
         borderBottomColor: Colors.GRAY_E4E9F2,
@@ -40,6 +40,22 @@ const styles = StyleSheet.create({
         marginRight: 7,
         width: 16
     },
+    iconSearch: {
+        position: 'absolute',
+        resizeMode: 'contain',
+        right: 30,
+        top: 10,
+        width: 20
+    },
+    inputSearch: {
+        borderColor: Colors.GRAY_8F9BB3,
+        borderRadius: 8,
+        borderWidth: 1,
+        flex: 8,
+        height: 40,
+        paddingLeft: 20,
+        paddingRight: 50
+    },
     itemCate: {
         flexDirection: 'row',
         padding: 15
@@ -61,8 +77,17 @@ const styles = StyleSheet.create({
     },
     navRight: {
         backgroundColor: Colors.WHITE,
-        flex: 3,
-        flexDirection: 'row-reverse'
+        flex: 3
+    },
+    navRightBottom: {},
+    navRightTop: {
+        flexDirection: 'row',
+        height: 40,
+        paddingBottom: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        position: 'relative'
     },
     textBtnClose: {
         color: Colors.GRAY_222B45,
@@ -76,4 +101,3 @@ const styles = StyleSheet.create({
         lineHeight: 17
     }
 });
-export default styles;

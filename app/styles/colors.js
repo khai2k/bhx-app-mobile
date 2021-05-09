@@ -99,3 +99,4 @@ export const COLOR_353638 = 'rgba(35,36,38,0.5)';
 
 // GREEN
 export const GREEN_00AC5B = '#00AC5B';
+export const GRAY_8F9BB3 = '#8F9BB3';
