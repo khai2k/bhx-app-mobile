@@ -3,8 +3,14 @@ import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { Mixins, Colors, Typography } from '@app/styles';
 import { HeaderTop } from './HeaderTop';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { translate } from '@app/translate';
 
-export default class Header extends Component {
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  
   render() {
     return (
       <SafeAreaView>
@@ -18,15 +24,15 @@ export default class Header extends Component {
         </View>
         <View style={styles.boxinfo}>
           <View style={styles.boxdelivery}>
-            <Text style={styles.textcolor}>Giao tại</Text>
+            <Text style={styles.textcolor}>{translate('Header_DeliveryAddress')}</Text>
             <Text style={styles.textcolor} numberOfLines={1}>Buôn mê thuộc</Text>
           </View>
           <View style={styles.boxhistory}>
-            <Text style={styles.historyorder}>Đơn hàng từng mua</Text>
+            <Text style={styles.historyorder}>{translate('Header_HistoryAccount')}</Text>
           </View>
           <View style={styles.boxcart}>
             <View style={styles.boxcartprice}>
-              <Text style={styles.textcolor}>Thanh toán</Text>
+              <Text style={styles.textcolor}>{translate('Header_Cart')}</Text>
               <Text style={styles.textcolor}>10.000.000đ</Text>
             </View>
             <View style={styles.boxnumber}>
@@ -106,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',    
   },
   input:{
-    paddingLeft: 2,
+    paddingLeft: 5,
   },
   
   iconsearch:{
@@ -159,3 +165,5 @@ const styles = StyleSheet.create({
   }
 
 });
+
+export default Header;
