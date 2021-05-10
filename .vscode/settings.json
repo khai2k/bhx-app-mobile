@@ -26,5 +26,8 @@
     "android/": false,
     "__tests__": false,
     "node_modules/": false
-  }
+  },
+  "cSpell.words": [
+    "silder"
+  ]
 }

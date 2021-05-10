@@ -5,14 +5,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { translate } from '@app/translate';
+// import { Header } from '@app/components';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
 import ProductDetail from '../container/productDetail';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import { translate } from '@app/translate';
-import { Header } from '@app/components';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -67,32 +67,38 @@ const MainDrawer = () => {
 class MainTabComponent extends Component {
     render() {
         return (
-            <Tab.Navigator initialRouteName="Product" 
+            <Tab.Navigator
+                initialRouteName="Product"
                 screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, image, color }) => {
+                    tabBarIcon: ({ focused, image }) => {
                         if (route.name === 'Product') {
                             image = focused
-                                ? require('../../assets/images/grid.png')
-                                : require('../../assets/images/grid.png');
+                                ? require('../../assets/Images/grid.png')
+                                : require('../../assets/Images/grid.png');
                         } else if (route.name === 'Promotion') {
-                            image = focused 
-                                ? require('../../assets/images/promotion.png') 
-                                : require('../../assets/images/promotion.png');
+                            image = focused
+                                ? require('../../assets/Images/promotion.png')
+                                : require('../../assets/Images/promotion.png');
                         } else if (route.name === 'Notification') {
-                            image = focused 
-                                ? require('../../assets/images/notification.png') 
-                                : require('../../assets/images/notification.png');
+                            image = focused
+                                ? require('../../assets/Images/notification.png')
+                                : require('../../assets/Images/notification.png');
                         } else if (route.name === 'Profile') {
-                            image = focused 
-                                ? require('../../assets/images/user.png') 
-                                : require('../../assets/images/user.png');
-                        }          
-                        return <Image source={image} style={{width: 20, height: 20}} />;
-                    },
+                            image = focused
+                                ? require('../../assets/Images/user.png')
+                                : require('../../assets/Images/user.png');
+                        }
+                        return (
+                            <Image
+                                source={image}
+                                style={{ width: 20, height: 20 }}
+                            />
+                        );
+                    }
                 })}
                 tabBarOptions={{
                     activeTintColor: 'red',
-                    inactiveTintColor: 'gray',
+                    inactiveTintColor: 'gray'
                 }}>
                 <Tab.Screen
                     name="Product"

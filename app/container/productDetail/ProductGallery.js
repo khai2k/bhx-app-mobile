@@ -11,22 +11,24 @@ import {
     Modal,
     StatusBar,
     SafeAreaView
-} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { ScrollView } from 'react-native-gesture-handler'
-import Carousel from 'react-native-snap-carousel'
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ScrollView } from 'react-native-gesture-handler';
+// import Carousel from 'react-native-snap-carousel'
 
-const THUMB_SIZE = 50
-const { width, height } = Dimensions.get('window')
-const IMG_HEIGHT = width * .75
+const THUMB_SIZE = 50;
+const { width, height } = Dimensions.get('window');
+const IMG_HEIGHT = width * 0.75;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 export default class ProductGallery extends Component {
-    silderRef = createRef()
-    galleryRef = createRef()
-    thumbRef = createRef()
+    silderRef = createRef();
+
+    galleryRef = createRef();
+
+    thumbRef = createRef();
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             data: [
                 {
@@ -66,15 +68,15 @@ export default class ProductGallery extends Component {
             isShowModal: false,
             crrThumb: 0,
             isShowFromSlider: false
-        }
+        };
         if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental(true)
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }
 
     render() {
-        const { data, crrImgIdx, isShowModal } = this.state
-        const DATA_IMAGES_LENGTH = data.length
+        const { data, crrImgIdx, isShowModal } = this.state;
+        const DATA_IMAGES_LENGTH = data.length;
 
         return (
             <ScrollView style={{ width: width, marginTop: STATUSBAR_HEIGHT }}>
