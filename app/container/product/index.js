@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet } from 'react-native';
-import { translate } from '@app/translate';
+import { View, StyleSheet, ScrollView } from 'react-native';
+// import { translate } from '@app/translate';
 import { Header } from '@app/components';
 import ProductBox from '../../components/ProductBox/ProductBox';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+// import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import ListCategory from './ListCategory';
+import SliderTitle from './SliderTitle';
 
 const styles = StyleSheet.create({
     container: {
@@ -64,20 +65,16 @@ class Product extends Component {
     }
 
     render() {
-        // return (
-        //     <View style={styles.container}>
-        //         <Text style={{fontSize: 30}}>{translate('Product')}</Text>
-        //     </View>
-        // );
         return (
             <View style={styles.container}>
                 <Header />
+                <SliderTitle />
+                <ListCategory />
                 <View style={styles.productList}>
-                    {this.state.listProducts.map((product, i) => {
+                    {this.state.listProducts.map((product) => {
                         return <ProductBox bhxProduct={product} />;
                     })}
                 </View>
-                <ListCategory />
             </View>
         );
     }
