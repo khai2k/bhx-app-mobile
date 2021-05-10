@@ -6,8 +6,7 @@ import {
     Image,
     FlatList,
     TextInput,
-    ScrollView,
-    SectionList
+    ScrollView
 } from 'react-native';
 import { styles } from './styles';
 import { ImageNavMenu, ImageCateDemo } from '../../../images';
@@ -124,16 +123,10 @@ const NavMenu = () => {
                     />
                 </View>
                 <ScrollView>
-                    {/* <FlatList
+                    <FlatList
                         style={styles.navRightBottom}
                         data={ListCate}
                         renderItem={action.renderCateChildItem}
-                    /> */}
-                    <SectionList
-                        sections={ListCate}
-                        renderItem={({ item }) => (
-                            <action.renderCateChildItem ChildCategory={item} />
-                        )}
                     />
                 </ScrollView>
             </View>
