@@ -6,7 +6,8 @@ import {
     Image,
     FlatList,
     TextInput,
-    ScrollView
+    ScrollView,
+    SectionList
 } from 'react-native';
 import { styles } from './styles';
 import { ImageNavMenu, ImageCateDemo } from '../../../images';
@@ -16,7 +17,7 @@ const ListCate = [
     {
         Id: '1100',
         TextName: 'Thịt, cá, tôm, trứng',
-        ChildCategory: [
+        data: [
             {
                 Id: '1101',
                 TextName: 'Thịt tươi sống',
@@ -37,7 +38,7 @@ const ListCate = [
     {
         Id: '1200',
         TextName: 'Đồ uống các loại',
-        ChildCategory: [
+        data: [
             {
                 Id: '1201',
                 TextName: 'Nước ngọt có ga',
@@ -58,7 +59,7 @@ const ListCate = [
     {
         Id: '1300',
         TextName: 'Dầu ăn, gia vị',
-        ChildCategory: [
+        data: [
             {
                 Id: '1301',
                 TextName: 'Dầu ăn',
@@ -79,7 +80,7 @@ const ListCate = [
     {
         Id: '1400',
         TextName: 'Khuyến mãi hot',
-        ChildCategory: null
+        data: []
     }
 ];
 
@@ -122,11 +123,17 @@ const NavMenu = () => {
                         source={ImageNavMenu.imgIconSearch}
                     />
                 </View>
-                <ScrollView>
-                    <FlatList
-                        style={styles.navRightBottom}
-                        data={ListCate}
-                        renderItem={action.renderCateChildItem}
+                <ScrollView style={styles.navRightBottom}>
+                    <SectionList
+                        sections={ListCate}
+                        renderItem={({ item }) => {
+                            return (
+                                <action.renderCateChildItem
+                                    TextName={item.TextName}
+                                    UrlImage={item.UrlImage}
+                                />
+                            );
+                        }}
                     />
                 </ScrollView>
             </View>

@@ -26,6 +26,10 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         flex: 1
     },
+    iconCateChild: {
+        resizeMode: 'contain',
+        width: 60
+    },
     iconClose: {
         height: 16,
         marginRight: 7,
@@ -65,6 +69,13 @@ export const styles = StyleSheet.create({
         borderLeftColor: Colors.GREEN_00AC5B,
         borderLeftWidth: 5
     },
+    itemCateChild: {
+        alignItems: 'center',
+        backgroundColor: Colors.BLUE_ASTRONAUT,
+        height: 80,
+        justifyContent: 'center',
+        width: 80
+    },
     navLeft: {
         flex: 2
     },
@@ -79,7 +90,10 @@ export const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE,
         flex: 3
     },
-    navRightBottom: {},
+    navRightBottom: {
+        backgroundColor: Colors.CORAL_RED,
+        marginTop: 5
+    },
     navRightTop: {
         flexDirection: 'row',
         height: 40,

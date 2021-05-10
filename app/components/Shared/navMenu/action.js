@@ -25,16 +25,9 @@ export const renderCateItem = ({ item }) => (
 //     </TouchableOpacity>
 // );
 
-export const renderCateChildItem = ({ ChildCategory }) => (
+export const renderCateChildItem = ({ TextName, UrlImage }) => (
     <TouchableOpacity style={styles.itemCateChild}>
-        <Image
-            style={styles.iconCateChild}
-            source={
-                ChildCategory != null && ChildCategory.UrlImage != null
-                    ? ChildCategory.UrlImage
-                    : ''
-            }
-        />
-        <Text style={styles.txtCateChild}>{ChildCategory.TextName}</Text>
+        <Image style={styles.iconCateChild} source={UrlImage} />
+        <Text style={styles.txtCateChild}>{TextName}</Text>
     </TouchableOpacity>
 );
