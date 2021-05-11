@@ -14,7 +14,10 @@ import {
     SafeAreaView
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ImageZoom from 'react-native-image-pan-zoom';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import FakeData from './FakeData';
 
 const THUMB_SIZE = 50;
 const { width, height } = Dimensions.get('window');
@@ -30,44 +33,12 @@ export default class ProductGallery extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-202103162327047901.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281438314972.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281439182449.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/88223/bhx/thung-24-chai-budweiser-330ml-201905281439185091.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/thung-24-lon-strongbow-dau-den-330ml-202103162237023532.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/nuoc-ep-len-men-strongbow-dark-fruit-thung-24-lon-1511201815836.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/nuoc-ep-len-men-strongbow-dark-fruit-thung-24-lon-1511201815843.jpg'
-                },
-                {
-                    uri:
-                        'https://cdn.tgdd.vn/Products/Images/2282/193600/bhx/thung-24-lon-strongbow-dau-den-330ml-201905221021440177.jpg'
-                }
-            ],
+            data: FakeData,
             crrImgIdx: 0,
             isShowModal: false,
             crrThumb: 0,
-            isShowFromSlider: false
+            isShowFromSlider: false,
+            scroll: true
         };
         if (Platform.OS === 'android') {
             UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -192,10 +163,8 @@ export default class ProductGallery extends Component {
                             visible={isShowModal}
                             onRequestClose={() => this.setModalVisible(false)}
                             onShow={() => this.onModalChangingShow()}
-                            swipeDirection="bottom"
                             swipeThreshold={50}
                             animationType="slide"
-                            onSwipeComplete={() => this.setModalVisible(false)}
                             style={{ width, height }}>
                             <View style={{ width, height }}>
                                 <FlatList
@@ -206,13 +175,13 @@ export default class ProductGallery extends Component {
                                         flexGrow: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        backgroundColor: '#999999'
+                                        backgroundColor: '#000'
                                     }}
                                     snapToInterval={width}
                                     bounces={false}
                                     decelerationRate="fast"
                                     viewAbilityConfig={{
-                                        viewAreaCoveragePercentThreshold: 50
+                                        viewAreaCoveragePercentThreshold: 25
                                     }}
                                     data={data}
                                     ref={this.galleryRef}
@@ -223,15 +192,43 @@ export default class ProductGallery extends Component {
                                     onViewableItemsChanged={
                                         this.onViewableItemsChangedGallery
                                     }
+                                    scrollEnabled={this.state.scroll}
                                     renderItem={({ item }) => {
                                         return (
-                                            <Image
-                                                style={{
-                                                    width,
-                                                    height: IMG_HEIGHT
+                                            <ImageZoom
+                                                cropWidth={
+                                                    Dimensions.get('window')
+                                                        .width
+                                                }
+                                                cropHeight={
+                                                    Dimensions.get('window')
+                                                        .height
+                                                }
+                                                enableSwipeDown
+                                                onSwipeDown={() =>
+                                                    this.setModalVisible(false)
+                                                }
+                                                panToMove={!this.state.scroll}
+                                                onMove={({ scale }) => {
+                                                    this.setState({
+                                                        scroll: scale === 1
+                                                    });
                                                 }}
-                                                source={{ uri: item.uri }}
-                                            />
+                                                minScale={1}
+                                                swipeDownThreshold={100}
+                                                imageWidth={width}
+                                                imageHeight={IMG_HEIGHT}>
+                                                <Image
+                                                    source={{
+                                                        uri: item.uri
+                                                    }}
+                                                    style={{
+                                                        width,
+                                                        height: IMG_HEIGHT
+                                                    }}
+                                                    resizeMode="contain"
+                                                />
+                                            </ImageZoom>
                                         );
                                     }}
                                 />
