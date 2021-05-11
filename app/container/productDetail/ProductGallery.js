@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react'
+import React, { Component, createRef } from 'react';
 import {
     Dimensions,
     View,
@@ -10,23 +10,25 @@ import {
     StyleSheet,
     Modal,
     StatusBar,
+    Platform,
     SafeAreaView
-} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { ScrollView } from 'react-native-gesture-handler'
-import Carousel from 'react-native-snap-carousel'
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const THUMB_SIZE = 50
-const { width, height } = Dimensions.get('window')
-const IMG_HEIGHT = width * .75
+const THUMB_SIZE = 50;
+const { width, height } = Dimensions.get('window');
+const IMG_HEIGHT = width * 0.75;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 export default class ProductGallery extends Component {
-    silderRef = createRef()
-    galleryRef = createRef()
-    thumbRef = createRef()
+    silderRef = createRef();
+
+    galleryRef = createRef();
+
+    thumbRef = createRef();
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             data: [
                 {
@@ -66,35 +68,37 @@ export default class ProductGallery extends Component {
             isShowModal: false,
             crrThumb: 0,
             isShowFromSlider: false
-        }
+        };
         if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental(true)
+            UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }
 
     render() {
-        const { data, crrImgIdx, isShowModal } = this.state
-        const DATA_IMAGES_LENGTH = data.length
+        const { data, crrImgIdx, isShowModal } = this.state;
+        const DATA_IMAGES_LENGTH = data.length;
 
         return (
-            <ScrollView style={{ width: width, marginTop: STATUSBAR_HEIGHT }}>
+            <ScrollView style={{ width, marginTop: STATUSBAR_HEIGHT }}>
                 <View>
                     <View>
                         <FlatList
                             ref={this.silderRef}
-                            style={{ width: width, height: IMG_HEIGHT }}
+                            style={{ width, height: IMG_HEIGHT }}
                             snapToInterval={width}
                             bounces={false}
-                            decelerationRate='fast'
+                            decelerationRate="fast"
                             viewAbilityConfig={{
                                 viewAreaCoveragePercentThreshold: 50
                             }}
                             data={data}
-                            keyExtractor={item => item.uri}
+                            keyExtractor={(item) => item.uri}
                             horizontal
                             pagingEnabled
                             showsHorizontalScrollIndicator={false}
-                            onViewableItemsChanged={this.onViewableItemsChangedSlider}
+                            onViewableItemsChanged={
+                                this.onViewableItemsChangedSlider
+                            }
                             renderItem={({ item }) => {
                                 return (
                                     <TouchableOpacity
@@ -103,18 +107,18 @@ export default class ProductGallery extends Component {
                                             this.setModalVisible(true)
                                         }
                                         style={{
-                                            width: width,
-                                            height: height
+                                            width,
+                                            height
                                         }}>
                                         <Image
                                             style={{
-                                                width: width,
+                                                width,
                                                 height: IMG_HEIGHT
                                             }}
                                             source={{ uri: item.uri }}
                                         />
                                     </TouchableOpacity>
-                                )
+                                );
                             }}
                         />
                         <View
@@ -132,13 +136,13 @@ export default class ProductGallery extends Component {
                                     const tmpcrridx =
                                         crrImgIdx - 1 < 0
                                             ? DATA_IMAGES_LENGTH - 1
-                                            : crrImgIdx - 1
-                                    this.changeOffsetSlider(tmpcrridx)
+                                            : crrImgIdx - 1;
+                                    this.changeOffsetSlider(tmpcrridx);
                                 }}>
                                 <Icon
-                                    name='angle-left'
+                                    name="angle-left"
                                     size={26}
-                                    color='#fff'
+                                    color="#fff"
                                 />
                             </TouchableOpacity>
                         </View>
@@ -157,13 +161,13 @@ export default class ProductGallery extends Component {
                                     const tmpcrridx =
                                         crrImgIdx + 1 >= DATA_IMAGES_LENGTH
                                             ? 0
-                                            : crrImgIdx + 1
-                                    this.changeOffsetSlider(tmpcrridx)
+                                            : crrImgIdx + 1;
+                                    this.changeOffsetSlider(tmpcrridx);
                                 }}>
                                 <Icon
-                                    name='angle-right'
+                                    name="angle-right"
                                     size={26}
-                                    color='#fff'
+                                    color="#fff"
                                 />
                             </TouchableOpacity>
                         </View>
@@ -176,7 +180,7 @@ export default class ProductGallery extends Component {
                                 style={{
                                     width: 40
                                 }}>
-                                <Text style={[styles.totalNumber]}>
+                                <Text style={styles.totalNumber}>
                                     {crrImgIdx + 1}/{DATA_IMAGES_LENGTH}
                                 </Text>
                             </View>
@@ -188,44 +192,47 @@ export default class ProductGallery extends Component {
                             visible={isShowModal}
                             onRequestClose={() => this.setModalVisible(false)}
                             onShow={() => this.onModalChangingShow()}
-                            swipeDirection='bottom'
+                            swipeDirection="bottom"
                             swipeThreshold={50}
-                            animationType='slide'
+                            animationType="slide"
                             onSwipeComplete={() => this.setModalVisible(false)}
-                            style={{ width: width, height: height }}>
-                            <View style={{ width: width, height: height }}>
+                            style={{ width, height }}>
+                            <View style={{ width, height }}>
                                 <FlatList
-                                    keyboardShouldPersistTaps='always'
+                                    keyboardShouldPersistTaps="always"
                                     style={{ height: IMG_HEIGHT }}
+                                    // eslint-disable-next-line react-native/no-color-literals
                                     contentContainerStyle={{
                                         flexGrow: 1,
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        backgroundColor: '#333'
+                                        backgroundColor: '#999999'
                                     }}
                                     snapToInterval={width}
                                     bounces={false}
-                                    decelerationRate='fast'
+                                    decelerationRate="fast"
                                     viewAbilityConfig={{
                                         viewAreaCoveragePercentThreshold: 50
                                     }}
                                     data={data}
                                     ref={this.galleryRef}
-                                    keyExtractor={item => item.uri}
+                                    keyExtractor={(item) => item.uri}
                                     horizontal
                                     pagingEnabled
                                     showsHorizontalScrollIndicator={false}
-                                    onViewableItemsChanged={this.onViewableItemsChangedGallery}
+                                    onViewableItemsChanged={
+                                        this.onViewableItemsChangedGallery
+                                    }
                                     renderItem={({ item }) => {
                                         return (
                                             <Image
                                                 style={{
-                                                    width: width,
+                                                    width,
                                                     height: IMG_HEIGHT
                                                 }}
                                                 source={{ uri: item.uri }}
                                             />
-                                        )
+                                        );
                                     }}
                                 />
                             </View>
@@ -236,7 +243,7 @@ export default class ProductGallery extends Component {
                                     bottom: 25,
                                     left: 10,
                                     right: 10,
-                                    width: width,
+                                    width,
                                     height: 50,
                                     justifyContent: 'center',
                                     alignItems: 'center'
@@ -251,19 +258,24 @@ export default class ProductGallery extends Component {
                                     }}
                                     snapToInterval={width}
                                     bounces={false}
-                                    decelerationRate='fast'
+                                    decelerationRate="fast"
                                     viewAbilityConfig={{
                                         viewAreaCoveragePercentThreshold: 50
                                     }}
                                     data={data}
-                                    keyExtractor={item => `thumbRef_${item.uri}`}
+                                    keyExtractor={(item) =>
+                                        `thumbRef_${item.uri}`
+                                    }
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
                                     onMomentumScrollBegin={() => {
                                         this.onEndReachedCalledDuringMomentum = false;
                                     }}
-                                    onMomentumScrollEnd={ev => {
-                                        if (!this.onEndReachedCalledDuringMomentum) {
+                                    onMomentumScrollEnd={() => {
+                                        if (
+                                            !this
+                                                .onEndReachedCalledDuringMomentum
+                                        ) {
                                             this.onEndReachedCalledDuringMomentum = true;
                                         }
                                     }}
@@ -271,8 +283,12 @@ export default class ProductGallery extends Component {
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    this.setState({ crrThumb: index })
-                                                    this.changeOffsetGallery(index)
+                                                    this.setState({
+                                                        crrThumb: index
+                                                    });
+                                                    this.changeOffsetGallery(
+                                                        index
+                                                    );
                                                 }}
                                                 activeOpacity={0.85}
                                                 style={{
@@ -285,12 +301,16 @@ export default class ProductGallery extends Component {
                                                         width: THUMB_SIZE,
                                                         height: THUMB_SIZE,
                                                         borderRadius: 4,
-                                                        opacity: index === this.state.crrThumb ? 1 : .5
+                                                        opacity:
+                                                            index ===
+                                                            this.state.crrThumb
+                                                                ? 1
+                                                                : 0.5
                                                     }}
                                                     source={{ uri: item.uri }}
                                                 />
                                             </TouchableOpacity>
-                                        )
+                                        );
                                     }}
                                 />
                             </View>
@@ -298,77 +318,78 @@ export default class ProductGallery extends Component {
                     </SafeAreaView>
                 </View>
             </ScrollView>
-        )
+        );
     }
 
-    setActiveIndex = index => {
-        this.setState({ crrImgIdx: index })
-    }
+    setActiveIndex = (index) => {
+        this.setState({ crrImgIdx: index });
+    };
 
-    setModalVisible = isshow => {
-        this.setState({ isShowModal: isshow })
+    setModalVisible = (isshow) => {
+        this.setState({ isShowModal: isshow });
         if (!isshow) {
-            this.changeOffsetSlider(this.state.crrImgIdx)
+            this.changeOffsetSlider(this.state.crrImgIdx);
         }
-    }
+    };
 
     onModalChangingShow = () => {
         this.setState({ isShowFromSlider: true });
-        this.changeOffsetGallery(this.state.crrImgIdx)
-    }
+        this.changeOffsetGallery(this.state.crrImgIdx);
+    };
 
-    changeOffsetSlider = index => {
+    changeOffsetSlider = (index) => {
         this.silderRef?.current?.scrollToIndex({
-            index: index,
+            index,
             animation: false
-        })
-    }
+        });
+    };
 
-    changeOffsetGallery = index => {
+    changeOffsetGallery = (index) => {
         this.galleryRef?.current?.scrollToIndex({
-            index: index,
+            index,
             animation: false
-        })
-    }
+        });
+    };
 
-    changeOffsetThumb = index => {
-        let mnus = 30
-        if (THUMB_SIZE * index < width / 2) mnus = -30
+    changeOffsetThumb = (index) => {
+        let mnus = 30;
+        if (THUMB_SIZE * index < width / 2) {
+            mnus = -30;
+        }
 
         this.thumbRef?.current?.scrollToOffset({
             offset: THUMB_SIZE * index + mnus,
             viewPosition: 0
-        })
-    }
+        });
+    };
 
     onViewableItemsChangedSlider = ({ viewableItems }) => {
         let idxCheck = 0;
         if (viewableItems.length === 1) {
-            idxCheck++;
+            idxCheck += 1;
             if (idxCheck === 1) {
                 idxCheck = 0;
-                this.setActiveIndex(viewableItems[0].index)
+                this.setActiveIndex(viewableItems[0].index);
                 this.setState({ crrThumb: viewableItems[0].index });
             }
         }
-    }
+    };
 
     onViewableItemsChangedGallery = ({ viewableItems }) => {
-        if (viewableItems.length === 2)
+        if (viewableItems.length === 2) {
             return;
+        }
         if (this.state.isShowFromSlider) {
             this.setState({ isShowFromSlider: false });
             return;
         }
-
-
         if (viewableItems.length === 1) {
-            const index = viewableItems[0].index;
+            const { index } = viewableItems[0];
             this.setState({ crrThumb: index });
             this.changeOffsetThumb(index);
             this.setActiveIndex(index);
         }
-    }
+    };
 }
 
 const styles = StyleSheet.create({
@@ -382,35 +403,36 @@ const styles = StyleSheet.create({
         top: 0,
         width: 29
     },
-    btnPreviousContainer: {
-        left: 0
-    },
-    btnNextContainer: {
-        right: 0
-    },
     // eslint-disable-next-line react-native/no-color-literals
     btnChangeSlider: {
         backgroundColor: 'rgba(34, 43, 69, 0.5)',
         paddingHorizontal: 10,
         paddingVertical: 20
     },
-    btnChangeSliderPrevious: {
-        borderBottomRightRadius: 5,
-        borderTopRightRadius: 5
-    },
     btnChangeSliderNext: {
         borderBottomLeftRadius: 5,
         borderTopLeftRadius: 5
     },
+    btnChangeSliderPrevious: {
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5
+    },
+    btnNextContainer: {
+        right: 0
+    },
+    btnPreviousContainer: {
+        left: 0
+    },
+    // eslint-disable-next-line react-native/no-color-literals
     totalNumber: {
         backgroundColor: '#d6e0f5',
+        borderRadius: 16,
         color: '#fff',
         fontSize: 12,
         lineHeight: 16,
-        textAlign: 'center',
-        borderRadius: 16,
-        marginTop: 5,
         marginBottom: 5,
-        marginRight: 5
+        marginRight: 5,
+        marginTop: 5,
+        textAlign: 'center'
     }
-})
+});
