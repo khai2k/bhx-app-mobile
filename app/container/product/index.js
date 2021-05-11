@@ -4,7 +4,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { translate } from '@app/translate';
 import { Header } from '@app/components';
 import ProductBox from '../../components/ProductBox/ProductBox';
+import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
+import ComboProductBox from '../../components/ProductBox/ComboProductBox';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import axios from 'axios';
 
 const styles = StyleSheet.create({
     container: {
@@ -22,43 +25,62 @@ class Product extends Component {
         this.state = {
             listProducts: [
                 {
-                    expiredDateDisplay: '2 tháng',
-                    avatar:
+                    ExpiredDateDisplay: '2 tháng',
+                    Avatar:
                         'http://cdn.tgdd.vn/Products/Images/2945/201564/bhx/feature/loc-4-hop-thuc-uong-lua-mach-it-duong-milo-active-go-180ml-202104291437478177.png',
-                    maxQuantityOnBill: 3,
-                    shortName: '4 hộp sữa lúa mạch ít đường Milo 180ml',
-                    price: '23.500đ'
+                    MaxQuantityOnBill: 3,
+                    ShortName: '4 hộp sữa lúa mạch ít đường Milo 180ml',
+                    Price: '23.500đ'
                 },
                 {
-                    expiredDateDisplay: '3 tháng',
-                    avatar:
+                    ExpiredDateDisplay: '3 tháng',
+                    Avatar:
                         'https://cdn.tgdd.vn/Products/Images/2947/79219/bhx/sua-trai-cay-nutriboost-huong-dau-1-lit-202103290229582034_300x300.jpg',
-                    maxQuantityOnBill: 0,
-                    shortName: 'Sữa trái cây Nutriboost dâu 1 lít',
-                    price: '19.000đ',
-                    promotionText: 'Mua 1 tặng quà',
-                    promotionGiftImgs:
+                    MaxQuantityOnBill: 0,
+                    ShortName: 'Sữa trái cây Nutriboost dâu 1 lít',
+                    Price: '19.000đ',
+                    PromotionText: 'Mua 1 tặng quà',
+                    PromotionGiftImgs:
                         'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg'
                 },
                 {
-                    expiredDateDisplay: '23 ngày',
-                    avatar:
+                    ExpiredDateDisplay: '23 ngày',
+                    Avatar:
                         'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg',
-                    maxQuantityOnBill: 1,
-                    shortName: '100 gói mì tôm đặc biệt Miliket 65g',
-                    price: '228.000đ'
+                    MaxQuantityOnBill: 1,
+                    ShortName: '100 gói mì tôm đặc biệt Miliket 65g',
+                    Price: '228.000đ'
                 },
                 {
-                    expiredDateDisplay: '6 tháng',
-                    avatar:
+                    ExpiredDateDisplay: '6 tháng',
+                    Avatar:
                         'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg',
-                    maxQuantityOnBill: 0,
-                    shortName: 'Phở chay vina Bích Chi gói 60g',
-                    price: '4.700đ',
-                    isExpired: true
+                    MaxQuantityOnBill: 0,
+                    ShortName: 'Phở chay vina Bích Chi gói 60g',
+                    Price: '4.700đ',
+                    IsExpired: true
                 }
-            ]
+            ],
+            bhxProduct: {}
         };
+    }
+
+    componentDidMount() {
+        axios({
+            method: 'get',
+            url:
+                'http://apiappbeta.bachhoaxanh.com/api/product/get?productId=196828&province=0&store=6463',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => {
+                const bhxProduct = res.data;
+                console.log('Api response: ' + res.data);
+                this.setState({ bhxProduct: bhxProduct });
+            })
+            .catch((err) => console.log(err));
     }
 
     render() {
@@ -73,6 +95,12 @@ class Product extends Component {
                 <View style={styles.productList}>
                     {this.state.listProducts.map((product, i) => {
                         return <ProductBox bhxProduct={product} />;
+                    })}
+                    {this.state.listProducts.map((product, i) => {
+                        return <ProductExpiredBox bhxProduct={product} />;
+                    })}
+                    {this.state.listProducts.map((product, i) => {
+                        return <ComboProductBox bhxProduct={product} />;
                     })}
                 </View>
             </View>
