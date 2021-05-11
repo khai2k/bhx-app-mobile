@@ -1,48 +1,32 @@
-import React, { PureComponent, useState, Component } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import styles from './style';
 
-export default class ProductBox extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            numberItems: 1,
-            buyButtonVisible: false
-        };
-    }
-    handleInputNumber = (number) => {
-        this.setState({
-            numberItems: +number
-        });
+const ProductExpiredBox = (props) => {
+   const [numberItems, setNumberItems] = useState(1);
+   const [buyButtonVisible, setBuyButtonVisible] = useState(false);
+   const navigation = useNavigation();
+
+    const handleInputNumber = (number) => {
+        setNumberItems(+number);
     };
-    handleChangeNumber = (number) => {
-        if (number < 0) {
-            this.setState((state, props) => ({
-                buyButtonVisible: state.numberItems == 1 ? false : true,
-                numberItems:
-                    state.numberItems > 0 ? this.state.numberItems - 1 : 0
-            }));
-        } else {
-            this.setState((state, props) => ({
-                numberItems: state.numberItems + number
-            }));
-        }
-    };
-    boxLabel() {
+    const boxLabel = () {
         if (
-            this.props.bhxProduct.IsPreOrder &&
-            this.props.bhxProduct.PreAmount > 0
+            props.bhxProduct.IsPreOrder &&
+            props.bhxProduct.PreAmount > 0
         )
             return (
                 <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
-                        Còn {this.props.bhxProduct.PreAmount} túi
+                        Còn {props.bhxProduct.PreAmount} túi
                     </Text>
                 </View>
             );
     }
-    canBuyProduct = (bhxProduct) => {
+    //SP có thể bán được
+    const canBuyProduct = (bhxProduct) => {
         if (bhxProduct.Price > 0) {
             return bhxProduct.IsBaseUnit
                 ? bhxProduct.StockQuantityNew > 0
@@ -50,7 +34,8 @@ export default class ProductBox extends PureComponent {
         }
         return false;
     };
-    calcDateRemain = (expiredDate) => {
+    //format HSD còn lại
+    const calcDateRemain = (expiredDate) => {
         let nowDate = moment(expiredDate);
         let diffDay = nowDate.diff(expiredDate, 'days');
         if (diff < 1) return '';
@@ -58,10 +43,10 @@ export default class ProductBox extends PureComponent {
         if (diff <= 365 && diff > 90) return diff / 30 + ' tháng';
         return diff + ' ngày';
     };
-    boxExpiredProduct() {
-        const bhxProduct = this.props.bhxProduct;
+    const boxExpiredProduct = () {
+        const bhxProduct = props.bhxProduct;
         const momentExpiredDate = moment(bhxProduct.ExpiredDateDisplay);
-        if (this.canBuyProduct(bhxProduct)) {
+        if (canBuyProduct(bhxProduct)) {
             if (
                 bhxProduct.ExpiredDateDisplay !== '1/1/0001 12:00:00 AM' &&
                 bhxProduct.Category.Id != 7578
@@ -69,7 +54,7 @@ export default class ProductBox extends PureComponent {
                 if (bhxProduct.ExpiredType >= 2) {
                     <Text>HSD {momentExpiredDate.format('DD/MM/YYYY')}</Text>;
                 } else {
-                    let expiredTime = this.calcDateRemain(momentExpiredDate);
+                    let expiredTime = calcDateRemain(momentExpiredDate);
                     if (expiredTime != '') {
                         let isMore3Years =
                             moment(expiredDate).diff(
@@ -85,8 +70,7 @@ export default class ProductBox extends PureComponent {
             }
         }
     }
-    render() {
-        const bhxProduct = this.props.bhxProduct;
+    const bhxProduct = props.bhxProduct;
         const isNearlyExpiredProduct =
             bhxProduct.Sales !== null && bhxProduct.Sales != undefined;
         if (isNearlyExpiredProduct && bhxProduct.ExpStoreId > 0) {
@@ -102,7 +86,7 @@ export default class ProductBox extends PureComponent {
                     }>
                     <TouchableOpacity
                         onPress={() =>
-                            this.props.navigation.navigate('ProductDetail')
+                            navigation.navigate('ProductDetail')
                         }
                         style={styles.productImg}>
                         <View className="boxImg" style={styles.boxImg}>
@@ -122,14 +106,12 @@ export default class ProductBox extends PureComponent {
                                 />
                             </View>
                         </View>
-                        {this.boxLabel()}
+                        {boxLabel()}
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() =>
-                            this.setState({
-                                buyButtonVisible: true,
-                                numberItems: 1
-                            })
+                            setNumberItems(1);
+                            setBuyButtonVisible(true);
                         }
                         style={
                             this.state.buyButtonVisible
@@ -146,9 +128,6 @@ export default class ProductBox extends PureComponent {
                             <Text style={styles.productName}>
                                 {bhxProduct.ShortName}
                             </Text>
-                            {/* <View className="price">
-                                    <Text>3.000đ</Text>
-                                </View> */}
                         </View>
                         <View className="boxBuy" style={styles.boxBuy}>
                             <View
@@ -176,16 +155,14 @@ export default class ProductBox extends PureComponent {
                                     </Text>
                                 </View>
                                 <Text style={styles.expiredText}>
-                                    {this.boxExpiredProduct()}
+                                    {boxExpiredProduct()}
                                 </Text>
                             </TouchableOpacity>
                         ) : null}
                     </TouchableOpacity>
                     <View
                         onPress={() =>
-                            this.setState({
-                                buyButtonVisible: true
-                            })
+                            setBuyButtonVisible(true);
                         }
                         style={
                             this.state.buyButtonVisible
@@ -211,20 +188,25 @@ export default class ProductBox extends PureComponent {
                         <View className="boxBuy" style={styles.boxBuy}>
                             <View className="upDown" style={styles.upDownShow}>
                                 <TouchableOpacity
-                                    onPress={() => this.handleChangeNumber(-1)}
+                                    onPress={() => {
+                                        setNumberItems(
+                                            numberItems > 0 ? numberItems - 1 : 0
+                                        );
+                                        setBuyButtonVisible(numberItems !== 1);
+                                    }}
                                     className="down"
                                     style={styles.down}>
                                     <Text style={styles.downIcon}></Text>
                                 </TouchableOpacity>
                                 <TextInput
                                     style={styles.inputBuy}
-                                    onChangeText={this.handleInputNumber}
+                                    onChangeText={handleInputNumber}
                                     value={this.state.numberItems.toString()}
                                     keyboardType="numeric"
                                 />
                                 <TouchableOpacity
                                     onPress={() => {
-                                        this.handleChangeNumber(1);
+                                        setNumberItems(numberItems + 1);
                                     }}
                                     className="up"
                                     style={styles.up}>
@@ -246,15 +228,15 @@ export default class ProductBox extends PureComponent {
                                     </Text>
                                 </View>
                                 <Text style={styles.expiredText}>
-                                    {this.boxExpiredProduct()}
+                                    {boxExpiredProduct()}
                                 </Text>
                             </TouchableOpacity>
                         ) : null}
                     </View>
                 </View>
             );
-        } else {
-            return null;
-        }
-    }
+        } 
+        return null;
 }
+
+export default ProductExpiredBox;
