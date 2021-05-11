@@ -6,7 +6,6 @@ import {
     Image,
     FlatList,
     TextInput,
-    ScrollView,
     SectionList
 } from 'react-native';
 import { styles } from './styles';
@@ -86,7 +85,7 @@ const ListCate = [
 
 const NavMenu = () => {
     const [textSearch, setTextSearch] = useState('');
-    // const [cateIndex, setCateIndex] = useState('1100');
+
     return (
         <View style={styles.container}>
             <View style={styles.navLeft}>
@@ -123,19 +122,20 @@ const NavMenu = () => {
                         source={ImageNavMenu.imgIconSearch}
                     />
                 </View>
-                <ScrollView style={styles.navRightBottom}>
-                    <SectionList
-                        sections={ListCate}
-                        renderItem={({ item }) => {
-                            return (
-                                <action.renderCateChildItem
-                                    TextName={item.TextName}
-                                    UrlImage={item.UrlImage}
-                                />
-                            );
-                        }}
-                    />
-                </ScrollView>
+                <SectionList
+                    sections={ListCate}
+                    renderItem={() => {
+                        return null;
+                    }}
+                    renderSectionHeader={({ section }) => (
+                        <FlatList
+                            style={styles.navRightBottom}
+                            numColumns="3"
+                            data={section.data}
+                            renderItem={action.renderCateChildItem}
+                        />
+                    )}
+                />
             </View>
         </View>
     );

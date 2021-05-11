@@ -6,7 +6,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { translate } from '@app/translate';
-// import { Header } from '@app/components';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';

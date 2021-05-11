@@ -1,5 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, Image, Text } from 'react-native';
+import React, { useState } from 'react';
+import { TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
 
@@ -15,19 +15,21 @@ export const renderCateItem = ({ item }) => (
     </TouchableOpacity>
 );
 
-// export const renderCateChildItem = ({ item }) => (
-//     <TouchableOpacity style={styles.itemCateChild}>
-//         <Image
-//             style={styles.iconCateChild}
-//             source={item != null && item.UrlImage != null ? item.UrlImage : ''}
-//         />
-//         <Text style={styles.txtCateChild}>{item.TextName}</Text>
-//     </TouchableOpacity>
-// );
+export const renderCateChildItem = ({ item }) => {
+    const [isActive, setIsActive] = useState('');
 
-export const renderCateChildItem = ({ TextName, UrlImage }) => (
-    <TouchableOpacity style={styles.itemCateChild}>
-        <Image style={styles.iconCateChild} source={UrlImage} />
-        <Text style={styles.txtCateChild}>{TextName}</Text>
-    </TouchableOpacity>
-);
+    const _onPress = (id) => {
+        setIsActive(id);
+        Alert.alert(isActive);
+    };
+
+    return (
+        <TouchableOpacity
+            key={item.Id}
+            style={styles.itemCateChild}
+            onPress={() => _onPress(item.Id)}>
+            <Image style={styles.iconCateChild} source={item.UrlImage} />
+            <Text style={styles.txtCateChild}>{item.TextName}</Text>
+        </TouchableOpacity>
+    );
+};
