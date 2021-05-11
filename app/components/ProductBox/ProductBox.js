@@ -1,75 +1,56 @@
-import React, { PureComponent, useState, Component } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import styles from './style';
 
-export default class ProductBox extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            numberItems: 1,
-            buyButtonVisible: false
-        };
-    }
-    handleInputNumber = (number) => {
-        this.setState({
-            numberItems: +number
-        });
-    };
-    handleChangeNumber = (number) => {
-        if (number < 0) {
-            this.setState((state, props) => ({
-                buyButtonVisible: state.numberItems == 1 ? false : true,
-                numberItems:
-                    state.numberItems > 0 ? this.state.numberItems - 1 : 0
-            }));
-        } else {
-            this.setState((state, props) => ({
-                numberItems: state.numberItems + number
-            }));
-        }
-    };
-    boxLabel() {
-        if (this.props.bhxProduct.MaxQuantityOnBill > 0)
+const ProductBox = (props) => {
+    const [numberItems, setNumberItems] = useState(1);
+    const [buyButtonVisible, setBuyButtonVisible] = useState(false);
+    const navigation = useNavigation();
+
+    const boxLabel = () => {
+        if (props.bhxProduct.MaxQuantityOnBill > 0) {
             return (
                 <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
-                        Tối đa {this.props.bhxProduct.MaxQuantityOnBill}
+                        Tối đa {props.bhxProduct.MaxQuantityOnBill}
                         SP/đơn
                     </Text>
                 </View>
             );
-        else if (this.props.bhxProduct.PromotionText)
+        } else if (props.bhxProduct.PromotionText) {
             return (
                 <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
-                        {this.props.bhxProduct.PromotionText}
+                        {props.bhxProduct.PromotionText}
                     </Text>
-                    {this.props.bhxProduct.PromotionGiftImgs !== null &&
-                    this.props.bhxProduct.PromotionGiftImgs.trim().length >
-                        0 ? (
+                    {props.bhxProduct.PromotionGiftImgs !== null &&
+                    props.bhxProduct.PromotionGiftImgs.trim().length > 0 ? (
                         <Image
                             style={styles.imagePromotion}
                             source={{
-                                uri: this.props.bhxProduct.PromotionGiftImgs
+                                uri: props.bhxProduct.PromotionGiftImgs
                             }}
                         />
                     ) : null}
                 </View>
             );
-        if (
-            this.props.bhxProduct.IsPreOrder &&
-            this.props.bhxProduct.PreAmount > 0
-        )
+        }
+        if (props.bhxProduct.IsPreOrder && props.bhxProduct.PreAmount > 0) {
             return (
                 <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
-                        Còn {this.props.bhxProduct.PreAmount} túi
+                        Còn {props.bhxProduct.PreAmount} túi
                     </Text>
                 </View>
             );
-    }
-    canBuyProduct = (bhxProduct) => {
+        }
+    };
+    const handleInputNumber = (number) => {
+        setNumberItems(+number);
+    };
+    const canBuyProduct = (bhxProduct) => {
         if (bhxProduct.Price > 0) {
             return bhxProduct.IsBaseUnit
                 ? bhxProduct.StockQuantityNew > 0
@@ -77,7 +58,7 @@ export default class ProductBox extends PureComponent {
         }
         return false;
     };
-    calcDateRemain = (expiredDate) => {
+    const calcDateRemain = (expiredDate) => {
         let nowDate = moment(expiredDate);
         let diffDay = nowDate.diff(expiredDate, 'days');
         if (diff < 1) return '';
@@ -85,182 +66,181 @@ export default class ProductBox extends PureComponent {
         if (diff <= 365 && diff > 90) return diff / 30 + ' tháng';
         return diff + ' ngày';
     };
-    boxExpiredProduct() {
-        const bhxProduct = this.props.bhxProduct;
+    const boxExpiredProduct = () => {
+        const bhxProduct = props.bhxProduct;
         const momentExpiredDate = moment(bhxProduct.ExpiredDateDisplay);
-        if (this.canBuyProduct(bhxProduct)) {
+        if (canBuyProduct(bhxProduct)) {
             if (
                 bhxProduct.ExpiredDateDisplay !== '1/1/0001 12:00:00 AM' &&
                 bhxProduct.Category.Id != 7578
             ) {
                 if (bhxProduct.ExpiredType >= 2) {
-                    <Text>HSD {momentExpiredDate.format('DD/MM/YYYY')}</Text>;
+                    return (
+                        <Text>
+                            HSD {momentExpiredDate.format('DD/MM/YYYY')}
+                        </Text>
+                    );
                 } else {
-                    let expiredTime = this.calcDateRemain(momentExpiredDate);
+                    let expiredTime = calcDateRemain(momentExpiredDate);
                     if (expiredTime != '') {
                         let isMore3Years =
                             moment(expiredDate).diff(
                                 momentExpiredDate,
                                 'days'
                             ) > 1095;
-                        <Text>
-                            HSD{' '}
-                            {isMore3Years ? 'hơn 3 năm' : 'còn ' + expiredTime}
-                        </Text>;
+                        return (
+                            <Text>
+                                HSD{' '}
+                                {isMore3Years
+                                    ? 'hơn 3 năm'
+                                    : 'còn ' + expiredTime}
+                            </Text>
+                        );
                     }
                 }
             }
         }
-    }
-    render() {
-        const bhxProduct = this.props.bhxProduct;
-        const isNearlyExpiredProduct =
-            bhxProduct.Sales !== null && bhxProduct.Sales != undefined;
-        return (
-            <View
-                className="product"
-                style={
-                    this.state.buyButtonVisible
-                        ? styles.productSelected
-                        : styles.product
-                }>
-                <TouchableOpacity
-                    onPress={() =>
-                        this.props.navigation.navigate('ProductDetail')
-                    }
-                    style={styles.productImg}>
-                    <View className="boxImg" style={styles.boxImg}>
-                        <Text className="boxExpired" style={styles.boxExpired}>
-                            HSD còn {bhxProduct.ExpiredDateDisplay}
-                        </Text>
-                        <View className="imgContent" style={styles.imgContent}>
-                            <Image
-                                style={styles.imageProduct}
-                                source={{ uri: bhxProduct.Avatar }}
-                            />
-                        </View>
+    };
+    return (
+        <View
+            className="product"
+            style={buyButtonVisible ? styles.productSelected : styles.product}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('ProductDetail')}
+                style={styles.productImg}>
+                <View className="boxImg" style={styles.boxImg}>
+                    <Text className="boxExpired" style={styles.boxExpired}>
+                        HSD còn {props.bhxProduct.ExpiredDateDisplay}
+                    </Text>
+                    <View className="imgContent" style={styles.imgContent}>
+                        <Image
+                            style={styles.imageProduct}
+                            source={{ uri: props.bhxProduct.Avatar }}
+                        />
                     </View>
-                    {this.boxLabel()}
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() =>
-                        this.setState({
-                            buyButtonVisible: true,
-                            numberItems: 1
-                        })
-                    }
-                    style={
-                        this.state.buyButtonVisible
-                            ? styles.unvisibleProductBuy
-                            : styles.visibleProductBuy
-                    }>
-                    <View
-                        className="productInfo"
-                        style={
-                            isNearlyExpiredProduct
-                                ? styles.productInfoExpired
-                                : styles.productInfo
-                        }>
-                        <Text style={styles.productName}>
-                            {bhxProduct.ShortName}
-                        </Text>
-                        {/* <View className="price">
-                                <Text>3.000đ</Text>
-                            </View> */}
-                    </View>
-                    <View className="boxBuy" style={styles.boxBuy}>
-                        <View className="priceInfo" style={styles.priceInfo}>
-                            <View className="price" style={styles.price}>
-                                <Text>{bhxProduct.Price}</Text>
-                            </View>
-                            <View className="buy" style={styles.buy}>
-                                <Text>MUA</Text>
-                            </View>
-                        </View>
-                    </View>
-                    {isNearlyExpiredProduct ? (
-                        <TouchableOpacity
-                            className="nearlyExpired"
-                            style={styles.nearlyExpired}>
-                            <View style={styles.expiredLine}>
-                                <Text style={styles.expiredText}>Hoặc </Text>
-                                <Text style={styles.expiredPrice}>
-                                    MUA 4.700đ{'\n'}
-                                </Text>
-                            </View>
-                            <Text style={styles.expiredText}>
-                                {this.boxExpiredProduct()}
-                            </Text>
-                        </TouchableOpacity>
-                    ) : null}
-                </TouchableOpacity>
-                <View
-                    onPress={() =>
-                        this.setState({
-                            buyButtonVisible: true
-                        })
-                    }
-                    style={
-                        this.state.buyButtonVisible
-                            ? styles.visibleProductBuy
-                            : styles.unvisibleProductBuy
-                    }>
-                    <View
-                        className="productInfo"
-                        style={
-                            isNearlyExpiredProduct
-                                ? styles.productInfoExpired
-                                : styles.productInfo
-                        }>
-                        <Text style={styles.productNameSelected}>
-                            {bhxProduct.ShortName}
-                        </Text>
-                        <Text className="price" style={styles.priceSelected}>
-                            {bhxProduct.Price}
-                        </Text>
-                    </View>
-                    <View className="boxBuy" style={styles.boxBuy}>
-                        <View className="upDown" style={styles.upDownShow}>
-                            <TouchableOpacity
-                                onPress={() => this.handleChangeNumber(-1)}
-                                className="down"
-                                style={styles.down}>
-                                <Text style={styles.downIcon}></Text>
-                            </TouchableOpacity>
-                            <TextInput
-                                style={styles.inputBuy}
-                                onChangeText={this.handleInputNumber}
-                                value={this.state.numberItems.toString()}
-                                keyboardType="numeric"
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.handleChangeNumber(1);
-                                }}
-                                className="up"
-                                style={styles.up}>
-                                <Text style={styles.upIcon1}></Text>
-                                <Text style={styles.upIcon2}></Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    {isNearlyExpiredProduct ? (
-                        <TouchableOpacity
-                            className="nearlyExpired"
-                            style={styles.nearlyExpired}>
-                            <View style={styles.expiredLine}>
-                                <Text style={styles.expiredText}>Hoặc </Text>
-                                <Text style={styles.expiredPrice}>
-                                    MUA 4.700đ{'\n'}
-                                </Text>
-                            </View>
-                            <Text style={styles.expiredText}>
-                                {this.boxExpiredProduct()}
-                            </Text>
-                        </TouchableOpacity>
-                    ) : null}
                 </View>
+                {boxLabel()}
+            </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    setNumberItems(1);
+                    setBuyButtonVisible(true);
+                }}
+                style={
+                    buyButtonVisible
+                        ? styles.unvisibleProductBuy
+                        : styles.visibleProductBuy
+                }>
+                <View
+                    className="productInfo"
+                    style={
+                        props.bhxProduct.IsExpired
+                            ? styles.productInfoExpired
+                            : styles.productInfo
+                    }>
+                    <Text style={styles.productName}>
+                        {props.bhxProduct.ShortName}
+                    </Text>
+                </View>
+                <View className="boxBuy" style={styles.boxBuy}>
+                    <View className="priceInfo" style={styles.priceInfo}>
+                        <View className="price" style={styles.price}>
+                            <Text>{props.bhxProduct.Price}</Text>
+                        </View>
+                        <View className="buy" style={styles.buy}>
+                            <Text>MUA</Text>
+                        </View>
+                    </View>
+                </View>
+                {props.bhxProduct.Sales !== null &&
+                props.bhxProduct.Sales != undefined ? (
+                    <TouchableOpacity
+                        className="nearlyExpired"
+                        style={styles.nearlyExpired}>
+                        <View style={styles.expiredLine}>
+                            <Text style={styles.expiredText}>Hoặc </Text>
+                            <Text style={styles.expiredPrice}>
+                                MUA 4.700đ{'\n'}
+                            </Text>
+                        </View>
+                        <Text style={styles.expiredText}>
+                            {boxExpiredProduct()}
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
+            </TouchableOpacity>
+            <View
+                onPress={() => {
+                    setBuyButtonVisible(true);
+                }}
+                style={
+                    buyButtonVisible
+                        ? styles.visibleProductBuy
+                        : styles.unvisibleProductBuy
+                }>
+                <View
+                    className="productInfo"
+                    style={
+                        props.bhxProduct.IsExpired
+                            ? styles.productInfoExpired
+                            : styles.productInfo
+                    }>
+                    <Text style={styles.productNameSelected}>
+                        {props.bhxProduct.ShortName}
+                    </Text>
+                    <Text className="price" style={styles.priceSelected}>
+                        {props.bhxProduct.Price}
+                    </Text>
+                </View>
+                <View className="boxBuy" style={styles.boxBuy}>
+                    <View className="upDown" style={styles.upDownShow}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setNumberItems(
+                                    numberItems > 0 ? numberItems - 1 : 0
+                                );
+                                setBuyButtonVisible(numberItems !== 1);
+                            }}
+                            className="down"
+                            style={styles.down}>
+                            <Text style={styles.downIcon} />
+                        </TouchableOpacity>
+                        <TextInput
+                            style={styles.inputBuy}
+                            onChangeText={handleInputNumber}
+                            value={numberItems.toString()}
+                            keyboardType="numeric"
+                        />
+                        <TouchableOpacity
+                            onPress={() => {
+                                setNumberItems(numberItems + 1);
+                            }}
+                            className="up"
+                            style={styles.up}>
+                            <Text style={styles.upIcon1} />
+                            <Text style={styles.upIcon2} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                {props.bhxProduct.Sales !== null &&
+                props.bhxProduct.Sales != undefined ? (
+                    <TouchableOpacity
+                        className="nearlyExpired"
+                        style={styles.nearlyExpired}>
+                        <View style={styles.expiredLine}>
+                            <Text style={styles.expiredText}>Hoặc </Text>
+                            <Text style={styles.expiredPrice}>
+                                MUA 4.700đ{'\n'}
+                            </Text>
+                        </View>
+                        <Text style={styles.expiredText}>
+                            {boxExpiredProduct()}
+                        </Text>
+                    </TouchableOpacity>
+                ) : null}
             </View>
-        );
-    }
-}
+        </View>
+    );
+};
+
+export default ProductBox;

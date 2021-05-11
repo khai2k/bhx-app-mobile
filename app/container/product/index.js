@@ -57,8 +57,7 @@ class Product extends Component {
                         'https://cdn.tgdd.vn/Products/Images/2565/175894/bhx/thung-100-goi-mi-tom-dac-biet-miliket-giay-vang-65g-202103031707002030_300x300.jpg',
                     MaxQuantityOnBill: 0,
                     ShortName: 'Phở chay vina Bích Chi gói 60g',
-                    Price: '4.700đ',
-                    IsExpired: true
+                    Price: '4.700đ'
                 }
             ],
             bhxProduct: {}
