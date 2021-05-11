@@ -3,21 +3,24 @@ import { TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
 
-export const renderCateItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemCate}>
-        {item.Id === '1400' ? (
-            <Image
-                style={styles.iconPromotion}
-                source={ImageNavMenu.imgIconPromotion}
-            />
-        ) : null}
-        <Text style={styles.txtCate}>{item.TextName}</Text>
-    </TouchableOpacity>
-);
+export const RenderCateItem = (props) => {
+    const { item } = props.item;
+    return (
+        <TouchableOpacity style={styles.itemCate}>
+            {item.Id === '1400' ? (
+                <Image
+                    style={styles.iconPromotion}
+                    source={ImageNavMenu.imgIconPromotion}
+                />
+            ) : null}
+            <Text style={styles.txtCate}>{item.TextName}</Text>
+        </TouchableOpacity>
+    );
+};
 
-const [isActive, setIsActive] = useState('');
-
-export const renderCateChildItem = ({ item }) => {
+export const RenderCateChildItem = (props) => {
+    const { item } = props.item;
+    const [isActive, setIsActive] = useState('');
     const handleSelectCateChild = (id) => {
         setIsActive(id);
         Alert.alert(isActive);

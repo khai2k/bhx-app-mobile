@@ -107,7 +107,9 @@ const NavMenu = () => {
                 <FlatList
                     style={styles.navLeftBottom}
                     data={ListCate}
-                    renderItem={action.renderCateItem}
+                    renderItem={(item) => {
+                        return <action.RenderCateItem item={item} />;
+                    }}
                 />
             </View>
             <View style={styles.navRight}>
@@ -132,7 +134,11 @@ const NavMenu = () => {
                             style={styles.navRightBottom}
                             numColumns="3"
                             data={section.data}
-                            renderItem={action.renderCateChildItem}
+                            renderItem={(item) => {
+                                return (
+                                    <action.RenderCateChildItem item={item} />
+                                );
+                            }}
                         />
                     )}
                 />
