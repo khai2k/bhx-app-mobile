@@ -1,27 +1,26 @@
-import React, { PureComponent, useState, Component } from 'react'
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
-import styles from './style'
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import styles from './style';
 
-import { useNavigation } from '@react-navigation/native'
-
-const ProductBox = props => {
-    const [numberItems, setNumberItems] = useState(1)
-    const [buyButtonVisible, setBuyButtonVisible] = useState(false)
-    const navigation = useNavigation()
+const ProductBox = (props) => {
+    const [numberItems, setNumberItems] = useState(1);
+    const [buyButtonVisible, setBuyButtonVisible] = useState(false);
+    const navigation = useNavigation();
 
     const boxLabel = () => {
-        if (props.bhxProduct.maxQuantityOnBill > 0)
+        if (props.bhxProduct.maxQuantityOnBill > 0) {
             return (
-                <View className='boxLabel' style={styles.boxLabel}>
+                <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
                         Tối đa {props.bhxProduct.maxQuantityOnBill}
                         SP/đơn
                     </Text>
                 </View>
-            )
-        else if (props.bhxProduct.promotionText)
+            );
+        } else if (props.bhxProduct.promotionText) {
             return (
-                <View className='boxLabel' style={styles.boxLabel}>
+                <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
                         {props.bhxProduct.promotionText}
                     </Text>
@@ -35,35 +34,35 @@ const ProductBox = props => {
                         />
                     ) : null}
                 </View>
-            )
-        if (props.bhxProduct.isPreOrder && props.bhxProduct.preAmount > 0)
+            );
+        }
+        if (props.bhxProduct.isPreOrder && props.bhxProduct.preAmount > 0) {
             return (
-                <View className='boxLabel' style={styles.boxLabel}>
+                <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
                         Còn {props.bhxProduct.preAmount} túi
                     </Text>
                 </View>
-            )
-    }
+            );
+        }
+    };
 
-    const handleInputNumber = number => {
-        setNumberItems(+number)
-    }
+    const handleInputNumber = (number) => {
+        setNumberItems(+number);
+    };
 
     return (
         <View
-            className='product'
-            style={
-                this.buyButtonVisible ? styles.productSelected : styles.product
-            }>
+            className="product"
+            style={buyButtonVisible ? styles.productSelected : styles.product}>
             <TouchableOpacity
                 onPress={() => navigation.navigate('ProductDetail')}
                 style={styles.productImg}>
-                <View className='boxImg' style={styles.boxImg}>
-                    <Text className='boxExpired' style={styles.boxExpired}>
+                <View className="boxImg" style={styles.boxImg}>
+                    <Text className="boxExpired" style={styles.boxExpired}>
                         HSD còn {props.bhxProduct.expiredDateDisplay}
                     </Text>
-                    <View className='imgContent' style={styles.imgContent}>
+                    <View className="imgContent" style={styles.imgContent}>
                         <Image
                             style={styles.imageProduct}
                             source={{ uri: props.bhxProduct.avatar }}
@@ -74,16 +73,16 @@ const ProductBox = props => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
-                    this.setNumberItems(1)
-                    this.setBuyButtonVisible(true)
+                    setNumberItems(1);
+                    setBuyButtonVisible(true);
                 }}
                 style={
-                    this.buyButtonVisible
+                    buyButtonVisible
                         ? styles.unvisibleProductBuy
                         : styles.visibleProductBuy
                 }>
                 <View
-                    className='productInfo'
+                    className="productInfo"
                     style={
                         props.bhxProduct.isExpired
                             ? styles.productInfoExpired
@@ -96,19 +95,19 @@ const ProductBox = props => {
                                 <Text>3.000đ</Text>
                             </View> */}
                 </View>
-                <View className='boxBuy' style={styles.boxBuy}>
-                    <View className='priceInfo' style={styles.priceInfo}>
-                        <View className='price' style={styles.price}>
+                <View className="boxBuy" style={styles.boxBuy}>
+                    <View className="priceInfo" style={styles.priceInfo}>
+                        <View className="price" style={styles.price}>
                             <Text>{props.bhxProduct.price}</Text>
                         </View>
-                        <View className='buy' style={styles.buy}>
+                        <View className="buy" style={styles.buy}>
                             <Text>MUA</Text>
                         </View>
                     </View>
                 </View>
                 {props.bhxProduct.isExpired ? (
                     <TouchableOpacity
-                        className='nearlyExpired'
+                        className="nearlyExpired"
                         style={styles.nearlyExpired}>
                         <View style={styles.expiredLine}>
                             <Text style={styles.expiredText}>Hoặc </Text>
@@ -122,15 +121,15 @@ const ProductBox = props => {
             </TouchableOpacity>
             <View
                 onPress={() => {
-                    this.setBuyButtonVisible(true)
+                    setBuyButtonVisible(true);
                 }}
                 style={
-                    this.buyButtonVisible
+                    buyButtonVisible
                         ? styles.visibleProductBuy
                         : styles.unvisibleProductBuy
                 }>
                 <View
-                    className='productInfo'
+                    className="productInfo"
                     style={
                         props.bhxProduct.isExpired
                             ? styles.productInfoExpired
@@ -139,49 +138,43 @@ const ProductBox = props => {
                     <Text style={styles.productNameSelected}>
                         {props.bhxProduct.shortName}
                     </Text>
-                    <Text className='price' style={styles.priceSelected}>
+                    <Text className="price" style={styles.priceSelected}>
                         {props.bhxProduct.price}
                     </Text>
                 </View>
-                <View className='boxBuy' style={styles.boxBuy}>
-                    <View className='upDown' style={styles.upDownShow}>
+                <View className="boxBuy" style={styles.boxBuy}>
+                    <View className="upDown" style={styles.upDownShow}>
                         <TouchableOpacity
                             onPress={() => {
-                                this.setState((state, props) => ({
-                                    buyButtonVisible:
-                                        state.numberItems == 1 ? false : true,
-                                    numberItems:
-                                        state.numberItems > 0
-                                            ? numberItems - 1
-                                            : 0
-                                }))
+                                setNumberItems(
+                                    numberItems > 0 ? numberItems - 1 : 0
+                                );
+                                setBuyButtonVisible(numberItems !== 1);
                             }}
-                            className='down'
+                            className="down"
                             style={styles.down}>
-                            <Text style={styles.downIcon}></Text>
+                            <Text style={styles.downIcon} />
                         </TouchableOpacity>
                         <TextInput
                             style={styles.inputBuy}
-                            onChangeText={this.handleInputNumber}
+                            onChangeText={handleInputNumber}
                             value={numberItems.toString()}
-                            keyboardType='numeric'
+                            keyboardType="numeric"
                         />
                         <TouchableOpacity
                             onPress={() => {
-                                this.setState((state, props) => ({
-                                    numberItems: state.numberItems + 1
-                                }))
+                                setNumberItems(numberItems + 1);
                             }}
-                            className='up'
+                            className="up"
                             style={styles.up}>
-                            <Text style={styles.upIcon1}></Text>
-                            <Text style={styles.upIcon2}></Text>
+                            <Text style={styles.upIcon1} />
+                            <Text style={styles.upIcon2} />
                         </TouchableOpacity>
                     </View>
                 </View>
                 {props.bhxProduct.isExpired ? (
                     <TouchableOpacity
-                        className='nearlyExpired'
+                        className="nearlyExpired"
                         style={styles.nearlyExpired}>
                         <View style={styles.expiredLine}>
                             <Text style={styles.expiredText}>Hoặc </Text>
@@ -194,7 +187,7 @@ const ProductBox = props => {
                 ) : null}
             </View>
         </View>
-    )
-}
+    );
+};
 
-export default ProductBox
+export default ProductBox;
