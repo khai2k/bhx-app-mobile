@@ -10,7 +10,7 @@ const ComboProductBox = (props) => {
 
     const handleInputNumber = (number) => {
         setNumberItems(+number);
-    }
+    };
     const bhxProduct = props.bhxProduct;
     const imageModal =
         bhxProduct != null && bhxProduct.FeatureImageModel != null
@@ -21,19 +21,13 @@ const ComboProductBox = (props) => {
             <View
                 className="product"
                 style={
-                    buyButtonVisible
-                        ? styles.productSelected
-                        : styles.product
+                    buyButtonVisible ? styles.productSelected : styles.product
                 }>
                 <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate('ProductDetail')
-                    }
+                    onPress={() => navigation.navigate('ProductDetail')}
                     style={styles.productImg}>
                     <View className="boxImg" style={styles.boxImg}>
-                        <View
-                            className="imgContent"
-                            style={styles.imgContent}>
+                        <View className="imgContent" style={styles.imgContent}>
                             <Image
                                 style={styles.comboTheme}
                                 source={{
@@ -50,26 +44,22 @@ const ComboProductBox = (props) => {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() =>
+                    onPress={() => {
                         setBuyButtonVisible(true);
                         setNumberItems(1);
-                    }
+                    }}
                     style={
                         buyButtonVisible
                             ? styles.unvisibleProductBuy
                             : styles.visibleProductBuy
                     }>
-                    <View
-                        className="productInfo"
-                        style={styles.productInfo}>
+                    <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productName}>
                             {bhxProduct.ShortName}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
-                        <View
-                            className="priceInfo"
-                            style={styles.priceInfo}>
+                        <View className="priceInfo" style={styles.priceInfo}>
                             <View className="price" style={styles.price}>
                                 <Text>{bhxProduct.Price}</Text>
                             </View>
@@ -80,23 +70,19 @@ const ComboProductBox = (props) => {
                     </View>
                 </TouchableOpacity>
                 <View
-                    onPress={() =>
+                    onPress={() => {
                         setBuyButtonVisible(true);
-                    }
+                    }}
                     style={
                         buyButtonVisible
                             ? styles.visibleProductBuy
                             : styles.unvisibleProductBuy
                     }>
-                    <View
-                        className="productInfo"
-                        style={styles.productInfo}>
+                    <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productNameSelected}>
                             {bhxProduct.ShortName}
                         </Text>
-                        <Text
-                            className="price"
-                            style={styles.priceSelected}>
+                        <Text className="price" style={styles.priceSelected}>
                             {bhxProduct.Price}
                         </Text>
                     </View>
@@ -122,7 +108,7 @@ const ComboProductBox = (props) => {
                             <TouchableOpacity
                                 onPress={() => {
                                     setNumberItems(numberItems + 1);
-                                }}    
+                                }}
                                 className="up"
                                 style={styles.up}>
                                 <Text style={styles.upIcon1}></Text>
@@ -133,7 +119,7 @@ const ComboProductBox = (props) => {
                 </View>
             </View>
         );
-    } 
+    }
     return null;
 };
-export default class ComboProductBox;
+export default ComboProductBox;

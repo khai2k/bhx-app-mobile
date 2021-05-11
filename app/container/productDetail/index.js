@@ -1,29 +1,25 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { View } from 'react-native'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { View } from 'react-native';
 
-import ProductGallery from './ProductGallery'
+import ProductGallery from '../../components/ProductGallery/ProductGallery';
 
 class ProductDetail extends Component {
-    constructor (props) {
-        super(props)
-    }
-
-    render () {
+    render() {
         return (
             <View>
                 <ProductGallery />
             </View>
-        )
+        );
     }
 }
 
 const mapStateToProps = function () {
-    return {}
-}
+    return {};
+};
 
 const mapDispatchToProps = function () {
-    return {}
-}
+    return {};
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

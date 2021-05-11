@@ -5,14 +5,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { translate } from '@app/translate';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
 import ProductDetail from '../container/productDetail';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import { translate } from '@app/translate';
-import { Header } from '@app/components';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();

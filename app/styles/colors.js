@@ -107,3 +107,6 @@ export const JADE = '#00AC5B';
 export const EUCALYPTUS = '#1F884C';
 export const GREEN_KEY = '#037841';
 export const TROPICAL_RAIN_FOREST = '#008848';
+export const BORDER = '#00AC5B';
+export const RED = 'red';
+export const HEADER_CART = '#FFF87C';
