@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.LINK_WATER_2,
         justifyContent: 'center',
         alignSelf: 'center',
-        height: 34,
+        height: 33,
         lineHeight: 30,
         padding: 0,
         margin: 0

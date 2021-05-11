@@ -54,7 +54,7 @@ const ProductBox = (props) => {
         if (bhxProduct.Price > 0) {
             return bhxProduct.IsBaseUnit
                 ? bhxProduct.StockQuantityNew > 0
-                : StockQuantityNew >= 1;
+                : bhxProduct.StockQuantityNew >= 1;
         }
         return false;
     };
@@ -71,7 +71,7 @@ const ProductBox = (props) => {
         const momentExpiredDate = moment(bhxProduct.ExpiredDateDisplay);
         if (canBuyProduct(bhxProduct)) {
             if (
-                bhxProduct.ExpiredDateDisplay !== '1/1/0001 12:00:00 AM' &&
+                bhxProduct.ExpiredDateDisplay !== '0001-01-01T00:00:00' &&
                 bhxProduct.Category.Id != 7578
             ) {
                 if (bhxProduct.ExpiredType >= 2) {
