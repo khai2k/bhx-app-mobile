@@ -1,47 +1,47 @@
-import React, { Component } from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
-import { View, StyleSheet, Image } from 'react-native'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { connect } from 'react-redux'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
-import { translate } from '@app/translate'
-import { constants } from '../constants'
-import Profile from '../container/profile'
-import Product from '../container/product'
-import ProductDetail from '../container/productDetail'
-import Promotion from '../container/promotion'
-import Notification from '../container/notification'
+import React, { Component } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { View, StyleSheet, Image } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { connect } from 'react-redux';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { translate } from '@app/translate';
+import { constants } from '../constants';
+import Profile from '../container/profile';
+import Product from '../container/product';
+import ProductDetail from '../container/productDetail';
+import Promotion from '../container/promotion';
+import Notification from '../container/notification';
 
-const MainStack = createStackNavigator()
-const Drawer = createDrawerNavigator()
-const Tab = createBottomTabNavigator()
+const MainStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 const MainNavigator = () => {
     return (
-        <MainStack.Navigator initialRouteName='Main'>
+        <MainStack.Navigator initialRouteName="Main">
             <MainStack.Screen
-                name='Main'
+                name="Main"
                 component={MainDrawer}
                 options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? ''
-                    console.log('route:', routeName)
-                    return { headerShown: false }
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
                 }}
             />
             <MainStack.Screen
-                name='ProductDetail'
+                name="ProductDetail"
                 component={ProductDetail}
                 options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? ''
-                    console.log('route:', routeName)
-                    return { headerShown: false }
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
                 }}
             />
         </MainStack.Navigator>
-    )
-}
+    );
+};
 
-export default MainNavigator
+export default MainNavigator;
 
 const styles = StyleSheet.create({
     drawerStyle: {
@@ -49,50 +49,50 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         width: constants.width
     }
-})
+});
 const MainDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName='MainTab'
-            drawerContent={props => {
-                return <View {...props} />
+            initialRouteName="MainTab"
+            drawerContent={(props) => {
+                return <View {...props} />;
             }}
             drawerStyle={styles.drawerStyle}>
-            <Drawer.Screen name='MainTab' component={MainTab} />
+            <Drawer.Screen name="MainTab" component={MainTab} />
         </Drawer.Navigator>
-    )
-}
+    );
+};
 
 class MainTabComponent extends Component {
-    render () {
+    render() {
         return (
             <Tab.Navigator
-                initialRouteName='Product'
+                initialRouteName="Product"
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, image }) => {
                         if (route.name === 'Product') {
                             image = focused
                                 ? require('../../assets/images/grid.png')
-                                : require('../../assets/images/grid.png')
+                                : require('../../assets/images/grid.png');
                         } else if (route.name === 'Promotion') {
                             image = focused
                                 ? require('../../assets/images/promotion.png')
-                                : require('../../assets/images/promotion.png')
+                                : require('../../assets/images/promotion.png');
                         } else if (route.name === 'Notification') {
                             image = focused
                                 ? require('../../assets/images/notification.png')
-                                : require('../../assets/images/notification.png')
+                                : require('../../assets/images/notification.png');
                         } else if (route.name === 'Profile') {
                             image = focused
                                 ? require('../../assets/images/user.png')
-                                : require('../../assets/images/user.png')
+                                : require('../../assets/images/user.png');
                         }
                         return (
                             <Image
                                 source={image}
                                 style={{ width: 20, height: 20 }}
                             />
-                        )
+                        );
                     }
                 })}
                 tabBarOptions={{
@@ -100,39 +100,39 @@ class MainTabComponent extends Component {
                     inactiveTintColor: 'gray'
                 }}>
                 <Tab.Screen
-                    name='Product'
+                    name="Product"
                     component={Product}
                     options={{ title: translate('Product') }}
                 />
                 <Tab.Screen
-                    name='Promotion'
+                    name="Promotion"
                     component={Promotion}
                     options={{ title: translate('Promotion') }}
                 />
                 <Tab.Screen
-                    name='Notification'
+                    name="Notification"
                     component={Notification}
                     options={{ title: translate('Notification') }}
                 />
                 <Tab.Screen
-                    name='Profile'
+                    name="Profile"
                     component={Profile}
                     options={{ title: translate('Account') }}
                 />
             </Tab.Navigator>
-        )
+        );
     }
 }
 
 const mapStatePropMain = function () {
-    return {}
-}
+    return {};
+};
 
 const mapDispatchPropsMain = function () {
-    return {}
-}
+    return {};
+};
 
 const MainTab = connect(
     mapStatePropMain,
     mapDispatchPropsMain
-)(MainTabComponent)
+)(MainTabComponent);
