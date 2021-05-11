@@ -15,10 +15,10 @@ export const renderCateItem = ({ item }) => (
     </TouchableOpacity>
 );
 
-export const renderCateChildItem = ({ item }) => {
-    const [isActive, setIsActive] = useState('');
+const [isActive, setIsActive] = useState('');
 
-    const _onPress = (id) => {
+export const renderCateChildItem = ({ item }) => {
+    const handleSelectCateChild = (id) => {
         setIsActive(id);
         Alert.alert(isActive);
     };
@@ -27,9 +27,10 @@ export const renderCateChildItem = ({ item }) => {
         <TouchableOpacity
             key={item.Id}
             style={styles.itemCateChild}
-            onPress={() => _onPress(item.Id)}>
+            onPress={() => handleSelectCateChild(item.Id)}>
             <Image style={styles.iconCateChild} source={item.UrlImage} />
             <Text style={styles.txtCateChild}>{item.TextName}</Text>
+            {/* <Text style={styles.txtCateChild}>{isActive}</Text> */}
         </TouchableOpacity>
     );
 };
