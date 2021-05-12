@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     imageProduct: {
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
-        width: win.width / 3 - 6,
+        width: '100%',
         height: ratio
     },
     imgContent: {
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
         height: win.width / 3,
         width: '100%'
     },
-    imageProductCombo: {
+    wrapImageProductCombo: {
         position: 'absolute',
         top: 0,
         left: 0,
@@ -354,6 +354,10 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    imageProductCombo: {
+        height: win.width / 4,
+        width: '100%'
     }
 });
 

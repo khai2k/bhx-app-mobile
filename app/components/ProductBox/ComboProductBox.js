@@ -11,12 +11,13 @@ const ComboProductBox = (props) => {
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
-    const bhxProduct = props.bhxProduct;
     const imageModal =
-        bhxProduct != null && bhxProduct.FeatureImageModel != null
-            ? bhxProduct.FeatureImageModel
+        props.bhxProduct != null &&
+        props.bhxProduct.FeatureImageModel != null &&
+        props.bhxProduct.FeatureImageModel != undefined
+            ? props.bhxProduct.FeatureImageModel
             : null;
-    if (bhxProduct != null && imageModal != null) {
+    if (props.bhxProduct != null && imageModal != null) {
         return (
             <View
                 className="product"
@@ -34,12 +35,14 @@ const ComboProductBox = (props) => {
                                     uri: imageModal.ThemeMobile
                                 }}
                             />
-                            <Image
-                                style={styles.imageProductCombo}
-                                source={{
-                                    uri: imageModal.ImageMobile
-                                }}
-                            />
+                            <View style={styles.wrapImageProductCombo}>
+                                <Image
+                                    style={styles.imageProductCombo}
+                                    source={{
+                                        uri: imageModal.ImageMobile
+                                    }}
+                                />
+                            </View>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -55,13 +58,13 @@ const ComboProductBox = (props) => {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productName}>
-                            {bhxProduct.ShortName}
+                            {props.bhxProduct.ShortName}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
                         <View className="priceInfo" style={styles.priceInfo}>
                             <View className="price" style={styles.price}>
-                                <Text>{bhxProduct.Price}</Text>
+                                <Text>{props.bhxProduct.Price}</Text>
                             </View>
                             <View className="buy" style={styles.buy}>
                                 <Text>MUA</Text>
@@ -80,10 +83,10 @@ const ComboProductBox = (props) => {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productNameSelected}>
-                            {bhxProduct.ShortName}
+                            {props.bhxProduct.ShortName}
                         </Text>
                         <Text className="price" style={styles.priceSelected}>
-                            {bhxProduct.Price}
+                            {props.bhxProduct.Price}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>

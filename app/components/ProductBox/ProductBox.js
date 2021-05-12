@@ -134,7 +134,8 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.IsExpired
+                        props.bhxProduct.Sales !== null &&
+                        props.bhxProduct.Sales != undefined
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -181,7 +182,8 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.IsExpired
+                        props.bhxProduct.Sales !== null &&
+                        props.bhxProduct.Sales != undefined
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
