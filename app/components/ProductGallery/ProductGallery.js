@@ -5,17 +5,16 @@ import {
     Text,
     Image,
     UIManager,
-    FlatList,
     TouchableOpacity,
     StyleSheet,
     Modal,
     StatusBar,
     Platform,
-    SafeAreaView
+    ScrollView,
+    FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ImageZoom from 'react-native-image-pan-zoom';
-import { ScrollView } from 'react-native-gesture-handler';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 import FakeData from './FakeData';
 
@@ -23,22 +22,20 @@ const THUMB_SIZE = 50;
 const { width, height } = Dimensions.get('window');
 const IMG_HEIGHT = width * 0.75;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
+
 export default class ProductGallery extends Component {
-    silderRef = createRef();
+    _sliderRef = createRef();
 
-    galleryRef = createRef();
+    _carousel = createRef();
 
-    thumbRef = createRef();
+    _thumbRef = createRef();
 
     constructor(props) {
         super(props);
         this.state = {
             data: FakeData,
             crrImgIdx: 0,
-            isShowModal: false,
-            crrThumb: 0,
-            isShowFromSlider: false,
-            scroll: true
+            showModal: false
         };
         if (Platform.OS === 'android') {
             UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -46,346 +43,233 @@ export default class ProductGallery extends Component {
     }
 
     render() {
-        const { data, crrImgIdx, isShowModal } = this.state;
+        const { data, crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
+        const images = data.map((s) => ({ url: s.uri }));
 
         return (
-            <ScrollView style={{ width, marginTop: STATUSBAR_HEIGHT }}>
-                <View>
-                    <View>
-                        <FlatList
-                            ref={this.silderRef}
-                            style={{ width, height: IMG_HEIGHT }}
-                            snapToInterval={width}
-                            bounces={false}
-                            decelerationRate="fast"
-                            viewAbilityConfig={{
-                                viewAreaCoveragePercentThreshold: 50
-                            }}
-                            data={data}
-                            keyExtractor={(item) => item.uri}
-                            horizontal
-                            pagingEnabled
-                            showsHorizontalScrollIndicator={false}
-                            onViewableItemsChanged={
-                                this.onViewableItemsChangedSlider
-                            }
-                            renderItem={({ item }) => {
-                                return (
-                                    <TouchableOpacity
-                                        activeOpacity={0.85}
-                                        onPress={() =>
-                                            this.setModalVisible(true)
-                                        }
+            <View
+                style={{
+                    width,
+                    marginTop: STATUSBAR_HEIGHT
+                }}>
+                <View
+                    style={{
+                        height: IMG_HEIGHT + 28
+                    }}>
+                    <ScrollView
+                        ref={(snapScroll) => {
+                            this._sliderRef = snapScroll;
+                        }}
+                        horizontal
+                        style={{
+                            height: IMG_HEIGHT
+                        }}
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}>
+                        {data.map((item, index) => {
+                            return (
+                                <TouchableOpacity
+                                    activeOpacity={0.85}
+                                    onPress={() => this.openModal(index)}
+                                    style={{
+                                        width,
+                                        height: IMG_HEIGHT
+                                    }}>
+                                    <Image
                                         style={{
                                             width,
-                                            height
-                                        }}>
-                                        <Image
-                                            style={{
-                                                width,
-                                                height: IMG_HEIGHT
-                                            }}
-                                            source={{ uri: item.uri }}
-                                        />
-                                    </TouchableOpacity>
-                                );
-                            }}
-                        />
-                        <View
+                                            height: IMG_HEIGHT
+                                        }}
+                                        resizeMode="contain"
+                                        source={{ uri: item.uri }}
+                                    />
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </ScrollView>
+
+                    <View
+                        style={[
+                            styles.btnArrowContainer,
+                            styles.btnPreviousContainer
+                        ]}>
+                        <TouchableOpacity
                             style={[
-                                styles.btnArrowContainer,
-                                styles.btnPreviousContainer
-                            ]}>
-                            <TouchableOpacity
-                                style={[
-                                    styles.btnChangeSlider,
-                                    styles.btnChangeSliderPrevious
-                                ]}
-                                activeOpacity={0.7}
-                                onPress={() => {
-                                    const tmpcrridx =
-                                        crrImgIdx - 1 < 0
-                                            ? DATA_IMAGES_LENGTH - 1
-                                            : crrImgIdx - 1;
-                                    this.changeOffsetSlider(tmpcrridx);
-                                }}>
-                                <Icon
-                                    name="angle-left"
-                                    size={26}
-                                    color="#fff"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View
+                                styles.btnChangeSlider,
+                                styles.btnChangeSliderPrevious
+                            ]}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                                const tmpcrridx =
+                                    crrImgIdx - 1 < 0
+                                        ? DATA_IMAGES_LENGTH - 1
+                                        : crrImgIdx - 1;
+                                this.setState({ crrImgIdx: tmpcrridx });
+                                this._sliderRef.scrollTo({
+                                    x: tmpcrridx * width,
+                                    y: 0,
+                                    animated: true
+                                });
+                            }}>
+                            <Icon name="angle-left" size={26} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        style={[
+                            styles.btnArrowContainer,
+                            styles.btnNextContainer
+                        ]}>
+                        <TouchableOpacity
                             style={[
-                                styles.btnArrowContainer,
-                                styles.btnNextContainer
-                            ]}>
-                            <TouchableOpacity
-                                style={[
-                                    styles.btnChangeSlider,
-                                    styles.btnChangeSliderNext
-                                ]}
-                                activeOpacity={0.7}
-                                onPress={() => {
-                                    const tmpcrridx =
-                                        crrImgIdx + 1 >= DATA_IMAGES_LENGTH
-                                            ? 0
-                                            : crrImgIdx + 1;
-                                    this.changeOffsetSlider(tmpcrridx);
-                                }}>
-                                <Icon
-                                    name="angle-right"
-                                    size={26}
-                                    color="#fff"
-                                />
-                            </TouchableOpacity>
-                        </View>
+                                styles.btnChangeSlider,
+                                styles.btnChangeSliderNext
+                            ]}
+                            activeOpacity={0.7}
+                            onPress={() => {
+                                const tmpcrridx =
+                                    crrImgIdx + 1 >= DATA_IMAGES_LENGTH
+                                        ? 0
+                                        : crrImgIdx + 1;
+                                this.setState({ crrImgIdx: tmpcrridx });
+                                this._sliderRef.scrollTo({
+                                    x: tmpcrridx * width,
+                                    y: 0,
+                                    animated: true
+                                });
+                            }}>
+                            <Icon name="angle-right" size={26} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                    <View
+                        // eslint-disable-next-line react-native/no-color-literals
+                        style={{
+                            height: 28,
+                            alignItems: 'flex-end'
+                        }}>
                         <View
                             style={{
-                                flex: 1,
-                                alignItems: 'flex-end'
+                                width: 40
                             }}>
-                            <View
-                                style={{
-                                    width: 40
-                                }}>
-                                <Text style={styles.totalNumber}>
-                                    {crrImgIdx + 1}/{DATA_IMAGES_LENGTH}
-                                </Text>
-                            </View>
+                            <Text style={styles.totalNumber}>
+                                {crrImgIdx + 1}/{DATA_IMAGES_LENGTH}
+                            </Text>
                         </View>
                     </View>
 
-                    <SafeAreaView>
-                        <Modal
-                            visible={isShowModal}
-                            onRequestClose={() => this.setModalVisible(false)}
-                            onShow={() => this.onModalChangingShow()}
-                            swipeThreshold={50}
-                            animationType="slide"
-                            style={{ width, height }}>
-                            <View style={{ width, height }}>
-                                <FlatList
-                                    keyboardShouldPersistTaps="always"
-                                    style={{ height: IMG_HEIGHT }}
-                                    // eslint-disable-next-line react-native/no-color-literals
-                                    contentContainerStyle={{
-                                        flexGrow: 1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backgroundColor: '#000'
-                                    }}
-                                    snapToInterval={width}
-                                    bounces={false}
-                                    decelerationRate="fast"
-                                    viewAbilityConfig={{
-                                        viewAreaCoveragePercentThreshold: 25
-                                    }}
-                                    data={data}
-                                    ref={this.galleryRef}
-                                    keyExtractor={(item) => item.uri}
-                                    horizontal
-                                    pagingEnabled
-                                    showsHorizontalScrollIndicator={false}
-                                    onViewableItemsChanged={
-                                        this.onViewableItemsChangedGallery
-                                    }
-                                    scrollEnabled={this.state.scroll}
-                                    renderItem={({ item }) => {
-                                        return (
-                                            <ImageZoom
-                                                cropWidth={
-                                                    Dimensions.get('window')
-                                                        .width
-                                                }
-                                                cropHeight={
-                                                    Dimensions.get('window')
-                                                        .height
-                                                }
-                                                enableSwipeDown
-                                                onSwipeDown={() =>
-                                                    this.setModalVisible(false)
-                                                }
-                                                panToMove={!this.state.scroll}
-                                                onMove={({ scale }) => {
-                                                    this.setState({
-                                                        scroll: scale === 1
-                                                    });
-                                                }}
-                                                minScale={1}
-                                                swipeDownThreshold={100}
-                                                imageWidth={width}
-                                                imageHeight={IMG_HEIGHT}>
-                                                <Image
-                                                    source={{
-                                                        uri: item.uri
-                                                    }}
-                                                    style={{
-                                                        width,
-                                                        height: IMG_HEIGHT
-                                                    }}
-                                                    resizeMode="contain"
-                                                />
-                                            </ImageZoom>
-                                        );
-                                    }}
-                                />
-                            </View>
-
-                            <View
-                                style={{
-                                    position: 'absolute',
-                                    bottom: 25,
-                                    left: 10,
-                                    right: 10,
-                                    width,
-                                    height: 50,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                <FlatList
-                                    ref={this.thumbRef}
-                                    contentContainerStyle={{
-                                        padding: 5,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        minWidth: width
-                                    }}
-                                    snapToInterval={width}
-                                    bounces={false}
-                                    decelerationRate="fast"
-                                    viewAbilityConfig={{
-                                        viewAreaCoveragePercentThreshold: 50
-                                    }}
-                                    data={data}
-                                    keyExtractor={(item) =>
-                                        `thumbRef_${item.uri}`
-                                    }
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    onMomentumScrollBegin={() => {
-                                        this.onEndReachedCalledDuringMomentum = false;
-                                    }}
-                                    onMomentumScrollEnd={() => {
-                                        if (
-                                            !this
-                                                .onEndReachedCalledDuringMomentum
-                                        ) {
-                                            this.onEndReachedCalledDuringMomentum = true;
-                                        }
-                                    }}
-                                    renderItem={({ item, index }) => {
-                                        return (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.setState({
-                                                        crrThumb: index
-                                                    });
-                                                    this.changeOffsetGallery(
-                                                        index
-                                                    );
-                                                }}
-                                                activeOpacity={0.85}
-                                                style={{
-                                                    width: THUMB_SIZE,
-                                                    height: THUMB_SIZE,
-                                                    marginRight: 10
-                                                }}>
-                                                <Image
-                                                    style={{
-                                                        width: THUMB_SIZE,
-                                                        height: THUMB_SIZE,
-                                                        borderRadius: 4,
-                                                        opacity:
-                                                            index ===
-                                                            this.state.crrThumb
-                                                                ? 1
-                                                                : 0.5
-                                                    }}
-                                                    source={{ uri: item.uri }}
-                                                />
-                                            </TouchableOpacity>
-                                        );
-                                    }}
-                                />
-                            </View>
-                        </Modal>
-                    </SafeAreaView>
+                    <Modal
+                        visible={this.state.showModal}
+                        animationType="slide"
+                        transparent
+                        onShow={() => {
+                            this.changeOffsetThumb(this.state.crrImgIdx);
+                        }}
+                        onRequestClose={() => this.closeModal()}>
+                        <ImageViewer
+                            imageUrls={images}
+                            index={crrImgIdx}
+                            enableSwipeDown
+                            swipeDownThreshold={25}
+                            onSwipeDown={() => this.closeModal()}
+                            // eslint-disable-next-line no-unused-vars
+                            onMove={(position) => {
+                                // const _crrY = position.positionY;
+                                // const _opacity = (100 - _crrY * 2) / 100;
+                                // const finalOPa = _opacity < 0 ? 0 : _opacity;
+                                // this.setState({
+                                //     modalOpacity: finalOPa
+                                // });
+                                // console.log(_opacity);
+                            }}
+                            onChange={(index) => {
+                                this.changeOffsetThumb(index);
+                                this.setState({ crrImgIdx: index });
+                            }}
+                            backgroundColor="white"
+                            footerContainerStyle={[styles.modalFooterStyle]}
+                            renderFooter={this._renderFooterModalItems}
+                        />
+                    </Modal>
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 
-    setActiveIndex = (index) => {
-        this.setState({ crrImgIdx: index });
-    };
+    _renderFooterModalItems = () => (
+        <View
+            style={{
+                width,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+            <FlatList
+                ref={this._thumbRef}
+                contentContainerStyle={{
+                    padding: 5,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minWidth: width
+                }}
+                data={this.state.data}
+                keyExtractor={(item) => `thumbRef_${item.uri}`}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item, index }) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                this.setState({
+                                    crrImgIdx: index
+                                });
+                            }}
+                            activeOpacity={0.85}
+                            style={{
+                                width: THUMB_SIZE,
+                                height: THUMB_SIZE,
+                                marginRight: 10
+                            }}>
+                            <Image
+                                style={{
+                                    width: THUMB_SIZE,
+                                    height: THUMB_SIZE,
+                                    borderRadius: 4,
+                                    opacity:
+                                        index === this.state.crrImgIdx ? 1 : 0.5
+                                }}
+                                source={{
+                                    uri: item.uri
+                                }}
+                            />
+                        </TouchableOpacity>
+                    );
+                }}
+            />
+        </View>
+    );
 
-    setModalVisible = (isshow) => {
-        this.setState({ isShowModal: isshow });
-        if (!isshow) {
-            this.changeOffsetSlider(this.state.crrImgIdx);
-        }
-    };
+    openModal(index) {
+        this.setState({ showModal: true, crrImgIdx: index });
+    }
 
-    onModalChangingShow = () => {
-        this.setState({ isShowFromSlider: true });
-        this.changeOffsetGallery(this.state.crrImgIdx);
-    };
-
-    changeOffsetSlider = (index) => {
-        this.silderRef?.current?.scrollToIndex({
-            index,
-            animation: false
+    closeModal() {
+        this.setState({ showModal: false });
+        this._sliderRef.scrollTo({
+            x: this.state.crrImgIdx * width,
+            y: 0,
+            animated: true
         });
-    };
-
-    changeOffsetGallery = (index) => {
-        this.galleryRef?.current?.scrollToIndex({
-            index,
-            animation: false
-        });
-    };
+    }
 
     changeOffsetThumb = (index) => {
         let mnus = 30;
         if (THUMB_SIZE * index < width / 2) {
             mnus = -30;
         }
-
-        this.thumbRef?.current?.scrollToOffset({
+        this._thumbRef?.current?.scrollToOffset({
             offset: THUMB_SIZE * index + mnus,
             viewPosition: 0
         });
-    };
-
-    onViewableItemsChangedSlider = ({ viewableItems }) => {
-        let idxCheck = 0;
-        if (viewableItems.length === 1) {
-            idxCheck += 1;
-            if (idxCheck === 1) {
-                idxCheck = 0;
-                this.setActiveIndex(viewableItems[0].index);
-                this.setState({ crrThumb: viewableItems[0].index });
-            }
-        }
-    };
-
-    onViewableItemsChangedGallery = ({ viewableItems }) => {
-        if (viewableItems.length === 2) {
-            return;
-        }
-        if (this.state.isShowFromSlider) {
-            this.setState({ isShowFromSlider: false });
-            return;
-        }
-        if (viewableItems.length === 1) {
-            const { index } = viewableItems[0];
-            this.setState({ crrThumb: index });
-            this.changeOffsetThumb(index);
-            this.setActiveIndex(index);
-        }
     };
 }
 
@@ -419,6 +303,19 @@ const styles = StyleSheet.create({
     },
     btnPreviousContainer: {
         left: 0
+    },
+    // eslint-disable-next-line react-native/no-color-literals
+    modalFooterStyle: {
+        backgroundColor: '#fff',
+        elevation: 9,
+        padding: 5,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 0,
+            height: -2
+        },
+        shadowOpacity: 1.0,
+        shadowRadius: 2
     },
     // eslint-disable-next-line react-native/no-color-literals
     totalNumber: {
