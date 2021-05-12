@@ -86,6 +86,10 @@ const ListCate = [
 const NavMenu = () => {
     const [textSearch, setTextSearch] = useState('');
 
+    const [cateFilter, setCateFilter] = useState('1100');
+
+    const [selectedCateChild, setSelectedCateChild] = useState('');
+
     return (
         <View style={styles.container}>
             <View style={styles.navLeft}>
@@ -108,7 +112,13 @@ const NavMenu = () => {
                     style={styles.navLeftBottom}
                     data={ListCate}
                     renderItem={(item) => {
-                        return <action.RenderCateItem item={item} />;
+                        return (
+                            <action.RenderCateItem
+                                item={item}
+                                cateFilter={cateFilter}
+                                setCateFilter={setCateFilter}
+                            />
+                        );
                     }}
                 />
             </View>
@@ -136,7 +146,16 @@ const NavMenu = () => {
                             data={section.data}
                             renderItem={(item) => {
                                 return (
-                                    <action.RenderCateChildItem item={item} />
+                                    <action.RenderCateChildItem
+                                        item={item}
+                                        cateParent={section.Id}
+                                        cateFilter={cateFilter}
+                                        setCateFilter={setCateFilter}
+                                        selectedCateChild={selectedCateChild}
+                                        setSelectedCateChild={
+                                            setSelectedCateChild
+                                        }
+                                    />
                                 );
                             }}
                         />

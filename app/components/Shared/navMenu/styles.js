@@ -31,6 +31,14 @@ export const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 50
     },
+    iconChecked: {
+        position: 'absolute',
+        resizeMode: 'contain',
+        right: 10,
+        top: -10,
+        width: 16,
+        zIndex: 1
+    },
     iconClose: {
         height: 16,
         marginRight: 7,
@@ -73,7 +81,12 @@ export const styles = StyleSheet.create({
     itemCateChild: {
         alignItems: 'center',
         justifyContent: 'center',
+        opacity: 0.5,
+        position: 'relative',
         width: '33%'
+    },
+    itemCateChildActive: {
+        opacity: 1
     },
     navLeft: {
         flex: 2
@@ -116,5 +129,8 @@ export const styles = StyleSheet.create({
     txtCateChild: {
         marginTop: 0,
         textAlign: 'center'
+    },
+    txtCateChildActive: {
+        fontWeight: 'bold'
     }
 });
