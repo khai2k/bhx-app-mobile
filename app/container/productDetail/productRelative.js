@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
-// import { translate } from '@app/translate';
-import { Header } from '@app/components';
-import ProductBox from '../../components/ProductBox/ProductBox';
-import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
-import ComboProductBox from '../../components/ProductBox/ComboProductBox';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import axios from 'axios';
 
-import ListCategory from './ListCategory';
-import SliderTitle from './SliderTitle';
+import { View, StyleSheet, Text } from 'react-native';
+import ProductBox from '../../components/ProductBox/ProductBox';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
     productList: {
         flexDirection: 'row',
         flexWrap: 'wrap'
+    },
+    title: {
+        fontSize: 20,
+        paddingHorizontal: 10
     }
 });
 
-class Product extends Component {
+class ProductRelative extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -67,39 +60,13 @@ class Product extends Component {
         };
     }
 
-    componentDidMount() {
-        axios({
-            method: 'get',
-            url:
-                'http://apiappbeta.bachhoaxanh.com/api/product/get?productId=196828&province=0&store=6463',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((res) => {
-                const bhxProduct = res.data;
-                console.log('Api response: ' + res.data);
-                this.setState({ bhxProduct: bhxProduct });
-            })
-            .catch((err) => console.log(err));
-    }
-
     render() {
         return (
             <View style={styles.container}>
-                <Header />
-                <SliderTitle />
-                <ListCategory />
+                <Text style={styles.title}>Sản phẩm liên quan </Text>
                 <View style={styles.productList}>
                     {this.state.listProducts.map((product) => {
                         return <ProductBox bhxProduct={product} />;
-                    })}
-                    {this.state.listProducts.map((product, i) => {
-                        return <ProductExpiredBox bhxProduct={product} />;
-                    })}
-                    {this.state.listProducts.map((product, i) => {
-                        return <ComboProductBox bhxProduct={product} />;
                     })}
                 </View>
             </View>
@@ -115,4 +82,4 @@ const mapDispatchToProps = function () {
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductRelative);
