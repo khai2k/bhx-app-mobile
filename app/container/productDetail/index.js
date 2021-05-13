@@ -1,29 +1,31 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { View } from 'react-native'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { ScrollView, View } from 'react-native';
 
-import ProductGallery from './ProductGallery'
+import ProductGallery from '../../components/ProductGallery/ProductGallery';
+import ProductArticle from './productArticle';
+import ProductRelative from './productRelative';
+import GroupBoxSelect from './groupBoxSelect';
 
 class ProductDetail extends Component {
-    constructor (props) {
-        super(props)
-    }
-
-    render () {
+    render() {
         return (
-            <View>
+            <ScrollView>
                 <ProductGallery />
-            </View>
-        )
+                <ProductArticle />
+                <GroupBoxSelect />
+                <ProductRelative />
+            </ScrollView>
+        );
     }
 }
 
 const mapStateToProps = function () {
-    return {}
-}
+    return {};
+};
 
 const mapDispatchToProps = function () {
-    return {}
-}
+    return {};
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);

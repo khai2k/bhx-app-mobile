@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '@app/styles';
 
 const win = Dimensions.get('window');
-const ratio = win.width / 3 / 300; //product image width
+const ratio = win.width / 3; //product image width
 
 const styles = StyleSheet.create({
     boxBuy: {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.LINK_WATER_2,
         justifyContent: 'center',
         alignSelf: 'center',
-        height: 34,
+        height: 33,
         lineHeight: 30,
         padding: 0,
         margin: 0
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
         width: win.width / 3 - 6,
-        height: ratio * 300
+        height: ratio
     },
     imgContent: {
         height: 'auto'
@@ -338,6 +338,22 @@ const styles = StyleSheet.create({
         padding: 0,
         lineHeight: 14,
         fontSize: 11
+    },
+    /*Combo product box*/
+    comboTheme: {
+        borderTopLeftRadius: 7,
+        borderTopRightRadius: 7,
+        height: win.width / 3,
+        width: '100%'
+    },
+    imageProductCombo: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
