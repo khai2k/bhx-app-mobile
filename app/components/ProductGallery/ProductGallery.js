@@ -19,7 +19,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import FakeData from './FakeData';
 
 const THUMB_SIZE = 50;
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const IMG_HEIGHT = width * 0.75;
 const STATUSBAR_HEIGHT = StatusBar.currentHeight;
 
