@@ -10,6 +10,7 @@ import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
 import ProductDetail from '../container/productDetail';
+import Cart from '../container/cart';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
 
@@ -31,6 +32,15 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="ProductDetail"
                 component={ProductDetail}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="Cart"
+                component={Cart}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);

@@ -1,3 +1,3 @@
-import { apiBase } from './fetchApi';
+import { apiBase, METHOD } from './fetchApi';
 
-export { apiBase };
+export { apiBase, METHOD };

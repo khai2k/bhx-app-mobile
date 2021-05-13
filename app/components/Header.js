@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Image,
+    TextInput,
+    TouchableOpacity
+} from 'react-native';
 
 class Header extends Component {
     render() {
@@ -39,7 +46,11 @@ class Header extends Component {
                                 {translate('Header_HistoryAccount')}
                             </Text>
                         </View>
-                        <View style={styles.boxcart}>
+                        <TouchableOpacity
+                            style={styles.boxcart}
+                            onPress={() =>
+                                this.props.navigation.navigate('Cart')
+                            }>
                             <View style={styles.boxcartprice}>
                                 <Text style={styles.textcolor}>
                                     {translate('Header_Cart')}
@@ -55,7 +66,7 @@ class Header extends Component {
                                     source={require('../../assets/images/icon-shoping-cart.png')}
                                 />
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </SafeAreaView>

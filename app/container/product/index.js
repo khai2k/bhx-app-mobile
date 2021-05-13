@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, Button } from 'react-native';
 // import { translate } from '@app/translate';
 import { Header } from '@app/components';
 import ProductBox from '../../components/ProductBox/ProductBox';
@@ -67,7 +67,7 @@ class Product extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header />
+                <Header navigation={this.props.navigation} />
                 <SliderTitle />
                 <ListCategory />
                 <View style={styles.productList}>

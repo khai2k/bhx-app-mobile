@@ -6,7 +6,7 @@ import NetInfo from '@react-native-community/netinfo';
 
 import { helper } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
-import { translate } from '@app/translate';
+
 // Declear const for status code for app.
 const STATUS_CODE_SUCCESS_200 = 200;
 const STATUS_CODE_SUCCESS_300 = 300;
@@ -69,10 +69,7 @@ const timeout = (time, promise) => {
         _timeoutAPI = setTimeout(() => {
             clearTimeout(_timeoutAPI);
             return reject(
-                setCustomError(
-                    STATUS_CODE_TIMEOUT,
-                    translate('fetchAPI.error_time_out')
-                )
+                setCustomError(STATUS_CODE_TIMEOUT, 'fetchAPI.error_time_out')
             );
         }, time);
         promise.then(resolve, reject);
@@ -89,27 +86,23 @@ const handleError = async (error) => {
         if (state) {
             let msg = '';
             if (helper.hasProperty(state, 'isConnected') && state.isConnected) {
-                msg = translate('fetchAPI.error_time_out_withConnected');
+                msg = 'fetchAPI.error_time_out_withConnected';
             } else if (
                 helper.hasProperty(state, 'isInternetReachable') &&
                 state.isInternetReachable
             ) {
-                msg = translate('fetchAPI.no_connected');
+                msg = 'fetchAPI.no_connected';
             } else {
                 switch (state.type) {
                     case 'wifi':
-                        msg = translate(
-                            'fetchAPI.error_time_out_withConnectedWifi'
-                        );
+                        msg = 'fetchAPI.error_time_out_withConnectedWifi';
                         break;
                     case 'cellular':
-                        msg = translate(
-                            'fetchAPI.error_time_out_withConnectedCellular'
-                        );
+                        msg = 'fetchAPI.error_time_out_withConnectedCellular';
                         break;
                     default:
                         // no internet here
-                        msg = translate('fetchAPI.no_connected');
+                        msg = 'fetchAPI.no_connected';
                         break;
                 }
             }
@@ -122,27 +115,23 @@ const handleError = async (error) => {
         if (state) {
             let msg = '';
             if (helper.hasProperty(state, 'isConnected') && state.isConnected) {
-                msg = translate('fetchAPI.error_time_out_withConnected');
+                msg = 'fetchAPI.error_time_out_withConnected';
             } else if (
                 helper.hasProperty(state, 'isInternetReachable') &&
                 state.isInternetReachable
             ) {
-                msg = translate('fetchAPI.no_connected');
+                msg = 'fetchAPI.no_connected';
             } else {
                 switch (state.type) {
                     case 'wifi':
-                        msg = translate(
-                            'fetchAPI.error_time_out_withConnectedWifi'
-                        );
+                        msg = 'fetchAPI.error_time_out_withConnectedWifi';
                         break;
                     case 'cellular':
-                        msg = translate(
-                            'fetchAPI.error_time_out_withConnectedCellular'
-                        );
+                        msg = 'fetchAPI.error_time_out_withConnectedCellular';
                         break;
                     default:
                         // no internet here
-                        msg = translate('fetchAPI.no_connected');
+                        msg = 'fetchAPI.no_connected';
                         break;
                 }
             }
@@ -159,8 +148,8 @@ const handleError = async (error) => {
     return Promise.reject(
         setCustomError(
             STATUS_CODE_UNKNOW,
-            translate('fetchAPI.error_connect'),
-            translate('fetchAPI.error_connect')
+            'fetchAPI.error_connect',
+            'fetchAPI.error_connect'
         )
     );
 };
@@ -188,7 +177,7 @@ const checkStatus = (response) => {
                     setCustomError(
                         STATUS_CODE_SEVER_ERROR,
                         'Lỗi Sever: ',
-                        translate('fetchAPI.error_server')
+                        'fetchAPI.error_server'
                     )
                 );
             }
@@ -209,7 +198,7 @@ const checkStatus = (response) => {
                 return Promise.reject(error);
             } else {
                 return Promise.reject(
-                    setCustomError(0, translate('fetchAPI.error_server'))
+                    setCustomError(0, 'fetchAPI.error_server')
                 );
             }
         });
@@ -329,7 +318,7 @@ export const apiBase = (
                         case METHOD.GET:
                             // append params into url
                             if (helper.IsValidateObject(options.params)) {
-                                url += getQueryString(options.params);
+                                url += `?${getQueryString(options.params)}`;
                             }
 
                             break;
@@ -361,49 +350,48 @@ export const apiBase = (
                     }
                 }
 
-                const controller = {};
-                const _signal = controller.signal;
-                const abortError = {
-                    name: 'AbortError'
-                };
+                // const controller = {};
+                // const _signal = controller.signal;
+                // const abortError = {
+                //     name: 'AbortError'
+                // };
 
-                if (options.signal !== null && options.signal !== undefined) {
-                    options.signal.addEventListener('abort', () => {
-                        reject(
-                            setCustomError(
-                                STATUS_CODE_SUCCESS_WITH_ABORT,
-                                abortError.name,
-                                abortError.name
-                            )
-                        );
-                    });
-                } else {
-                    _signal.addEventListener('abort', () => {
-                        reject(
-                            setCustomError(
-                                STATUS_CODE_SUCCESS_WITH_ABORT,
-                                abortError.name,
-                                abortError.name
-                            )
-                        );
-                    });
-                }
+                // if (options.signal !== null && options.signal !== undefined) {
+                //     options.signal.addEventListener('abort', () => {
+                //         reject(
+                //             setCustomError(
+                //                 STATUS_CODE_SUCCESS_WITH_ABORT,
+                //                 abortError.name,
+                //                 abortError.name
+                //             )
+                //         );
+                //     });
+                // } else {
+                //     _signal.addEventListener('abort', () => {
+                //         reject(
+                //             setCustomError(
+                //                 STATUS_CODE_SUCCESS_WITH_ABORT,
+                //                 abortError.name,
+                //                 abortError.name
+                //             )
+                //         );
+                //     });
+                // }
 
-                console.log('API REQUEST: ', url, {
+                let requests = {
                     signal: options.signal,
                     method,
                     headers,
                     body // <-- Post parameters
-                });
-                timeout(
-                    15000,
-                    fetch(url, {
+                };
+                if (method === METHOD.GET) {
+                    requests = {
                         signal: options.signal,
-                        method,
-                        headers,
-                        body // <-- Post parameters
-                    })
-                )
+                        method
+                    };
+                }
+                console.log('API REQUEST: ', url, requests);
+                timeout(15000, fetch(url, requests))
                     .catch(handleError) // handle network issues
                     .then(checkStatus)
                     .then(parseJSON)

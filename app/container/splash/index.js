@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { MyText } from '@app/components';
+import { setI18nConfig } from '@app/translate';
 import styles from './style';
 import * as actionAuthenCreator from './action';
-import { setI18nConfig } from '@app/translate';
 
 class Splash extends Component {
     constructor(props) {
@@ -34,6 +34,8 @@ class Splash extends Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state);
+    console.log('mapStateToProps authenReducer');
     return {
         isShowSplash: state.authenReducer.isShowSplash
     };
