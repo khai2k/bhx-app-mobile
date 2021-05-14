@@ -6,6 +6,9 @@ export const BLACK_08 = 'rgba(0, 0, 0, 0.8)';
 export const GRAY_LIGHT = '#e6e6e6';
 export const GRAY_MEDIUM = '#cacaca';
 export const GRAY_DARK = '#8a8a8a';
+export const GRAY_222B45 = '#222B45';
+export const GRAY_EAEEF7 = '#EAEEF7';
+export const GRAY_E4E9F2 = '#E4E9F2';
 
 export const DIM_GRAY = 'rgba(107,107,107,1)';
 export const NIGHT_RIDER = 'rgba(51, 51, 51,1)';
@@ -111,6 +114,10 @@ export const BORDER = '#00AC5B';
 export const BORDER_GENERAL = '#ededed';
 export const RED = 'red';
 export const HEADER_CART = '#FFF87C';
+
+// GREEN
+export const GREEN_00AC5B = '#00AC5B';
+export const GRAY_8F9BB3 = '#8F9BB3';
 export const CART_STOPSALES = '#f30600';
 export const CART_UNIT = '#8f9bb3';
 export const CART_BORDER_BTN = '#8f9bb3';

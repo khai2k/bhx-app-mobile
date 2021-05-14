@@ -16,12 +16,17 @@ class Header extends Component {
         return (
             <SafeAreaView>
                 <View style={styles.headerContainer}>
-                    <View style={styles.boxlogo}>
+                    <TouchableOpacity
+                        style={styles.boxlogo}
+                        onPress={() =>
+                            this.props.navigation.navigate('NavMenu')
+                        }>
                         <Image
                             style={styles.logo}
-                            source={require('../../assets/images/icon-menu.png')}
+                            source={require('../../assets/Images/icon-menu.png')}
                         />
-                    </View>
+                    </TouchableOpacity>
+
                     <View style={styles.boxsearch}>
                         <TextInput
                             style={styles.input}
@@ -29,7 +34,7 @@ class Header extends Component {
                         />
                         <Image
                             style={styles.iconsearch}
-                            source={require('../../assets/images/icon-search.png')}
+                            source={require('../../assets/Images/icon-search.png')}
                         />
                     </View>
                     <View style={styles.boxinfo}>
@@ -63,7 +68,7 @@ class Header extends Component {
                                 <Text style={styles.number}>5</Text>
                                 <Image
                                     style={styles.iconcart}
-                                    source={require('../../assets/images/icon-shoping-cart.png')}
+                                    source={require('../../assets/Images/icon-shopping-cart.png')}
                                 />
                             </View>
                         </TouchableOpacity>
