@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
+import BuyBox from './BuyBox';
 
 const ProductBox = (props) => {
     const [numberItems, setNumberItems] = useState(1);
@@ -46,6 +47,13 @@ const ProductBox = (props) => {
             );
         }
     };
+    const onUpdateNumberItems = (number) => {
+        setNumberItems(number);
+    };
+    const onUpdateBuyButtonVisible = (status) => {
+        setBuyButtonVisible(status);
+    };
+
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
@@ -71,8 +79,13 @@ const ProductBox = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
                 onPress={() => {
-                    setNumberItems(1);
-                    setBuyButtonVisible(true);
+                    if (
+                        props.bhxProduct.Price > 0 &&
+                        props.bhxProduct.StockQuantityNew >= 1
+                    ) {
+                        setNumberItems(1);
+                        setBuyButtonVisible(true);
+                    }
                 }}
                 style={
                     buyButtonVisible
@@ -92,14 +105,15 @@ const ProductBox = (props) => {
                     </Text>
                 </View>
                 <View className="boxBuy" style={styles.boxBuy}>
-                    <View className="priceInfo" style={styles.priceInfo}>
-                        <View className="price" style={styles.price}>
-                            <Text>{props.bhxProduct.Price}</Text>
-                        </View>
-                        <View className="buy" style={styles.buy}>
-                            <Text>MUA</Text>
-                        </View>
-                    </View>
+                    <BuyBox
+                        bhxProduct={props.bhxProduct}
+                        isPageExpired={false}
+                        selectedBuy={false}
+                        numberItems={numberItems}
+                        onUpdateNumberItems={onUpdateNumberItems}
+                        onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                        handleInputNumber={handleInputNumber}
+                    />
                 </View>
                 {props.bhxProduct.Sales !== null &&
                 props.bhxProduct.Sales !== undefined ? (
@@ -143,34 +157,15 @@ const ProductBox = (props) => {
                     </Text>
                 </View>
                 <View className="boxBuy" style={styles.boxBuy}>
-                    <View className="upDown" style={styles.upDownShow}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setNumberItems(
-                                    numberItems > 0 ? numberItems - 1 : 0
-                                );
-                                setBuyButtonVisible(numberItems !== 1);
-                            }}
-                            className="down"
-                            style={styles.down}>
-                            <Text style={styles.downIcon} />
-                        </TouchableOpacity>
-                        <TextInput
-                            style={styles.inputBuy}
-                            onChangeText={handleInputNumber}
-                            value={numberItems.toString()}
-                            keyboardType="numeric"
-                        />
-                        <TouchableOpacity
-                            onPress={() => {
-                                setNumberItems(numberItems + 1);
-                            }}
-                            className="up"
-                            style={styles.up}>
-                            <Text style={styles.upIcon1} />
-                            <Text style={styles.upIcon2} />
-                        </TouchableOpacity>
-                    </View>
+                    <BuyBox
+                        bhxProduct={props.bhxProduct}
+                        isPageExpired={false}
+                        selectedBuy
+                        numberItems={numberItems}
+                        onUpdateNumberItems={onUpdateNumberItems}
+                        onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                        handleInputNumber={handleInputNumber}
+                    />
                 </View>
                 {props.bhxProduct.Sales !== null &&
                 props.bhxProduct.Sales !== undefined ? (
