@@ -26,5 +26,36 @@
     "android/": false,
     "__tests__": false,
     "node_modules/": false
+  },
+  "cSpell.words": [
+    "Actived",
+    "Childrens",
+    "Khuy",
+    "Khuyến",
+    "Mu",
+    "Muối",
+    "STOPSALES",
+    "Th",
+    "Thịt",
+    "accum",
+    "ch",
+    "clearcache",
+    "danh",
+    "i",
+    "m",
+    "n",
+    "ng",
+    "nh",
+    "nhóm",
+    "s",
+    "silder",
+    "sách",
+    "t",
+    "tr",
+    "trứng",
+    "Đường"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

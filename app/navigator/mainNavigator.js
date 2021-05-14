@@ -11,8 +11,10 @@ import Profile from '../container/profile';
 import Product from '../container/product';
 import ProductDetail from '../container/productDetail';
 import Cart from '../container/cart';
+import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
+import NavMenu from '../components/Shared/navMenu/NavMenu';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -41,6 +43,24 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="Cart"
                 component={Cart}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="NavMenu"
+                component={NavMenu}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="Group"
+                component={Group}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
@@ -82,20 +102,20 @@ class MainTabComponent extends Component {
                     tabBarIcon: ({ focused, image }) => {
                         if (route.name === 'Product') {
                             image = focused
-                                ? require('../../assets/images/grid.png')
-                                : require('../../assets/images/grid.png');
+                                ? require('../../assets/Images/grid.png')
+                                : require('../../assets/Images/grid.png');
                         } else if (route.name === 'Promotion') {
                             image = focused
-                                ? require('../../assets/images/promotion.png')
-                                : require('../../assets/images/promotion.png');
+                                ? require('../../assets/Images/promotion.png')
+                                : require('../../assets/Images/promotion.png');
                         } else if (route.name === 'Notification') {
                             image = focused
-                                ? require('../../assets/images/notification.png')
-                                : require('../../assets/images/notification.png');
+                                ? require('../../assets/Images/notification.png')
+                                : require('../../assets/Images/notification.png');
                         } else if (route.name === 'Profile') {
                             image = focused
-                                ? require('../../assets/images/user.png')
-                                : require('../../assets/images/user.png');
+                                ? require('../../assets/Images/user.png')
+                                : require('../../assets/Images/user.png');
                         }
                         return (
                             <Image
