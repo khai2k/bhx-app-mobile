@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -8,6 +8,7 @@ import {
     StyleSheet
 } from 'react-native';
 import { Colors } from '@app/styles';
+import FilterPopup from './FilterPopup';
 
 const ManufactureFilter = () => {
     const listBrands = [
@@ -45,28 +46,48 @@ const ManufactureFilter = () => {
             Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
         }
     ];
+    const [visiblePopup, setVisiblePopup] = useState(false);
+
+    const updateVisibleStatus = (status) => {
+        setVisiblePopup(status);
+    };
 
     return (
-        <View className="manufacture" style={styles.manufacture}>
-            <Text
-                className="titleCate"
-                style={[styles.titleCate, styles.titleCate80]}>
-                Nước ngọt{'\n'} các loại
-            </Text>
-            <FlatList
-                contentContainerStyle={[styles.scrollList, styles.scrollList80]}
-                horizontal
-                data={listBrands}
-                renderItem={({ item }) => (
-                    <View className="it" style={styles.it}>
-                        <TouchableOpacity style={styles.brand}>
-                            <Image
-                                style={styles.brandLogo}
-                                source={{ uri: item.Logo }}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                )}
+        <View>
+            <View className="manufacture" style={styles.manufacture}>
+                <TouchableOpacity
+                    onPress={() => {
+                        updateVisibleStatus(true);
+                    }}
+                    className="titleCate"
+                    style={[styles.titleCate, styles.titleCate80]}>
+                    <Text
+                        style={[styles.titleCateText, styles.titleCate80Text]}>
+                        Nước ngọt{'\n'} các loại
+                    </Text>
+                </TouchableOpacity>
+                <FlatList
+                    contentContainerStyle={[
+                        styles.scrollList,
+                        styles.scrollList80
+                    ]}
+                    horizontal
+                    data={listBrands}
+                    renderItem={({ item }) => (
+                        <View className="it" style={styles.it}>
+                            <TouchableOpacity style={styles.brand}>
+                                <Image
+                                    style={styles.brandLogo}
+                                    source={{ uri: item.Logo }}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                />
+            </View>
+            <FilterPopup
+                visibleStatus={visiblePopup}
+                onTogglePopup={updateVisibleStatus}
             />
         </View>
     );
@@ -108,29 +129,37 @@ const styles = StyleSheet.create({
         paddingLeft: 82
     },
     titleCate: {
-        alignItems: 'center',
         backgroundColor: Colors.LINK_WATER_2,
         borderBottomColor: Colors.CATSKILL_WHITE,
         borderBottomWidth: 1,
         borderRightColor: Colors.CATSKILL_WHITE,
         borderRightWidth: 1,
+        height: 47,
+        position: 'absolute',
+        width: 60,
+        zIndex: 1
+    },
+    titleCate80: {
+        width: 80
+    },
+    titleCate80Text: {
+        width: '100%'
+    },
+    titleCateText: {
+        alignItems: 'center',
         color: Colors.CLOUD_BURST,
         fontSize: 12,
-        height: 47,
+        height: '100%',
         justifyContent: 'center',
         lineHeight: 16,
         paddingBottom: 4,
         paddingLeft: 0,
         paddingRight: 0,
         paddingTop: 4,
-        position: 'absolute',
         textAlign: 'center',
         textAlignVertical: 'center',
-        width: 60,
+        width: '100%',
         zIndex: 1
-    },
-    titleCate80: {
-        width: 80
     }
 });
 

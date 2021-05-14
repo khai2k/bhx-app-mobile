@@ -14,6 +14,7 @@ import Cart from '../container/cart';
 import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
+import NavMenu from '../components/Shared/navMenu/NavMenu';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -42,6 +43,15 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="Cart"
                 component={Cart}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="NavMenu"
+                component={NavMenu}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
