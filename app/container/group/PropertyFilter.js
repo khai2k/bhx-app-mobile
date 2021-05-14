@@ -54,7 +54,7 @@ const PropertyFilter = () => {
                     style={[styles.titleCate, styles.titleCate80]}>
                     <Image
                         style={styles.iconSearch}
-                        source={require('../../../assets/images/searchFilterCate.png')}
+                        source={require('../../../assets/Images/searchFilterCate.png')}
                     />
                     <Text style={styles.titleCateText}>Lọc tìm</Text>
                 </TouchableOpacity>

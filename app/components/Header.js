@@ -23,7 +23,7 @@ class Header extends Component {
                         }>
                         <Image
                             style={styles.logo}
-                            source={require('../../assets/images/icon-menu.png')}
+                            source={require('../../assets/Images/icon-menu.png')}
                         />
                     </TouchableOpacity>
 
@@ -34,7 +34,7 @@ class Header extends Component {
                         />
                         <Image
                             style={styles.iconsearch}
-                            source={require('../../assets/images/icon-search.png')}
+                            source={require('../../assets/Images/icon-search.png')}
                         />
                     </View>
                     <View style={styles.boxinfo}>
@@ -68,7 +68,7 @@ class Header extends Component {
                                 <Text style={styles.number}>5</Text>
                                 <Image
                                     style={styles.iconcart}
-                                    source={require('../../assets/images/icon-shopping-cart.png')}
+                                    source={require('../../assets/Images/icon-shopping-cart.png')}
                                 />
                             </View>
                         </TouchableOpacity>
