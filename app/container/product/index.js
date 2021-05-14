@@ -99,7 +99,7 @@ class Product extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header />
+                <Header navigation={this.props.navigation} />
                 <SliderTitle />
                 <ListCategory />
                 <View style={styles.productList}>
