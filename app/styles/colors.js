@@ -20,6 +20,8 @@ export const TROUT = '#515764';
 export const GALLERY = '#ECECEC';
 export const MINE_SHAFT = '#333';
 export const BALI_HAI = '#8F9BB3';
+export const MERCURY = '#e9e8e8';
+export const EMPEROR = '#525252';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';
@@ -78,13 +80,14 @@ export const NAVY_BLUE = '#0057BE';
 export const BLUE_CHALK = 'rgba(237,202,251,1)';
 export const BLUE_ASTRONAUT = 'rgba(19,69,99,1)';
 export const APPLE = '#6AB04C';
-// BLUE
+
 // BLUE
 export const LUCKY_POINT = 'rgba(44, 48, 81,1)';
 export const ARAPAWA = '#2D4A64';
 export const PERANO = 'rgba(155,165,255,1)';
 export const CURIOUS_BLUE = 'rgba(40, 138, 214,1)';
 export const CLOUD_BURST = '#222B45';
+export const SCIENCE_BLUE = '#0064C2';
 
 // ORANGE
 export const YELLOW_ORANGE = 'rgba(255,175,66,1)';
@@ -110,3 +113,4 @@ export const TROPICAL_RAIN_FOREST = '#008848';
 export const BORDER = '#00AC5B';
 export const RED = 'red';
 export const HEADER_CART = '#FFF87C';
+export const FUN_GREEN = '#008945';

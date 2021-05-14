@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import moment from 'moment';
 import styles from './style';
 
 const ProductExpiredBox = (props) => {
@@ -13,7 +12,7 @@ const ProductExpiredBox = (props) => {
         setNumberItems(+number);
     };
     const boxLabel = () => {
-        if (props.bhxProduct.IsPreOrder && props.bhxProduct.PreAmount > 0)
+        if (props.bhxProduct.IsPreOrder && props.bhxProduct.PreAmount > 0) {
             return (
                 <View className="boxLabel" style={styles.boxLabel}>
                     <Text style={styles.boxLabelText}>
@@ -21,8 +20,9 @@ const ProductExpiredBox = (props) => {
                     </Text>
                 </View>
             );
+        }
     };
-    //SP có thể bán được
+    // SP có thể bán được
     const canBuyProduct = (bhxProduct) => {
         if (bhxProduct.Price > 0) {
             return bhxProduct.IsBaseUnit
@@ -31,45 +31,10 @@ const ProductExpiredBox = (props) => {
         }
         return false;
     };
-    //format HSD còn lại
-    const calcDateRemain = (expiredDate) => {
-        let nowDate = moment(expiredDate);
-        let diffDay = nowDate.diff(expiredDate, 'days');
-        if (diff < 1) return '';
-        if (diff > 365) return diff / 365 + ' năm';
-        if (diff <= 365 && diff > 90) return diff / 30 + ' tháng';
-        return diff + ' ngày';
-    };
-    const boxExpiredProduct = () => {
-        const bhxProduct = props.bhxProduct;
-        const momentExpiredDate = moment(bhxProduct.ExpiredDateDisplay);
-        if (canBuyProduct(bhxProduct)) {
-            if (
-                bhxProduct.ExpiredDateDisplay !== '0001-01-01T00:00:00' &&
-                bhxProduct.Category.Id != 7578
-            ) {
-                if (bhxProduct.ExpiredType >= 2) {
-                    <Text>HSD {momentExpiredDate.format('DD/MM/YYYY')}</Text>;
-                } else {
-                    let expiredTime = calcDateRemain(momentExpiredDate);
-                    if (expiredTime != '') {
-                        let isMore3Years =
-                            moment(expiredDate).diff(
-                                momentExpiredDate,
-                                'days'
-                            ) > 1095;
-                        <Text>
-                            HSD{' '}
-                            {isMore3Years ? 'hơn 3 năm' : 'còn ' + expiredTime}
-                        </Text>;
-                    }
-                }
-            }
-        }
-    };
-    const bhxProduct = props.bhxProduct;
+
+    const { bhxProduct } = props;
     const isNearlyExpiredProduct =
-        bhxProduct.Sales !== null && bhxProduct.Sales != undefined;
+        bhxProduct.Sales !== null && bhxProduct.Sales !== undefined;
     if (isNearlyExpiredProduct && bhxProduct.ExpStoreId > 0) {
         const expiredProduct =
             bhxProduct.Sales[bhxProduct.ExpStoreId.toString()];
@@ -77,9 +42,7 @@ const ProductExpiredBox = (props) => {
             <View
                 className="product"
                 style={
-                    this.state.buyButtonVisible
-                        ? styles.productSelected
-                        : styles.product
+                    buyButtonVisible ? styles.productSelected : styles.product
                 }>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('ProductDetail')}
@@ -105,7 +68,7 @@ const ProductExpiredBox = (props) => {
                         setBuyButtonVisible(true);
                     }}
                     style={
-                        this.state.buyButtonVisible
+                        buyButtonVisible
                             ? styles.unvisibleProductBuy
                             : styles.visibleProductBuy
                     }>
@@ -130,7 +93,7 @@ const ProductExpiredBox = (props) => {
                             </View>
                         </View>
                     </View>
-                    {isNearlyExpiredProduct ? (
+                    {canBuyProduct(bhxProduct) ? (
                         <TouchableOpacity
                             className="nearlyExpired"
                             style={styles.nearlyExpired}>
@@ -142,7 +105,7 @@ const ProductExpiredBox = (props) => {
                                 </Text>
                             </View>
                             <Text style={styles.expiredText}>
-                                {boxExpiredProduct()}
+                                {bhxProduct.ExpiredText}
                             </Text>
                         </TouchableOpacity>
                     ) : null}
@@ -152,7 +115,7 @@ const ProductExpiredBox = (props) => {
                         setBuyButtonVisible(true);
                     }}
                     style={
-                        this.state.buyButtonVisible
+                        buyButtonVisible
                             ? styles.visibleProductBuy
                             : styles.unvisibleProductBuy
                     }>
@@ -181,12 +144,12 @@ const ProductExpiredBox = (props) => {
                                 }}
                                 className="down"
                                 style={styles.down}>
-                                <Text style={styles.downIcon}></Text>
+                                <Text style={styles.downIcon} />
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.inputBuy}
                                 onChangeText={handleInputNumber}
-                                value={this.state.numberItems.toString()}
+                                value={numberItems.toString()}
                                 keyboardType="numeric"
                             />
                             <TouchableOpacity
@@ -195,12 +158,12 @@ const ProductExpiredBox = (props) => {
                                 }}
                                 className="up"
                                 style={styles.up}>
-                                <Text style={styles.upIcon1}></Text>
-                                <Text style={styles.upIcon2}></Text>
+                                <Text style={styles.upIcon1} />
+                                <Text style={styles.upIcon2} />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {isNearlyExpiredProduct ? (
+                    {canBuyProduct(bhxProduct) ? (
                         <TouchableOpacity
                             className="nearlyExpired"
                             style={styles.nearlyExpired}>
@@ -211,7 +174,7 @@ const ProductExpiredBox = (props) => {
                                 </Text>
                             </View>
                             <Text style={styles.expiredText}>
-                                {boxExpiredProduct()}
+                                {bhxProduct.ExpiredText}
                             </Text>
                         </TouchableOpacity>
                     ) : null}

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 // import { translate } from '@app/translate';
 import { Header } from '@app/components';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
 import ComboProductBox from '../../components/ProductBox/ComboProductBox';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import axios from 'axios';
 
 import ListCategory from './ListCategory';
 import SliderTitle from './SliderTitle';
@@ -76,28 +74,27 @@ class Product extends Component {
                             'https://cdn.tgdd.vn/Products/Images/2386/219025/bhx/feature/sua-tuoi-nguyen-kem-khong-duong-inex-hop-1-lit-202102200840479611.png'
                     }
                 }
-            ],
-            bhxProduct: {}
+            ]
         };
     }
 
-    componentDidMount() {
-        axios({
-            method: 'get',
-            url:
-                'http://apiappbeta.bachhoaxanh.com/api/product/get?productId=196828&province=0&store=6463',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then((res) => {
-                const bhxProduct = res.data;
-                console.log('Api response: ' + res.data);
-                this.setState({ bhxProduct: bhxProduct });
-            })
-            .catch((err) => console.log(err));
-    }
+    // componentDidMount() {
+    //     axios({
+    //         method: 'get',
+    //         url:
+    //             'https://beta.bachhoaxanh.com/apiapp/api/product/Get?productId=196828&provinceId=3&storeId=6463',
+    //         headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //         .then((res) => {
+    //             const bhxProduct = res.data;
+    //             console.log(`Api response: ${res.data}`);
+    //             this.setState({ bhxProduct });
+    //         })
+    //         .catch((err) => console.log(err));
+    // }
 
     render() {
         return (

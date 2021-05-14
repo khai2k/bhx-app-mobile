@@ -14,7 +14,7 @@ const ComboProductBox = (props) => {
     const imageModal =
         props.bhxProduct != null &&
         props.bhxProduct.FeatureImageModel != null &&
-        props.bhxProduct.FeatureImageModel != undefined
+        props.bhxProduct.FeatureImageModel !== undefined
             ? props.bhxProduct.FeatureImageModel
             : null;
     if (props.bhxProduct != null && imageModal != null) {
@@ -100,7 +100,7 @@ const ComboProductBox = (props) => {
                                 }}
                                 className="down"
                                 style={styles.down}>
-                                <Text style={styles.downIcon}></Text>
+                                <Text style={styles.downIcon} />
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.inputBuy}
@@ -114,8 +114,8 @@ const ComboProductBox = (props) => {
                                 }}
                                 className="up"
                                 style={styles.up}>
-                                <Text style={styles.upIcon1}></Text>
-                                <Text style={styles.upIcon2}></Text>
+                                <Text style={styles.upIcon1} />
+                                <Text style={styles.upIcon2} />
                             </TouchableOpacity>
                         </View>
                     </View>

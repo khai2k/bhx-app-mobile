@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '@app/styles';
 
 const win = Dimensions.get('window');
-const ratio = win.width / 3; //product image width
+const ratio = win.width / 3; // product image width
 
 const styles = StyleSheet.create({
     boxBuy: {
@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
     },
     buy: {
         alignItems: 'center',
-        borderLeftWidth: 1,
         borderLeftColor: Colors.LINK_WATER_3,
+        borderLeftWidth: 1,
         color: Colors.CLOUD_BURST,
         flexBasis: 'auto',
         flexGrow: 1,
@@ -37,87 +37,91 @@ const styles = StyleSheet.create({
         marginTop: 8,
         textTransform: 'uppercase'
     },
+
     down: {
         backgroundColor: Colors.WHITE,
-        borderColor: Colors.GALLERY,
-        borderWidth: 1,
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
+        borderBottomLeftRadius: 8,
         borderBottomWidth: 0,
+        borderColor: Colors.GALLERY,
+        borderLeftWidth: 0,
+        borderTopWidth: 0,
+        borderWidth: 1,
         fontStyle: 'normal',
         height: 34,
         lineHeight: 30,
         position: 'relative',
         textAlign: 'center',
-        width: '33%',
-        borderBottomLeftRadius: 8
+        width: '33%'
     },
     downIcon: {
-        width: 14,
+        backgroundColor: Colors.EUCALYPTUS,
+        borderRadius: 4,
         height: 2,
-        backgroundColor: Colors.EUCALYPTUS,
-        marginTop: 15,
-        marginLeft: 'auto',
-        marginRight: 'auto',
         marginBottom: 15,
-        borderRadius: 4
-    },
-    up: {
-        backgroundColor: Colors.WHITE,
-        borderColor: Colors.GALLERY,
-        borderWidth: 1,
-        borderTopWidth: 0,
-        borderRightWidth: 0,
-        borderBottomWidth: 0,
-        fontStyle: 'normal',
-        height: 34,
-        lineHeight: 30,
-        position: 'relative',
-        textAlign: 'center',
-        width: '33%',
-        borderBottomRightRadius: 8
-    },
-    upIcon1: {
-        width: 14,
-        height: 2,
-        backgroundColor: Colors.EUCALYPTUS,
+        marginLeft: 'auto',
+        marginRight: 'auto',
         marginTop: 15,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginBottom: 15,
-        borderRadius: 4
-    },
-    upIcon2: {
-        width: 2,
-        height: 14,
-        backgroundColor: Colors.EUCALYPTUS,
-        marginTop: -23,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginBottom: 0,
-        borderRadius: 4
-    },
-    inputBuy: {
-        fontSize: 16,
-        color: Colors.MINE_SHAFT,
-        width: '33%',
-        textAlign: 'center',
-        borderWidth: 0,
-        borderRadius: 0,
-        borderColor: Colors.GALLERY,
-        backgroundColor: Colors.LINK_WATER_2,
-        justifyContent: 'center',
-        alignSelf: 'center',
-        height: 33,
-        lineHeight: 30,
-        padding: 0,
-        margin: 0
+        width: 14
     },
     imageProduct: {
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
-        width: '100%',
-        height: ratio
+        height: ratio,
+        width: '100%'
+    },
+    inputBuy: {
+        alignSelf: 'center',
+        backgroundColor: Colors.LINK_WATER_2,
+        borderColor: Colors.GALLERY,
+        borderRadius: 0,
+        borderWidth: 0,
+        color: Colors.MINE_SHAFT,
+        fontSize: 16,
+        height: 33,
+        justifyContent: 'center',
+        lineHeight: 30,
+        margin: 0,
+        padding: 0,
+        textAlign: 'center',
+        width: '33%'
+    },
+
+    up: {
+        backgroundColor: Colors.WHITE,
+        borderBottomRightRadius: 8,
+        borderBottomWidth: 0,
+        borderColor: Colors.GALLERY,
+        borderRightWidth: 0,
+        borderTopWidth: 0,
+        borderWidth: 1,
+        fontStyle: 'normal',
+        height: 34,
+        lineHeight: 30,
+        position: 'relative',
+        textAlign: 'center',
+        width: '33%'
+    },
+
+    upIcon1: {
+        backgroundColor: Colors.EUCALYPTUS,
+        borderRadius: 4,
+        height: 2,
+        marginBottom: 15,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 15,
+        width: 14
+    },
+
+    upIcon2: {
+        backgroundColor: Colors.EUCALYPTUS,
+        borderRadius: 4,
+        height: 14,
+        marginBottom: 0,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: -23,
+        width: 2
     },
     imgContent: {
         height: 'auto'
@@ -138,21 +142,22 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     priceInfo: {
+        flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '100%',
-        flexDirection: 'row'
+        width: '100%'
     },
     priceInfoHide: {
-        justifyContent: 'space-between',
-        width: '100%',
+        display: 'none',
         flexDirection: 'row',
-        display: 'none'
+        justifyContent: 'space-between',
+        width: '100%'
     },
     product: {
         backgroundColor: Colors.WHITE,
         borderColor: Colors.CATSKILL_WHITE,
         borderRadius: 8,
         borderWidth: 1,
+        height: 'auto',
         marginBottom: 0,
         marginLeft: 3,
         marginRight: 3,
@@ -163,14 +168,14 @@ const styles = StyleSheet.create({
         shadowColor: Colors.LINK_WATER,
         shadowOffset: { height: 3, width: 0 },
         shadowOpacity: 0.5,
-        width: win.width / 3 - 6,
-        height: 'auto'
+        width: win.width / 3 - 6
     },
     productSelected: {
         backgroundColor: Colors.WHITE,
         borderColor: Colors.TROPICAL_RAIN_FOREST,
         borderRadius: 8,
         borderWidth: 1,
+        height: 'auto',
         marginBottom: 0,
         marginLeft: 3,
         marginRight: 3,
@@ -181,8 +186,7 @@ const styles = StyleSheet.create({
         shadowColor: Colors.LINK_WATER,
         shadowOffset: { height: 3, width: 0 },
         shadowOpacity: 0.5,
-        width: win.width / 3 - 6,
-        height: 'auto'
+        width: win.width / 3 - 6
     },
     productImg: {
         borderTopLeftRadius: 8,
@@ -197,12 +201,12 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     productInfoExpired: {
-        height: 40,
-        bottom: 65,
         backgroundColor: Colors.WHITE,
+        bottom: 65,
+        height: 40,
         padding: 0,
-        paddingTop: 3,
         paddingBottom: 0,
+        paddingTop: 3,
         position: 'absolute',
         width: '100%'
     },
@@ -221,49 +225,48 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE,
         color: Colors.TROUT,
         fontSize: 12,
-        lineHeight: 14,
-        overflow: 'hidden',
-        padding: 3,
-        textAlign: 'center',
-        width: '100%',
         height: 16,
+        lineHeight: 14,
         margin: 0,
+        overflow: 'hidden',
         padding: 0,
-        paddingTop: 2
+        paddingTop: 2,
+        textAlign: 'center',
+        width: '100%'
     },
     priceSelected: {
-        textAlign: 'center',
-        fontSize: 12,
+        backgroundColor: Colors.WHITE,
         color: Colors.CLOUD_BURST,
+        fontSize: 12,
         height: 15,
-        width: '100%',
-        backgroundColor: Colors.WHITE
+        textAlign: 'center',
+        width: '100%'
     },
     upDown: {
         display: 'none'
     },
     upDownShow: {
         display: 'flex',
-        height: 35,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        height: 35
     },
     boxLabel: {
         position: 'relative'
     },
     boxLabelText: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
         backgroundColor: Colors.JADE,
+        borderTopRightRadius: 8,
+        bottom: 0,
         color: Colors.TURBO,
         fontSize: 11,
+        height: 18,
+        left: 0,
+        overflow: 'hidden',
         paddingBottom: 0,
         paddingLeft: 3,
         paddingRight: 3,
         paddingTop: 0,
-        borderTopRightRadius: 8,
-        overflow: 'hidden',
-        height: 18,
+        position: 'absolute',
         zIndex: 1
     },
     visibleProductBuy: {
@@ -273,20 +276,20 @@ const styles = StyleSheet.create({
         display: 'none'
     },
     boxExpired: {
+        alignItems: 'center',
+        backgroundColor: Colors.TROUT,
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
-        position: 'absolute',
-        zIndex: 1,
-        width: '100%',
-        height: 20,
-        textAlign: 'center',
-        backgroundColor: Colors.TROUT,
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 10,
         color: Colors.WHITE,
+        fontSize: 10,
+        height: 20,
+        justifyContent: 'center',
+        opacity: 0.8,
         padding: 3,
-        opacity: 0.8
+        position: 'absolute',
+        textAlign: 'center',
+        width: '100%',
+        zIndex: 1
     },
     imagePromotion: {
         padding: 0,
@@ -308,38 +311,38 @@ const styles = StyleSheet.create({
         height: 48
     },
     nearlyExpired: {
-        height: 31,
-        backgroundColor: Colors.MYSTIC,
-        borderBottomRightRadius: 7,
-        borderBottomLeftRadius: 7,
-        textAlign: 'center',
-        padding: 0,
-        paddingTop: 1,
-        paddingBottom: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
+        backgroundColor: Colors.MYSTIC,
+        borderBottomLeftRadius: 7,
+        borderBottomRightRadius: 7,
+        color: Colors.BALI_HAI,
+        height: 31,
+        justifyContent: 'center',
+        padding: 0,
+        paddingBottom: 1,
+        paddingTop: 1,
         position: 'relative',
-        color: Colors.BALI_HAI
+        textAlign: 'center',
+        width: '100%'
     },
     expiredLine: {
         flexDirection: 'row'
     },
     expiredText: {
         color: Colors.BALI_HAI,
+        fontSize: 11,
         height: 13,
-        padding: 0,
         lineHeight: 14,
-        fontSize: 11
+        padding: 0
     },
     expiredPrice: {
         color: Colors.CLOUD_BURST,
+        fontSize: 11,
         height: 13,
-        padding: 0,
         lineHeight: 14,
-        fontSize: 11
+        padding: 0
     },
-    /*Combo product box*/
+    /* Combo product box */
     comboTheme: {
         borderTopLeftRadius: 7,
         borderTopRightRadius: 7,
@@ -347,13 +350,13 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     wrapImageProductCombo: {
+        alignItems: 'center',
+        height: '100%',
+        justifyContent: 'center',
+        left: 0,
         position: 'absolute',
         top: 0,
-        left: 0,
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
+        width: '100%'
     },
     imageProductCombo: {
         height: win.width / 4,
