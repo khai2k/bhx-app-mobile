@@ -24,7 +24,8 @@ export const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.GRAY_EAEEF7,
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
+        paddingTop: 60
     },
     iconCateChild: {
         height: 50,
@@ -104,6 +105,7 @@ export const styles = StyleSheet.create({
     },
     navRightBottom: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         marginTop: 10
     },
     navRightTop: {

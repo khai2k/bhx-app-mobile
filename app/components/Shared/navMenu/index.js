@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TouchableOpacity,
     View,
@@ -9,86 +9,41 @@ import {
     SectionList
 } from 'react-native';
 import { styles } from './styles';
-import { ImageNavMenu, ImageCateDemo } from '../../../images';
-import * as action from './action';
-
-const ListCate = [
-    {
-        Id: '1100',
-        TextName: 'Thịt, cá, tôm, trứng',
-        data: [
-            {
-                Id: '1101',
-                TextName: 'Thịt tươi sống',
-                UrlImage: ImageCateDemo.imgCate1
-            },
-            {
-                Id: '1102',
-                TextName: 'Tôm tươi sống',
-                UrlImage: ImageCateDemo.imgCate2
-            },
-            {
-                Id: '1103',
-                TextName: 'Cá tươi sống',
-                UrlImage: ImageCateDemo.imgCate3
-            }
-        ]
-    },
-    {
-        Id: '1200',
-        TextName: 'Đồ uống các loại',
-        data: [
-            {
-                Id: '1201',
-                TextName: 'Nước ngọt có ga',
-                UrlImage: ImageCateDemo.imgCate4
-            },
-            {
-                Id: '1202',
-                TextName: 'Nước trà giải khát',
-                UrlImage: ImageCateDemo.imgCate5
-            },
-            {
-                Id: '1203',
-                TextName: 'Trà sữa đóng chai',
-                UrlImage: ImageCateDemo.imgCate6
-            }
-        ]
-    },
-    {
-        Id: '1300',
-        TextName: 'Dầu ăn, gia vị',
-        data: [
-            {
-                Id: '1301',
-                TextName: 'Dầu ăn',
-                UrlImage: ImageCateDemo.imgCate7
-            },
-            {
-                Id: '1302',
-                TextName: 'Muối',
-                UrlImage: ImageCateDemo.imgCate8
-            },
-            {
-                Id: '1303',
-                TextName: 'Đường',
-                UrlImage: ImageCateDemo.imgCate9
-            }
-        ]
-    },
-    {
-        Id: '1400',
-        TextName: 'Khuyến mãi hot',
-        data: []
-    }
-];
+import { ImageNavMenu } from '../../../images';
+import * as service from '../../../service/shared';
 
 const NavMenu = () => {
-    const [textSearch, setTextSearch] = useState('');
-
-    const [cateFilter, setCateFilter] = useState('1100');
-
+    const [query, setQuery] = useState('');
+    const [fullData, setFullData] = useState([]);
+    const [cateFilter, setCateFilter] = useState('8686');
     const [selectedCateChild, setSelectedCateChild] = useState('');
+
+    // Danh sách cate
+    const [listCate, setListCate] = useState([]);
+
+    // Param để lấy danh sách cate Navigation
+    const categoryId = 0;
+    const currentProvinceId = 0;
+    const currentStoreId = 0;
+    const isCheckOnSales = true;
+    const clearcache = 'ok';
+
+    useEffect(() => {
+        const result = service.GetNavigationFromApi(
+            'GET',
+            'shared/GetNavigation',
+            categoryId,
+            currentProvinceId,
+            currentStoreId,
+            isCheckOnSales,
+            clearcache
+        );
+        result.then((value) => {
+            console.log(value);
+            setListCate(value);
+            setFullData(value);
+        });
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -110,10 +65,10 @@ const NavMenu = () => {
                 </View>
                 <FlatList
                     style={styles.navLeftBottom}
-                    data={ListCate}
+                    data={listCate}
                     renderItem={(item) => {
                         return (
-                            <action.RenderCateItem
+                            <RenderCateItem
                                 item={item}
                                 cateFilter={cateFilter}
                                 setCateFilter={setCateFilter}
@@ -125,9 +80,15 @@ const NavMenu = () => {
             <View style={styles.navRight}>
                 <View style={styles.navRightTop}>
                     <TextInput
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        clearButtonMode="always"
+                        value={query}
                         style={styles.inputSearch}
                         placeholder="Tìm nhóm hàng"
-                        onChangeText={() => setTextSearch(textSearch)}
+                        // onChangeText={(queryText) =>
+                        //     handleSearchInput(queryText)
+                        // }
                     />
                     <Image
                         style={styles.iconSearch}
@@ -135,7 +96,7 @@ const NavMenu = () => {
                     />
                 </View>
                 <SectionList
-                    sections={ListCate}
+                    sections={listCate}
                     renderItem={() => {
                         return null;
                     }}
@@ -146,9 +107,9 @@ const NavMenu = () => {
                             data={section.data}
                             renderItem={(item) => {
                                 return (
-                                    <action.RenderCateChildItem
+                                    <RenderCateChildItem
                                         item={item}
-                                        cateParent={section.Id}
+                                        cateParent={section.ReferenceId}
                                         cateFilter={cateFilter}
                                         setCateFilter={setCateFilter}
                                         selectedCateChild={selectedCateChild}
@@ -163,6 +124,69 @@ const NavMenu = () => {
                 />
             </View>
         </View>
+    );
+};
+
+// Render danh sách cate cha
+const RenderCateItem = (props) => {
+    const { item } = props.item;
+
+    return (
+        <TouchableOpacity
+            style={[
+                styles.itemCate,
+                item.ReferenceId === props.cateFilter && styles.itemCateActive
+            ]}
+            onPress={() => {
+                props.setCateFilter(item.ReferenceId);
+            }}>
+            {item.Id === '-1' && (
+                <Image
+                    style={styles.iconPromotion}
+                    source={ImageNavMenu.imgIconPromotion}
+                />
+            )}
+            <Text style={styles.txtCate}>{item.Text}</Text>
+        </TouchableOpacity>
+    );
+};
+
+// Render danh sách cate con
+const RenderCateChildItem = (props) => {
+    const { item } = props.item;
+
+    const handleSelectCateChild = (id, cateParent) => {
+        props.setSelectedCateChild(id);
+        props.setCateFilter(cateParent);
+    };
+
+    return (
+        <TouchableOpacity
+            disabled={props.cateFilter !== props.cateParent}
+            style={[
+                styles.itemCateChild,
+                props.cateFilter === props.cateParent &&
+                    styles.itemCateChildActive
+            ]}
+            onPress={() =>
+                handleSelectCateChild(item.ReferenceId, props.cateParent)
+            }>
+            {props.selectedCateChild === item.ReferenceId && (
+                <Image
+                    style={styles.iconChecked}
+                    source={ImageNavMenu.imgIconCheck}
+                />
+            )}
+            <Image style={styles.iconCateChild} source={{ uri: item.ImgUrl }} />
+            <Text
+                style={[
+                    styles.txtCateChild,
+                    props.selectedCateChild === item.ReferenceId &&
+                        styles.txtCateChildActive
+                ]}>
+                {item.Text}
+            </Text>
+        </TouchableOpacity>
     );
 };
 
