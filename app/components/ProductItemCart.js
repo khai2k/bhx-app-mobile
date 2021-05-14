@@ -26,20 +26,24 @@ class ProductItemCart extends Component {
                     <Image
                         style={styles.imgbind}
                         source={{
-                            uri:
-                                'https://cdn.tgdd.vn/Products/Images/7578/231990/bhx/tao-ambrosia-nhap-khau-my-hop-1kg-6-7-trai-202103041519103052_300x300.jpg'
+                            uri: this.props.productCart.Info.Image
                         }}
                     />
                 </View>
                 <View style={styles.boxinfo}>
                     <Text style={styles.title}>
-                        Táo Ambrosia nhập khẩu Mỹ 1kg Táo
+                        {this.props.productCart.Info.Name}
                     </Text>
-                    <Text style={styles.unit}>65.000₫/túi</Text>
+                    <Text style={styles.unit}>
+                        {this.props.productCart.Price}/
+                        {this.props.productCart.Unit}
+                    </Text>
                     <Text style={styles.statusoff}>Tạm hết hàng</Text>
                 </View>
                 <View style={styles.boxprice}>
-                    <Text style={styles.price}>76.000₫</Text>
+                    <Text style={styles.price}>
+                        {this.props.productCart.Total}
+                    </Text>
                     <View style={styles.quantity}>
                         <TouchableOpacity>
                             <Icon

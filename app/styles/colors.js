@@ -113,3 +113,4 @@ export const RED = 'red';
 export const HEADER_CART = '#FFF87C';
 export const CART_STOPSALES = '#f30600';
 export const CART_UNIT = '#8f9bb3';
+export const CART_BORDER_BTN = '#8f9bb3';

@@ -7,32 +7,34 @@ export const cartAction = {
     GET_CART
 };
 
-export const get_cart = function (cartInfo) {
-    return (dispatch) => {
-        const bodyAPI = {
-            cartid:
-                '9D6D54B6FC4B56FDF27C975769EBA8B8A65AC3EDC0F60F16B23E63790465F92C',
+export const get_cart = function () {
+    return async (dispatch, getSate) => {
+        const bodyApi = {
+            token: getSate().cartReducer.Cart.CartId,
+            us: '',
             provinceId: 3,
             districtId: 0,
             wardId: 0,
             storeId: 6463,
-            tk: 0
+            data: {
+                cartId: getSate().cartReducer.Cart.CartId
+            }
         };
-        console.log('response api authen :', bodyAPI);
-        const response = apiBase(
+        const response = await apiBase(
             API_CONST.API_REQUEST_GET_CART,
             METHOD.POST,
-            bodyAPI,
+            bodyApi,
             {
-                isCustomToken: true,
+                isCustomToken: false,
                 isOauthenToken: false,
                 isUpload: false
             }
         );
-        console.log('response api authen :', response);
+        const cartInfo = response.Value;
+        console.log('response api Nhu test:', cartInfo);
         dispatch({
             type: GET_CART,
-            response
+            cartInfo
         });
     };
 };

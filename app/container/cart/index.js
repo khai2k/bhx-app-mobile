@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, ProductItemCart } from '@app/components';
 import { connect } from 'react-redux';
@@ -31,8 +31,30 @@ const styles = StyleSheet.create({
         ...Typography.FONT_BOLD_14
     },
     titlecart: {
+        borderBottomWidth: 1,
+        borderColor: Colors.BORDER_GENERAL,
+        borderTopWidth: 5,
         justifyContent: 'center',
-        padding: 5
+        padding: 10,
+    },
+    boxbtn: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+    btn: {
+        padding: 5,
+        width: '30%',
+        borderWidth: 1,
+        borderColor: Colors.CART_BORDER_BTN,
+        borderRadius: 10,
+    },
+    textbtn: {
+        ...Typography.FONT_BOLD_14,
+        alignItems: 'center',
+        textAlign: 'center',
     }
 });
 
@@ -44,7 +66,7 @@ class Cart extends Component {
     }
 
     componentDidMount() {
-        this.props.actionCart.get_cart(this.state.carId);
+        this.props.actionCart.get_cart();
     }
 
     render() {
@@ -54,10 +76,11 @@ class Cart extends Component {
                 <View style={styles.titlecart}>
                     <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                 </View>
-                <ProductItemCart />
-                <ProductItemCart />
-                <ProductItemCart />
-                <ProductItemCart />
+                <View>
+                    {this.props.cartInfo.Cart.ListCartItem.map((itemCart) => {
+                        return <ProductItemCart productCart={itemCart} />;
+                    })}
+                </View>
                 <View style={styles.boxsum}>
                     <Text style={styles.boxleft}>Tiền hàng:</Text>
                     <Text style={styles.boxrightfont}>141.000₫</Text>
@@ -66,14 +89,33 @@ class Cart extends Component {
                     <Text style={styles.boxleft}>Phí giao dự kiến:</Text>
                     <Text style={styles.boxright}>15.000₫</Text>
                 </View>
+                <View style={styles.boxbtn}>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => this.props.navigation.navigate('Cart')}>
+                        <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => this.props.navigation.navigate('Cart')}>
+                        <Text style={styles.textbtn}>Dùng phiếu mua hàng</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => this.props.navigation.navigate('Cart')}>
+                        <Text style={styles.textbtn}>ĐẶT HÀNG</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.cartReducer);
+    console.log(mapStateToProps);
     return {
-        carId: state.cartReducer.carId
+        cartInfo: state.cartReducer
     };
 };
 
