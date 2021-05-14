@@ -1,74 +1,136 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useDispatch } from 'react-redux';
+import { helper } from '@app/common';
 import {
     Text,
     Image,
     View,
     TouchableOpacity,
     TextInput,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from 'react-native';
+import { bindActionCreators } from 'redux';
+import * as cartCreator from '../container/cart/action';
 
-class ProductItemCart extends Component {
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={styles.boximg}>
-                    <TouchableOpacity>
+const ProductItemCart = (props) => {
+    //  const cart = useSelector((state) => state.cartReducer.Cart);
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
+
+    const [quantity, setQuantity] = useState(props.productCart.Quantity);
+    const [guildId, setguildId] = useState(props.productCart.GuildId);
+
+    const offItemProduct =
+        props.productCart.IsAllowQuantityChange === false ||
+        props.productCart.NoChangeQuantity === true;
+
+    const handleInputQuantity = (number) => {
+        setQuantity(+number);
+    };
+
+    const setQuantityMinus = () => {
+        quantity <= 1 ? alertDeleteItemProduct() : setQuantity(quantity - 1);
+    };
+
+    const setQuantityPlus = () => {
+        quantity > 50
+            ? alertMaxQuantityItemProduct()
+            : setQuantity(quantity + 1);
+    };
+
+    const actionRemoveItemProduct = () => {
+        actionCart.cart_remove_item_product(guildId);
+    };
+
+    const alertDeleteItemProduct = () => {
+        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý',
+                onPress: actionRemoveItemProduct
+            }
+        ]);
+    };
+
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý',
+                onPress: actionRemoveItemProduct
+            }
+        ]);
+    };
+    return (
+        <View style={styles.container}>
+            <View style={styles.boximg}>
+                <TouchableOpacity>
+                    <Icon
+                        style={styles.closer}
+                        name="times"
+                        size={Typography.FONT_SIZE_10}
+                        color={Colors.WHITE}
+                    />
+                </TouchableOpacity>
+                <Image
+                    style={styles.imgbind}
+                    source={{
+                        uri: props.productCart.Info.Image
+                    }}
+                />
+            </View>
+            <View style={styles.boxinfo}>
+                <Text style={styles.title}>{props.productCart.Info.Name}</Text>
+                <Text style={styles.unit}>
+                    {helper.formatMoney(props.productCart.Price)}/
+                    {props.productCart.Unit}
+                </Text>
+                <Text style={styles.statusoff}>Tạm hết hàng</Text>
+            </View>
+            <View style={styles.boxprice}>
+                <Text style={styles.price}>
+                    {helper.formatMoney(props.productCart.Total)}
+                </Text>
+                <View style={styles.quantity}>
+                    <TouchableOpacity
+                        onPress={setQuantityMinus}
+                        disabled={offItemProduct}>
                         <Icon
-                            style={styles.closer}
-                            name="times"
-                            size={Typography.FONT_SIZE_10}
-                            color={Colors.WHITE}
+                            style={styles.plus}
+                            name="minus"
+                            size={Typography.FONT_SIZE_14}
                         />
                     </TouchableOpacity>
-                    <Image
-                        style={styles.imgbind}
-                        source={{
-                            uri: this.props.productCart.Info.Image
-                        }}
+                    <TextInput
+                        editable={!offItemProduct}
+                        onChangeText={handleInputQuantity}
+                        style={styles.input}
+                        value={quantity.toString()}
+                        keyboardType="numeric"
                     />
-                </View>
-                <View style={styles.boxinfo}>
-                    <Text style={styles.title}>
-                        {this.props.productCart.Info.Name}
-                    </Text>
-                    <Text style={styles.unit}>
-                        {this.props.productCart.Price}/
-                        {this.props.productCart.Unit}
-                    </Text>
-                    <Text style={styles.statusoff}>Tạm hết hàng</Text>
-                </View>
-                <View style={styles.boxprice}>
-                    <Text style={styles.price}>
-                        {this.props.productCart.Total}
-                    </Text>
-                    <View style={styles.quantity}>
-                        <TouchableOpacity>
-                            <Icon
-                                style={styles.plus}
-                                name="minus"
-                                size={Typography.FONT_SIZE_14}
-                            />
-                        </TouchableOpacity>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
+                    <TouchableOpacity
+                        onPress={setQuantityPlus}
+                        disabled={offItemProduct}>
+                        <Icon
+                            style={styles.plus}
+                            name="plus"
+                            size={Typography.FONT_SIZE_14}
                         />
-                        <TouchableOpacity>
-                            <Icon
-                                style={styles.plus}
-                                name="plus"
-                                size={Typography.FONT_SIZE_14}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
-        );
-    }
-}
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     boximg: {

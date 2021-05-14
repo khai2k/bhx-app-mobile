@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Header, ProductItemCart } from '@app/components';
 import { connect } from 'react-redux';
 import { Colors, Typography } from '@app/styles';
+import { helper } from '@app/common';
 import * as cartCreator from './action';
 
 // define your styles
@@ -66,7 +67,7 @@ class Cart extends Component {
     }
 
     componentDidMount() {
-        this.props.actionCart.get_cart();
+        this.props.actionCart.cart_get();
     }
 
     render() {
@@ -83,11 +84,19 @@ class Cart extends Component {
                 </View>
                 <View style={styles.boxsum}>
                     <Text style={styles.boxleft}>Tiền hàng:</Text>
-                    <Text style={styles.boxrightfont}>141.000₫</Text>
+                    <Text style={styles.boxrightfont}>
+                        {helper.formatMoney(
+                            this.props.cartInfo.CartTotal.Total
+                        )}
+                    </Text>
                 </View>
                 <View style={styles.boxsum}>
                     <Text style={styles.boxleft}>Phí giao dự kiến:</Text>
-                    <Text style={styles.boxright}>15.000₫</Text>
+                    <Text style={styles.boxright}>
+                        {helper.formatMoney(
+                            this.props.cartInfo.CartTotal.ShipFee
+                        )}
+                    </Text>
                 </View>
                 <View style={styles.boxbtn}>
                     <TouchableOpacity
@@ -112,8 +121,6 @@ class Cart extends Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.cartReducer);
-    console.log(mapStateToProps);
     return {
         cartInfo: state.cartReducer
     };
