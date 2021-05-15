@@ -14,8 +14,9 @@ import { ImageNavMenu } from '../../../images';
 import * as service from '../../../service/shared';
 
 const NavMenu = () => {
-    const [query, setQuery] = useState('');
-    const [fullData, setFullData] = useState([]);
+    const [search, setSearch] = useState('');
+    const [masterData, setMasterData] = useState([]);
+
     const [cateFilter, setCateFilter] = useState('8686');
     const [selectedCateChild, setSelectedCateChild] = useState('');
     const navigation = useNavigation();
@@ -30,6 +31,28 @@ const NavMenu = () => {
     const isCheckOnSales = true;
     const clearcache = 'ok';
 
+    const searchFilter = (text) => {
+        if (text) {
+            const filtered = masterData.map((element) => {
+                return {
+                    ...element,
+                    data: (element.data || []).filter(
+                        (subElement) =>
+                            subElement.Text.toUpperCase().indexOf(
+                                text.toUpperCase()
+                            ) > -1
+                    )
+                };
+            });
+
+            setListCate(filtered);
+            setSearch(text);
+        } else {
+            setListCate(masterData);
+            setSearch(text);
+        }
+    };
+
     useEffect(() => {
         const result = service.GetNavigationFromApi(
             'GET',
@@ -41,9 +64,8 @@ const NavMenu = () => {
             clearcache
         );
         result.then((value) => {
-            console.log(value);
             setListCate(value);
-            setFullData(value);
+            setMasterData(value);
         });
     }, []);
 
@@ -71,7 +93,7 @@ const NavMenu = () => {
                 </View>
                 <FlatList
                     style={styles.navLeftBottom}
-                    data={listCate}
+                    data={masterData}
                     renderItem={(item) => {
                         return (
                             <RenderCateItem
@@ -89,12 +111,12 @@ const NavMenu = () => {
                         autoCapitalize="none"
                         autoCorrect={false}
                         clearButtonMode="always"
-                        value={query}
+                        value={search}
                         style={styles.inputSearch}
                         placeholder="Tìm nhóm hàng"
-                        // onChangeText={(queryText) =>
-                        //     handleSearchInput(queryText)
-                        // }
+                        onChangeText={(text) => {
+                            searchFilter(text);
+                        }}
                     />
                     <Image
                         style={styles.iconSearch}
@@ -106,27 +128,31 @@ const NavMenu = () => {
                     renderItem={() => {
                         return null;
                     }}
-                    renderSectionHeader={({ section }) => (
-                        <FlatList
-                            style={styles.navRightBottom}
-                            numColumns="3"
-                            data={section.data}
-                            renderItem={(item) => {
-                                return (
-                                    <RenderCateChildItem
-                                        item={item}
-                                        cateParent={section.ReferenceId}
-                                        cateFilter={cateFilter}
-                                        setCateFilter={setCateFilter}
-                                        selectedCateChild={selectedCateChild}
-                                        setSelectedCateChild={
-                                            setSelectedCateChild
-                                        }
-                                    />
-                                );
-                            }}
-                        />
-                    )}
+                    renderSectionHeader={({ section }) =>
+                        section.data.length > 0 && (
+                            <FlatList
+                                style={styles.navRightBottom}
+                                numColumns="3"
+                                data={section.data}
+                                renderItem={(item) => {
+                                    return (
+                                        <RenderCateChildItem
+                                            item={item}
+                                            cateParent={section.ReferenceId}
+                                            cateFilter={cateFilter}
+                                            setCateFilter={setCateFilter}
+                                            selectedCateChild={
+                                                selectedCateChild
+                                            }
+                                            setSelectedCateChild={
+                                                setSelectedCateChild
+                                            }
+                                        />
+                                    );
+                                }}
+                            />
+                        )
+                    }
                 />
             </View>
         </View>
