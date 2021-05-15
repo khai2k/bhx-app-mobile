@@ -1,5 +1,4 @@
-import { apiBase, METHOD } from '@app/api';
-import { API_CONST } from '@app/constants';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 
 const CART_GET = 'CART_GET';
 const CART_REMOVE_ITEM_PRODUCT = 'CART_REMOVE_ITEM_PRODUCT';
@@ -16,16 +15,17 @@ export const cart_get = function () {
         const bodyApi = {
             token: getSate().cartReducer.Cart.CartId,
             us: '',
-            provinceId: 3,
-            districtId: 0,
-            wardId: 0,
-            storeId: 6463,
+            provinceId: 8,
+            districtId: 723,
+            wardId: 11544,
+            storeId: 5771,
             data: {
                 cartId: getSate().cartReducer.Cart.CartId
             }
         };
         apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
             .then((response) => {
+                console.log('CART_REMOVE_ITEM_PRODUCT Data:', response);
                 const cartInfo = response.Value;
                 dispatch({
                     type: CART_GET,
@@ -43,10 +43,10 @@ export const cart_remove_item_product = function (guildId = '') {
         const bodyApi = {
             token: getSate().cartReducer.Cart.CartId,
             us: '',
-            provinceId: 3,
-            districtId: 0,
-            wardId: 0,
-            storeId: 6463,
+            provinceId: 8,
+            districtId: 723,
+            wardId: 11544,
+            storeId: 5771,
             data: {
                 cartId: getSate().cartReducer.Cart.CartId,
                 guid: guildId,
@@ -74,10 +74,14 @@ export const cart_add_item_product = function (prodId, quantityNum) {
         const bodyApi = {
             token: getSate().cartReducer.Cart.CartId,
             us: '',
-            provinceId: 3,
-            districtId: 0,
-            wardId: 0,
-            storeId: 6463,
+            // provinceId: 3,
+            // districtId: 0,
+            // wardId: 0,
+            // storeId: 6463,
+            provinceId: 8,
+            districtId: 723,
+            wardId: 11544,
+            storeId: 5771,
             data: {
                 cartId: getSate().cartReducer.Cart.CartId,
                 productId: prodId,

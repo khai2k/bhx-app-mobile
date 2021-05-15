@@ -13,7 +13,7 @@ import {
     Alert
 } from 'react-native';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '../container/cart/action';
+import * as cartCreator from '@app/container/cart/action';
 
 const ProductItemCart = (props) => {
     //  const cart = useSelector((state) => state.cartReducer.Cart);
