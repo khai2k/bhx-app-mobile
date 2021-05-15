@@ -102,20 +102,20 @@ class MainTabComponent extends Component {
                     tabBarIcon: ({ focused, image }) => {
                         if (route.name === 'Product') {
                             image = focused
-                                ? require('../../assets/Images/grid.png')
-                                : require('../../assets/Images/grid.png');
+                                ? require('../../assets/images/grid.png')
+                                : require('../../assets/images/grid.png');
                         } else if (route.name === 'Promotion') {
                             image = focused
-                                ? require('../../assets/Images/promotion.png')
-                                : require('../../assets/Images/promotion.png');
+                                ? require('../../assets/images/promotion.png')
+                                : require('../../assets/images/promotion.png');
                         } else if (route.name === 'Notification') {
                             image = focused
-                                ? require('../../assets/Images/notification.png')
-                                : require('../../assets/Images/notification.png');
+                                ? require('../../assets/images/notification.png')
+                                : require('../../assets/images/notification.png');
                         } else if (route.name === 'Profile') {
                             image = focused
-                                ? require('../../assets/Images/user.png')
-                                : require('../../assets/Images/user.png');
+                                ? require('../../assets/images/user.png')
+                                : require('../../assets/images/user.png');
                         }
                         return (
                             <Image
