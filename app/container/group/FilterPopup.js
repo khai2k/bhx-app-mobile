@@ -114,7 +114,7 @@ const FilterPopup = (props) => {
                         style={styles.closeFilter}>
                         <Image
                             style={styles.iconSearch}
-                            source={require('../../../assets/Images/searchFilterCate.png')}
+                            source={require('../../../assets/images/searchFilterCate.png')}
                         />
                         <Text style={styles.closeFilterText}>Đóng</Text>
                     </TouchableOpacity>

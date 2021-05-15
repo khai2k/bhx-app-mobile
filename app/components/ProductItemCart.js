@@ -136,17 +136,6 @@ const styles = StyleSheet.create({
     boximg: {
         flex: 1.3
     },
-    closer: {
-        borderRadius: 15,
-        backgroundColor: '#8f9bb3',
-        position: 'absolute',
-        top: 5,
-        left: 5,
-        zIndex: 5,
-        elevation: (Platform.OS === 'android') ? 5 : 0,
-        paddingHorizontal: 5,
-        paddingVertical: 3
-    },
     boxinfo: {
         flex: 4,
         marginLeft: 5,
@@ -156,6 +145,17 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         width: 100
     },
+    closer: {
+        backgroundColor: '#8f9bb3',
+        borderRadius: 15,
+        elevation: Platform.OS === 'android' ? 5 : 0,
+        left: 5,
+        paddingHorizontal: 5,
+        paddingVertical: 3,
+        position: 'absolute',
+        top: 5,
+        zIndex: 5
+    },
     container: {
         borderBottomWidth: 1,
         borderColor: Colors.BORDER_GENERAL,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     imgbind: {
-        elevation: (Platform.OS === 'android') ? 2 : 0,
+        elevation: Platform.OS === 'android' ? 2 : 0,
         height: 60,
         resizeMode: 'contain',
         zIndex: 1
@@ -200,10 +200,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 5
     },
-    unit: {
-        ...Typography.FONT_REGULAR_12,
-        color: Colors.CART_UNIT
-    },
     statusoff: {
         color: Colors.CART_STOPSALES,
         fontSize: Typography.FONT_SIZE_12,
@@ -212,6 +208,10 @@ const styles = StyleSheet.create({
     title: {
         color: Colors.BLACK,
         fontSize: Typography.FONT_SIZE_14
+    },
+    unit: {
+        ...Typography.FONT_REGULAR_12,
+        color: Colors.CART_UNIT
     }
 });
 
