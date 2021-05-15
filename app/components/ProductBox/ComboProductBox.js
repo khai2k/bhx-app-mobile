@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
+import BuyBox from './BuyBox';
 
 const ComboProductBox = (props) => {
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
     const navigation = useNavigation();
-
+    const onUpdateNumberItems = (number) => {
+        setNumberItems(number);
+    };
+    const onUpdateBuyButtonVisible = (status) => {
+        setBuyButtonVisible(status);
+    };
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
-    const bhxProduct = props.bhxProduct;
     const imageModal =
-        bhxProduct != null && bhxProduct.FeatureImageModel != null
-            ? bhxProduct.FeatureImageModel
+        props.bhxProduct != null &&
+        props.bhxProduct.FeatureImageModel != null &&
+        props.bhxProduct.FeatureImageModel !== undefined
+            ? props.bhxProduct.FeatureImageModel
             : null;
-    if (bhxProduct != null && imageModal != null) {
+    if (props.bhxProduct != null && imageModal != null) {
         return (
             <View
                 className="product"
@@ -34,19 +41,26 @@ const ComboProductBox = (props) => {
                                     uri: imageModal.ThemeMobile
                                 }}
                             />
-                            <Image
-                                style={styles.imageProductCombo}
-                                source={{
-                                    uri: imageModal.ImageMobile
-                                }}
-                            />
+                            <View style={styles.wrapImageProductCombo}>
+                                <Image
+                                    style={styles.imageProductCombo}
+                                    source={{
+                                        uri: imageModal.ImageMobile
+                                    }}
+                                />
+                            </View>
                         </View>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => {
-                        setBuyButtonVisible(true);
-                        setNumberItems(1);
+                        if (
+                            props.bhxProduct.Price > 0 &&
+                            props.bhxProduct.StockQuantityNew >= 1
+                        ) {
+                            setNumberItems(1);
+                            setBuyButtonVisible(true);
+                        }
                     }}
                     style={
                         buyButtonVisible
@@ -55,18 +69,19 @@ const ComboProductBox = (props) => {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productName}>
-                            {bhxProduct.ShortName}
+                            {props.bhxProduct.ShortName}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
-                        <View className="priceInfo" style={styles.priceInfo}>
-                            <View className="price" style={styles.price}>
-                                <Text>{bhxProduct.Price}</Text>
-                            </View>
-                            <View className="buy" style={styles.buy}>
-                                <Text>MUA</Text>
-                            </View>
-                        </View>
+                        <BuyBox
+                            bhxProduct={props.bhxProduct}
+                            isPageExpired={false}
+                            selectedBuy={false}
+                            numberItems={numberItems}
+                            onUpdateNumberItems={onUpdateNumberItems}
+                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            handleInputNumber={handleInputNumber}
+                        />
                     </View>
                 </TouchableOpacity>
                 <View
@@ -80,41 +95,22 @@ const ComboProductBox = (props) => {
                     }>
                     <View className="productInfo" style={styles.productInfo}>
                         <Text style={styles.productNameSelected}>
-                            {bhxProduct.ShortName}
+                            {props.bhxProduct.ShortName}
                         </Text>
                         <Text className="price" style={styles.priceSelected}>
-                            {bhxProduct.Price}
+                            {props.bhxProduct.Price}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
-                        <View className="upDown" style={styles.upDownShow}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setNumberItems(
-                                        numberItems > 0 ? numberItems - 1 : 0
-                                    );
-                                    setBuyButtonVisible(numberItems !== 1);
-                                }}
-                                className="down"
-                                style={styles.down}>
-                                <Text style={styles.downIcon}></Text>
-                            </TouchableOpacity>
-                            <TextInput
-                                style={styles.inputBuy}
-                                onChangeText={handleInputNumber}
-                                value={numberItems.toString()}
-                                keyboardType="numeric"
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setNumberItems(numberItems + 1);
-                                }}
-                                className="up"
-                                style={styles.up}>
-                                <Text style={styles.upIcon1}></Text>
-                                <Text style={styles.upIcon2}></Text>
-                            </TouchableOpacity>
-                        </View>
+                        <BuyBox
+                            bhxProduct={props.bhxProduct}
+                            isPageExpired={false}
+                            selectedBuy
+                            numberItems={numberItems}
+                            onUpdateNumberItems={onUpdateNumberItems}
+                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            handleInputNumber={handleInputNumber}
+                        />
                     </View>
                 </View>
             </View>

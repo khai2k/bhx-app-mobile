@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
+import ProductRelative from './productRelative';
+import GroupBoxSelect from './groupBoxSelect';
 
 class ProductDetail extends Component {
     render() {
         return (
-            <View>
+            <ScrollView>
                 <ProductGallery />
                 <ProductArticle />
-            </View>
+                <GroupBoxSelect />
+                <ProductRelative />
+            </ScrollView>
         );
     }
 }
