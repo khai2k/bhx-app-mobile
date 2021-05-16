@@ -1,68 +1,11 @@
 import React, { Component } from 'react';
-import {
-    View,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    ScrollView
-} from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, ProductItemCart, ProductItemCartOff } from '@app/components';
 import { connect } from 'react-redux';
-import { Colors, Typography } from '@app/styles';
 import { helper } from '@app/common';
 import * as cartCreator from './action';
-
-// define your styles
-
-const styles = StyleSheet.create({
-    boxbtn: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-evenly'
-    },
-    boxleft: {
-        marginLeft: 5
-    },
-    boxright: {
-        marginRight: 5
-    },
-    boxrightfont: {
-        ...Typography.FONT_BOLD_14,
-        marginRight: 5
-    },
-    boxsum: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5
-    },
-    btn: {
-        borderColor: Colors.CART_BORDER_BTN,
-        borderRadius: 10,
-        borderWidth: 1,
-        padding: 5,
-        width: '30%'
-    },
-    cartinfo: {
-        backgroundColor: Colors.WHITE
-    },
-    textbtn: {
-        ...Typography.FONT_BOLD_14,
-        alignItems: 'center',
-        textAlign: 'center'
-    },
-    textcart: {
-        ...Typography.FONT_BOLD_14
-    },
-    titlecart: {
-        borderBottomWidth: 1,
-        borderColor: Colors.BORDER_GENERAL,
-        borderTopWidth: 5,
-        justifyContent: 'center',
-        padding: 10
-    }
-});
+import styles from './style';
 
 // create a component
 class Cart extends Component {
@@ -89,22 +32,22 @@ class Cart extends Component {
                     {showListCartItemBuy(
                         this.props.cartInfo.Cart.ListCartItemBuy
                     )}
-                    <View style={styles.boxsum}>
-                        <Text style={styles.boxleft}>Tiền hàng:</Text>
-                        <Text style={styles.boxrightfont}>
-                            {helper.formatMoney(
-                                this.props.cartInfo.CartTotal.Total
-                            )}
-                        </Text>
-                    </View>
-                    {showTotalPromotion(this.props.cartInfo.CartTotal)}
-                    <View style={styles.boxsum}>
-                        <Text style={styles.boxleft}>Phí giao dự kiến:</Text>
-                        <Text style={styles.boxright}>
-                            {helper.formatMoney(
-                                this.props.cartInfo.CartTotal.ShipFee
-                            )}
-                        </Text>
+                    <View style={styles.boxtotal}>
+                        <ComponentTotal
+                            total={this.props.cartInfo.CartTotal.Total}
+                            title="Tiền hàng:"
+                            bold
+                        />
+                        <ComponentTotal
+                            total={
+                                this.props.cartInfo.CartTotal.TotalBillPromotion
+                            }
+                            title="Hàng khuyến mãi:"
+                        />
+                        <ComponentTotal
+                            total={this.props.cartInfo.CartTotal.ShipFee}
+                            title="Phí giao dự kiến:"
+                        />
                     </View>
                     <View style={styles.boxbtn}>
                         <TouchableOpacity
@@ -124,11 +67,11 @@ class Cart extends Component {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={styles.btn}
+                            style={styles.btnbuy}
                             onPress={() =>
                                 this.props.navigation.navigate('Cart')
                             }>
-                            <Text style={styles.textbtn}>ĐẶT HÀNG</Text>
+                            <Text style={styles.textbtnbuy}>ĐẶT HÀNG</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -161,12 +104,12 @@ const showListCartItemBuy = (listCartItemBuy) => {
     }
 };
 
-const showTotalPromotion = (cartTotal) => {
+const ComponentTotal = (props) => {
     return (
         <View style={styles.boxsum}>
-            <Text style={styles.boxleft}>Hàng khuyến mãi:</Text>
-            <Text style={styles.boxright}>
-                {helper.formatMoney(cartTotal.TotalBillPromotion)}
+            <Text style={styles.boxleft}>{props.title}</Text>
+            <Text style={props.bold ? styles.boxrightfont : styles.boxright}>
+                {helper.formatMoney(props.total)}
             </Text>
         </View>
     );
