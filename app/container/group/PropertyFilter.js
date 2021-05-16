@@ -10,38 +10,16 @@ import {
 import { Colors } from '@app/styles';
 import FilterPopup from './FilterPopup';
 
-const PropertyFilter = () => {
-    const listProps = [
-        {
-            ValueID: '17779:124491',
-            Value: 'Nước ngọt\n lon, cây'
-        },
-        {
-            ValueID: '17779:124493',
-            Value: 'Nước ngọt\n chai nhỏ'
-        },
-        {
-            ValueID: '17779:149374',
-            Value: 'Nước ngọt\n chai lớn'
-        },
-        {
-            ValueID: '17779:124494',
-            Value: 'Nước ngọt\n dạng lốc'
-        },
-        {
-            ValueID: '17779:124495',
-            Value: 'Nước ngọt\n thùng 24'
-        },
-        {
-            ValueID: '27624:187514',
-            Value: 'Chai từ\n 330ml-500ml'
-        }
-    ];
+const PropertyFilter = (props) => {
     const [visiblePopup, setVisiblePopup] = useState(false);
 
     const updateVisibleStatus = (status) => {
         setVisiblePopup(status);
     };
+
+    const listAllProperties = props.properties.flatMap(
+        (property) => property.ProductPropValueBOLst
+    );
 
     return (
         <View>
@@ -54,7 +32,7 @@ const PropertyFilter = () => {
                     style={[styles.titleCate, styles.titleCate80]}>
                     <Image
                         style={styles.iconSearch}
-                        source={require('../../../assets/images/searchFilterCate.png')}
+                        source={require('../../../assets/Images/searchFilterCate.png')}
                     />
                     <Text style={styles.titleCateText}>Lọc tìm</Text>
                 </TouchableOpacity>
@@ -64,7 +42,7 @@ const PropertyFilter = () => {
                         styles.scrollList80
                     ]}
                     horizontal
-                    data={listProps}
+                    data={listAllProperties}
                     renderItem={({ item }) => (
                         <View className="it" style={styles.it}>
                             <TouchableOpacity>
@@ -79,6 +57,8 @@ const PropertyFilter = () => {
             <FilterPopup
                 visibleStatus={visiblePopup}
                 onTogglePopup={updateVisibleStatus}
+                brands={props.brands}
+                properties={props.properties}
             />
         </View>
     );

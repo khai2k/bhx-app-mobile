@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { helper } from '@app/common';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -66,7 +67,7 @@ const ProductBox = (props) => {
                 style={styles.productImg}>
                 <View className="boxImg" style={styles.boxImg}>
                     <Text className="boxExpired" style={styles.boxExpired}>
-                        HSD còn {props.bhxProduct.ExpiredDateDisplay}
+                        {props.bhxProduct.ExpiredText}
                     </Text>
                     <View className="imgContent" style={styles.imgContent}>
                         <Image
@@ -153,7 +154,7 @@ const ProductBox = (props) => {
                         {props.bhxProduct.ShortName}
                     </Text>
                     <Text className="price" style={styles.priceSelected}>
-                        {props.bhxProduct.Price}
+                        {helper.formatMoney(props.bhxProduct.Price)}
                     </Text>
                 </View>
                 <View className="boxBuy" style={styles.boxBuy}>

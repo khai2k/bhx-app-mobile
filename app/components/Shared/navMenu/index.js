@@ -9,7 +9,7 @@ import {
     SectionList
 } from 'react-native';
 import { styles } from './styles';
-import { ImageNavMenu } from '../../../images';
+import { ImageNavMenu } from '../../../Images';
 import * as service from '../../../service/shared';
 
 const NavMenu = () => {

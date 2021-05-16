@@ -10,42 +10,7 @@ import {
 import { Colors } from '@app/styles';
 import FilterPopup from './FilterPopup';
 
-const ManufactureFilter = () => {
-    const listBrands = [
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        }
-    ];
+const ManufactureFilter = (props) => {
     const [visiblePopup, setVisiblePopup] = useState(false);
 
     const updateVisibleStatus = (status) => {
@@ -63,7 +28,7 @@ const ManufactureFilter = () => {
                     style={[styles.titleCate, styles.titleCate80]}>
                     <Text
                         style={[styles.titleCateText, styles.titleCate80Text]}>
-                        Nước ngọt{'\n'} các loại
+                        {props.infoCate.Name}
                     </Text>
                 </TouchableOpacity>
                 <FlatList
@@ -72,13 +37,15 @@ const ManufactureFilter = () => {
                         styles.scrollList80
                     ]}
                     horizontal
-                    data={listBrands}
+                    data={props.brands}
                     renderItem={({ item }) => (
                         <View className="it" style={styles.it}>
                             <TouchableOpacity style={styles.brand}>
                                 <Image
                                     style={styles.brandLogo}
-                                    source={{ uri: item.Logo }}
+                                    source={{
+                                        uri: `https://cdn.tgdd.vn/Brand/11/${item.Logo}`
+                                    }}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -88,6 +55,8 @@ const ManufactureFilter = () => {
             <FilterPopup
                 visibleStatus={visiblePopup}
                 onTogglePopup={updateVisibleStatus}
+                brands={props.brands}
+                properties={props.properties}
             />
         </View>
     );

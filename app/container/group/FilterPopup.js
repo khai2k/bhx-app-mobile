@@ -15,67 +15,6 @@ import { Colors } from '@app/styles';
 const { width, height } = Dimensions.get('window');
 
 const FilterPopup = (props) => {
-    const listProps = [
-        {
-            ValueID: '17779:124491',
-            Value: 'Nước ngọt\n lon, cây'
-        },
-        {
-            ValueID: '17779:124493',
-            Value: 'Nước ngọt\n chai nhỏ'
-        },
-        {
-            ValueID: '17779:149374',
-            Value: 'Nước ngọt\n chai lớn'
-        },
-        {
-            ValueID: '17779:124494',
-            Value: 'Nước ngọt\n dạng lốc'
-        },
-        {
-            ValueID: '17779:124495',
-            Value: 'Nước ngọt\n thùng 24'
-        },
-        {
-            ValueID: '27624:187514',
-            Value: 'Chai từ\n 330ml-500ml'
-        }
-    ];
-    const listBrands = [
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        },
-        {
-            Logo: 'https://cdn.tgdd.vn/Brand/11/pepsi-25092020163114.png'
-        }
-    ];
     const ListSort = [
         {
             Value: 'PriceDesc',
@@ -114,7 +53,7 @@ const FilterPopup = (props) => {
                         style={styles.closeFilter}>
                         <Image
                             style={styles.iconSearch}
-                            source={require('../../../assets/images/searchFilterCate.png')}
+                            source={require('../../../assets/Images/searchFilterCate.png')}
                         />
                         <Text style={styles.closeFilterText}>Đóng</Text>
                     </TouchableOpacity>
@@ -132,50 +71,46 @@ const FilterPopup = (props) => {
                             })}
                         </View>
                     </View>
-                    <View className="boxFilter">
-                        <Text style={styles.filterTitle}>
-                            Lọc theo đóng gói
-                        </Text>
-                        <View style={styles.listFilter}>
-                            {listProps.map((properties) => {
-                                return (
-                                    <TouchableOpacity style={styles.it}>
-                                        <Text style={styles.filterName}>
-                                            {properties.Value}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    </View>
-                    <View className="boxFilter">
-                        <Text style={styles.filterTitle}>
-                            Lọc theo thể tích
-                        </Text>
-                        <View style={styles.listFilter}>
-                            {listProps.map((properties) => {
-                                return (
-                                    <TouchableOpacity style={styles.it}>
-                                        <Text style={styles.filterName}>
-                                            {properties.Value}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                    </View>
+                    {props.properties.map((property) => {
+                        return (
+                            <View className="boxFilter">
+                                <Text style={styles.filterTitle}>
+                                    {property.PropertyName}
+                                </Text>
+                                <View style={styles.listFilter}>
+                                    {property.ProductPropValueBOLst.map(
+                                        (propValue) => {
+                                            return (
+                                                <TouchableOpacity
+                                                    style={styles.it}>
+                                                    <Text
+                                                        style={
+                                                            styles.filterName
+                                                        }>
+                                                        {propValue.Value}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            );
+                                        }
+                                    )}
+                                </View>
+                            </View>
+                        );
+                    })}
                     <View className="boxBrand" style={styles.boxBrand}>
                         <Text style={styles.filterTitle}>
                             Lọc theo thương hiệu
                         </Text>
                         <View style={styles.listFilter}>
-                            {listBrands.map((brand) => {
+                            {props.brands.map((brand) => {
                                 return (
                                     <TouchableOpacity
                                         style={[styles.it, styles.itBrand]}>
                                         <Image
                                             style={styles.brandLogo}
-                                            source={{ uri: brand.Logo }}
+                                            source={{
+                                                uri: `https://cdn.tgdd.vn/Brand/11/${brand.Logo}`
+                                            }}
                                         />
                                     </TouchableOpacity>
                                 );
