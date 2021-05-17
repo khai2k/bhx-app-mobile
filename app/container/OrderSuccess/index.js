@@ -26,7 +26,8 @@ class OrderSuccess extends Component {
         // this.props.actionOrderSuccess.order_success_get();
         axios({
             method: 'get',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
         })
             .then((res) => {
                 const { data } = res;
@@ -42,7 +43,7 @@ class OrderSuccess extends Component {
     _renderUserInfo() {
         return (
             <View style={styles.infoLine}>
-                <View style={styles.dot}></View>
+                <View style={styles.dot} />
                 <Text>
                     Người đặt: Anh NGHIÊNG, 09115511148
                     {/* {this.state.infoOrder.ContactName} */}
@@ -57,7 +58,7 @@ class OrderSuccess extends Component {
                 <Text>
                     Giao tại: Tòa nhà MWG, Phường Tân Phú, Quận 9, TP. Hồ Chí
                     Minh {'  '}
-                    <View style={styles.dotActive}></View>
+                    <View style={styles.dotActive} />
                     <Text> Sửa</Text>
                 </Text>
             </View>
@@ -67,10 +68,10 @@ class OrderSuccess extends Component {
     _renderTime() {
         return (
             <View style={styles.infoLine}>
-                <View style={styles.dot}></View>
+                <View style={styles.dot} />
                 <Text>
                     Giao vào: 08h-12h-Ngày mai (16/11) {'  '}
-                    <View style={styles.dotActive}></View>
+                    <View style={styles.dotActive} />
                     <Text> Sửa</Text>
                 </Text>
             </View>
@@ -81,7 +82,7 @@ class OrderSuccess extends Component {
         return (
             <TouchableWithoutFeedback>
                 <View style={styles.infoLine}>
-                    <View style={styles.dot}></View>
+                    <View style={styles.dot} />
                     <Text style={{ textDecorationLine: 'underline' }}>
                         Thêm ghi chú:
                     </Text>
@@ -94,7 +95,7 @@ class OrderSuccess extends Component {
         return (
             <TouchableWithoutFeedback>
                 <View style={styles.infoLine}>
-                    <View style={styles.dot}></View>
+                    <View style={styles.dot} />
                     <Text>Xem các sản phẩm đã đặt:</Text>
                 </View>
             </TouchableWithoutFeedback>
@@ -105,7 +106,7 @@ class OrderSuccess extends Component {
         return (
             <>
                 <View style={styles.infoLine}>
-                    <View style={styles.dot}></View>
+                    <View style={styles.dot} />
                     <Text>Tổng tiền: 113.000đ </Text>
                     <View style={styles.PMHbox}>
                         <Text style={styles.PHMText}>
