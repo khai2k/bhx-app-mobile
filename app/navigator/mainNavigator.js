@@ -14,7 +14,7 @@ import Cart from '../container/cart';
 import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import NavMenu from '../components/Shared/navMenu/NavMenu';
+import NavMenu from '../components/Shared/NavMenu/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 
 const MainStack = createStackNavigator();
@@ -68,7 +68,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
- <MainStack.Screen
+            <MainStack.Screen
                 name="OrderSuccess"
                 component={OrderSuccess}
                 options={({ route }) => {
