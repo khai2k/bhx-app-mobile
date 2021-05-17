@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
@@ -19,10 +19,14 @@ const ProductItemCart = (props) => {
     //  const cart = useSelector((state) => state.cartReducer.Cart);
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
-
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
     const [guildId, setguildId] = useState(props.productCart.GuildId);
-
+    useEffect(() => {
+        console.log('useEffect');
+        console.log(props.productCart.Quantity);
+        setQuantity(props.productCart.Quantity);
+        setguildId(props.productCart.GuildId);
+    }); //  , [props.productCart.Quantity]
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
@@ -32,17 +36,63 @@ const ProductItemCart = (props) => {
     };
 
     const setQuantityMinus = () => {
-        quantity <= 1 ? alertDeleteItemProduct() : setQuantity(quantity - 1);
+        if (quantity <= 1) {
+            alertDeleteItemProduct();
+        } else {
+            setQuantity(quantity - 1);
+            actionCart
+                .cart_update_item_product(props.ProductId, quantity)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                    setQuantity(quantity + 1);
+                });
+        }
     };
 
     const setQuantityPlus = () => {
-        quantity > 50
-            ? alertMaxQuantityItemProduct()
-            : setQuantity(quantity + 1);
+        if (quantity > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            setQuantity(quantity + 1);
+            actionCart
+                .cart_update_item_product(props.ProductId, quantity)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                    setQuantity(quantity - 1);
+                });
+        }
     };
 
     const actionRemoveItemProduct = () => {
-        actionCart.cart_remove_item_product(guildId);
+        actionCart
+            .cart_remove_item_product(guildId)
+            .then((res) => {
+                console.log('actionRemoveItemProduct');
+                if (res.ResultCode < 0) {
+                    alertAPI(res.Message);
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+
+    const alertAPI = (mesages) => {
+        Alert.alert('', mesages);
     };
 
     const alertDeleteItemProduct = () => {
@@ -70,6 +120,26 @@ const ProductItemCart = (props) => {
             }
         ]);
     };
+
+    const showHideUnit = () => {
+        if (quantity >= 2) {
+            return (
+                <Text style={styles.unit}>
+                    {helper.formatMoney(props.productCart.Price)}/
+                    {props.productCart.Unit}
+                </Text>
+            );
+        }
+    };
+
+    const showHideExpire = () => {
+        if (props.productCart.InvoiceNote !== '') {
+            return (
+                <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
+            );
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
@@ -89,12 +159,11 @@ const ProductItemCart = (props) => {
                 />
             </View>
             <View style={styles.boxinfo}>
-                <Text style={styles.title}>{props.productCart.Info.Name}</Text>
-                <Text style={styles.unit}>
-                    {helper.formatMoney(props.productCart.Price)}/
-                    {props.productCart.Unit}
+                <Text style={styles.title}>
+                    {props.productCart.Info.ShortName}
                 </Text>
-                <Text style={styles.statusoff}>Tạm hết hàng</Text>
+                {showHideExpire()}
+                {showHideUnit()}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
@@ -143,10 +212,11 @@ const styles = StyleSheet.create({
     },
     boxprice: {
         flexDirection: 'column',
+        marginRight: 8,
         width: 100
     },
     closer: {
-        backgroundColor: '#8f9bb3',
+        backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
         elevation: Platform.OS === 'android' ? 5 : 0,
         left: 5,
