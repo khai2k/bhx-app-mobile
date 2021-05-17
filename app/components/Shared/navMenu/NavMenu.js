@@ -9,9 +9,10 @@ import {
     SectionList
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
-import * as service from '../../../service/shared';
+// import * as service from '../../../service/shared';
 
 const NavMenu = () => {
     const [search, setSearch] = useState('');
@@ -28,10 +29,10 @@ const NavMenu = () => {
 
     // Param để lấy danh sách cate Navigation
     const categoryId = 0;
-    const currentProvinceId = 0;
-    const currentStoreId = 0;
+    const provinceId = 0;
+    const storeId = 0;
     const isCheckOnSales = true;
-    const clearcache = '';
+    const clearcache = '@ok';
 
     const searchFilter = (text) => {
         if (text) {
@@ -69,19 +70,38 @@ const NavMenu = () => {
     };
 
     useEffect(() => {
-        const result = service.GetNavigationFromApi(
-            'GET',
-            'shared/GetNavigation',
-            categoryId,
-            currentProvinceId,
-            currentStoreId,
-            isCheckOnSales,
-            clearcache
-        );
-        result.then((value) => {
-            setListCate(value);
-            setMasterData(value);
-        });
+        apiBase(
+            API_CONST.API_GET_CATEGORY_NAVIGATION,
+            METHOD.GET,
+            {},
+            {
+                params: {
+                    categoryId,
+                    provinceId,
+                    storeId,
+                    isCheckOnSales,
+                    clearcache
+                }
+            }
+        )
+            .then((response) => {
+                // Parse dữ liệu để dùng cho sectionList
+                const res = response.Value.reduce(
+                    (accum, item) => [
+                        ...accum,
+                        {
+                            ...item,
+                            data: item.Childrens != null ? item.Childrens : []
+                        }
+                    ],
+                    []
+                );
+                setListCate(res);
+                setMasterData(res);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
     return (
