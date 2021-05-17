@@ -27,6 +27,12 @@ class Profile extends Component {
                     }
                     title="Go to Product detail"
                 />
+                <Button
+                    onPress={() =>
+                        this.props.navigation.navigate('OrderSuccess')
+                    }
+                    title="Go to Order success page"
+                />
             </View>
         );
     }
