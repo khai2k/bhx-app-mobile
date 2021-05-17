@@ -9,7 +9,17 @@ import * as categoryCreator from './action';
 
 class Group extends Component {
     componentDidMount() {
-        this.props.actionCategory.category_get();
+        const option = {
+            params: {
+                categoryUrl: 'nuoc-ngot',
+                provinceId: 3,
+                storeId: 6463,
+                phone: 0,
+                isMobile: 'true',
+                clearcache: ''
+            }
+        };
+        this.props.actionCategory.category_get(option);
     }
 
     render() {
@@ -20,6 +30,9 @@ class Group extends Component {
                     brands={this.props.categoryInfo.Brands}
                     properties={this.props.categoryInfo.Filters}
                     info={this.props.categoryInfo.Info}
+                    selectedBrand={this.props.categoryInfo.SelectedBrand}
+                    selectedProps={this.props.categoryInfo.SelectedProps}
+                    selectedSort={this.props.categoryInfo.SelectedSort}
                 />
                 <Product
                     listProducts={this.props.categoryInfo.CurrentData.Products}

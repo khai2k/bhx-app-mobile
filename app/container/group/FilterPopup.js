@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -10,33 +10,120 @@ import {
     Modal,
     Dimensions
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
+import * as categoryCreator from '@app/container/group/action';
 
 const { width, height } = Dimensions.get('window');
 
 const FilterPopup = (props) => {
+    const dispatch = useDispatch();
+    const actionCategory = bindActionCreators(categoryCreator, dispatch);
     const ListSort = [
         {
-            Value: 'PriceDesc',
-            Name: 'Giá cao\n đến thấp'
+            PropertyID: -99,
+            ValueID: 2,
+            Value: 'Giá cao\n đến thấp'
         },
         {
-            Value: 'PriceAsc',
-            Name: 'Giá thấp\n đến cao'
+            PropertyID: -99,
+            ValueID: 1,
+            Value: 'Giá thấp\n đến cao'
         },
         {
-            Value: 'OnlyPromotion',
-            Name: 'Khuyến mãi\n nhiều hơn'
+            PropertyID: -99,
+            ValueID: 13,
+            Value: 'Khuyến mãi\n nhiều hơn'
         },
         {
-            Value: 'PriceDesc',
-            Name: 'Sản phẩm\n bán chạy'
+            PropertyID: -99,
+            ValueID: 14,
+            Value: 'Sản phẩm\n bán chạy'
         },
         {
-            Value: 'PriceDesc',
-            Name: 'Sản phẩm\n mới về'
+            PropertyID: -99,
+            ValueID: 15,
+            Value: 'Sản phẩm\n mới về'
         }
     ];
+    const submitFilter = () => {
+        actionCategory.category_filter(
+            props.infoCate.Id,
+            popupSelectedBrand,
+            popupSelectedProps,
+            popupSelectedSort
+        );
+        actionCategory.select_brand(popupSelectedBrand);
+        actionCategory.select_property(popupSelectedProps);
+        actionCategory.select_sort(popupSelectedSort);
+        props.onTogglePopup(false);
+    };
+
+    const [popupSelectedBrand, setPopupSelectedBrand] = useState(
+        props.selectedBrand
+    );
+    useEffect(() => {
+        setPopupSelectedBrand(props.selectedBrand);
+    }, [props.selectedBrand]);
+
+    const [popupSelectedProps, setPopupSelectedProps] = useState(
+        props.selectedProps
+    );
+    useEffect(() => {
+        setPopupSelectedProps(props.selectedProps);
+    }, [props.selectedProps]);
+
+    const [popupSelectedSort, setPopupSelectedSort] = useState(
+        props.selectedSort
+    );
+    useEffect(() => {
+        setPopupSelectedSort(props.selectedSort);
+    }, [props.selectedSort]);
+
+    const replaceBetween = (start, end, currentString, replaceString) => {
+        return (
+            currentString.substring(0, start) +
+            replaceString +
+            currentString.substring(end)
+        );
+    };
+    const processSelectedProps = (propertyId) => {
+        let currentSelectProps = popupSelectedProps;
+        const selectPropertyInfo = propertyId.split(':');
+        const indexContainSelectedPropertyStart = currentSelectProps.indexOf(
+            propertyId
+        );
+        const indexContainSelectedGroupPropertyStart = currentSelectProps.indexOf(
+            `${selectPropertyInfo[0]}:`
+        );
+        // nếu có tồn tại nhóm props trong listprops đã chọn
+        if (indexContainSelectedGroupPropertyStart > -1) {
+            const indexContainSelectedGroupPropertyEnd = currentSelectProps.indexOf(
+                ',',
+                indexContainSelectedGroupPropertyStart
+            );
+            currentSelectProps = replaceBetween(
+                indexContainSelectedGroupPropertyStart,
+                indexContainSelectedGroupPropertyEnd,
+                currentSelectProps,
+                indexContainSelectedPropertyStart > -1 ? '' : `${propertyId}` // bỏ chọn prop đã chọn
+            );
+        } else {
+            currentSelectProps += `${propertyId},`;
+        }
+        return currentSelectProps;
+    };
+    const selectProperty = (propertyId) => {
+        const strSelectedProps = processSelectedProps(propertyId);
+        setPopupSelectedProps(strSelectedProps);
+    };
+
+    const resetFilter = () => {
+        setPopupSelectedBrand(0);
+        setPopupSelectedProps('');
+        setPopupSelectedSort(0);
+    };
 
     return (
         <SafeAreaView>
@@ -62,10 +149,26 @@ const FilterPopup = (props) => {
                         <View style={styles.listFilter}>
                             {ListSort.map((filter) => {
                                 return (
-                                    <TouchableOpacity style={styles.it}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setPopupSelectedSort(
+                                                popupSelectedSort ===
+                                                    filter.ValueID
+                                                    ? 0
+                                                    : filter.ValueID
+                                            );
+                                        }}
+                                        style={styles.it}>
                                         <Text style={styles.filterName}>
-                                            {filter.Name}
+                                            {filter.Value}
                                         </Text>
+                                        {popupSelectedSort ===
+                                        filter.ValueID ? (
+                                            <Image
+                                                style={styles.iconCheck}
+                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            />
+                                        ) : null}
                                     </TouchableOpacity>
                                 );
                             })}
@@ -82,6 +185,11 @@ const FilterPopup = (props) => {
                                         (propValue) => {
                                             return (
                                                 <TouchableOpacity
+                                                    onPress={() => {
+                                                        selectProperty(
+                                                            `${propValue.PropertyID}:${propValue.ValueID}`
+                                                        );
+                                                    }}
                                                     style={styles.it}>
                                                     <Text
                                                         style={
@@ -89,6 +197,16 @@ const FilterPopup = (props) => {
                                                         }>
                                                         {propValue.Value}
                                                     </Text>
+                                                    {popupSelectedProps.includes(
+                                                        `${propValue.PropertyID}:${propValue.ValueID}`
+                                                    ) ? (
+                                                        <Image
+                                                            style={
+                                                                styles.iconCheck
+                                                            }
+                                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                        />
+                                                    ) : null}
                                                 </TouchableOpacity>
                                             );
                                         }
@@ -105,6 +223,13 @@ const FilterPopup = (props) => {
                             {props.brands.map((brand) => {
                                 return (
                                     <TouchableOpacity
+                                        onPress={() => {
+                                            setPopupSelectedBrand(
+                                                popupSelectedBrand === brand.Id
+                                                    ? 0
+                                                    : brand.Id
+                                            );
+                                        }}
                                         style={[styles.it, styles.itBrand]}>
                                         <Image
                                             style={styles.brandLogo}
@@ -112,6 +237,12 @@ const FilterPopup = (props) => {
                                                 uri: `https://cdn.tgdd.vn/Brand/11/${brand.Logo}`
                                             }}
                                         />
+                                        {popupSelectedBrand === brand.Id ? (
+                                            <Image
+                                                style={styles.iconCheck}
+                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            />
+                                        ) : null}
                                     </TouchableOpacity>
                                 );
                             })}
@@ -120,11 +251,17 @@ const FilterPopup = (props) => {
                 </ScrollView>
                 <View class="boxApply" style={styles.boxApply}>
                     <TouchableOpacity
+                        onPress={() => {
+                            resetFilter();
+                        }}
                         className="reset"
                         style={[styles.button, styles.reset]}>
                         <Text style={styles.textButton}>Chọn lại</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
+                        onPress={() => {
+                            submitFilter();
+                        }}
                         className="apply"
                         style={[styles.button, styles.apply]}>
                         <Text style={styles.textButtonApply}>Áp dụng</Text>
@@ -209,6 +346,13 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         marginBottom: 10,
         paddingLeft: 5
+    },
+    iconCheck: {
+        height: 16,
+        position: 'absolute',
+        right: -2,
+        top: -2,
+        width: 16
     },
     it: {
         borderColor: Colors.FUN_GREEN,

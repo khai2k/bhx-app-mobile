@@ -7,15 +7,35 @@ import {
     TouchableOpacity,
     StyleSheet
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
+import * as categoryCreator from '@app/container/group/action';
 import FilterPopup from './FilterPopup';
 
 const ManufactureFilter = (props) => {
+    const dispatch = useDispatch();
+    const actionCategory = bindActionCreators(categoryCreator, dispatch);
     const [visiblePopup, setVisiblePopup] = useState(false);
 
     const updateVisibleStatus = (status) => {
         setVisiblePopup(status);
     };
+
+    const selectBrand = (brandId) => {
+        const selectedBrand = brandId === props.selectedBrand ? 0 : brandId;
+        actionCategory.category_filter(
+            props.infoCate.Id,
+            selectedBrand,
+            props.selectedProps
+        );
+        actionCategory.select_brand(selectedBrand);
+    };
+
+    const isExtendBrands = props.brands && props.brands.length > 10;
+    const listBrands = isExtendBrands
+        ? props.brands.slice(0, 11)
+        : props.brands;
 
     return (
         <View>
@@ -37,17 +57,49 @@ const ManufactureFilter = (props) => {
                         styles.scrollList80
                     ]}
                     horizontal
-                    data={props.brands}
-                    renderItem={({ item }) => (
+                    data={listBrands}
+                    renderItem={({ item, index }) => (
                         <View className="it" style={styles.it}>
-                            <TouchableOpacity style={styles.brand}>
-                                <Image
-                                    style={styles.brandLogo}
-                                    source={{
-                                        uri: `https://cdn.tgdd.vn/Brand/11/${item.Logo}`
+                            {index === 10 ? (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        updateVisibleStatus(true);
                                     }}
-                                />
-                            </TouchableOpacity>
+                                    style={styles.showMore}>
+                                    <Image
+                                        style={styles.iconSearch}
+                                        source={require('../../../assets/Images/searchFilterCate.png')}
+                                    />
+                                    <Text style={styles.textShowMore}>
+                                        Xem thêm
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        selectBrand(item.Id);
+                                    }}
+                                    style={[
+                                        styles.brand,
+                                        props.selectedBrand > 0 &&
+                                        props.selectedBrand === item.Id
+                                            ? styles.selectedBrand
+                                            : ''
+                                    ]}>
+                                    <Image
+                                        style={styles.brandLogo}
+                                        source={{
+                                            uri: `https://cdn.tgdd.vn/Brand/11/${item.Logo}`
+                                        }}
+                                    />
+                                    {props.selectedBrand === item.Id ? (
+                                        <Image
+                                            style={styles.iconCheck}
+                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                        />
+                                    ) : null}
+                                </TouchableOpacity>
+                            )}
                         </View>
                     )}
                 />
@@ -57,6 +109,10 @@ const ManufactureFilter = (props) => {
                 onTogglePopup={updateVisibleStatus}
                 brands={props.brands}
                 properties={props.properties}
+                infoCate={props.infoCate}
+                selectedBrand={props.selectedBrand}
+                selectedProps={props.selectedProps}
+                selectedSort={props.selectedSort}
             />
         </View>
     );
@@ -77,6 +133,13 @@ const styles = StyleSheet.create({
         height: 35,
         width: 58
     },
+    iconCheck: {
+        height: 16,
+        position: 'absolute',
+        right: -2,
+        top: -1,
+        width: 16
+    },
     it: {
         height: 37,
         marginBottom: 5,
@@ -96,6 +159,17 @@ const styles = StyleSheet.create({
     },
     scrollList80: {
         paddingLeft: 82
+    },
+    showMore: {
+        alignItems: 'center',
+        height: 37,
+        justifyContent: 'center',
+        width: '100%'
+    },
+    textShowMore: {
+        color: Colors.FUN_GREEN,
+        fontSize: 12,
+        lineHeight: 15
     },
     titleCate: {
         backgroundColor: Colors.LINK_WATER_2,

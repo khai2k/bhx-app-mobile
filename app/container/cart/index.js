@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+    View,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    ScrollView
+} from 'react-native';
 import { bindActionCreators } from 'redux';
-import { Header, ProductItemCart } from '@app/components';
+import { Header, ProductItemCart, ProductItemCartOff } from '@app/components';
 import { connect } from 'react-redux';
 import { Colors, Typography } from '@app/styles';
 import { helper } from '@app/common';
@@ -10,6 +16,12 @@ import * as cartCreator from './action';
 // define your styles
 
 const styles = StyleSheet.create({
+    boxbtn: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly'
+    },
     boxleft: {
         marginLeft: 5
     },
@@ -25,8 +37,20 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 5
     },
+    btn: {
+        borderColor: Colors.CART_BORDER_BTN,
+        borderRadius: 10,
+        borderWidth: 1,
+        padding: 5,
+        width: '30%'
+    },
     cartinfo: {
         backgroundColor: Colors.WHITE
+    },
+    textbtn: {
+        ...Typography.FONT_BOLD_14,
+        alignItems: 'center',
+        textAlign: 'center'
     },
     textcart: {
         ...Typography.FONT_BOLD_14
@@ -36,26 +60,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 5,
         justifyContent: 'center',
-        padding: 10,
-    },
-    boxbtn: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-    },
-    btn: {
-        padding: 5,
-        width: '30%',
-        borderWidth: 1,
-        borderColor: Colors.CART_BORDER_BTN,
-        borderRadius: 10,
-    },
-    textbtn: {
-        ...Typography.FONT_BOLD_14,
-        alignItems: 'center',
-        textAlign: 'center',
+        padding: 10
     }
 });
 
@@ -74,51 +79,98 @@ class Cart extends Component {
         return (
             <View style={styles.cartinfo}>
                 <Header />
-                <View style={styles.titlecart}>
-                    <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
-                </View>
-                <View>
-                    {this.props.cartInfo.Cart.ListCartItem.map((itemCart) => {
-                        return <ProductItemCart productCart={itemCart} />;
-                    })}
-                </View>
-                <View style={styles.boxsum}>
-                    <Text style={styles.boxleft}>Tiền hàng:</Text>
-                    <Text style={styles.boxrightfont}>
-                        {helper.formatMoney(
-                            this.props.cartInfo.CartTotal.Total
-                        )}
-                    </Text>
-                </View>
-                <View style={styles.boxsum}>
-                    <Text style={styles.boxleft}>Phí giao dự kiến:</Text>
-                    <Text style={styles.boxright}>
-                        {helper.formatMoney(
-                            this.props.cartInfo.CartTotal.ShipFee
-                        )}
-                    </Text>
-                </View>
-                <View style={styles.boxbtn}>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => this.props.navigation.navigate('Cart')}>
-                        <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => this.props.navigation.navigate('Cart')}>
-                        <Text style={styles.textbtn}>Dùng phiếu mua hàng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => this.props.navigation.navigate('Cart')}>
-                        <Text style={styles.textbtn}>ĐẶT HÀNG</Text>
-                    </TouchableOpacity>
-                </View>
+                <ScrollView>
+                    <View style={styles.titlecart}>
+                        <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
+                    </View>
+                    {showListCartItemOff(
+                        this.props.cartInfo.Cart.ListCartItemOff
+                    )}
+                    {showListCartItemBuy(
+                        this.props.cartInfo.Cart.ListCartItemBuy
+                    )}
+                    <View style={styles.boxsum}>
+                        <Text style={styles.boxleft}>Tiền hàng:</Text>
+                        <Text style={styles.boxrightfont}>
+                            {helper.formatMoney(
+                                this.props.cartInfo.CartTotal.Total
+                            )}
+                        </Text>
+                    </View>
+                    {showTotalPromotion(this.props.cartInfo.CartTotal)}
+                    <View style={styles.boxsum}>
+                        <Text style={styles.boxleft}>Phí giao dự kiến:</Text>
+                        <Text style={styles.boxright}>
+                            {helper.formatMoney(
+                                this.props.cartInfo.CartTotal.ShipFee
+                            )}
+                        </Text>
+                    </View>
+                    <View style={styles.boxbtn}>
+                        <TouchableOpacity
+                            style={styles.btn}
+                            onPress={() =>
+                                this.props.navigation.navigate('Cart')
+                            }>
+                            <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.btn}
+                            onPress={() =>
+                                this.props.navigation.navigate('Cart')
+                            }>
+                            <Text style={styles.textbtn}>
+                                Dùng phiếu mua hàng
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.btn}
+                            onPress={() =>
+                                this.props.navigation.navigate('Cart')
+                            }>
+                            <Text style={styles.textbtn}>ĐẶT HÀNG</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
             </View>
         );
     }
 }
+
+const showListCartItemOff = (listCartItemOff) => {
+    if (listCartItemOff != null && !helper.IsEmptyArray(listCartItemOff)) {
+        return (
+            <View>
+                {listCartItemOff.map((itemCart) => {
+                    return <ProductItemCartOff productCart={itemCart} />;
+                })}
+            </View>
+        );
+    }
+};
+
+const showListCartItemBuy = (listCartItemBuy) => {
+    if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
+        return (
+            <View>
+                {listCartItemBuy.map((itemCart) => {
+                    return <ProductItemCart productCart={itemCart} />;
+                })}
+            </View>
+        );
+    }
+};
+
+const showTotalPromotion = (cartTotal) => {
+    return (
+        <View style={styles.boxsum}>
+            <Text style={styles.boxleft}>Hàng khuyến mãi:</Text>
+            <Text style={styles.boxright}>
+                {helper.formatMoney(cartTotal.TotalBillPromotion)}
+            </Text>
+        </View>
+    );
+};
 
 const mapStateToProps = (state) => {
     return {

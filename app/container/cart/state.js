@@ -74,6 +74,8 @@ export const cartState = {
                     Url: '/nuoc-ngot/coca-cola-zero-1-5-lit'
                 }
             }
-        ]
+        ],
+        ListCartItemBuy: [],
+        ListCartItemOff: []
     }
 };

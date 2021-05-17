@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
@@ -19,10 +19,12 @@ const ProductItemCart = (props) => {
     //  const cart = useSelector((state) => state.cartReducer.Cart);
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
-
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
     const [guildId, setguildId] = useState(props.productCart.GuildId);
-
+    useEffect(() => {
+        setQuantity(props.productCart.Quantity);
+        setguildId(props.productCart.GuildId);
+    }, [props.productCart]);
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
@@ -41,8 +43,38 @@ const ProductItemCart = (props) => {
             : setQuantity(quantity + 1);
     };
 
+    const showHideUnit = () => {
+        if (quantity >= 2) {
+            return (
+                <Text style={styles.unit}>
+                    {helper.formatMoney(props.productCart.Price)}/
+                    {props.productCart.Unit}
+                </Text>
+            );
+        }
+    };
+
+    const showHideExpire = () => {
+        if (props.productCart.InvoiceNote !== '') {
+            return (
+                <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
+            );
+        }
+    };
+
     const actionRemoveItemProduct = () => {
-        actionCart.cart_remove_item_product(guildId);
+        actionCart
+            .cart_remove_item_product(guildId)
+            .then((res) => {
+                console.log('actionRemoveItemProduct');
+                if (res.ResultCode < 0) {
+                    alertAPI(res.Message);
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+        // actionCart.cart_remove_item_product(guildId);
     };
 
     const alertDeleteItemProduct = () => {
@@ -58,6 +90,10 @@ const ProductItemCart = (props) => {
         ]);
     };
 
+    const alertAPI = (mesages) => {
+        Alert.alert('', mesages);
+    };
+
     const alertMaxQuantityItemProduct = () => {
         Alert.alert('', 'Chưa có thông tin?', [
             {
@@ -70,6 +106,7 @@ const ProductItemCart = (props) => {
             }
         ]);
     };
+
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
@@ -89,12 +126,11 @@ const ProductItemCart = (props) => {
                 />
             </View>
             <View style={styles.boxinfo}>
-                <Text style={styles.title}>{props.productCart.Info.Name}</Text>
-                <Text style={styles.unit}>
-                    {helper.formatMoney(props.productCart.Price)}/
-                    {props.productCart.Unit}
+                <Text style={styles.title}>
+                    {props.productCart.Info.ShortName}
                 </Text>
-                <Text style={styles.statusoff}>Tạm hết hàng</Text>
+                {showHideExpire()}
+                {showHideUnit()}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
