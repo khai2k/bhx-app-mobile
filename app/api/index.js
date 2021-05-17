@@ -1,3 +1,4 @@
-import { apiBase } from './fetchApi';
+import { apiBase, METHOD } from './fetchApi';
+import * as API_CONST from './api';
 
-export { apiBase };
+export { apiBase, METHOD, API_CONST };

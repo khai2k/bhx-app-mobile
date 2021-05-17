@@ -1,67 +1,74 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
+import { useNavigation } from '@react-navigation/native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Image,
+    TextInput,
+    TouchableOpacity
+} from 'react-native';
 
-class Header extends Component {
-    render() {
-        return (
-            <SafeAreaView>
-                <View style={styles.headerContainer}>
-                    <View style={styles.boxlogo}>
-                        <Image
-                            style={styles.logo}
-                            source={require('../../assets/images/icon-menu.png')}
-                        />
-                    </View>
-                    <View style={styles.boxsearch}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Bạn tìm gì?"
-                        />
-                        <Image
-                            style={styles.iconsearch}
-                            source={require('../../assets/images/icon-search.png')}
-                        />
-                    </View>
-                    <View style={styles.boxinfo}>
-                        <View style={styles.boxdelivery}>
-                            <Text style={styles.textcolor}>
-                                {translate('Header_DeliveryAddress')}
-                            </Text>
-                            <Text style={styles.textcolor} numberOfLines={1}>
-                                Buôn mê thuộc
-                            </Text>
-                        </View>
-                        <View style={styles.boxhistory}>
-                            <Text style={styles.historyorder}>
-                                {translate('Header_HistoryAccount')}
-                            </Text>
-                        </View>
-                        <View style={styles.boxcart}>
-                            <View style={styles.boxcartprice}>
-                                <Text style={styles.textcolor}>
-                                    {translate('Header_Cart')}
-                                </Text>
-                                <Text style={styles.textcolor}>
-                                    10.000.000đ
-                                </Text>
-                            </View>
-                            <View style={styles.boxnumber}>
-                                <Text style={styles.number}>5</Text>
-                                <Image
-                                    style={styles.iconcart}
-                                    source={require('../../assets/images/icon-shoping-cart.png')}
-                                />
-                            </View>
-                        </View>
-                    </View>
+const Header = (props) => {
+    const navigation = useNavigation();
+    return (
+        <SafeAreaView>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity
+                    style={styles.boxlogo}
+                    onPress={() => navigation.navigate('NavMenu')}>
+                    <Image
+                        style={styles.logo}
+                        source={require('../../assets/images/icon-menu.png')}
+                    />
+                </TouchableOpacity>
+
+                <View style={styles.boxsearch}>
+                    <TextInput style={styles.input} placeholder="Bạn tìm gì?" />
+                    <Image
+                        style={styles.iconsearch}
+                        source={require('../../assets/images/icon-search.png')}
+                    />
                 </View>
-            </SafeAreaView>
-        );
-    }
-}
+                <View style={styles.boxinfo}>
+                    <View style={styles.boxdelivery}>
+                        <Text style={styles.textcolor}>
+                            {translate('Header_DeliveryAddress')}
+                        </Text>
+                        <Text style={styles.textcolor} numberOfLines={1}>
+                            Buôn mê thuộc
+                        </Text>
+                    </View>
+                    <View style={styles.boxhistory}>
+                        <Text style={styles.historyorder}>
+                            {translate('Header_HistoryAccount')}
+                        </Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.boxcart}
+                        onPress={() => navigation.navigate('Cart')}>
+                        <View style={styles.boxcartprice}>
+                            <Text style={styles.textcolor}>
+                                {translate('Header_Cart')}
+                            </Text>
+                            <Text style={styles.textcolor}>10.000.000đ</Text>
+                        </View>
+                        <View style={styles.boxnumber}>
+                            <Text style={styles.number}>5</Text>
+                            <Image
+                                style={styles.iconcart}
+                                source={require('../../assets/images/icon-shopping-cart.png')}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </SafeAreaView>
+    );
+};
 
 const styles = StyleSheet.create({
     boxcart: {

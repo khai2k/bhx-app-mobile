@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, Dimensions } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
+import { Text, View, StyleSheet, Image } from 'react-native';
+// import Carousel from 'react-native-snap-carousel';
 
 const style = StyleSheet.create({
     boxTitle: {
@@ -74,7 +74,7 @@ export default class SliderTitle extends Component {
                         uri: this.state.backgroundTitle
                     }}
                 />
-                <Carousel
+                {/* <Carousel
                     ref={(c) => {
                         this._carousel = c;
                     }}
@@ -88,7 +88,7 @@ export default class SliderTitle extends Component {
                     itemWidth={200}
                     sliderWidth={200}
                     style={style.boxCarousel}
-                />
+                /> */}
             </View>
         );
     }

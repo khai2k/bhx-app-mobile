@@ -36,3 +36,28 @@ export const FONT_REGULAR = {
     fontFamily: FONT_FAMILY_REGULAR,
     fontWeight: FONT_WEIGHT_REGULAR
 };
+
+export const FONT_BOLD = {
+    fontFamily: FONT_FAMILY_BOLD,
+    fontWeight: FONT_WEIGHT_BOLD
+};
+
+export const FONT_REGULAR_14 = {
+    ...FONT_REGULAR,
+    fontSize: FONT_SIZE_14
+};
+
+export const FONT_REGULAR_12 = {
+    ...FONT_REGULAR,
+    fontSize: FONT_SIZE_12
+};
+
+export const FONT_BOLD_14 = {
+    ...FONT_BOLD,
+    fontSize: FONT_SIZE_14
+};
+
+export const FONT_BOLD_12 = {
+    ...FONT_BOLD,
+    fontSize: FONT_SIZE_12
+};
