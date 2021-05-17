@@ -1,26 +1,48 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
-const BoxSelect = (props) => {
+const Box = (props) => {
+    const { bHXProduct } = props;
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
     const navigation = useNavigation();
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
-    const { status, ShortName, Avatar, Price, isNearDate } = props.bhxProduct;
+    const checkWebStatusId = (Price, StockQuantityNew) => {
+        if (Price > 0) {
+            if (StockQuantityNew > 0) {
+                return 3;
+            }
+            return 5;
+        }
+        return 1;
+    };
+    const checkIsSaleOnly = (webStatusId, Sales) => {
+        if (webStatusId === 5 && Sales !== null) {
+            return true;
+        }
+        return false;
+    };
+    const { StockQuantityNew, Price, Sales } = bHXProduct;
+    const webStatusId = checkWebStatusId(Price, StockQuantityNew);
+    const isSaleOnly = checkIsSaleOnly(webStatusId, Sales);
+
     return (
         <View>
             <View
                 style={
-                    status === 0 ? styles.product : styles.productOutOfStock
+                    webStatusId === 3 || isSaleOnly
+                        ? styles.product
+                        : styles.productOutOfStock
                 }>
                 <TouchableOpacity
                     onPress={() => {
-                        if (status === 0) {
+                        if (webStatusId === 3 || isSaleOnly) {
                             setNumberItems(1);
                             setBuyButtonVisible(true);
                         }
@@ -30,55 +52,41 @@ const BoxSelect = (props) => {
                             ? styles.unvisibleProductBuy
                             : styles.visibleProductBuy
                     }>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 1
-                        }}>
-                        <Image
-                            style={{ width: 20, height: 20, margin: 5 }}
-                            source={{ uri: Avatar }}
-                        />
-                        <View style={{ justifyContent: 'center' }}>
-                            <Text>{ShortName}</Text>
+                    <View style={styles.center}>
+                        <View style={styles.boxBuy}>
+                            <Text>{`${Price}đ`}</Text>
                         </View>
                     </View>
-                    <View className="boxBuy" style={styles.boxBuy}>
-                        {status === 0 ? (
-                            <View
-                                className="priceInfo"
-                                style={styles.priceInfo}>
-                                <View className="price" style={styles.price}>
-                                    <Text>{Price}</Text>
+                    {isSaleOnly ? (
+                        <View style={styles.boxBuy}>
+                            <Text style={styles.ExpiredText}>
+                                {' '}
+                                {Sales && Sales['6613'].ExpiredText}
+                            </Text>
+                        </View>
+                    ) : (
+                        <View className="boxBuy" style={styles.boxBuy}>
+                            {webStatusId === 3 ? (
+                                <View
+                                    className="priceInfo"
+                                    style={styles.priceInfo}>
+                                    <View className="buy" style={styles.buy}>
+                                        <Text>MUA NGAY</Text>
+                                    </View>
                                 </View>
-                                <View className="buy" style={styles.buy}>
-                                    <Text>MUA</Text>
+                            ) : webStatusId === 5 ? (
+                                <View style={styles.center}>
+                                    <Text>TẠM HẾT HÀNG</Text>
                                 </View>
-                            </View>
-                        ) : status === 1 ? (
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                <Text>TẠM HẾT HÀNG</Text>
-                            </View>
-                        ) : (
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
-                                <Text style={{ fontSize: 12 }}>
-                                    NGUNG KINH DANH
-                                </Text>
-                            </View>
-                        )}
-                    </View>
+                            ) : (
+                                <View style={styles.center}>
+                                    <Text style={{ fontSize: 12 }}>
+                                        NGUNG KINH DANH
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
                 </TouchableOpacity>
                 <View
                     onPress={() => {
@@ -89,17 +97,9 @@ const BoxSelect = (props) => {
                             ? styles.visibleProductBuy
                             : styles.unvisibleProductBuy
                     }>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center'
-                        }}>
-                        <Image
-                            style={{ width: 20, height: 20, margin: 5 }}
-                            source={{ uri: Avatar }}
-                        />
-                        <View style={{ justifyContent: 'center' }}>
-                            <Text>{Price}</Text>
+                    <View style={styles.boxBuy}>
+                        <View style={styles.center}>
+                            <Text>{`${Price}đ`}</Text>
                         </View>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
@@ -134,13 +134,18 @@ const BoxSelect = (props) => {
                     </View>
                 </View>
             </View>
-            {isNearDate === 1 && (
+            {Sales !== null && !isSaleOnly && (
                 <View style={styles.productNearDate}>
                     <View style={styles.textProductNearDate}>
-                        <Text style={{ fontWeight: 'bold' }}> MUA 13.000đ</Text>
+                        <Text style={{ fontWeight: 'bold' }}>
+                            {Sales && `MUA ${Sales['6613'].Price}`}
+                        </Text>
                     </View>
                     <View style={styles.textProductNearDate}>
-                        <Text> HSD còn 24 ngày </Text>
+                        <Text style={styles.ExpiredText}>
+                            {' '}
+                            {Sales && Sales['6613'].ExpiredText}
+                        </Text>
                     </View>
                 </View>
             )}
@@ -148,4 +153,4 @@ const BoxSelect = (props) => {
     );
 };
 
-export default BoxSelect;
+export default Box;

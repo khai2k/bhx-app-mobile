@@ -121,3 +121,7 @@ export const getPathImageIOS = (assetPath) => {
         }
     });
 };
+
+export const formatMoney = (decimal) => {
+    return `${decimal.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}₫`;
+};

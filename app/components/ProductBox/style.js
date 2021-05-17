@@ -361,6 +361,13 @@ const styles = StyleSheet.create({
     imageProductCombo: {
         height: win.width / 4,
         width: '100%'
+    },
+    noBuy: {
+        alignItems: 'center',
+        fontSize: 11,
+        justifyContent: 'center',
+        textAlign: 'center',
+        textTransform: 'uppercase'
     }
 });
 

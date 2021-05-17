@@ -13,7 +13,7 @@ class Splash extends Component {
         setI18nConfig();
         this.state = {};
     }
-    
+
     componentDidMount() {
         const { isShowSplash } = this.props;
         if (isShowSplash) {
