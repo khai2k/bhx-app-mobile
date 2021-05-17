@@ -68,7 +68,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
- <MainStack.Screen
+            <MainStack.Screen
                 name="OrderSuccess"
                 component={OrderSuccess}
                 options={({ route }) => {

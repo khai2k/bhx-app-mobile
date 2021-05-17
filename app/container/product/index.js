@@ -32,8 +32,7 @@ class Product extends Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url:
-                'https://staging.bachhoaxanh.com/apiapp/api/Home/GetHomeData?provinceId=3&storeId=6463&userId=0&phoneList=0&IsMobile=true&clearcache=ok'
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/Home/GetHomeData?provinceId=3&storeId=6463&userId=0&phoneList=0&IsMobile=true&clearcache=ok'
         })
             .then((res) => {
                 const { data } = res;
