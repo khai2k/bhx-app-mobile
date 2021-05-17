@@ -20,7 +20,7 @@ class Profile extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header></Header>
+                <Header />
                 <Button
                     onPress={() =>
                         this.props.navigation.navigate('ProductDetail')
