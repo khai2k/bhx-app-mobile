@@ -6,7 +6,8 @@ import {
     Image,
     FlatList,
     TextInput,
-    SectionList
+    SectionList,
+    AsyncStorage
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -69,39 +70,53 @@ const NavMenu = () => {
         }
     };
 
-    useEffect(() => {
-        apiBase(
-            API_CONST.API_GET_CATEGORY_NAVIGATION,
-            METHOD.GET,
-            {},
-            {
-                params: {
-                    categoryId,
-                    provinceId,
-                    storeId,
-                    isCheckOnSales,
-                    clearcache
+    const getListCateLocalStorage = async () => {
+        const value = await AsyncStorage.getItem('listCates');
+        return value ? JSON.parse(value) : [];
+    };
+
+    useEffect(async () => {
+        const data = await getListCateLocalStorage();
+        setListCate(data);
+        setMasterData(data);
+
+        // Nếu local có dữ liệu thì ko call API
+        data.length === 0 &&
+            apiBase(
+                API_CONST.API_GET_CATEGORY_NAVIGATION,
+                METHOD.GET,
+                {},
+                {
+                    params: {
+                        categoryId,
+                        provinceId,
+                        storeId,
+                        isCheckOnSales,
+                        clearcache
+                    }
                 }
-            }
-        )
-            .then((response) => {
-                // Parse dữ liệu để dùng cho sectionList
-                const res = response.Value.reduce(
-                    (accum, item) => [
-                        ...accum,
-                        {
-                            ...item,
-                            data: item.Childrens != null ? item.Childrens : []
-                        }
-                    ],
-                    []
-                );
-                setListCate(res);
-                setMasterData(res);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            )
+                .then((response) => {
+                    // Parse dữ liệu để dùng cho sectionList
+                    // console.log('call api');
+                    const res = response.Value.reduce(
+                        (accum, item) => [
+                            ...accum,
+                            {
+                                ...item,
+                                data:
+                                    item.Childrens != null ? item.Childrens : []
+                            }
+                        ],
+                        []
+                    );
+                    setListCate(res);
+                    setMasterData(res);
+                    AsyncStorage.setItem('listCates', res);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
     }, []);
 
     return (
@@ -119,7 +134,7 @@ const NavMenu = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.btnHome}
-                        onPress={() => navigation.goBack()}>
+                        onPress={() => navigation.navigate('Main')}>
                         <Image
                             source={ImageNavMenu.imgIconHome}
                             style={styles.iconHome}
