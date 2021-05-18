@@ -63,18 +63,17 @@ const PropertyFilter = (props) => {
     const processSelectedProps = (propertyId) => {
         let currentSelectProps = props.selectedProps;
         const selectPropertyInfo = propertyId.split(':');
-        const indexContainSelectedPropertyStart = currentSelectProps.indexOf(
-            propertyId
-        );
-        const indexContainSelectedGroupPropertyStart = currentSelectProps.indexOf(
-            `${selectPropertyInfo[0]}:`
-        );
+        const indexContainSelectedPropertyStart =
+            currentSelectProps.indexOf(propertyId);
+        const indexContainSelectedGroupPropertyStart =
+            currentSelectProps.indexOf(`${selectPropertyInfo[0]}:`);
         // nếu có tồn tại nhóm props trong listprops đã chọn
         if (indexContainSelectedGroupPropertyStart > -1) {
-            const indexContainSelectedGroupPropertyEnd = currentSelectProps.indexOf(
-                ',',
-                indexContainSelectedGroupPropertyStart
-            );
+            const indexContainSelectedGroupPropertyEnd =
+                currentSelectProps.indexOf(
+                    ',',
+                    indexContainSelectedGroupPropertyStart
+                );
             currentSelectProps = replaceBetween(
                 indexContainSelectedGroupPropertyStart,
                 indexContainSelectedGroupPropertyEnd,
@@ -122,7 +121,7 @@ const PropertyFilter = (props) => {
                     style={[styles.titleCate, styles.titleCate80]}>
                     <Image
                         style={styles.iconSearch}
-                        source={require('../../../assets/Images/searchFilterCate.png')}
+                        source={require('../../../assets/images/searchFilterCate.png')}
                     />
                     <Text style={styles.titleCateText}>Lọc tìm</Text>
                 </TouchableOpacity>
@@ -143,7 +142,7 @@ const PropertyFilter = (props) => {
                                     style={styles.showMore}>
                                     <Image
                                         style={styles.iconSearch}
-                                        source={require('../../../assets/Images/searchFilterCate.png')}
+                                        source={require('../../../assets/images/searchFilterCate.png')}
                                     />
                                     <Text style={styles.textShowMore}>
                                         Xem thêm
@@ -169,7 +168,7 @@ const PropertyFilter = (props) => {
                                         )) ? (
                                         <Image
                                             style={styles.iconCheck}
-                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                         />
                                     ) : null}
                                 </TouchableOpacity>

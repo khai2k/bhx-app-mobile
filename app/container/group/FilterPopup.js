@@ -91,18 +91,17 @@ const FilterPopup = (props) => {
     const processSelectedProps = (propertyId) => {
         let currentSelectProps = popupSelectedProps;
         const selectPropertyInfo = propertyId.split(':');
-        const indexContainSelectedPropertyStart = currentSelectProps.indexOf(
-            propertyId
-        );
-        const indexContainSelectedGroupPropertyStart = currentSelectProps.indexOf(
-            `${selectPropertyInfo[0]}:`
-        );
+        const indexContainSelectedPropertyStart =
+            currentSelectProps.indexOf(propertyId);
+        const indexContainSelectedGroupPropertyStart =
+            currentSelectProps.indexOf(`${selectPropertyInfo[0]}:`);
         // nếu có tồn tại nhóm props trong listprops đã chọn
         if (indexContainSelectedGroupPropertyStart > -1) {
-            const indexContainSelectedGroupPropertyEnd = currentSelectProps.indexOf(
-                ',',
-                indexContainSelectedGroupPropertyStart
-            );
+            const indexContainSelectedGroupPropertyEnd =
+                currentSelectProps.indexOf(
+                    ',',
+                    indexContainSelectedGroupPropertyStart
+                );
             currentSelectProps = replaceBetween(
                 indexContainSelectedGroupPropertyStart,
                 indexContainSelectedGroupPropertyEnd,
@@ -140,7 +139,7 @@ const FilterPopup = (props) => {
                         style={styles.closeFilter}>
                         <Image
                             style={styles.iconSearch}
-                            source={require('../../../assets/Images/searchFilterCate.png')}
+                            source={require('../../../assets/images/searchFilterCate.png')}
                         />
                         <Text style={styles.closeFilterText}>Đóng</Text>
                     </TouchableOpacity>
@@ -166,7 +165,7 @@ const FilterPopup = (props) => {
                                         filter.ValueID ? (
                                             <Image
                                                 style={styles.iconCheck}
-                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                             />
                                         ) : null}
                                     </TouchableOpacity>
@@ -204,7 +203,7 @@ const FilterPopup = (props) => {
                                                             style={
                                                                 styles.iconCheck
                                                             }
-                                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                                         />
                                                     ) : null}
                                                 </TouchableOpacity>
@@ -240,7 +239,7 @@ const FilterPopup = (props) => {
                                         {popupSelectedBrand === brand.Id ? (
                                             <Image
                                                 style={styles.iconCheck}
-                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                             />
                                         ) : null}
                                     </TouchableOpacity>

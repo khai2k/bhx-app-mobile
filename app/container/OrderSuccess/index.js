@@ -125,7 +125,7 @@ class OrderSuccess extends Component {
                     <View style={styles.boxRow}>
                         <Image
                             style={styles.imageDone}
-                            source={require('../../../assets/Images/done.png')}
+                            source={require('../../../assets/images/done.png')}
                         />
                         <Text style={styles.textButton}>Tiền mặt</Text>
                     </View>
@@ -180,7 +180,7 @@ class OrderSuccess extends Component {
                     <View style={styles.editBox}>
                         <Image
                             style={styles.iconEdit}
-                            source={require('../../../assets/Images/edit-circle.png')}
+                            source={require('../../../assets/images/edit-circle.png')}
                         />
                         <Text style={styles.editTextButton}>Sửa đơn hàng</Text>
                         <Text style={styles.editText}>
@@ -201,7 +201,7 @@ class OrderSuccess extends Component {
                         <View style={styles.viewTitle}>
                             <Image
                                 style={styles.doneIcon}
-                                source={require('../../../assets/Images/done.png')}
+                                source={require('../../../assets/images/done.png')}
                             />
                             <Text style={styles.textTitle}>
                                 ĐẶT HÀNG THÀNH CÔNG

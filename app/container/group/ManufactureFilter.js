@@ -68,7 +68,7 @@ const ManufactureFilter = (props) => {
                                     style={styles.showMore}>
                                     <Image
                                         style={styles.iconSearch}
-                                        source={require('../../../assets/Images/searchFilterCate.png')}
+                                        source={require('../../../assets/images/searchFilterCate.png')}
                                     />
                                     <Text style={styles.textShowMore}>
                                         Xem thêm
@@ -95,7 +95,7 @@ const ManufactureFilter = (props) => {
                                     {props.selectedBrand === item.Id ? (
                                         <Image
                                             style={styles.iconCheck}
-                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                         />
                                     ) : null}
                                 </TouchableOpacity>

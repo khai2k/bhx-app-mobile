@@ -22,7 +22,7 @@ const Header = () => {
                     onPress={() => navigation.navigate('NavMenu')}>
                     <Image
                         style={styles.logo}
-                        source={require('../../assets/Images/icon-menu.png')}
+                        source={require('../../assets/images/icon-menu.png')}
                     />
                 </TouchableOpacity>
 
@@ -30,7 +30,7 @@ const Header = () => {
                     <TextInput style={styles.input} placeholder="Bạn tìm gì?" />
                     <Image
                         style={styles.iconsearch}
-                        source={require('../../assets/Images/icon-search.png')}
+                        source={require('../../assets/images/icon-search.png')}
                     />
                 </View>
                 <View style={styles.boxinfo}>
@@ -60,7 +60,7 @@ const Header = () => {
                             <Text style={styles.number}>5</Text>
                             <Image
                                 style={styles.iconcart}
-                                source={require('../../assets/Images/icon-shopping-cart.png')}
+                                source={require('../../assets/images/icon-shopping-cart.png')}
                             />
                         </View>
                     </TouchableOpacity>
