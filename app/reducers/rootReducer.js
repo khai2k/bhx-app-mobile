@@ -3,11 +3,13 @@ import { loginReducer } from '../container/login/reducer';
 import { authenReducer } from '../container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
 import { cartReducer } from '../container/cart/reducer';
+import { categoryReducer } from '../container/group/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
-    cartReducer
+    cartReducer,
+    categoryReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {

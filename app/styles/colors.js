@@ -25,6 +25,7 @@ export const MINE_SHAFT = '#333';
 export const BALI_HAI = '#8F9BB3';
 export const MERCURY = '#e9e8e8';
 export const EMPEROR = '#525252';
+export const DOVE_GRAY = '#666';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';

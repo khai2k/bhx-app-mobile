@@ -57,7 +57,7 @@ export default class SliderTitle extends Component {
                 }
             ],
             backgroundTitle:
-                'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121018.png'
+                'https://cdn.tgdd.vn/bachhoaxanh/www/Content/Images/mobile/freshBanner.v202104121018.png'
         };
     }
 
