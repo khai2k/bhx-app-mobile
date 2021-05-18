@@ -8,8 +8,8 @@ import { categoryReducer } from '../container/group/reducer';
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
-    cartReducer
-    // categoryReducer
+    cartReducer,
+    categoryReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {
