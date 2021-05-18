@@ -82,6 +82,7 @@ const NavCateChild = (props) => {
                                             setSelectedCateChild={
                                                 props.setSelectedCateChild
                                             }
+                                            navigation={props.navigation}
                                         />
                                     );
                                 }}
@@ -100,6 +101,7 @@ const RenderCateChildItem = (props) => {
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
+        props.navigation.navigate('Group', { url: item.Url });
     };
 
     return (
