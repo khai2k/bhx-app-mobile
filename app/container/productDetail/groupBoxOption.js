@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { View, StyleSheet, Text } from 'react-native';
+import { View } from 'react-native';
+import styles from './style';
 import BoxSelect from './boxOption';
-
-const styles = StyleSheet.create({
-    productList: {
-        flexDirection: 'row',
-        flexWrap: 'wrap'
-    }
-});
 
 class GroupBoxOption extends Component {
     render() {

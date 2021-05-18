@@ -16,6 +16,9 @@ class Splash extends Component {
     }
 
     async componentDidMount() {
+        // Lấy dữ liệu danh sách cate Menu từ local
+        const data = await getListCateLocalStorage();
+
         const { isShowSplash } = this.props;
         if (isShowSplash) {
             const delay = 1000 * 3;
@@ -27,14 +30,13 @@ class Splash extends Component {
         // Call api lấy dữ liệu danh sách catemenu
         // Param để lấy danh sách cate
         const categoryId = 0;
-        const provinceId = 0;
-        const storeId = 0;
+        const provinceId = 3;
+        const storeId = 6463;
         const isCheckOnSales = true;
         const phone = 0;
         const isMobile = true;
         const clearcache = '@ok';
         // Nếu local có dữ liệu thì ko call API
-        const data = await getListCateLocalStorage();
         data.length === 0 &&
             apiBase(
                 API_CONST.API_GET_CATEGORY_NAVIGATION,
@@ -66,7 +68,7 @@ class Splash extends Component {
                         ],
                         []
                     );
-                    AsyncStorage.setItem('listCates', res);
+                    saveStoreDataCate(res);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -98,8 +100,13 @@ const mapDispatchToProps = (dispatch) => {
 
 // Lấy dữ liệu ở localStorage
 const getListCateLocalStorage = async () => {
-    const value = await AsyncStorage.getItem('listCates');
+    const value = await AsyncStorage.getItem('ListCates');
     return value ? JSON.parse(value) : [];
+};
+
+// Lưu dữ liệu vào localStorage
+const saveStoreDataCate = async (res) => {
+    await AsyncStorage.setItem('ListCates', JSON.stringify(res));
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Splash);

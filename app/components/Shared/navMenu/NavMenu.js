@@ -19,7 +19,7 @@ const NavMenu = () => {
     const [isHasSearch, setIsHasSearch] = useState(false);
 
     const getListCateLocalStorage = async () => {
-        const value = await AsyncStorage.getItem('listCates');
+        const value = await AsyncStorage.getItem('ListCates');
         return value ? JSON.parse(value) : [];
     };
 
