@@ -1,41 +1,41 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
-// import Carousel from 'react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
+import { Colors } from '@app/styles';
 
 const style = StyleSheet.create({
     boxTitle: {
+        alignItems: 'center',
+        bottom: 10,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        left: 0,
         marginVertical: 10,
         position: 'relative',
-        top: 0,
-        left: 0,
         right: 0,
-        bottom: 10,
+        top: 0,
         width: '100%'
     },
     imgTitle: {
-        marginHorizontal: 0,
-        height: 50,
         borderRadius: 50,
-        position: 'absolute',
-        top: 0,
+        bottom: 0,
+        height: 50,
         left: '10%',
+        marginHorizontal: 0,
+        position: 'absolute',
         right: '10%',
-        bottom: 0
+        top: 0
     },
     slideItem: {
-        width: '100%',
-        color: '#fff',
-        textAlign: 'center',
-        height: 50,
-        display: 'flex',
-        justifyContent: 'center',
+        alignContent: 'center',
         alignItems: 'center',
-        alignContent: 'center'
-    },
-    boxCarousel: {}
+        color: Colors.WHITE,
+        display: 'flex',
+        height: 50,
+        justifyContent: 'center',
+        textAlign: 'center',
+        width: '100%'
+    }
 });
 
 export default class SliderTitle extends Component {
@@ -55,13 +55,11 @@ export default class SliderTitle extends Component {
                     titleId: 3,
                     name: 'Hơn 10k sản phẩm đang kinh doanh'
                 }
-            ],
-            backgroundTitle:
-                'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121018.png'
+            ]
         };
     }
 
-    _renderItem = ({ item, index }) => {
+    _renderItem = ({ item }) => {
         return <Text style={style.slideItem}>{item.name}</Text>;
     };
 
@@ -71,24 +69,18 @@ export default class SliderTitle extends Component {
                 <Image
                     style={style.imgTitle}
                     source={{
-                        uri: this.state.backgroundTitle
+                        uri: 'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121018.png'
                     }}
                 />
-                {/* <Carousel
+                <Carousel
                     ref={(c) => {
                         this._carousel = c;
                     }}
-                    autoplay={true}
-                    enableMomentum={false}
-                    lockScrollWhileSnapping={true}
-                    loop={true}
-                    enableSnap={true}
                     data={this.state.listTitle}
                     renderItem={this._renderItem}
-                    itemWidth={200}
-                    sliderWidth={200}
-                    style={style.boxCarousel}
-                /> */}
+                    sliderWidth={100}
+                    itemWidth={100}
+                />
             </View>
         );
     }
