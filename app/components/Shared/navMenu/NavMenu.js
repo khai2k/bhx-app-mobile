@@ -13,7 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
-// import * as service from '../../../service/shared';
 
 const NavMenu = () => {
     const [search, setSearch] = useState('');
