@@ -6,12 +6,14 @@ import {
     Image,
     FlatList,
     TextInput,
-    SectionList
+    SectionList,
+    AsyncStorage
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
-import * as service from '../../../service/shared';
+// import * as service from '../../../service/shared';
 
 const NavMenu = () => {
     const [search, setSearch] = useState('');
@@ -28,10 +30,10 @@ const NavMenu = () => {
 
     // Param để lấy danh sách cate Navigation
     const categoryId = 0;
-    const currentProvinceId = 0;
-    const currentStoreId = 0;
+    const provinceId = 0;
+    const storeId = 0;
     const isCheckOnSales = true;
-    const clearcache = '';
+    const clearcache = '@ok';
 
     const searchFilter = (text) => {
         if (text) {
@@ -68,20 +70,53 @@ const NavMenu = () => {
         }
     };
 
-    useEffect(() => {
-        const result = service.GetNavigationFromApi(
-            'GET',
-            'shared/GetNavigation',
-            categoryId,
-            currentProvinceId,
-            currentStoreId,
-            isCheckOnSales,
-            clearcache
-        );
-        result.then((value) => {
-            setListCate(value);
-            setMasterData(value);
-        });
+    const getListCateLocalStorage = async () => {
+        const value = await AsyncStorage.getItem('listCates');
+        return value ? JSON.parse(value) : [];
+    };
+
+    useEffect(async () => {
+        const data = await getListCateLocalStorage();
+        setListCate(data);
+        setMasterData(data);
+
+        // Nếu local có dữ liệu thì ko call API
+        data.length === 0 &&
+            apiBase(
+                API_CONST.API_GET_CATEGORY_NAVIGATION,
+                METHOD.GET,
+                {},
+                {
+                    params: {
+                        categoryId,
+                        provinceId,
+                        storeId,
+                        isCheckOnSales,
+                        clearcache
+                    }
+                }
+            )
+                .then((response) => {
+                    // Parse dữ liệu để dùng cho sectionList
+                    // console.log('call api');
+                    const res = response.Value.reduce(
+                        (accum, item) => [
+                            ...accum,
+                            {
+                                ...item,
+                                data:
+                                    item.Childrens != null ? item.Childrens : []
+                            }
+                        ],
+                        []
+                    );
+                    setListCate(res);
+                    setMasterData(res);
+                    AsyncStorage.setItem('listCates', res);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
     }, []);
 
     return (
@@ -99,7 +134,7 @@ const NavMenu = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.btnHome}
-                        onPress={() => navigation.goBack()}>
+                        onPress={() => navigation.navigate('Main')}>
                         <Image
                             source={ImageNavMenu.imgIconHome}
                             style={styles.iconHome}
