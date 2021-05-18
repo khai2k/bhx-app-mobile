@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
 
 const ProductItemCart = (props) => {
+    console.log('ProductItemCart Render');
     //  const cart = useSelector((state) => state.cartReducer.Cart);
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
@@ -23,7 +24,6 @@ const ProductItemCart = (props) => {
     const [guildId, setguildId] = useState(props.productCart.GuildId);
     useEffect(() => {
         console.log('useEffect');
-        console.log(props.productCart.Quantity);
         setQuantity(props.productCart.Quantity);
         setguildId(props.productCart.GuildId);
     }); //  , [props.productCart.Quantity]
@@ -39,19 +39,19 @@ const ProductItemCart = (props) => {
         if (quantity <= 1) {
             alertDeleteItemProduct();
         } else {
-            setQuantity(quantity - 1);
             actionCart
-                .cart_update_item_product(props.ProductId, quantity)
+                .cart_update_item_product(guildId, quantity - 1)
                 .then((res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
+                    } else {
+                        setQuantity(quantity - 1);
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
-                    setQuantity(quantity + 1);
                 });
         }
     };
@@ -60,19 +60,22 @@ const ProductItemCart = (props) => {
         if (quantity > 50) {
             alertMaxQuantityItemProduct();
         } else {
-            setQuantity(quantity + 1);
+            console.log('setQuantityPlus');
+            console.log(guildId);
+            console.log(quantity);
             actionCart
-                .cart_update_item_product(props.ProductId, quantity)
+                .cart_update_item_product(guildId, quantity + 1)
                 .then((res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
+                    } else {
+                        setQuantity(quantity + 1);
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
-                    setQuantity(quantity - 1);
                 });
         }
     };
