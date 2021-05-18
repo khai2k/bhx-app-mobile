@@ -25,6 +25,7 @@ export const MINE_SHAFT = '#333';
 export const BALI_HAI = '#8F9BB3';
 export const MERCURY = '#e9e8e8';
 export const EMPEROR = '#525252';
+export const DOVE_GRAY = '#666';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';
@@ -127,3 +128,6 @@ export const CART_BORDER_BTN = '#8f9bb3';
 export const FUN_GREEN = '#008945';
 export const BG_BUTTON_CLOSER = '#8f9bb3';
 export const BG_BUTTON_BUY = '#008848';
+
+// GRAY
+export const GRAY_F8FBFF = '#F8FBFF';

@@ -2,11 +2,21 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '@app/styles';
 
 const win = Dimensions.get('window');
-const ratio = win.width / 3; // product image width
 
 const styles = StyleSheet.create({
     ExpiredText: {
         color: Colors.GRAY_DARK
+    },
+    productList: {
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
+    title: {
+        fontSize: 20,
+        paddingHorizontal: 10
+    },
+    container: {
+        marginBottom: 10
     },
     Image: {
         height: 20,
@@ -213,7 +223,7 @@ const styles = StyleSheet.create({
     /// combo
     combo_container: {
         backgroundColor: Colors.WHITE,
-        margin: 10,
+        margin: 5,
         padding: 5
     },
     combo_price: {
@@ -226,7 +236,7 @@ const styles = StyleSheet.create({
         flex: 2
     },
     combo_title: {
-        fontWeight: 'bold',
+        fontSize: 20,
         paddingVertical: 10
     }
 });

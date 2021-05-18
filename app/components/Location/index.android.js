@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, PermissionsAndroid } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, PermissionsAndroid } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
 
 const LocationModal = () => {
-    const [sPermission, setSPermission] = useState('');
-    const [lat, setLat] = useState(0);
-    const [long, setLong] = useState(0);
+    const value = useSelector((state) => state.value);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const hasLocationPermission = PermissionsAndroid.check(
@@ -13,24 +13,24 @@ const LocationModal = () => {
         );
 
         if (hasLocationPermission) {
-            setSPermission('Granted');
             Geolocation.getCurrentPosition(
                 (position) => {
-                    setLat(position.coords.latitude);
-                    setLong(position.coords.longitude);
+                    const crrLat = position.coords.latitude;
+                    const crrLong = position.coords.longitude;
 
-                    console.log(lat);
-                    console.log(long);
+                    if (crrLat > 0 && crrLong > 0) {
+                        dispatch({ type: 'LOCATION_GETCURRENT', payload: {} });
+                        console.log('value');
+                        console.log(value);
+                    }
                 },
                 (error) => {
-                    setSPermission(
-                        `error.code: ${error.code} - error.message: ${error.message}`
-                    );
+                    console.log(error);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             );
         } else {
-            setSPermission('Denied');
+            console.log('Denied');
         }
     });
 

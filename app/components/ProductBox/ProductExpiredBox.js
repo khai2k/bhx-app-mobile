@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { helper } from '@app/common';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -112,7 +113,7 @@ const ProductExpiredBox = (props) => {
                             <View style={styles.expiredLine}>
                                 <Text style={styles.expiredText}>Hoặc </Text>
                                 <Text style={styles.expiredPrice}>
-                                    MUA {bhxProduct.Price}
+                                    MUA {helper.formatMoney(bhxProduct.Price)}
                                     {'\n'}
                                 </Text>
                             </View>
@@ -142,7 +143,7 @@ const ProductExpiredBox = (props) => {
                             {bhxProduct.ShortName}
                         </Text>
                         <Text className="price" style={styles.priceSelected}>
-                            {bhxProduct.Price}
+                            {helper.formatMoney(bhxProduct.Price)}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
