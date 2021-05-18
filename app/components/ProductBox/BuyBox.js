@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { helper } from '@app/common';
 import styles from './style';
 
 const BuyBox = (props) => {
@@ -13,7 +14,9 @@ const BuyBox = (props) => {
                     return (
                         <View className="priceInfo" style={styles.priceInfo}>
                             <View className="price" style={styles.price}>
-                                <Text>{props.bhxProduct.Price}đ</Text>
+                                <Text>
+                                    {helper.formatMoney(props.bhxProduct.Price)}
+                                </Text>
                             </View>
                             <View className="buy" style={styles.buy}>
                                 <Text>MUA</Text>
@@ -98,7 +101,9 @@ const BuyBox = (props) => {
             return (
                 <View className="priceInfo" style={styles.priceInfo}>
                     <View className="price" style={styles.price}>
-                        <Text>{props.bhxProduct.Price}đ</Text>
+                        <Text>
+                            {helper.formatMoney(props.bhxProduct.Price)}
+                        </Text>
                     </View>
                     <View className="buy" style={styles.buy}>
                         <Text>MUA</Text>

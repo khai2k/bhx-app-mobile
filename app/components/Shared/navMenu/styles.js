@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         opacity: 0.5,
         position: 'relative',
-        width: '33%'
+        width: 80
     },
     itemCateChildActive: {
         opacity: 1
@@ -104,14 +104,17 @@ export const styles = StyleSheet.create({
         flex: 3
     },
     navRightBottom: {
+        borderBottomColor: Colors.GRAY_F8FBFF,
+        borderBottomWidth: 8,
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        marginTop: 10,
+        paddingBottom: 10
     },
     navRightTop: {
         flexDirection: 'row',
-        height: 40,
-        marginBottom: 10,
-        paddingBottom: 5,
+        height: 50,
+        paddingBottom: 10,
         paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 5,

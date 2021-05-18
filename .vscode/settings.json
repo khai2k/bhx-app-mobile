@@ -35,13 +35,18 @@
     "Mu",
     "Muối",
     "STOPSALES",
+    "Subviews",
     "Th",
     "Thịt",
     "accum",
+    "ang",
+    "c",
     "ch",
     "clearcache",
     "danh",
     "i",
+    "ki",
+    "kiếm",
     "m",
     "n",
     "ng",
@@ -53,7 +58,9 @@
     "t",
     "tr",
     "trứng",
-    "Đường"
+    "Đường",
+    "đang",
+    "được"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true

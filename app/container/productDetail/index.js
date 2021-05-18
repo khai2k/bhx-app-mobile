@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 
 import axios from 'axios';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
@@ -16,7 +16,10 @@ class ProductDetail extends Component {
         this.state = {
             isExchangeProduct: true,
             bHXProduct: [],
-            exchangeProducts: []
+            exchangeProducts: [],
+            relativeProducts: [],
+            comboProducts: [],
+            banner: 'null'
         };
     }
 
@@ -37,6 +40,49 @@ class ProductDetail extends Component {
                 if (exchangeProducts.length <= 1) {
                     this.setState({ isExchangeProduct: false });
                 }
+            })
+            .catch((err) => console.log(err));
+        axios({
+            method: 'get',
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/product/ProductRelative?productId=226339&provinceId=3&storeId=6463&totalSize=6&clearcache=%22%22'
+        })
+            .then((res) => {
+                const { data } = res;
+                const { Value } = data;
+                this.setState({
+                    relativeProducts: Value
+                });
+            })
+            .catch((err) => console.log(err));
+        axios({
+            method: 'get',
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/product/ComboDetail?productCode=79387%2C85959&quantityPromotionId=2&provinceId=3&storeId=6463&clearcache=%22%22'
+        })
+            .then((res) => {
+                const { data } = res;
+                const { Value } = data;
+                this.setState({
+                    comboProducts: Value
+                });
+                console.log(
+                    JSON.stringify(Value, null, 2),
+                    'ValueValueValueValueValueValueValue'
+                );
+            })
+            .catch((err) => console.log(err));
+        axios({
+            method: 'get',
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/product/BoxBanner?productId=226339&provinceId=3&storeId=6463&isMobile=true&clearcache=%22%22'
+        })
+            .then((res) => {
+                const { data } = res;
+                const { Value } = data;
+                this.setState({
+                    banner: Value.Image
+                });
             })
             .catch((err) => console.log(err));
     }
@@ -60,8 +106,17 @@ class ProductDetail extends Component {
                         exchangeProducts={this.state.exchangeProducts}
                     />
                 )}
-                <Combo />
-                <ProductRelative />
+                {this.state.comboProducts !== [] && (
+                    <Combo comboProducts={this.state.comboProducts} />
+                )}
+                <ProductRelative
+                    relativeProducts={this.state.relativeProducts}
+                />
+                <Image
+                    style={{ width: '100%', height: 80 }}
+                    resizeMode="cover"
+                    source={{ uri: this.state.banner }}
+                />
             </ScrollView>
         );
     }

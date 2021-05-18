@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, ProductItemCart, ProductItemCartOff } from '@app/components';
 import { connect } from 'react-redux';
@@ -18,6 +18,10 @@ class Cart extends Component {
         this.props.actionCart.cart_get();
     }
 
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
+
     render() {
         return (
             <View style={styles.cartinfo}>
@@ -26,26 +30,20 @@ class Cart extends Component {
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
-                    {showListCartItemOff(
-                        this.props.cartInfo.Cart.ListCartItemOff
-                    )}
-                    {showListCartItemBuy(
-                        this.props.cartInfo.Cart.ListCartItemBuy
-                    )}
+                    {showListCartItemOff(this.props.cart.ListCartItemOff)}
+                    {showListCartItemBuy(this.props.cart.ListCartItemBuy)}
                     <View style={styles.boxtotal}>
                         <ComponentTotal
-                            total={this.props.cartInfo.CartTotal.Total}
+                            total={this.props.cartTotal.Total}
                             title="Tiền hàng:"
                             bold
                         />
                         <ComponentTotal
-                            total={
-                                this.props.cartInfo.CartTotal.TotalBillPromotion
-                            }
+                            total={this.props.cartTotal.TotalBillPromotion}
                             title="Hàng khuyến mãi:"
                         />
-                        <ComponentTotal
-                            total={this.props.cartInfo.CartTotal.ShipFee}
+                        <ComponentTotalFee
+                            cartTotal={this.props.cartTotal}
                             title="Phí giao dự kiến:"
                         />
                     </View>
@@ -115,9 +113,43 @@ const ComponentTotal = (props) => {
     );
 };
 
+const ComponentTotalFee = (props) => {
+    const totalFee = props.cartTotal.ApartmentShipFee + props.cartTotal.ShipFee;
+    if (totalFee > 0) {
+        return (
+            <View style={styles.boxsum}>
+                <Text style={styles.boxleft}>{props.title}</Text>
+                <Text style={styles.boxright}>
+                    {helper.formatMoney(totalFee)}
+                </Text>
+            </View>
+        );
+    } else if (props.cartTotal.ShipFeeBase > 0) {
+        return (
+            <View style={styles.boxsum}>
+                <Text style={styles.boxleft}>{props.title}</Text>
+                <View style={styles.boxright}>
+                    <Text style={styles.textdel}>
+                        {helper.formatMoney(props.cartTotal.ShipFeeBase)}
+                    </Text>
+                    <Text>Miễn Phí</Text>
+                </View>
+            </View>
+        );
+    } else {
+        return (
+            <View style={styles.boxsum}>
+                <Text style={styles.boxleft}>{props.title}</Text>
+                <Text style={styles.boxright}>Miễn Phí</Text>
+            </View>
+        );
+    }
+};
+
 const mapStateToProps = (state) => {
     return {
-        cartInfo: state.cartReducer
+        cart: state.cartReducer.Cart,
+        cartTotal: state.cartReducer.CartTotal
     };
 };
 
