@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
     TouchableOpacity,
     View,
@@ -15,10 +15,11 @@ const NavCateChild = (props) => {
     const refContainer = React.useRef(null);
     useEffect(() => {
         if (refContainer.current) {
-            refContainer.current.scrollToIndex({
+            refContainer.current.scrollToLocation({
                 animated: true,
-                index: 0,
-                viewPosition: 0.5
+                itemIndex: 0,
+                sectionIndex: 1,
+                viewPosition: 0
             });
         }
     }, [props.cateFilter]);
@@ -61,14 +62,13 @@ const NavCateChild = (props) => {
                     renderItem={() => {
                         return null;
                     }}
+                    ref={refContainer}
                     renderSectionHeader={({ section }) =>
                         section.data.length > 0 && (
                             <FlatList
                                 style={styles.navRightBottom}
                                 numColumns="3"
                                 data={section.data}
-                                ref={refContainer}
-                                keyExtractor={(item) => item.ReferenceId}
                                 renderItem={(item) => {
                                     return (
                                         <RenderCateChildItem
