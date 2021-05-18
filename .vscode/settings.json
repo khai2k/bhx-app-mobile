@@ -39,6 +39,8 @@
     "Th",
     "Thịt",
     "accum",
+    "ang",
+    "c",
     "ch",
     "clearcache",
     "danh",
@@ -56,7 +58,9 @@
     "t",
     "tr",
     "trứng",
-    "Đường"
+    "Đường",
+    "đang",
+    "được"
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true

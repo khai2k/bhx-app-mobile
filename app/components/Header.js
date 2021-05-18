@@ -12,7 +12,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-const Header = (props) => {
+const Header = () => {
     const navigation = useNavigation();
     return (
         <SafeAreaView>
