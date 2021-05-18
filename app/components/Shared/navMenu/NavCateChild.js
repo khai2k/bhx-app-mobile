@@ -70,8 +70,8 @@ const NavCateChild = (props) => {
                     }}
                     ref={refContainer}
                     getItemLayout={(data, index) => ({
-                        length: 100,
-                        offset: 32 * index,
+                        length: 27,
+                        offset: 27 * index,
                         index
                     })}
                     keyExtractor={(item, index) => item + index}
