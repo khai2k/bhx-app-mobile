@@ -31,8 +31,14 @@ class Product extends Component {
         return (
             <View style={styles.container}>
                 <Header navigation={this.props.navigation} />
-                <ListCategories />
+                {/* <ListCategories />
                 <SliderTitle />
+                <View>
+                    {this.props.HomeReducer.ListProducts.map((product) => {
+                        return <ProductBox bhxProduct={product} />;
+                    })}
+                </View> */}
+
                 {/* <View style={styles.productList}>
                     {this.state.listProducts.map((product) => {
                         return <ProductBox bhxProduct={product} />;
