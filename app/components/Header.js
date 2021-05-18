@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';

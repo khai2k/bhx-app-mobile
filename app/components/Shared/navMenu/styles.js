@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         opacity: 0.5,
         position: 'relative',
-        width: '33%'
+        width: 80
     },
     itemCateChildActive: {
         opacity: 1
