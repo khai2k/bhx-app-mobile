@@ -7,7 +7,6 @@ const SplashNavigator = () => {
     return (
         <SplashStack.Navigator initialRouteName="Splash" headerMode="none">
             <SplashStack.Screen name="Splash" component={Splash} />
-            <SplashStack.Screen name="Location" component={Location} />
         </SplashStack.Navigator>
     );
 };
