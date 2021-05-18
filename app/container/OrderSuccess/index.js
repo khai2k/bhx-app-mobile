@@ -26,7 +26,8 @@ class OrderSuccess extends Component {
         // this.props.actionOrderSuccess.order_success_get();
         axios({
             method: 'get',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
         })
             .then((res) => {
                 const { data } = res;
