@@ -8,6 +8,11 @@ const homeReducer = function (state = _state.homeState, action) {
                 ...state,
                 ListCategories: action.listCategories
             };
+        case _action.homeAction.GET_LIST_PRODUCT:
+            return {
+                ...state,
+                ListProducts: action.listProducts
+            };
         default:
             return state;
     }

@@ -4,6 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 import { Colors } from '@app/styles';
 
 const style = StyleSheet.create({
+    boxCarousel: {},
     boxTitle: {
         alignItems: 'center',
         bottom: 10,
@@ -55,7 +56,9 @@ export default class SliderTitle extends Component {
                     titleId: 3,
                     name: 'Hơn 10k sản phẩm đang kinh doanh'
                 }
-            ]
+            ],
+            backgroundTitle:
+                'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121018.png'
         };
     }
 
@@ -69,17 +72,23 @@ export default class SliderTitle extends Component {
                 <Image
                     style={style.imgTitle}
                     source={{
-                        uri: 'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121018.png'
+                        uri: this.state.backgroundTitle
                     }}
                 />
                 <Carousel
                     ref={(c) => {
                         this._carousel = c;
                     }}
+                    autoplay
+                    enableMomentum={false}
+                    lockScrollWhileSnapping
+                    loop
+                    enableSnap
                     data={this.state.listTitle}
                     renderItem={this._renderItem}
-                    sliderWidth={100}
-                    itemWidth={100}
+                    itemWidth={200}
+                    sliderWidth={200}
+                    style={style.boxCarousel}
                 />
             </View>
         );

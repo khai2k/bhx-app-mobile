@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet } from 'react-native';
-import axios from 'axios';
-// import { translate } from '@app/translate';
+import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
-import ProductBox from '../../components/ProductBox/ProductBox';
-import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
-import ComboProductBox from '../../components/ProductBox/ComboProductBox';
+import * as homeCreator from './action';
+// import ProductBox from '../../components/ProductBox/ProductBox';
+// import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
+// import ComboProductBox from '../../components/ProductBox/ComboProductBox';
 
 import ListCategories from './ListCategories';
-// import SliderTitle from './SliderTitle';
+import SliderTitle from './SliderTitle';
 
 const styles = StyleSheet.create({
     container: {
@@ -24,24 +24,15 @@ class Product extends Component {
     }
 
     componentDidMount() {
-        axios({
-            method: 'get',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Home/GetHomeData?provinceId=3&storeId=6463&userId=0&phoneList=0&IsMobile=true&clearcache=ok'
-        })
-            .then((res) => {
-                const { data } = res;
-                const listData = data.Value;
-                this.setState({ listProducts: listData[1].Products });
-            })
-            .catch((err) => console.log(err));
+        this.props.actionHome.get_listproducts();
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <Header navigation={this.props.navigation} />
-                {/* <SliderTitle /> */}
-                <ListCategories />
+                {/* <ListCategories /> */}
+                <SliderTitle />
                 {/* <View style={styles.productList}>
                     {this.state.listProducts.map((product) => {
                         return <ProductBox bhxProduct={product} />;
@@ -58,12 +49,16 @@ class Product extends Component {
     }
 }
 
-const mapStateToProps = function () {
-    return {};
+const mapStateToProps = (state) => {
+    return {
+        HomeReducer: state.homeReducer
+    };
 };
 
-const mapDispatchToProps = function () {
-    return {};
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actionHome: bindActionCreators(homeCreator, dispatch)
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);
