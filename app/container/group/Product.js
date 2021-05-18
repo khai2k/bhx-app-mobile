@@ -63,15 +63,17 @@ const Product = (props) => {
                     data={listProductLoadMore}
                     renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 />
-                <TouchableOpacity
-                    onPress={loadMoreProducts}
-                    className="loadMore"
-                    style={styles.loadMore}>
-                    <Text style={styles.loadMoreText}>
-                        Còn {Total - pageIndex * PageSize} sản phẩm{' '}
-                    </Text>
-                    <Text style={styles.loadMoreTextBold}>{Name}</Text>
-                </TouchableOpacity>
+                {Total >= pageIndex * PageSize ? (
+                    <TouchableOpacity
+                        onPress={loadMoreProducts}
+                        className="loadMore"
+                        style={styles.loadMore}>
+                        <Text style={styles.loadMoreText}>
+                            Còn {Total - pageIndex * PageSize} sản phẩm{' '}
+                        </Text>
+                        <Text style={styles.loadMoreTextBold}>{Name}</Text>
+                    </TouchableOpacity>
+                ) : null}
             </ScrollView>
         );
     } else {
