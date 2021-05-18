@@ -12,10 +12,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-const Header = () => {
+import LocationModal from './Location';
+
+const Header = (props) => {
     const navigation = useNavigation();
     return (
         <SafeAreaView>
+            <LocationModal />
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.boxlogo}
