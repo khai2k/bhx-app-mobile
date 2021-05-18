@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { helper } from '@app/common';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -98,7 +99,7 @@ const ComboProductBox = (props) => {
                             {props.bhxProduct.ShortName}
                         </Text>
                         <Text className="price" style={styles.priceSelected}>
-                            {props.bhxProduct.Price}
+                            {helper.formatMoney(props.bhxProduct.Price)}
                         </Text>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
@@ -12,10 +12,13 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import LocationModal from './Location';
+
 const Header = (props) => {
     const navigation = useNavigation();
     return (
         <SafeAreaView>
+            <LocationModal />
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.boxlogo}
