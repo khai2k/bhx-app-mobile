@@ -7,3 +7,8 @@ export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
+export const API_GET_LOCATION = `${API_BASE}/shared/GetLocationByCoordinates`;
+
+// category
+export const API_CATEGORY_GET = `${API_BASE}Category/Get`;
+export const API_CATEGORY_AJAX_PRODUCT = `${API_BASE}Category/AjaxProducts`;
