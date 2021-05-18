@@ -10,7 +10,7 @@ const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
-    categoryReducer
+    categoryReducer,
     homeReducer
     // orderSuccessReducer
 });

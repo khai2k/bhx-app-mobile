@@ -4,7 +4,6 @@ import {
     View,
     FlatList,
     TouchableOpacity,
-    Linking,
     StyleSheet
 } from 'react-native';
 import { Colors } from '@app/styles';
@@ -48,9 +47,7 @@ class ListCategories extends Component {
                     renderItem={({ item }) => (
                         <TouchableOpacity>
                             <View>
-                                <Text
-                                    style={style.categoryItem}
-                                    onPress={() => Linking.openURL(item.Url)}>
+                                <Text style={style.categoryItem}>
                                     {item.Name}
                                 </Text>
                             </View>
