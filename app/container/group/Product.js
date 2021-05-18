@@ -1,17 +1,78 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    FlatList,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity
+} from 'react-native';
 import { Colors } from '@app/styles';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const Product = (props) => {
-    if (props.listProducts && props.listProducts.length > 0) {
+    const { Products, Total } = props.currentData;
+    const { Name } = props.info;
+    const { PageIndex, PageSize } = props.include.Paging;
+    const [listProductLoadMore, setListProductLoadMore] = useState(Products);
+    useEffect(() => {
+        setListProductLoadMore(Products);
+    }, [Products]);
+    const [pageIndex, setPageIndex] = useState(1);
+    useEffect(() => {
+        setPageIndex(0);
+    }, []);
+
+    const loadMoreProducts = () => {
+        const bodyApi = {
+            provinceId: 3,
+            storeId: 6463,
+            data: {
+                categoryId: props.info.Id,
+                selectedBrandId: props.selectedBrand,
+                phone: 0,
+                cateListFilter: '',
+                propertyIdList: props.selectedProps,
+                pageIndex,
+                pageSize: PageSize,
+                isLoadVideo: false,
+                isPromotion: false,
+                sort: props.selectedSort
+            }
+        };
+        apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
+            .then((response) => {
+                console.log(response);
+                setListProductLoadMore([
+                    ...listProductLoadMore,
+                    ...response.Value.CurrentData.Products
+                ]);
+                setPageIndex(pageIndex + 1);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    if (Products && Products.length > 0) {
         return (
-            <FlatList
-                style={{ flex: 1 }}
-                numColumns={3}
-                data={props.listProducts}
-                renderItem={({ item }) => <ProductBox bhxProduct={item} />}
-            />
+            <ScrollView>
+                <FlatList
+                    numColumns={3}
+                    data={listProductLoadMore}
+                    renderItem={({ item }) => <ProductBox bhxProduct={item} />}
+                />
+                <TouchableOpacity
+                    onPress={loadMoreProducts}
+                    className="loadMore"
+                    style={styles.loadMore}>
+                    <Text style={styles.loadMoreText}>
+                        Còn {Total - pageIndex * PageSize} sản phẩm{' '}
+                    </Text>
+                    <Text style={styles.loadMoreTextBold}>{Name}</Text>
+                </TouchableOpacity>
+            </ScrollView>
         );
     } else {
         return (
@@ -34,6 +95,33 @@ const styles = StyleSheet.create({
         paddingTop: 45,
         textAlign: 'center',
         textAlignVertical: 'center'
+    },
+    loadMore: {
+        alignItems: 'center',
+        borderColor: Colors.TROPICAL_RAIN_FOREST,
+        borderRadius: 8,
+        borderWidth: 1,
+        color: Colors.TROPICAL_RAIN_FOREST,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 10,
+        marginLeft: 3,
+        marginRight: 3,
+        marginTop: 10,
+        padding: 0,
+        paddingBottom: 12,
+        paddingTop: 12,
+        position: 'relative',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        backgroundColor: Colors.WHITE
+    },
+    loadMoreText: {
+        color: Colors.TROPICAL_RAIN_FOREST
+    },
+    loadMoreTextBold: {
+        color: Colors.TROPICAL_RAIN_FOREST,
+        fontWeight: 'bold'
     },
     productList: {
         flex: 1

@@ -9,7 +9,8 @@ const categoryReducer = function (state = _state.categoryState, action) {
                 Info: action.categoryInfo.Info,
                 Brands: action.categoryInfo.Brands,
                 Filters: action.categoryInfo.Filters,
-                CurrentData: action.categoryInfo.CurrentData
+                CurrentData: action.categoryInfo.CurrentData,
+                Query: action.categoryInfo.Query
             };
         case _action.categoryAction.CATEGORY_FILTER:
             return {
