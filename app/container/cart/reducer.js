@@ -2,9 +2,6 @@ import * as _state from './state';
 import * as _action from './action';
 
 const cartReducer = function (state = _state.cartState, action) {
-    console.log('cartReducer');
-    console.log(state);
-    console.log(action);
     switch (action.type) {
         case _action.cartAction.CART_GET:
             return {

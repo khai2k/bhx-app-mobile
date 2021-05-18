@@ -6,12 +6,14 @@ import {
     Image,
     FlatList,
     TextInput,
-    SectionList
+    SectionList,
+    AsyncStorage
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import { styles } from './styles';
 import { ImageNavMenu } from '../../../images';
-import * as service from '../../../service/shared';
+// import * as service from '../../../service/shared';
 
 const NavMenu = () => {
     const [search, setSearch] = useState('');
@@ -24,18 +26,22 @@ const NavMenu = () => {
     // Danh sách cate
     const [listCate, setListCate] = useState([]);
 
+    const [isHasSearch, setIsHasSearch] = useState(false);
+
     // Param để lấy danh sách cate Navigation
     const categoryId = 0;
-    const currentProvinceId = 0;
-    const currentStoreId = 0;
+    const provinceId = 3;
+    const storeId = 6463;
     const isCheckOnSales = true;
-    const clearcache = 'ok';
+    const clearcache = '@ok';
+    const phone = 0;
+    const isMobile = true;
 
     const searchFilter = (text) => {
         if (text) {
             const filtered = masterData.map((element) => {
                 return {
-                    ...element,
+                    // ...element,
                     data: (element.data || []).filter(
                         (subElement) =>
                             subElement.Text.toUpperCase().indexOf(
@@ -44,29 +50,77 @@ const NavMenu = () => {
                     )
                 };
             });
-
-            setListCate(filtered);
+            const resultSearch = [];
+            filtered.filter((value) => {
+                return (
+                    value.data.length > 0 &&
+                    value.data.map((element) => {
+                        return (
+                            element.ReferenceId !== '-1' &&
+                            resultSearch.push(element)
+                        );
+                    })
+                );
+            });
+            setIsHasSearch(true);
+            setListCate(resultSearch);
             setSearch(text);
         } else {
+            setIsHasSearch(false);
             setListCate(masterData);
             setSearch(text);
         }
     };
 
-    useEffect(() => {
-        const result = service.GetNavigationFromApi(
-            'GET',
-            'shared/GetNavigation',
-            categoryId,
-            currentProvinceId,
-            currentStoreId,
-            isCheckOnSales,
-            clearcache
-        );
-        result.then((value) => {
-            setListCate(value);
-            setMasterData(value);
-        });
+    const getListCateLocalStorage = async () => {
+        const value = await AsyncStorage.getItem('listCates');
+        return value ? JSON.parse(value) : [];
+    };
+
+    useEffect(async () => {
+        const data = await getListCateLocalStorage();
+        setListCate(data);
+        setMasterData(data);
+
+        // Nếu local có dữ liệu thì ko call API
+        data.length === 0 &&
+            apiBase(
+                API_CONST.API_GET_CATEGORY_NAVIGATION,
+                METHOD.GET,
+                {},
+                {
+                    params: {
+                        categoryId,
+                        provinceId,
+                        storeId,
+                        isCheckOnSales,
+                        clearcache,
+                        phone,
+                        isMobile
+                    }
+                }
+            )
+                .then((response) => {
+                    // Parse dữ liệu để dùng cho sectionList
+                    // console.log('call api');
+                    const res = response.Value.reduce(
+                        (accum, item) => [
+                            ...accum,
+                            {
+                                ...item,
+                                data:
+                                    item.Childrens != null ? item.Childrens : []
+                            }
+                        ],
+                        []
+                    );
+                    setListCate(res);
+                    setMasterData(res);
+                    AsyncStorage.setItem('listCates', res);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
     }, []);
 
     return (
@@ -84,7 +138,7 @@ const NavMenu = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.btnHome}
-                        onPress={() => navigation.goBack()}>
+                        onPress={() => navigation.navigate('Main')}>
                         <Image
                             source={ImageNavMenu.imgIconHome}
                             style={styles.iconHome}
@@ -123,37 +177,56 @@ const NavMenu = () => {
                         source={ImageNavMenu.imgIconSearch}
                     />
                 </View>
-                <SectionList
-                    sections={listCate}
-                    renderItem={() => {
-                        return null;
-                    }}
-                    renderSectionHeader={({ section }) =>
-                        section.data.length > 0 && (
-                            <FlatList
-                                style={styles.navRightBottom}
-                                numColumns="3"
-                                data={section.data}
-                                renderItem={(item) => {
-                                    return (
-                                        <RenderCateChildItem
-                                            item={item}
-                                            cateParent={section.ReferenceId}
-                                            cateFilter={cateFilter}
-                                            setCateFilter={setCateFilter}
-                                            selectedCateChild={
-                                                selectedCateChild
-                                            }
-                                            setSelectedCateChild={
-                                                setSelectedCateChild
-                                            }
-                                        />
-                                    );
-                                }}
-                            />
-                        )
-                    }
-                />
+                {/* Danh sách tìm kiếm cate con */}
+                {isHasSearch && (
+                    <FlatList
+                        style={styles.navRightBottom}
+                        numColumns="3"
+                        removeClippedSubviews
+                        maxToRenderPerBatch="10"
+                        data={listCate}
+                        renderItem={(item) => {
+                            return <RenderSearchCateChildItem item={item} />;
+                        }}
+                    />
+                )}
+                {/* Danh sách cate con */}
+                {!isHasSearch && (
+                    <SectionList
+                        sections={listCate}
+                        renderItem={() => {
+                            return null;
+                        }}
+                        renderSectionHeader={({ section }) =>
+                            section.data.length > 0 && (
+                                <FlatList
+                                    style={styles.navRightBottom}
+                                    numColumns="3"
+                                    removeClippedSubviews
+                                    maxToRenderPerBatch="10"
+                                    data={section.data}
+                                    renderItem={(item) => {
+                                        return (
+                                            <RenderCateChildItem
+                                                navigation={navigation}
+                                                item={item}
+                                                cateParent={section.ReferenceId}
+                                                cateFilter={cateFilter}
+                                                setCateFilter={setCateFilter}
+                                                selectedCateChild={
+                                                    selectedCateChild
+                                                }
+                                                setSelectedCateChild={
+                                                    setSelectedCateChild
+                                                }
+                                            />
+                                        );
+                                    }}
+                                />
+                            )
+                        }
+                    />
+                )}
             </View>
         </View>
     );
@@ -172,7 +245,7 @@ const RenderCateItem = (props) => {
             onPress={() => {
                 props.setCateFilter(item.ReferenceId);
             }}>
-            {item.Id === '-1' && (
+            {item.ReferenceId === '-1' && (
                 <Image
                     style={styles.iconPromotion}
                     source={ImageNavMenu.imgIconPromotion}
@@ -190,6 +263,8 @@ const RenderCateChildItem = (props) => {
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
+
+        props.navigation.navigate('Group', { url: item.Url });
     };
 
     return (
@@ -221,6 +296,22 @@ const RenderCateChildItem = (props) => {
                 ]}>
                 {item.Text}
             </Text>
+        </TouchableOpacity>
+    );
+};
+
+// Render danh sách search cate con
+const RenderSearchCateChildItem = (props) => {
+    const { item } = props.item;
+
+    return (
+        <TouchableOpacity
+            style={[styles.itemCateChild, styles.itemCateChildActive]}>
+            <Image
+                style={styles.iconCateChild}
+                source={{ uri: `https://${item.ImgUrl}` }}
+            />
+            <Text style={styles.txtCateChild}>{item.Text}</Text>
         </TouchableOpacity>
     );
 };

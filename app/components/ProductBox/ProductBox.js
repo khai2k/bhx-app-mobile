@@ -63,7 +63,7 @@ const ProductBox = (props) => {
             className="product"
             style={buyButtonVisible ? styles.productSelected : styles.product}>
             <TouchableOpacity
-                onPress={() => navigation.navigate('Group')}
+                onPress={() => navigation.navigate('ProductDetail')}
                 style={styles.productImg}>
                 <View className="boxImg" style={styles.boxImg}>
                     <Text className="boxExpired" style={styles.boxExpired}>

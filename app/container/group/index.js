@@ -11,7 +11,7 @@ class Group extends Component {
     componentDidMount() {
         const option = {
             params: {
-                categoryUrl: 'nuoc-ngot',
+                categoryUrl: this.props.route.params.url,
                 provinceId: 3,
                 storeId: 6463,
                 phone: 0,

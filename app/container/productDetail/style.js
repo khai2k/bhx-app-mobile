@@ -5,13 +5,23 @@ const win = Dimensions.get('window');
 const ratio = win.width / 3; // product image width
 
 const styles = StyleSheet.create({
+    ExpiredText: {
+        color: Colors.GRAY_DARK
+    },
+    Image: {
+        height: 20,
+        margin: 5,
+        width: 20
+    },
     boxBuy: {
+        alignItems: 'center',
         backgroundColor: Colors.WHITE,
         borderBottomLeftRadius: 7,
         borderBottomRightRadius: 7,
         borderTopColor: Colors.CATSKILL_WHITE,
         borderTopWidth: 1,
         height: 35,
+        justifyContent: 'center',
         position: 'relative',
         width: '100%'
     },
@@ -29,6 +39,11 @@ const styles = StyleSheet.create({
         marginRight: 0,
         marginTop: 8,
         textTransform: 'uppercase'
+    },
+    center: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center'
     },
     down: {
         backgroundColor: Colors.WHITE,
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         color: Colors.CLOUD_BURST,
         flexBasis: 'auto',
-        flexGrow: 0,
+        flexGrow: 1,
         flexShrink: 0,
         fontSize: 14,
         fontWeight: 'normal',
@@ -125,12 +140,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         width: win.width / 3 - 6
     },
-    textProductNearDate: {
-        alignItems: 'center',
-        backgroundColor: Colors.GRAY_LIGHT,
-        justifyContent: 'center',
-        paddingVertical: 2
-    },
     productOutOfStock: {
         backgroundColor: Colors.WHITE,
         borderColor: Colors.BLACK,
@@ -147,6 +156,12 @@ const styles = StyleSheet.create({
         shadowOffset: { height: 3, width: 0 },
         shadowOpacity: 0.5,
         width: win.width / 3 - 6
+    },
+    textProductNearDate: {
+        alignItems: 'center',
+        backgroundColor: Colors.GRAY_LIGHT,
+        justifyContent: 'center',
+        paddingVertical: 2
     },
     unvisibleProductBuy: {
         display: 'none'
@@ -193,6 +208,26 @@ const styles = StyleSheet.create({
     },
     visibleProductBuy: {
         display: 'flex'
+    },
+
+    /// combo
+    combo_container: {
+        backgroundColor: Colors.WHITE,
+        margin: 10,
+        padding: 5
+    },
+    combo_price: {
+        color: Colors.GRAY_DARK,
+        flex: 1,
+        textDecorationLine: 'line-through'
+    },
+    combo_expired: {
+        color: Colors.GRAY_DARK,
+        flex: 2
+    },
+    combo_title: {
+        fontWeight: 'bold',
+        paddingVertical: 10
     }
 });
 

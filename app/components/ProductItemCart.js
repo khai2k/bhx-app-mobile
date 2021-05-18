@@ -22,9 +22,11 @@ const ProductItemCart = (props) => {
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
     const [guildId, setguildId] = useState(props.productCart.GuildId);
     useEffect(() => {
+        console.log('useEffect');
+        console.log(props.productCart.Quantity);
         setQuantity(props.productCart.Quantity);
         setguildId(props.productCart.GuildId);
-    }, [props.productCart]);
+    }); //  , [props.productCart.Quantity]
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
@@ -34,13 +36,89 @@ const ProductItemCart = (props) => {
     };
 
     const setQuantityMinus = () => {
-        quantity <= 1 ? alertDeleteItemProduct() : setQuantity(quantity - 1);
+        if (quantity <= 1) {
+            alertDeleteItemProduct();
+        } else {
+            setQuantity(quantity - 1);
+            actionCart
+                .cart_update_item_product(props.ProductId, quantity)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                    setQuantity(quantity + 1);
+                });
+        }
     };
 
     const setQuantityPlus = () => {
-        quantity > 50
-            ? alertMaxQuantityItemProduct()
-            : setQuantity(quantity + 1);
+        if (quantity > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            setQuantity(quantity + 1);
+            actionCart
+                .cart_update_item_product(props.ProductId, quantity)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                    setQuantity(quantity - 1);
+                });
+        }
+    };
+
+    const actionRemoveItemProduct = () => {
+        actionCart
+            .cart_remove_item_product(guildId)
+            .then((res) => {
+                console.log('actionRemoveItemProduct');
+                if (res.ResultCode < 0) {
+                    alertAPI(res.Message);
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+
+    const alertAPI = (mesages) => {
+        Alert.alert('', mesages);
+    };
+
+    const alertDeleteItemProduct = () => {
+        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý',
+                onPress: actionRemoveItemProduct
+            }
+        ]);
+    };
+
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý',
+                onPress: actionRemoveItemProduct
+            }
+        ]);
     };
 
     const showHideUnit = () => {
@@ -60,51 +138,6 @@ const ProductItemCart = (props) => {
                 <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
             );
         }
-    };
-
-    const actionRemoveItemProduct = () => {
-        actionCart
-            .cart_remove_item_product(guildId)
-            .then((res) => {
-                console.log('actionRemoveItemProduct');
-                if (res.ResultCode < 0) {
-                    alertAPI(res.Message);
-                }
-            })
-            .catch((error) => {
-                alertAPI(error);
-            });
-        // actionCart.cart_remove_item_product(guildId);
-    };
-
-    const alertDeleteItemProduct = () => {
-        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
-            }
-        ]);
-    };
-
-    const alertAPI = (mesages) => {
-        Alert.alert('', mesages);
-    };
-
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
-            }
-        ]);
     };
 
     return (
@@ -179,10 +212,11 @@ const styles = StyleSheet.create({
     },
     boxprice: {
         flexDirection: 'column',
+        marginRight: 8,
         width: 100
     },
     closer: {
-        backgroundColor: '#8f9bb3',
+        backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
         elevation: Platform.OS === 'android' ? 5 : 0,
         left: 5,
