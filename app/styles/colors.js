@@ -128,3 +128,6 @@ export const CART_BORDER_BTN = '#8f9bb3';
 export const FUN_GREEN = '#008945';
 export const BG_BUTTON_CLOSER = '#8f9bb3';
 export const BG_BUTTON_BUY = '#008848';
+
+// GRAY
+export const GRAY_F8FBFF = '#F8FBFF';
