@@ -81,6 +81,7 @@ export const styles = StyleSheet.create({
     },
     itemCateChild: {
         alignItems: 'center',
+        height: 100,
         justifyContent: 'center',
         opacity: 0.5,
         position: 'relative',

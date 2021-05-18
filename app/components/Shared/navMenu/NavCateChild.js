@@ -15,14 +15,20 @@ const NavCateChild = (props) => {
     const refContainer = React.useRef(null);
     useEffect(() => {
         if (refContainer.current) {
-            refContainer.current.scrollToLocation({
-                animated: true,
-                itemIndex: 0,
-                sectionIndex: 1,
-                viewPosition: 0
+            const index = props.listCate.findIndex((ele) => {
+                return ele.ReferenceId === props.cateFilter;
             });
+            setTimeout(() => {
+                refContainer.current.scrollToLocation({
+                    animated: true,
+                    itemIndex: 0,
+                    sectionIndex: index,
+                    viewPosition: 0
+                });
+            }, 100);
         }
     }, [props.cateFilter]);
+
     return (
         <View style={styles.navRight}>
             <View style={styles.navRightTop}>
@@ -63,6 +69,12 @@ const NavCateChild = (props) => {
                         return null;
                     }}
                     ref={refContainer}
+                    getItemLayout={(data, index) => ({
+                        length: 100,
+                        offset: 32 * index,
+                        index
+                    })}
+                    keyExtractor={(item, index) => item + index}
                     renderSectionHeader={({ section }) =>
                         section.data.length > 0 && (
                             <FlatList
