@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TouchableOpacity,
     View,
@@ -12,6 +12,16 @@ import { ImageNavMenu } from '../../../images';
 import { styles } from './styles';
 
 const NavCateChild = (props) => {
+    const refContainer = React.useRef(null);
+    useEffect(() => {
+        if (refContainer.current) {
+            refContainer.current.scrollToIndex({
+                animated: true,
+                index: 0,
+                viewPosition: 0.5
+            });
+        }
+    }, [props.cateFilter]);
     return (
         <View style={styles.navRight}>
             <View style={styles.navRightTop}>
@@ -57,6 +67,7 @@ const NavCateChild = (props) => {
                                 style={styles.navRightBottom}
                                 numColumns="3"
                                 data={section.data}
+                                ref={refContainer}
                                 keyExtractor={(item) => item.ReferenceId}
                                 renderItem={(item) => {
                                     return (
@@ -86,7 +97,6 @@ const NavCateChild = (props) => {
 // Render danh sách cate con
 const RenderCateChildItem = (props) => {
     const { item } = props.item;
-
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
