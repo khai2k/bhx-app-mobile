@@ -91,18 +91,17 @@ const FilterPopup = (props) => {
     const processSelectedProps = (propertyId) => {
         let currentSelectProps = popupSelectedProps;
         const selectPropertyInfo = propertyId.split(':');
-        const indexContainSelectedPropertyStart = currentSelectProps.indexOf(
-            propertyId
-        );
-        const indexContainSelectedGroupPropertyStart = currentSelectProps.indexOf(
-            `${selectPropertyInfo[0]}:`
-        );
+        const indexContainSelectedPropertyStart =
+            currentSelectProps.indexOf(propertyId);
+        const indexContainSelectedGroupPropertyStart =
+            currentSelectProps.indexOf(`${selectPropertyInfo[0]}:`);
         // nếu có tồn tại nhóm props trong listprops đã chọn
         if (indexContainSelectedGroupPropertyStart > -1) {
-            const indexContainSelectedGroupPropertyEnd = currentSelectProps.indexOf(
-                ',',
-                indexContainSelectedGroupPropertyStart
-            );
+            const indexContainSelectedGroupPropertyEnd =
+                currentSelectProps.indexOf(
+                    ',',
+                    indexContainSelectedGroupPropertyStart
+                );
             currentSelectProps = replaceBetween(
                 indexContainSelectedGroupPropertyStart,
                 indexContainSelectedGroupPropertyEnd,
