@@ -25,8 +25,7 @@ class Splash extends Component {
         }
 
         // Call api lấy dữ liệu danh sách catemenu
-
-        // Param để lấy danh sách cate Navigation
+        // Param để lấy danh sách cate
         const categoryId = 0;
         const provinceId = 0;
         const storeId = 0;

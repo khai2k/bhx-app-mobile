@@ -56,9 +56,8 @@ const NavCateChild = (props) => {
                             <FlatList
                                 style={styles.navRightBottom}
                                 numColumns="3"
-                                removeClippedSubviews
-                                maxToRenderPerBatch="10"
                                 data={section.data}
+                                keyExtractor={(item) => item.ReferenceId}
                                 renderItem={(item) => {
                                     return (
                                         <RenderCateChildItem
@@ -162,7 +161,7 @@ const searchFilter = (text, props) => {
 };
 
 // Render danh sách search cate con
-const RenderSearchCateChildItem = (props) => {
+const RenderSearchCateChildItem = React.memo((props) => {
     const { item } = props.item;
 
     return (
@@ -175,6 +174,6 @@ const RenderSearchCateChildItem = (props) => {
             <Text style={styles.txtCateChild}>{item.Text}</Text>
         </TouchableOpacity>
     );
-};
+});
 
 export default NavCateChild;

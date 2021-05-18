@@ -46,6 +46,9 @@ const NavCateParent = (props) => {
 const RenderCateItem = (props) => {
     const { item } = props.item;
 
+    const handleSelectCateParent = (id) => {
+        props.setCateFilter(id);
+    };
     return (
         <TouchableOpacity
             style={[
@@ -53,7 +56,7 @@ const RenderCateItem = (props) => {
                 item.ReferenceId === props.cateFilter && styles.itemCateActive
             ]}
             onPress={() => {
-                props.setCateFilter(item.ReferenceId);
+                handleSelectCateParent(item.ReferenceId);
             }}>
             {item.ReferenceId === '-1' && (
                 <Image

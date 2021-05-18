@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, AsyncStorage } from 'react-native';
-// import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
 import NavCateParent from './NavCateParent';
@@ -18,13 +17,6 @@ const NavMenu = () => {
     // Danh sách cate
     const [listCate, setListCate] = useState([]);
     const [isHasSearch, setIsHasSearch] = useState(false);
-
-    // Param để lấy danh sách cate Navigation
-    // const categoryId = 0;
-    // const provinceId = 0;
-    // const storeId = 0;
-    // const isCheckOnSales = true;
-    // const clearcache = '@ok';
 
     const getListCateLocalStorage = async () => {
         const value = await AsyncStorage.getItem('listCates');
