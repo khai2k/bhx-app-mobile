@@ -7,6 +7,7 @@ const Product = (props) => {
     if (props.listProducts && props.listProducts.length > 0) {
         return (
             <FlatList
+                style={{ flex: 1 }}
                 numColumns={3}
                 data={props.listProducts}
                 renderItem={({ item }) => <ProductBox bhxProduct={item} />}
