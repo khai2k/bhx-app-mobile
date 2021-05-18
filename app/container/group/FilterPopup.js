@@ -140,7 +140,7 @@ const FilterPopup = (props) => {
                         style={styles.closeFilter}>
                         <Image
                             style={styles.iconSearch}
-                            source={require('../../../assets/Images/searchFilterCate.png')}
+                            source={require('../../../assets/images/searchFilterCate.png')}
                         />
                         <Text style={styles.closeFilterText}>Đóng</Text>
                     </TouchableOpacity>
@@ -166,7 +166,7 @@ const FilterPopup = (props) => {
                                         filter.ValueID ? (
                                             <Image
                                                 style={styles.iconCheck}
-                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                             />
                                         ) : null}
                                     </TouchableOpacity>
@@ -204,7 +204,7 @@ const FilterPopup = (props) => {
                                                             style={
                                                                 styles.iconCheck
                                                             }
-                                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                                         />
                                                     ) : null}
                                                 </TouchableOpacity>
@@ -240,7 +240,7 @@ const FilterPopup = (props) => {
                                         {popupSelectedBrand === brand.Id ? (
                                             <Image
                                                 style={styles.iconCheck}
-                                                source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                             />
                                         ) : null}
                                     </TouchableOpacity>

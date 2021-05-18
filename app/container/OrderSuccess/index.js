@@ -26,7 +26,8 @@ class OrderSuccess extends Component {
         // this.props.actionOrderSuccess.order_success_get();
         axios({
             method: 'get',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
+            url:
+                'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=26068531&sc=A1BF50D1DB6874A4ADBF4834773F15B5'
         })
             .then((res) => {
                 const { data } = res;
@@ -125,7 +126,7 @@ class OrderSuccess extends Component {
                     <View style={styles.boxRow}>
                         <Image
                             style={styles.imageDone}
-                            source={require('../../../assets/Images/done.png')}
+                            source={require('../../../assets/images/done.png')}
                         />
                         <Text style={styles.textButton}>Tiền mặt</Text>
                     </View>
@@ -180,7 +181,7 @@ class OrderSuccess extends Component {
                     <View style={styles.editBox}>
                         <Image
                             style={styles.iconEdit}
-                            source={require('../../../assets/Images/edit-circle.png')}
+                            source={require('../../../assets/images/edit-circle.png')}
                         />
                         <Text style={styles.editTextButton}>Sửa đơn hàng</Text>
                         <Text style={styles.editText}>
@@ -201,7 +202,7 @@ class OrderSuccess extends Component {
                         <View style={styles.viewTitle}>
                             <Image
                                 style={styles.doneIcon}
-                                source={require('../../../assets/Images/done.png')}
+                                source={require('../../../assets/images/done.png')}
                             />
                             <Text style={styles.textTitle}>
                                 ĐẶT HÀNG THÀNH CÔNG

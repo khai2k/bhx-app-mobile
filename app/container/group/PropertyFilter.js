@@ -122,7 +122,7 @@ const PropertyFilter = (props) => {
                     style={[styles.titleCate, styles.titleCate80]}>
                     <Image
                         style={styles.iconSearch}
-                        source={require('../../../assets/Images/searchFilterCate.png')}
+                        source={require('../../../assets/images/searchFilterCate.png')}
                     />
                     <Text style={styles.titleCateText}>Lọc tìm</Text>
                 </TouchableOpacity>
@@ -143,7 +143,7 @@ const PropertyFilter = (props) => {
                                     style={styles.showMore}>
                                     <Image
                                         style={styles.iconSearch}
-                                        source={require('../../../assets/Images/searchFilterCate.png')}
+                                        source={require('../../../assets/images/searchFilterCate.png')}
                                     />
                                     <Text style={styles.textShowMore}>
                                         Xem thêm
@@ -169,7 +169,7 @@ const PropertyFilter = (props) => {
                                         )) ? (
                                         <Image
                                             style={styles.iconCheck}
-                                            source={require('../../../assets/Images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
                                         />
                                     ) : null}
                                 </TouchableOpacity>
