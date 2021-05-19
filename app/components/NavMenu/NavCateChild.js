@@ -8,7 +8,7 @@ import {
     SectionList,
     Text
 } from 'react-native';
-import { ImageNavMenu } from '../../../images';
+import { ImageNavMenu } from '../../images';
 import { styles } from './styles';
 
 const NavCateChild = (props) => {
@@ -74,6 +74,7 @@ const NavCateChild = (props) => {
                         offset: 27 * index,
                         index
                     })}
+                    removeClippedSubviews
                     keyExtractor={(item, index) => item + index}
                     renderSectionHeader={({ section }) =>
                         section.data.length > 0 && (
@@ -81,6 +82,7 @@ const NavCateChild = (props) => {
                                 style={styles.navRightBottom}
                                 numColumns="3"
                                 data={section.data}
+                                keyExtractor={item => item.ReferenceId}
                                 renderItem={(item) => {
                                     return (
                                         <RenderCateChildItem
@@ -118,12 +120,12 @@ const RenderCateChildItem = (props) => {
 
     return (
         <TouchableOpacity
-            disabled={props.cateFilter !== props.cateParent}
-            style={[
-                styles.itemCateChild,
-                props.cateFilter === props.cateParent &&
-                    styles.itemCateChildActive
-            ]}
+            // disabled={props.cateFilter !== props.cateParent}
+            style={
+                styles.itemCateChild
+                // props.cateFilter === props.cateParent &&
+                //     styles.itemCateChildActive
+            }
             onPress={() =>
                 handleSelectCateChild(item.ReferenceId, props.cateParent)
             }>
