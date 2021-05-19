@@ -1,50 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { View, Modal, Text, PermissionsAndroid } from 'react-native';
+import React, { Component } from 'react';
+import { View, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as locationCreator from './action';
 
-const LocationModal = () => {
-    const [sPermission, setSPermission] = useState('');
-    const [lat, setLat] = useState(0);
-    const [long, setLong] = useState(0);
+// create a component
+class Location extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
-    useEffect(() => {
+    componentDidMount() {
         const hasLocationPermission = PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
 
         if (hasLocationPermission) {
-            setSPermission('Granted');
             Geolocation.getCurrentPosition(
                 (position) => {
-                    setLat(position.coords.latitude);
-                    setLong(position.coords.longitude);
+                    const crrLat = position.coords.latitude;
+                    const crrLong = position.coords.longitude;
+
+                    if (crrLat > 0 && crrLong > 0) {
+                        const value = this.props.locationAction.location_getCurrent();
+                        console.log('value');
+                        console.log(value);
+                    }
                 },
                 (error) => {
-                    setSPermission(
-                        `error.code: ${error.code} - error.message: ${error.message}`
-                    );
+                    console.log(error);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             );
         } else {
-            setSPermission('Denied');
+            console.log('Denied');
         }
-    });
+    }
 
-    return (
-        <Modal
-            style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-            <View>
-                <Text>PERMISSION: {sPermission}</Text>
-                <Text>LAT: {lat}</Text>
-                <Text>LONG: {long}</Text>
-            </View>
-        </Modal>
-    );
+    render() {
+        return <View />;
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        cartInfo: state.cartReducer
+    };
 };
 
-export default LocationModal;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        locationAction: bindActionCreators(locationCreator, dispatch)
+    };
+};
+// make this component available to the app
+export default connect(mapStateToProps, mapDispatchToProps)(Location);

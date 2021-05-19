@@ -4,13 +4,17 @@ import { authenReducer } from '../container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
 import { cartReducer } from '../container/cart/reducer';
 import { categoryReducer } from '../container/group/reducer';
-import { menuReducer } from "../components/NavMenu/reducer";
+import { locationReducer } from '../components/Location/reducer';
+import { homeReducer } from '../container/product/reducer';
+import { menuReducer } from '../components/NavMenu/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
+    locationReducer,
     categoryReducer,
+    homeReducer,
     menuReducer
     // orderSuccessReducer
 });

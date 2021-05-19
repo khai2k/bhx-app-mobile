@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    ScrollView,
+    RefreshControl
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, ProductItemCart, ProductItemCartOff } from '@app/components';
 import { connect } from 'react-redux';
@@ -11,8 +17,22 @@ import styles from './style';
 class Cart extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            isLoading: false
+        };
     }
+
+    onRefresh = () => {
+        this.setState({ isLoading: true });
+        this.props.actionCart
+            .cart_get()
+            .then((res) => {
+                this.setState({ isLoading: false });
+            })
+            .catch(() => {
+                this.setState({ isLoading: false });
+            });
+    };
 
     componentDidMount() {
         this.props.actionCart.cart_get();
@@ -26,7 +46,13 @@ class Cart extends Component {
         return (
             <View style={styles.cartinfo}>
                 <Header />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isLoading}
+                            onRefresh={this.onRefresh}
+                        />
+                    }>
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
@@ -103,14 +129,18 @@ const showListCartItemBuy = (listCartItemBuy) => {
 };
 
 const ComponentTotal = (props) => {
-    return (
-        <View style={styles.boxsum}>
-            <Text style={styles.boxleft}>{props.title}</Text>
-            <Text style={props.bold ? styles.boxrightfont : styles.boxright}>
-                {helper.formatMoney(props.total)}
-            </Text>
-        </View>
-    );
+    if (props.total > 0) {
+        return (
+            <View style={styles.boxsum}>
+                <Text style={styles.boxleft}>{props.title}</Text>
+                <Text
+                    style={props.bold ? styles.boxrightfont : styles.boxright}>
+                    {helper.formatMoney(props.total)}
+                </Text>
+            </View>
+        );
+    }
+    return null;
 };
 
 const ComponentTotalFee = (props) => {
