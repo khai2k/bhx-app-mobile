@@ -12,97 +12,22 @@ import { ImageNavMenu } from '../../images';
 import { styles } from './styles';
 
 const NavCateChild = (props) => {
-    const refContainer = React.useRef(null);
-    useEffect(() => {
-        if (refContainer.current) {
-            const index = props.listCate.findIndex((ele) => {
-                return ele.ReferenceId === props.cateFilter;
-            });
-            setTimeout(() => {
-                refContainer.current.scrollToLocation({
-                    animated: true,
-                    itemIndex: 0,
-                    sectionIndex: index,
-                    viewPosition: 0
-                });
-            }, 100);
-        }
-    }, [props.cateFilter]);
-
     return (
         <View style={styles.navRight}>
-            <View style={styles.navRightTop}>
-                <TextInput
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    clearButtonMode="always"
-                    value={props.search}
-                    style={styles.inputSearch}
-                    placeholder="Tìm nhóm hàng"
-                    onChangeText={(text) => {
-                        searchFilter(text, props);
-                    }}
-                />
-                <Image
-                    style={styles.iconSearch}
-                    source={ImageNavMenu.imgIconSearch}
-                />
-            </View>
+            <RenderTextSearch search={props.search} />
             {/* Danh sách tìm kiếm cate con */}
             {props.isHasSearch && (
-                <FlatList
-                    style={styles.navRightBottom}
-                    numColumns="3"
-                    removeClippedSubviews
-                    maxToRenderPerBatch="10"
-                    data={props.listCate}
-                    renderItem={(item) => {
-                        return <RenderSearchCateChildItem item={item} />;
-                    }}
-                />
+                <RenderListResultSearch listCate={props.listCate} />
             )}
             {/* Danh sách cate con */}
             {!props.isHasSearch && (
-                <SectionList
-                    sections={props.listCate}
-                    renderItem={() => {
-                        return null;
-                    }}
-                    ref={refContainer}
-                    getItemLayout={(data, index) => ({
-                        length: 27,
-                        offset: 27 * index,
-                        index
-                    })}
-                    removeClippedSubviews
-                    keyExtractor={(item, index) => item + index}
-                    renderSectionHeader={({ section }) =>
-                        section.data.length > 0 && (
-                            <FlatList
-                                style={styles.navRightBottom}
-                                numColumns="3"
-                                data={section.data}
-                                keyExtractor={item => item.ReferenceId}
-                                renderItem={(item) => {
-                                    return (
-                                        <RenderCateChildItem
-                                            item={item}
-                                            cateParent={section.ReferenceId}
-                                            cateFilter={props.cateFilter}
-                                            setCateFilter={props.setCateFilter}
-                                            selectedCateChild={
-                                                props.selectedCateChild
-                                            }
-                                            setSelectedCateChild={
-                                                props.setSelectedCateChild
-                                            }
-                                            navigation={props.navigation}
-                                        />
-                                    );
-                                }}
-                            />
-                        )
-                    }
+                <RenderListCatesChild
+                    listCate={props.listCate}
+                    cateFilter={props.cateFilter}
+                    setCateFilter={props.setCateFilter}
+                    selectedCateChild={props.selectedCateChild}
+                    setSelectedCateChild={props.setSelectedCateChild}
+                    navigation={props.navigation}
                 />
             )}
         </View>
@@ -151,6 +76,7 @@ const RenderCateChildItem = (props) => {
     );
 };
 
+// Function search danh sách cate con
 const searchFilter = (text, props) => {
     if (text) {
         const filtered = props.masterData.map((element) => {
@@ -187,7 +113,7 @@ const searchFilter = (text, props) => {
 };
 
 // Render danh sách search cate con
-const RenderSearchCateChildItem = React.memo((props) => {
+const RenderSearchCateChildItem = (props) => {
     const { item } = props.item;
 
     return (
@@ -200,6 +126,107 @@ const RenderSearchCateChildItem = React.memo((props) => {
             <Text style={styles.txtCateChild}>{item.Text}</Text>
         </TouchableOpacity>
     );
-});
+};
+
+// TextInput Search
+const RenderTextSearch = (props) => {
+    return (
+        <View style={styles.navRightTop}>
+            <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="always"
+                value={props.search}
+                style={styles.inputSearch}
+                placeholder="Tìm nhóm hàng"
+                onChangeText={(text) => {
+                    searchFilter(text, props);
+                }}
+            />
+            <Image
+                style={styles.iconSearch}
+                source={ImageNavMenu.imgIconSearch}
+            />
+        </View>
+    );
+};
+
+// Render danh sách sp search
+const RenderListResultSearch = (props) => {
+    return (
+        <FlatList
+            style={styles.navRightBottom}
+            numColumns="3"
+            removeClippedSubviews
+            maxToRenderPerBatch="10"
+            keyExtractor={(item) => item.ReferenceId}
+            data={props.listCate}
+            renderItem={(item) => {
+                return <RenderSearchCateChildItem item={item} />;
+            }}
+        />
+    );
+};
+
+// Render cate con
+const RenderListCatesChild = (props) => {
+    const refContainer = React.useRef(null);
+
+    useEffect(() => {
+        const index = props.listCate.findIndex((ele) => {
+            return ele.ReferenceId === props.cateFilter;
+        });
+        setTimeout(() => {
+            refContainer?.current?.scrollToLocation({
+                animated: true,
+                itemIndex: 0,
+                sectionIndex: index,
+                viewPosition: 0
+            });
+        }, 100);
+    }, [props.cateFilter]);
+
+    return (
+        <SectionList
+            sections={props.listCate}
+            renderItem={() => {
+                return null;
+            }}
+            ref={refContainer}
+            getItemLayout={(data, index) => ({
+                length: 27,
+                offset: 27 * index,
+                index
+            })}
+            removeClippedSubviews
+            keyExtractor={(item, index) => item + index}
+            renderSectionHeader={({ section }) =>
+                section.data.length > 0 && (
+                    <FlatList
+                        style={styles.navRightBottom}
+                        numColumns="3"
+                        data={section.data}
+                        keyExtractor={(item) => item.ReferenceId}
+                        renderItem={(item) => {
+                            return (
+                                <RenderCateChildItem
+                                    item={item}
+                                    cateParent={section.ReferenceId}
+                                    cateFilter={props.cateFilter}
+                                    setCateFilter={props.setCateFilter}
+                                    selectedCateChild={props.selectedCateChild}
+                                    setSelectedCateChild={
+                                        props.setSelectedCateChild
+                                    }
+                                    navigation={props.navigation}
+                                />
+                            );
+                        }}
+                    />
+                )
+            }
+        />
+    );
+};
 
 export default NavCateChild;
