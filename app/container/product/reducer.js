@@ -11,7 +11,7 @@ const homeReducer = function (state = _state.homeState, action) {
         case _action.homeAction.GET_LIST_PRODUCT:
             return {
                 ...state,
-                ListProducts: action.listProducts
+                HomeData: action.homeData
             };
         default:
             return state;

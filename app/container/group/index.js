@@ -24,7 +24,7 @@ class Group extends Component {
 
     render() {
         return (
-            <SafeAreaView>
+            <SafeAreaView style={{ flex: 1 }}>
                 <Header />
                 <Filter
                     brands={this.props.categoryInfo.Brands}
@@ -35,7 +35,12 @@ class Group extends Component {
                     selectedSort={this.props.categoryInfo.SelectedSort}
                 />
                 <Product
-                    listProducts={this.props.categoryInfo.CurrentData.Products}
+                    currentData={this.props.categoryInfo.CurrentData}
+                    include={this.props.categoryInfo.Query}
+                    info={this.props.categoryInfo.Info}
+                    selectedBrand={this.props.categoryInfo.SelectedBrand}
+                    selectedProps={this.props.categoryInfo.SelectedProps}
+                    selectedSort={this.props.categoryInfo.SelectedSort}
                 />
             </SafeAreaView>
         );

@@ -59,10 +59,10 @@ export const get_listproducts = function () {
             )
                 .then((response) => {
                     console.log('GET_LIST_PRODUCT Data:', response);
-                    const listProducts = response.Value;
+                    const homeData = response.Value;
                     dispatch({
                         type: GET_LIST_PRODUCT,
-                        listProducts
+                        homeData
                     });
                     resolve(response);
                 })

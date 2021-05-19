@@ -26,6 +26,12 @@ export const categoryState = {
         ValueIDFilterNameList: null,
         IsVirtualCate: false
     },
+    Query: {
+        Paging: {
+            PageIndex: 0,
+            PageSize: 12
+        }
+    },
     Brands: [],
     Filters: [],
     CurrentData: {
@@ -35,5 +41,6 @@ export const categoryState = {
     },
     SelectedBrand: 0,
     SelectedProps: '',
-    SelectedSort: 0
+    SelectedSort: 0,
+    PageIndex: 0
 };
