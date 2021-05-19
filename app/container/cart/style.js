@@ -11,10 +11,11 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     boxright: {
+        flexDirection: 'row',
         marginRight: 5
     },
     boxrightfont: {
-        ...Typography.FONT_BOLD_14,
+        ...Typography.FONT_BOLD_18,
         marginRight: 5
     },
     boxsum: {
@@ -58,6 +59,12 @@ const styles = StyleSheet.create({
     },
     textcart: {
         ...Typography.FONT_BOLD_14
+    },
+    textdel: {
+        ...Typography.FONT_REGULAR_14,
+        color: Colors.CART_UNIT,
+        marginRight: 5,
+        textDecorationLine: 'line-through'
     },
     titlecart: {
         borderBottomWidth: 1,

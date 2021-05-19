@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, FlatList } from 'react-native';
-import { ImageNavMenu } from '../../../images';
+import { ImageNavMenu } from '../../images';
 import { styles } from './styles';
 
 const NavCateParent = (props) => {
