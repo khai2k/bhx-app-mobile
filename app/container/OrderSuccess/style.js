@@ -200,6 +200,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center'
+    },
+    checkBoxText: {
+        margin: 6
     }
 });
 

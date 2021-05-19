@@ -230,7 +230,9 @@ class OrderSuccess extends Component {
                                         })
                                     }
                                 />
-                                <Text>Tôi không còn nhu cầu</Text>
+                                <Text style={styles.checkBoxText}>
+                                    Tôi không còn nhu cầu
+                                </Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <CheckBox
@@ -243,7 +245,9 @@ class OrderSuccess extends Component {
                                         })
                                     }
                                 />
-                                <Text>Tôi muốn mua đơn hàng khác</Text>
+                                <Text style={styles.checkBoxText}>
+                                    Tôi muốn mua đơn hàng khác
+                                </Text>
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <CheckBox
@@ -256,7 +260,9 @@ class OrderSuccess extends Component {
                                         })
                                     }
                                 />
-                                <Text>Tôi tìm chỗ khác giá tốt hơn</Text>
+                                <Text style={styles.checkBoxText}>
+                                    Tôi tìm chỗ khác giá tốt hơn
+                                </Text>
                             </View>
                         </View>
                         <View style={{ marginTop: 10 }}>
