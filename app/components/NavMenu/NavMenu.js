@@ -4,31 +4,25 @@ import { useNavigation } from '@react-navigation/native';
 import { styles } from './styles';
 import NavCateParent from './NavCateParent';
 import NavCateChild from './NavCateChild';
+import { useSelector } from 'react-redux';
 
 const NavMenu = () => {
     const navigation = useNavigation();
 
+    const menuData = useSelector((state) => state.menuReducer.Menu);
+
     const [search, setSearch] = useState('');
-    const [masterData, setMasterData] = useState([]);
 
     const [cateFilter, setCateFilter] = useState('8686');
     const [selectedCateChild, setSelectedCateChild] = useState('');
 
     // Danh sách cate
-    const [listCate, setListCate] = useState([]);
+    const [listCate, setListCate] = useState(menuData);
+    const [masterData, setMasterData] = useState(menuData);
+
     const [isHasSearch, setIsHasSearch] = useState(false);
 
-    const getListCateLocalStorage = async () => {
-        const value = await AsyncStorage.getItem('ListCates');
-        return value ? JSON.parse(value) : [];
-    };
 
-    useEffect(async () => {
-        // Lấy dữ liệu từ local
-        const data = await getListCateLocalStorage();
-        setListCate(data);
-        setMasterData(data);
-    }, []);
 
     return (
         <View style={styles.container}>
