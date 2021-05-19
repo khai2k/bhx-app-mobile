@@ -8,7 +8,8 @@ const CART_ADD_ITEM_PRODUCT = 'CART_ADD_ITEM_PRODUCT';
 export const cartAction = {
     CART_GET,
     CART_REMOVE_ITEM_PRODUCT,
-    CART_ADD_ITEM_PRODUCT
+    CART_ADD_ITEM_PRODUCT,
+    CART_UPDATE_ITEM_PRODUCT
 };
 
 export const cart_get = function () {
@@ -61,7 +62,7 @@ export const cart_update_item_product = function (guildId, iQuantity) {
             apiBase(API_CONST.API_REQUEST_UPDATE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_UPDATE_ITEM_PRODUCT Data:', response);
-                    const cartInfo = response.Value;
+                    const cartInfo = { ...response.Value };
                     dispatch({
                         type: CART_UPDATE_ITEM_PRODUCT,
                         cartInfo

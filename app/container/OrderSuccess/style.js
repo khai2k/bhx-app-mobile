@@ -150,6 +150,56 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'green',
         fontSize: 13
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modalView: {
+        margin: 10,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        padding: 20,
+        borderWidth: 3,
+        borderColor: 'green'
+    },
+    textInput: {
+        width: '100%',
+        height: 60,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 10
+    },
+    modalButtonView: {
+        flexDirection: 'row',
+        marginTop: 20,
+        justifyContent: 'space-between'
+    },
+    cancelButton: {
+        backgroundColor: '#DFDFDF',
+        padding: 7,
+        borderRadius: 5,
+        width: '47%',
+        justifyContent: 'center'
+    },
+    canceltext: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    confirmButton: {
+        backgroundColor: 'green',
+        padding: 7,
+        borderRadius: 5,
+        width: '47%',
+        justifyContent: 'center'
+    },
+    confirmText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center'
     }
 });
 
