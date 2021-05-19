@@ -5,13 +5,15 @@ import { authenReducer } from '../container/splash/reducer';
 import { cartReducer } from '../container/cart/reducer';
 import { categoryReducer } from '../container/group/reducer';
 import { homeReducer } from '../container/product/reducer';
+import { menuReducer } from '../components/NavMenu/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
     categoryReducer,
-    homeReducer
+    homeReducer,
+    menuReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {
