@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     TouchableOpacity,
     View,
@@ -8,10 +8,27 @@ import {
     SectionList,
     Text
 } from 'react-native';
-import { ImageNavMenu } from '../../../images';
+import { ImageNavMenu } from '../../images';
 import { styles } from './styles';
 
 const NavCateChild = (props) => {
+    const refContainer = React.useRef(null);
+    useEffect(() => {
+        if (refContainer.current) {
+            const index = props.listCate.findIndex((ele) => {
+                return ele.ReferenceId === props.cateFilter;
+            });
+            setTimeout(() => {
+                refContainer.current.scrollToLocation({
+                    animated: true,
+                    itemIndex: 0,
+                    sectionIndex: index,
+                    viewPosition: 0
+                });
+            }, 100);
+        }
+    }, [props.cateFilter]);
+
     return (
         <View style={styles.navRight}>
             <View style={styles.navRightTop}>
@@ -51,13 +68,21 @@ const NavCateChild = (props) => {
                     renderItem={() => {
                         return null;
                     }}
+                    ref={refContainer}
+                    getItemLayout={(data, index) => ({
+                        length: 27,
+                        offset: 27 * index,
+                        index
+                    })}
+                    removeClippedSubviews
+                    keyExtractor={(item, index) => item + index}
                     renderSectionHeader={({ section }) =>
                         section.data.length > 0 && (
                             <FlatList
                                 style={styles.navRightBottom}
                                 numColumns="3"
                                 data={section.data}
-                                keyExtractor={(item) => item.ReferenceId}
+                                keyExtractor={item => item.ReferenceId}
                                 renderItem={(item) => {
                                     return (
                                         <RenderCateChildItem
@@ -87,7 +112,6 @@ const NavCateChild = (props) => {
 // Render danh sách cate con
 const RenderCateChildItem = (props) => {
     const { item } = props.item;
-
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
@@ -96,12 +120,12 @@ const RenderCateChildItem = (props) => {
 
     return (
         <TouchableOpacity
-            disabled={props.cateFilter !== props.cateParent}
-            style={[
-                styles.itemCateChild,
-                props.cateFilter === props.cateParent &&
-                    styles.itemCateChildActive
-            ]}
+            // disabled={props.cateFilter !== props.cateParent}
+            style={
+                styles.itemCateChild
+                // props.cateFilter === props.cateParent &&
+                //     styles.itemCateChildActive
+            }
             onPress={() =>
                 handleSelectCateChild(item.ReferenceId, props.cateParent)
             }>
