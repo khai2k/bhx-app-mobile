@@ -3,6 +3,7 @@ import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import {
     Text,
     View,
@@ -14,8 +15,11 @@ import {
 
 import LocationModal from './Location';
 
-const Header = (props) => {
+const Header = () => {
     const navigation = useNavigation();
+
+    // const locationinfo = useSelector((state) => state.locationReducer);
+
     return (
         <SafeAreaView>
             <LocationModal />
@@ -42,7 +46,7 @@ const Header = (props) => {
                             {translate('Header_DeliveryAddress')}
                         </Text>
                         <Text style={styles.textcolor} numberOfLines={1}>
-                            Buôn mê thuộc
+                            {locationinfo?.crrLocationRs.ProvinceId}
                         </Text>
                     </View>
                     <View style={styles.boxhistory}>

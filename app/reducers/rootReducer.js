@@ -4,11 +4,13 @@ import { authenReducer } from '../container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
 import { cartReducer } from '../container/cart/reducer';
 import { categoryReducer } from '../container/group/reducer';
+import { locationReducer } from '../components/Location/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
+    locationReducer,
     categoryReducer
     // orderSuccessReducer
 });

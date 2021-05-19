@@ -6,21 +6,20 @@ export const locationAction = {
     LOCATION_GETCURRENT
 };
 
-export const location_getCurrent = function () {
+export const location_getCurrent = function (crrLat, crrLong) {
     return (dispatch) => {
         const bodyApi = {
             data: {
-                Lng: '10.8385859',
-                Lat: '106.8305654'
+                Lng: crrLat,
+                Lat: crrLong
             }
         };
         apiBase(API_CONST.API_GET_LOCATION, METHOD.POST, bodyApi)
             .then((response) => {
-                const rs = response.Value;
-                console.log(rs);
+                const crrLocationRs = response.Value;
                 dispatch({
                     type: LOCATION_GETCURRENT,
-                    rs
+                    crrLocationRs
                 });
             })
             .catch((error) => {
