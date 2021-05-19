@@ -67,7 +67,8 @@ class Cart extends Component {
                         <TouchableOpacity
                             style={styles.btnbuy}
                             onPress={() =>
-                                this.props.navigation.navigate('Cart')
+                                // this.props.navigation.navigate('Cart')
+                                this.props.navigation.navigate('UserInfo')
                             }>
                             <Text style={styles.textbtnbuy}>ĐẶT HÀNG</Text>
                         </TouchableOpacity>
