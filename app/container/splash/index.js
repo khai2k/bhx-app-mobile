@@ -7,7 +7,7 @@ import { setI18nConfig } from '@app/translate';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import * as actionAuthenCreator from './action';
-import * as actionMenuCreator from "../../components/Shared/NavMenu/action";
+import * as actionMenuCreator from "../../components/NavMenu/action";
 
 class Splash extends Component {
     constructor(props) {

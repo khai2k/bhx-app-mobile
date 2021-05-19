@@ -4,7 +4,7 @@ import { authenReducer } from '../container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
 import { cartReducer } from '../container/cart/reducer';
 import { categoryReducer } from '../container/group/reducer';
-import { menuReducer } from "../components/Shared/NavMenu/reducer";
+import { menuReducer } from "../components/NavMenu/reducer";
 
 const appReducer = combineReducers({
     loginReducer,
