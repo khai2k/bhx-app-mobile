@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
@@ -13,16 +13,19 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import LocationModal from './Location';
+import LoadLocationTrigger from './Location';
+import LocationModal from './Location/ModalLocation';
 
 const Header = () => {
     const navigation = useNavigation();
 
-    // const locationinfo = useSelector((state) => state.locationReducer);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const locationinfo = useSelector((state) => state.locationReducer);
 
     return (
         <SafeAreaView>
-            <LocationModal />
+            <LoadLocationTrigger />
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.boxlogo}
@@ -41,14 +44,16 @@ const Header = () => {
                     />
                 </View>
                 <View style={styles.boxinfo}>
-                    <View style={styles.boxdelivery}>
+                    <TouchableOpacity
+                        onPress={() => setIsModalVisible(true)}
+                        style={styles.boxdelivery}>
                         <Text style={styles.textcolor}>
                             {translate('Header_DeliveryAddress')}
                         </Text>
                         <Text style={styles.textcolor} numberOfLines={1}>
-                            {locationinfo?.crrLocationRs.ProvinceId}
+                            {locationinfo?.crrLocationRs.FullAddress}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
                     <View style={styles.boxhistory}>
                         <Text style={styles.historyorder}>
                             {translate('Header_HistoryAccount')}
@@ -73,6 +78,13 @@ const Header = () => {
                     </TouchableOpacity>
                 </View>
             </View>
+
+            <LocationModal
+                isModalVisible={isModalVisible}
+                changeModalVisibleCallback={(isVisible) =>
+                    setIsModalVisible(isVisible)
+                }
+            />
         </SafeAreaView>
     );
 };

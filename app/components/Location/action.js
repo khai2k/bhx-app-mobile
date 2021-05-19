@@ -11,12 +11,28 @@ export const location_getCurrent = function (crrLat, crrLong) {
         const bodyApi = {
             data: {
                 Lng: crrLat,
-                Lat: crrLong
+                Lat: crrLong,
+                IsLive: false
             }
         };
-        apiBase(API_CONST.API_GET_LOCATION, METHOD.POST, bodyApi)
+        apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
             .then((response) => {
-                const crrLocationRs = response.Value;
+                const tmpData = response.OrtherData;
+
+                const crrLocationRs = { ...tmpData, FullAddress: '' };
+                if (response.ResultCode === 0) {
+                    let _fullAddress = '';
+                    if (crrLocationRs.WardName !== '') {
+                        _fullAddress += `${crrLocationRs.WardName}, `;
+                    }
+                    if (crrLocationRs.DistrictName !== '') {
+                        _fullAddress += `${crrLocationRs.DistrictName}, `;
+                    }
+                    if (crrLocationRs.ProvinceFullName !== '') {
+                        _fullAddress += `${crrLocationRs.ProvinceFullName}`;
+                    }
+                    crrLocationRs.FullAddress = _fullAddress;
+                }
                 dispatch({
                     type: LOCATION_GETCURRENT,
                     crrLocationRs

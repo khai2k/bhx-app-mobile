@@ -1,10 +1,12 @@
 export const locationState = {
     crrLocationRs: {
-        ProvinceId: 0,
         DistrictId: 0,
+        DistrictName: '',
+        ProvinceFullName: '',
+        ProvinceId: 0,
+        ProvinceShortName: '',
         WardId: 0,
-        StoreId: 0,
-        Lat: '0',
-        Lng: '0'
+        WardName: '',
+        FullAddress: ''
     }
 };

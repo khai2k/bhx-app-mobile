@@ -5,7 +5,11 @@ export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
-export const API_GET_LOCATION = `${API_BASE}/shared/GetLocationByCoordinates`;
+
+// Location
+export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;
+export const API_LOCATION_GETALLPROVINCE = `${API_BASE}/shared/GetAllProvince`;
+export const API_LOCATION_GETDICTRICTBYPROVINCE = `${API_BASE}/shared/GetDistrictsByProvince`;
 
 // category
 export const API_CATEGORY_GET = `${API_BASE}Category/Get`;
