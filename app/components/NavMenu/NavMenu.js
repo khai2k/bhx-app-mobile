@@ -9,16 +9,17 @@ import { useSelector } from 'react-redux';
 const NavMenu = () => {
     const navigation = useNavigation();
 
+    //Get data Menu từ redux
     const menuData = useSelector((state) => state.menuReducer.Menu);
+
+    // Danh sách cate
+    const [listCate, setListCate] = useState(menuData);
+    const [masterData, setMasterData] = useState(menuData);
 
     const [search, setSearch] = useState('');
 
     const [cateFilter, setCateFilter] = useState('8686');
     const [selectedCateChild, setSelectedCateChild] = useState('');
-
-    // Danh sách cate
-    const [listCate, setListCate] = useState(menuData);
-    const [masterData, setMasterData] = useState(menuData);
 
     const [isHasSearch, setIsHasSearch] = useState(false);
 

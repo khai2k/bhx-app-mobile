@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../../styles';
+import { Colors } from '../../styles';
 
 export const styles = StyleSheet.create({
     btnClose: {
