@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../../styles';
+import { Colors } from '../../styles';
 
 export const styles = StyleSheet.create({
     btnClose: {
@@ -82,7 +82,7 @@ export const styles = StyleSheet.create({
     itemCateChild: {
         alignItems: 'center',
         justifyContent: 'center',
-        opacity: 0.5,
+        opacity: 1,
         position: 'relative',
         width: 80
     },
