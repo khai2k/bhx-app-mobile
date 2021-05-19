@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TouchableOpacity, View, Text, Image, FlatList } from 'react-native';
 import { ImageNavMenu } from '../../images';
 import { styles } from './styles';
@@ -7,36 +7,13 @@ const NavCateParent = (props) => {
     return (
         <View style={styles.navLeft}>
             <View style={styles.navLeftTop}>
-                <TouchableOpacity
-                    style={styles.btnClose}
-                    onPress={() => props.navigation.goBack()}>
-                    <Image
-                        style={styles.iconClose}
-                        source={ImageNavMenu.imgIconClose}
-                    />
-                    <Text style={styles.textBtnClose}>Đóng</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.btnHome}
-                    onPress={() => props.navigation.navigate('Main')}>
-                    <Image
-                        source={ImageNavMenu.imgIconHome}
-                        style={styles.iconHome}
-                    />
-                </TouchableOpacity>
+                <RenderButtonClose navigation={props.navigation} />
+                <RenderButtonHome navigation={props.navigation} />
             </View>
-            <FlatList
-                style={styles.navLeftBottom}
-                data={props.masterData}
-                renderItem={(item) => {
-                    return (
-                        <RenderCateItem
-                            item={item}
-                            cateFilter={props.cateFilter}
-                            setCateFilter={props.setCateFilter}
-                        />
-                    );
-                }}
+            <RenderListCateParent
+                masterData={props.masterData}
+                cateFilter={props.cateFilter}
+                setCateFilter={props.setCateFilter}
             />
         </View>
     );
@@ -66,6 +43,52 @@ const RenderCateItem = (props) => {
             )}
             <Text style={styles.txtCate}>{item.Text}</Text>
         </TouchableOpacity>
+    );
+};
+
+const RenderButtonClose = (props) => {
+    return (
+        <TouchableOpacity
+            style={styles.btnClose}
+            onPress={() => props.navigation.goBack()}>
+            <Image
+                style={styles.iconClose}
+                source={ImageNavMenu.imgIconClose}
+            />
+            <Text style={styles.textBtnClose}>Đóng</Text>
+        </TouchableOpacity>
+    );
+};
+
+const RenderButtonHome = (props) => {
+    return (
+        <TouchableOpacity
+            style={styles.btnHome}
+            onPress={() => props.navigation.navigate('Main')}>
+            <Image source={ImageNavMenu.imgIconHome} style={styles.iconHome} />
+        </TouchableOpacity>
+    );
+};
+
+const RenderListCateParent = (props) => {
+    useEffect(() => {
+        console.log('RenderListCateParent');
+    }, []);
+    return (
+        <FlatList
+            style={styles.navLeftBottom}
+            data={props.masterData}
+            keyExtractor={(item) => item.ReferenceId}
+            renderItem={(item) => {
+                return (
+                    <RenderCateItem
+                        item={item}
+                        cateFilter={props.cateFilter}
+                        setCateFilter={props.setCateFilter}
+                    />
+                );
+            }}
+        />
     );
 };
 
