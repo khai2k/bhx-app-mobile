@@ -116,6 +116,7 @@ export const GREEN_KEY = '#037841';
 export const TROPICAL_RAIN_FOREST = '#008848';
 export const BORDER = '#00AC5B';
 export const BORDER_GENERAL = '#ededed';
+export const MESSAGE_ERROR = '#f30600';
 export const RED = 'red';
 export const HEADER_CART = '#FFF87C';
 
