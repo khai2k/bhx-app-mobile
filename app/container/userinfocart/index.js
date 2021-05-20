@@ -21,7 +21,13 @@ class userinfo extends Component {
             <SafeAreaView>
                 <Header />
                 <View style={styles.container}>
-                    <Text style={styles.backTop}>Xem lại giỏ hàng</Text>
+                    <Text style={styles.backTop}>
+                      <Image
+                        style={styles.logoback}
+                        source={require('../../assets/images/icon-back.png')}
+                    />
+                    Xem lại giỏ hàng
+                    </Text>
                     <View style={styles.btnGetHistoryAddress}>
                         <Text style={styles.textHistoryAddress}>
                             LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY
@@ -99,6 +105,7 @@ const mapStateToProps = (state) => {
     return {
         cart: state.cartReducer.Cart
     };
+    
 };
 
 const mapDispatchToProps = (dispatch) => {
