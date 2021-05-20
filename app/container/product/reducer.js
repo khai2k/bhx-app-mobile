@@ -13,6 +13,11 @@ const homeReducer = function (state = _state.homeState, action) {
                 ...state,
                 HomeData: action.homeData
             };
+        case _action.homeAction.GET_MORE_LIST_PRODUCT:
+            return {
+                ...state,
+                LoadMoreProducts: action.loadMoreProducts
+            };
         default:
             return state;
     }
