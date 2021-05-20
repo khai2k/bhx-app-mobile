@@ -85,6 +85,9 @@ export const IsEmptyObject = (obj) => {
 export const IsEmptyArray = (arr) => {
     return isArray(arr) && arr.length === 0;
 };
+export function isEmptyOrNull(obj) {
+    return obj === undefined || obj === null || obj === '';
+}
 
 // Return Boolean
 export function IsValidateObject(object) {

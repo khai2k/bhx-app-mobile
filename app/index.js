@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { CodePushUpdate } from '@app/components';
+import { Colors } from '@app/styles';
 import { store } from './store';
 import AppContainer from './navigator/appNavigator';
-import { Colors } from '@app/styles';
 
 const styles = StyleSheet.create({
     container: {
