@@ -1,20 +1,156 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    TouchableOpacity,
     View,
-    TextInput,
+    TouchableOpacity,
+    Text,
     Image,
     FlatList,
-    SectionList,
-    Text
+    TextInput,
+    SectionList
 } from 'react-native';
-import { ImageNavMenu } from '../../images';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import { styles } from './styles';
+import { ImageNavMenu } from '../../images';
 
-const NavCateChild = (props) => {
+const NavMenu = () => {
+    const navigation = useNavigation();
+
+    // Get data Menu từ redux
+    const menuData = useSelector((state) => state.menuReducer.Menu);
+
+    // Danh sách cate
+    const [listCate, setListCate] = useState(menuData);
+    const masterData = menuData;
+
+    const [search, setSearch] = useState('');
+
+    const [cateFilter, setCateFilter] = useState('8686');
+    const [selectedCateChild, setSelectedCateChild] = useState('');
+
+    const [isHasSearch, setIsHasSearch] = useState(false);
+
+    return (
+        <View style={styles.container}>
+            <RenderNavCateParent
+                masterData={masterData}
+                cateFilter={cateFilter}
+                setCateFilter={setCateFilter}
+                navigation={navigation}
+            />
+            <RenderNavCateChild
+                search={search}
+                isHasSearch={isHasSearch}
+                listCate={listCate}
+                cateFilter={cateFilter}
+                setCateFilter={setCateFilter}
+                selectedCateChild={selectedCateChild}
+                setSelectedCateChild={setSelectedCateChild}
+                masterData={masterData}
+                setIsHasSearch={setIsHasSearch}
+                setListCate={setListCate}
+                setSearch={setSearch}
+                navigation={navigation}
+            />
+        </View>
+    );
+};
+// Render danh sách cate cha
+const RenderNavCateParent = (props) => {
+    return (
+        <View style={styles.navLeft}>
+            <View style={styles.navLeftTop}>
+                <RenderButtonClose navigation={props.navigation} />
+                <RenderButtonHome navigation={props.navigation} />
+            </View>
+            <RenderListCateParent
+                masterData={props.masterData}
+                cateFilter={props.cateFilter}
+                setCateFilter={props.setCateFilter}
+            />
+        </View>
+    );
+};
+
+const RenderCateItem = (props) => {
+    const { item } = props.item;
+    const handleSelectCateParent = (id) => {
+        props.setCateFilter(id);
+    };
+    return (
+        <TouchableOpacity
+            style={[
+                styles.itemCate,
+                item.ReferenceId === props.cateFilter && styles.itemCateActive
+            ]}
+            onPress={() => {
+                handleSelectCateParent(item.ReferenceId);
+            }}>
+            {item.ReferenceId === '-1' && (
+                <Image
+                    style={styles.iconPromotion}
+                    source={ImageNavMenu.imgIconPromotion}
+                />
+            )}
+            <Text style={styles.txtCate}>{item.Text}</Text>
+        </TouchableOpacity>
+    );
+};
+
+const RenderButtonClose = (props) => {
+    return (
+        <TouchableOpacity
+            style={styles.btnClose}
+            onPress={() => props.navigation.goBack()}>
+            <Image
+                style={styles.iconClose}
+                source={ImageNavMenu.imgIconClose}
+            />
+            <Text style={styles.textBtnClose}>Đóng</Text>
+        </TouchableOpacity>
+    );
+};
+
+const RenderButtonHome = (props) => {
+    return (
+        <TouchableOpacity
+            style={styles.btnHome}
+            onPress={() => props.navigation.navigate('Main')}>
+            <Image source={ImageNavMenu.imgIconHome} style={styles.iconHome} />
+        </TouchableOpacity>
+    );
+};
+
+const RenderListCateParent = (props) => {
+    return (
+        <FlatList
+            style={styles.navLeftBottom}
+            data={props.masterData}
+            keyExtractor={(item) => item.ReferenceId}
+            renderItem={(item) => {
+                return (
+                    <RenderCateItem
+                        item={item}
+                        cateFilter={props.cateFilter}
+                        setCateFilter={props.setCateFilter}
+                    />
+                );
+            }}
+        />
+    );
+};
+
+// Render danh sách cate con
+const RenderNavCateChild = (props) => {
     return (
         <View style={styles.navRight}>
-            <RenderTextSearch search={props.search} />
+            <RenderTextSearch
+                search={props.search}
+                masterData={props.masterData}
+                setIsHasSearch={props.setIsHasSearch}
+                setListCate={props.setListCate}
+                setSearch={props.setSearch}
+            />
             {/* Danh sách tìm kiếm cate con */}
             {props.isHasSearch && (
                 <RenderListResultSearch listCate={props.listCate} />
@@ -34,7 +170,6 @@ const NavCateChild = (props) => {
     );
 };
 
-// Render danh sách cate con
 const RenderCateChildItem = (props) => {
     const { item } = props.item;
     const handleSelectCateChild = (id, cateParent) => {
@@ -173,17 +308,18 @@ const RenderListCatesChild = (props) => {
     const refContainer = React.useRef(null);
 
     useEffect(() => {
-        const index = props.listCate.findIndex((ele) => {
+        const index = props.listCate?.findIndex((ele) => {
             return ele.ReferenceId === props.cateFilter;
         });
         setTimeout(() => {
-            refContainer?.current?.scrollToLocation({
-                animated: true,
-                itemIndex: 0,
-                sectionIndex: index,
-                viewPosition: 0
-            });
-        }, 100);
+            index >= 0 &&
+                refContainer?.current?.scrollToLocation({
+                    animated: true,
+                    itemIndex: 0,
+                    sectionIndex: index,
+                    viewPosition: 0
+                });
+        }, 1000);
     }, [props.cateFilter]);
 
     return (
@@ -198,7 +334,6 @@ const RenderListCatesChild = (props) => {
                 offset: 27 * index,
                 index
             })}
-            removeClippedSubviews
             keyExtractor={(item, index) => item + index}
             renderSectionHeader={({ section }) =>
                 section.data.length > 0 && (
@@ -229,4 +364,4 @@ const RenderListCatesChild = (props) => {
     );
 };
 
-export default NavCateChild;
+export default NavMenu;

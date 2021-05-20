@@ -82,9 +82,10 @@ export const styles = StyleSheet.create({
     itemCateChild: {
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 15,
         opacity: 1,
         position: 'relative',
-        width: 80
+        width: '33%'
     },
     itemCateChildActive: {
         opacity: 1
@@ -109,7 +110,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginTop: 10,
-        paddingBottom: 10
+        paddingBottom: 20
     },
     navRightTop: {
         flexDirection: 'row',
