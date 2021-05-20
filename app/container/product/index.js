@@ -52,11 +52,13 @@ class Product extends Component {
         }
 
         return (
-            <ScrollView style={styles.body}>
+            <ScrollView style={styles.body} onScroll={handleScroll}>
                 <Header navigation={this.props.navigation} />
+
                 <ListCategories
                     listCate={this.props.HomeReducer.ListCategories}
                 />
+
                 <SliderTitle listTitle={this.state.listTitle} />
 
                 {this.props.HomeReducer.HomeData?.map((item) => {
@@ -66,8 +68,21 @@ class Product extends Component {
         );
     }
 }
+
+const handleScroll = (event) => {
+    const positionX = event.nativeEvent.contentOffset.x;
+    const positionY = event.nativeEvent.contentOffset.y;
+    console.log('X: ', positionX);
+    console.log('Y: ', positionY);
+    console.log('--------------');
+};
+
 const ShowBoxCate = (category) => {
     if (category != null && !helper.IsEmptyArray(category)) {
+        const categoryName = category.Text;
+        const totalProduct = category.PromotionCount;
+        const viewMoreText = `Xem thêm ${totalProduct} sản phẩm ${categoryName.toLowerCase()}`;
+
         return (
             <View>
                 {ShowMainCate(category)}
@@ -75,15 +90,8 @@ const ShowBoxCate = (category) => {
                     {category.Products?.map((item) => {
                         return <ProductBox bhxProduct={item} />;
                     })}
-                    <View style={styles.viewmoreProduct}>
-                        <Text style={styles.viewmoreProduct_title}>
-                            Xem thêm sản phẩm
-                        </Text>
-                        <Text style={styles.viewmoreProduct_cate}>
-                            {category.Text}
-                        </Text>
-                    </View>
                 </View>
+                {ShowViewmore(category.MaxPage, viewMoreText)}
             </View>
         );
     } else {
@@ -101,7 +109,11 @@ const ShowMainCate = (category) => {
                     renderItem={({ item }) => (
                         <TouchableOpacity>
                             <View>
-                                <Text style={styles.categoryItem}>
+                                <Text
+                                    style={[
+                                        styles.categoryItem,
+                                        styles.categoryItem_black
+                                    ]}>
                                     {item.Name}
                                 </Text>
                             </View>
@@ -111,6 +123,34 @@ const ShowMainCate = (category) => {
             </View>
         );
     }
+};
+
+const ShowViewmore = (maxpage, viewMoreText) => {
+    if (maxpage > 0) {
+        return (
+            <TouchableOpacity
+                onPress={GenMoreProduct()}
+                style={styles.viewmoreProduct}>
+                <Text style={styles.viewmoreProduct_text}>{viewMoreText}</Text>
+            </TouchableOpacity>
+        );
+    } else {
+        return null;
+    }
+};
+
+const GenMoreProduct = () => {
+    return console.log('test');
+
+    // this.props.actionHome
+    //     .get_more_listproducts('', '', 0)
+    //     .then((res) => {
+    //         console.log('get_more_listproducts');
+    //         console.log(res);
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     });
 };
 
 const mapStateToProps = (state) => {

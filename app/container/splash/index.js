@@ -4,6 +4,9 @@ import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { MyText } from '@app/components';
 import { setI18nConfig } from '@app/translate';
+import { CONST_STORAGE } from '@app/constants';
+import messaging from '@react-native-firebase/messaging';
+import { Storage } from '@app/common';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
@@ -20,6 +23,13 @@ class Splash extends Component {
         this.props.actionGetMenu.menu_get();
 
         const { isShowSplash } = this.props;
+        messaging()
+            .getToken()
+            .then((token) => {
+                console.log('messaging');
+                console.log(token);
+                return saveTokenToDatabase(token);
+            });
         if (isShowSplash) {
             const delay = 1000 * 5;
             setTimeout(() => {
@@ -36,6 +46,10 @@ class Splash extends Component {
         );
     }
 }
+
+const saveTokenToDatabase = (token) => {
+    Storage.setItem(CONST_STORAGE.SESSION_TOKEN_NOTIFICATION, token);
+};
 
 const mapStateToProps = (state) => {
     console.log(state);

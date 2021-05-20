@@ -3,6 +3,7 @@ import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
 import { helper } from '@app/common';
+import HTML from 'react-native-render-html';
 import {
     Text,
     Image,
@@ -24,29 +25,36 @@ const ProductItemCart = (props) => {
     useEffect(() => {
         setQuantity(props.productCart.Quantity);
         setguildId(props.productCart.GuildId);
-    }); //  , [props.productCart.Quantity]
+    }, []); //  , [props.productCart.Quantity]
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
 
     const handleInputQuantity = (number) => {
-        console.log('handleInputQuantity');
-        console.log(number);
-        if (number > 50) {
+        setQuantity(number);
+    };
+
+    const submitQuantity = () => {
+        if (helper.isEmptyOrNull(quantity)) {
+            return false;
+        }
+        if (quantity > 50) {
             alertMaxQuantityItemProduct();
         } else {
-            console.log('setQuantityPlus');
-            console.log(guildId);
-            console.log(number);
             actionCart
-                .cart_update_item_product(guildId, number)
+                .cart_update_item_product(guildId, quantity)
                 .then((res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        setQuantity(number);
+                        const itemcart = res.Value.Cart.ListCartItem.find(
+                            (item) => item.GuildId === guildId
+                        );
+                        if (itemcart != null) {
+                            setQuantity(itemcart.Quantity);
+                        }
                     }
                 })
                 .catch((error) => {
@@ -59,6 +67,7 @@ const ProductItemCart = (props) => {
         if (quantity <= 1) {
             alertDeleteItemProduct();
         } else {
+            setQuantity(quantity - 1);
             actionCart
                 .cart_update_item_product(guildId, quantity - 1)
                 .then((res) => {
@@ -66,12 +75,12 @@ const ProductItemCart = (props) => {
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
-                    } else {
-                        setQuantity(quantity - 1);
+                        setQuantity(quantity + 1);
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
+                    setQuantity(quantity + 1);
                 });
         }
     };
@@ -80,9 +89,7 @@ const ProductItemCart = (props) => {
         if (quantity > 50) {
             alertMaxQuantityItemProduct();
         } else {
-            console.log('setQuantityPlus');
-            console.log(guildId);
-            console.log(quantity);
+            setQuantity(quantity + 1);
             actionCart
                 .cart_update_item_product(guildId, quantity + 1)
                 .then((res) => {
@@ -90,18 +97,12 @@ const ProductItemCart = (props) => {
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
-                    } else {
-                        const cartItem = res.Value.Cart.ListCartItem.find(
-                            (item) => item.GuildId === guildId
-                        );
-                        if (quantity + 1 > cartItem.Quantity) {
-                            showMessageQuantity(cartItem.Quantity);
-                        }
-                        setQuantity(quantity + 1);
+                        setQuantity(quantity - 1);
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
+                    setQuantity(quantity - 1);
                 });
         }
     };
@@ -161,23 +162,26 @@ const ProductItemCart = (props) => {
         }
     };
 
-    const showMessageQuantity = (maxQuantity) => {
-        console.log('showMessageQuantity');
-        console.log(maxQuantity);
-        if (maxQuantity > 0) {
+    const showMessageQuantity = () => {
+        if (!helper.isEmptyOrNull(props.productCart.ErrorMessage)) {
             return (
                 <View style={styles.boxerror}>
-                    <Text style={styles.error}>Chỉ còn</Text>
-                    <Text style={styles.errorbold}>
-                        {maxQuantity} {props.productCart.Unit}
-                    </Text>
+                    <HTML
+                        classesStyles={styles.error}
+                        source={{ html: props.productCart.ErrorMessage }}
+                        contentWidth={200}
+                    />
+                    {/* <Text style={styles.error}>Chỉ còn</Text> */}
+                    {/* <Text style={styles.errorbold}>
+                        {props.productCart.ErrorMessage}
+                    </Text> */}
                 </View>
             );
         }
     };
 
     const showHideExpire = () => {
-        if (props.productCart.InvoiceNote !== '') {
+        if (!helper.isEmptyOrNull(props.productCart.InvoiceNote)) {
             return (
                 <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
             );
@@ -241,7 +245,9 @@ const ProductItemCart = (props) => {
                     <TextInput
                         editable={!offItemProduct}
                         selectTextOnFocus
-                        onChange={handleInputQuantity}
+                        onChangeText={handleInputQuantity}
+                        onBlur={submitQuantity}
+                        onSubmitEditing={submitQuantity}
                         style={styles.input}
                         value={quantity.toString()}
                         keyboardType="numeric"
