@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
@@ -13,8 +13,9 @@ import {
 import { helper } from '@app/common';
 import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-class userinfo extends Component {
+class UserInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {};
@@ -29,21 +30,27 @@ class userinfo extends Component {
             <SafeAreaView>
                 <Header />
                 <View style={styles.container}>
-                    <View style={styles.backTop}>
+                    <TouchableOpacity
+                        style={styles.backTop}
+                        onpress={() => navigation.navigate('Cart')}>
                         <Image
                             style={styles.logoback}
                             source={require('../../../assets/images/icon-back.png')}
                         />
-                        <Text>Xem lại giỏ hàng</Text>
-                    </View>
+                        <Text
+                            onclick={() => navigation.navigate('Cart')}
+                            style={styles.backTop}>
+                            Xem lại giỏ hàng
+                        </Text>
+                    </TouchableOpacity>
                     <View style={styles.btnGetHistoryAddress}>
-                        <View style={styles.textHistoryAddress}>
-                            <Image
-                                style={styles.logoback}
-                                source={require('../../../assets/images/icon-back.png')}
-                            />
-                            <Text>LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY</Text>
-                        </View>
+                        <Image
+                            style={styles.logohome}
+                            source={require('../../../assets/images/icon-home.png')}
+                        />
+                        <Text style={styles.textHistoryAddress}>
+                            LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY
+                        </Text>
                     </View>
                     <View style={styles.sectionInput}>
                         <Text style={styles.stepTitle}>
@@ -60,18 +67,71 @@ class userinfo extends Component {
                                 placeholder="Vui lòng nhập số điện thoại"
                                 keyboardType="numeric"
                                 value={
-                                    this.props.cart.CustomerPhone !== ''
+                                    this.props.cart?.CustomerPhone !== '' &&
+                                    this.props.cart?.CustomerPhone !== undefined
                                         ? this.props.cart.CustomerPhone
                                         : ''
                                 }
                             />
                         </View>
+                        <SexRadio />
+                        <TextInput
+                            style={[styles.inputBox]}
+                            placeholder="Họ và tên *"
+                            keyboardType="text"
+                            value={
+                                this.props.cart?.CustomerName !== '' &&
+                                this.props.cart?.CustomerName !== undefined
+                                    ? this.props.cart.CustomerName
+                                    : ''
+                            }
+                        />
                     </View>
                 </View>
             </SafeAreaView>
         );
     }
 }
+const RadioButton = ({ onPress, selected, children }) => {
+    return (
+        <View style={styles.radioButtonContainer}>
+            <TouchableOpacity onPress={onPress} style={styles.radioButton}>
+                {selected ? <View style={styles.radioButtonIcon} /> : null}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onPress}>
+                <Text style={styles.radioButtonText}>{children}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
+const SexRadio = (props) => {
+    const [sex, setSex] = useState([
+        { id: 1, value: true, name: 'Anh', selected: true },
+        { id: 2, value: false, name: 'Chị', selected: false }
+    ]);
+
+    const onRadioBtnClick = (item) => {
+        let updatedState = sex.map((setSex) =>
+            setSex.id == item.id
+                ? { ...setSex, selected: true }
+                : { ...setSex, selected: false }
+        );
+        setSex(updatedState);
+    };
+
+    return (
+        <View style={styles.radioButtonContainer}>
+            {sex.map((item) => (
+                <RadioButton
+                    onPress={() => onRadioBtnClick(item)}
+                    selected={item.selected}
+                    key={item.id}>
+                    {item.name}
+                </RadioButton>
+            ))}
+        </View>
+    );
+};
 const UserProvAndDis = (props) => {
     return (
         <View>
@@ -129,4 +189,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(userinfo);
+export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
