@@ -319,7 +319,7 @@ const RenderListCatesChild = (props) => {
                     sectionIndex: index,
                     viewPosition: 0
                 });
-        }, 1000);
+        }, 100);
     }, [props.cateFilter]);
 
     return (
