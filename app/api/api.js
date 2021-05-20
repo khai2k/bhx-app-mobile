@@ -12,7 +12,14 @@ export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
 export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;
 export const API_LOCATION_GETALLPROVINCE = `${API_BASE}/shared/GetAllProvince`;
 export const API_LOCATION_GETDICTRICTBYPROVINCE = `${API_BASE}/shared/GetDistrictsByProvince`;
+export const API_LOCATION_GETWARDBYDICANDPROVINCE = `${API_BASE}/shared/GetWard`;
 
 // category
 export const API_CATEGORY_GET = `${API_BASE}Category/Get`;
 export const API_CATEGORY_AJAX_PRODUCT = `${API_BASE}Category/AjaxProducts`;
+
+// productDetail
+export const API_GET_PRODUCT_DETAIL = `${API_BASE}product/ProductDetail`;
+export const API_GET_PRODUCT_RELATIVE = `${API_BASE}product/ProductRelative`;
+export const API_GET_BOX_BANNER = `${API_BASE}product/BoxBanner`;
+export const API_GET_COMBO_DETAIL = `${API_BASE}product/ComboDetail`;

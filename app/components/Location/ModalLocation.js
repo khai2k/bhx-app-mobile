@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react-native/sort-styles */
 import React, { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
     Text,
     View,
@@ -16,11 +16,16 @@ import {
 import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
+import { location_SaveChooseLocation } from './action';
 
 const ModalLocation = (props) => {
     useEffect(() => {
-        changeStep(1);
+        changeStep(0);
     }, []);
+
+    const dispatch = useDispatch();
+    const dispatchlocation_SaveChooseLocation = (model) =>
+        dispatch(location_SaveChooseLocation(model));
 
     // Init
     const refSlider = useRef(null);
@@ -33,10 +38,22 @@ const ModalLocation = (props) => {
     const [txtTitleChoose, settxtTitleChoose] = useState(
         'Chọn tỉnh, thành phố'
     );
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
+
+    const [chooseProvinceId, setchooseProvinceId] = useState(0);
+    const [chooseProvinceFullName, setchooseProvinceFullName] = useState('');
+    const [chooseProvinceShortName, setchooseProvinceShortName] = useState('');
+
+    const [chooseDistrictId, setchooseDistrictId] = useState(0);
+    const [chooseDistrictName, setchooseDistrictName] = useState('');
+
+    const [chooseWardId, setchooseWardId] = useState(0);
+    const [chooseWardName, setchooseWardName] = useState('');
+
     const [lstProvince, setLstProvince] = useState(null);
     const [lstDistrict, setLstDistrict] = useState(null);
     const [lstWard, setLstWard] = useState(null);
+
     const [isLoadingProvince, setIsLoadingProvince] = useState(false);
     const [isLoadingDic, setIsLoadingDic] = useState(false);
     const [isLoadingWard, setIsLoadingWard] = useState(false);
@@ -47,7 +64,6 @@ const ModalLocation = (props) => {
             .then((response) => {
                 setLstProvince(response.Value);
                 setIsLoadingProvince(false);
-                console.log(response.Value);
             })
             .catch((err) => {
                 setIsLoadingProvince(false);
@@ -60,7 +76,7 @@ const ModalLocation = (props) => {
             API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
             METHOD.GET,
             {},
-            { params: { provinceId, clearcache: '' } }
+            { params: { provinceId, clearcache: 'empty' } }
         )
             .then((response) => {
                 setIsLoadingDic(false);
@@ -71,12 +87,12 @@ const ModalLocation = (props) => {
             });
     };
 
-    const location_getWardByDictrictId = (disId) => {
+    const location_getWardByDistrictId = (provinceId, districtId) => {
         apiBase(
-            API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
+            API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
             METHOD.GET,
             {},
-            { params: { disId, clearcache: '' } }
+            { params: { provinceId, districtId, clearcache: 'empty' } }
         )
             .then((response) => {
                 setIsLoadingWard(false);
@@ -87,30 +103,58 @@ const ModalLocation = (props) => {
             });
     };
 
-    const changeStep = (_step, locatonid?) => {
+    const SliderGotTo = (_step) => {
         setStep(_step);
-
         refSlider?.current?.scrollTo({
-            x: (_step - 1) * windowWidth,
+            x: _step * windowWidth,
             y: 0,
             animated: true
         });
-
-        if (_step === 1) {
+        if (_step === 0) {
             settxtTitleChoose('Chọn tỉnh, thành phố');
+        } else if (_step === 1) {
+            settxtTitleChoose('Chọn quận, huyện');
+        } else if (_step === 2) {
+            settxtTitleChoose('Chọn phường, xã');
+        }
+    };
+
+    const changeStep = (_step, objLocation) => {
+        if (_step < 3) {
+            SliderGotTo(_step);
+        }
+
+        if (_step === 0) {
             if (lstProvince === null) {
                 location_getAllProvince();
             } else {
                 setIsLoadingProvince(false);
             }
-        } else if (_step === 2) {
+        } else if (_step === 1) {
             setIsLoadingDic(true);
-            settxtTitleChoose('Chọn quận, huyện');
-            location_getDistrictByProince(locatonid);
-        } else if (_step === 3) {
+            location_getDistrictByProince(objLocation.provinceId);
+        } else if (_step === 2) {
             setIsLoadingWard(true);
-            settxtTitleChoose('Chọn phường, xã');
-            location_getWardByDictrictId(locatonid);
+            location_getWardByDistrictId(
+                chooseProvinceId,
+                objLocation.districtId
+            );
+        } else if (_step === 3) {
+            const tmpMdLocal = {
+                ProvinceId: chooseProvinceId,
+                ProvinceFullName: chooseProvinceFullName,
+                ProvinceShortName: chooseProvinceShortName,
+
+                DistrictId: chooseDistrictId,
+                DistrictName: chooseDistrictName,
+
+                WardId: objLocation.wardId,
+                WardName: objLocation.wardName,
+
+                FullAddress: `${objLocation.wardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
+            };
+            dispatchlocation_SaveChooseLocation(tmpMdLocal);
+            changeModalVisibleCallback(false);
         }
     };
 
@@ -122,6 +166,8 @@ const ModalLocation = (props) => {
     return (
         <Modal
             visible={props.isModalVisible}
+            index
+            onShow={() => SliderGotTo(0)}
             animationType="slide"
             onRequestClose={() => changeModalVisibleCallback(false)}>
             <View>
@@ -129,8 +175,11 @@ const ModalLocation = (props) => {
                     Khu vực đã chọn: {locationinfo?.crrLocationRs.FullAddress}
                 </Text>
                 <View style={styles.chooseProvince}>
-                    {step > 1 && (
-                        <TouchableOpacity onPress={() => changeStep(step - 1)}>
+                    {step > 0 && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                SliderGotTo(step - 1);
+                            }}>
                             <Icon name="chevron-left" size={20} color="#fff" />
                         </TouchableOpacity>
                     )}
@@ -146,10 +195,10 @@ const ModalLocation = (props) => {
                 <View>
                     <ScrollView
                         ref={refSlider}
-                        scrollEnabled={false}
                         horizontal
                         pagingEnabled
                         showsHorizontalScrollIndicator={false}
+                        scrollEnabled={false}
                         nestedScrollEnabled={false}>
                         <View style={{ width: windowWidth }}>
                             {isLoadingProvince && (
@@ -171,10 +220,21 @@ const ModalLocation = (props) => {
                                                     styles.chooseProvince_Item
                                                 }
                                                 onPress={() => {
-                                                    changeStep(
-                                                        2,
+                                                    setchooseProvinceId(
                                                         item.ProvinceId
                                                     );
+                                                    setchooseProvinceFullName(
+                                                        item.ProvinceFullName
+                                                    );
+                                                    setchooseProvinceShortName(
+                                                        item.ProvinceShortName
+                                                    );
+                                                    changeStep(1, {
+                                                        provinceId:
+                                                            item.ProvinceId,
+                                                        districtId: 0,
+                                                        wardId: 0
+                                                    });
                                                 }}>
                                                 <Text>
                                                     {item.ProvinceFullName}
@@ -204,10 +264,17 @@ const ModalLocation = (props) => {
                                                     styles.chooseProvince_Item
                                                 }
                                                 onPress={() => {
-                                                    changeStep(
-                                                        3,
-                                                        item.DictrictId
+                                                    setchooseDistrictId(
+                                                        item.Item1
                                                     );
+                                                    setchooseDistrictName(
+                                                        item.Item2
+                                                    );
+                                                    changeStep(2, {
+                                                        provinceId: 0,
+                                                        districtId: item.Item1,
+                                                        wardId: 0
+                                                    });
                                                 }}>
                                                 <Text>{item.Item2}</Text>
                                             </TouchableOpacity>
@@ -234,7 +301,18 @@ const ModalLocation = (props) => {
                                                 style={
                                                     styles.chooseProvince_Item
                                                 }
-                                                onPress={() => {}}>
+                                                onPress={() => {
+                                                    setchooseWardId(item.Item1);
+                                                    setchooseWardName(
+                                                        item.Item2
+                                                    );
+                                                    changeStep(3, {
+                                                        provinceId: 0,
+                                                        districtId: 0,
+                                                        wardId: item.Item1,
+                                                        wardName: item.Item2
+                                                    });
+                                                }}>
                                                 <Text>{item.Item2}</Text>
                                             </TouchableOpacity>
                                         )}

@@ -43,3 +43,12 @@ export const location_getCurrent = function (crrLat, crrLong) {
             });
     };
 };
+
+export const location_SaveChooseLocation = function (crrLocationRs) {
+    return (dispatch) => {
+        dispatch({
+            type: LOCATION_GETCURRENT,
+            crrLocationRs
+        });
+    };
+};
