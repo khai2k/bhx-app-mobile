@@ -118,13 +118,18 @@ const showListCartItemOff = (listCartItemOff) => {
 
 const showListCartItemBuy = (listCartItemBuy) => {
     if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
-        return (
-            <View>
-                {listCartItemBuy.map((itemCart) => {
-                    return <ProductItemCart productCart={itemCart} />;
-                })}
-            </View>
+        const list = listCartItemBuy.filter(
+            (item) => item.TypeProduct != 3 && item.TypeProduct != 1
         );
+        if (!helper.IsEmptyArray(list)) {
+            return (
+                <View>
+                    {list.map((itemCart) => {
+                        return <ProductItemCart productCart={itemCart} />;
+                    })}
+                </View>
+            );
+        }
     }
 };
 
