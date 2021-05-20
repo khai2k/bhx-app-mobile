@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         resizeMode: 'contain',
         right: 10,
-        top: -10,
+        top: 0,
         width: 16,
         zIndex: 1
     },
@@ -81,11 +81,13 @@ export const styles = StyleSheet.create({
     },
     itemCateChild: {
         alignItems: 'center',
+        height: 100,
         justifyContent: 'center',
         marginBottom: 15,
         opacity: 1,
+        paddingTop: 10,
         position: 'relative',
-        width: '33%'
+        width: 80
     },
     itemCateChildActive: {
         opacity: 1
