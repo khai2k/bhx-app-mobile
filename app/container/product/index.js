@@ -62,7 +62,7 @@ class Product extends Component {
 
                 <SliderTitle listTitle={this.state.listTitle} />
 
-                {this.props.HomeReducer.HomeData.map((item) => {
+                {this.props.HomeReducer.HomeData?.map((item) => {
                     return ShowBoxCate(item);
                 })}
             </ScrollView>
@@ -88,7 +88,7 @@ const ShowBoxCate = (category) => {
             <View>
                 {ShowMainCate(category)}
                 <View style={styles.productList}>
-                    {category.Products.map((item) => {
+                    {category.Products?.map((item) => {
                         return <ProductBox bhxProduct={item} />;
                     })}
                 </View>
