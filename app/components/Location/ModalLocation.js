@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react-native/sort-styles */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, createRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     Text,
@@ -11,12 +11,15 @@ import {
     ActivityIndicator,
     FlatList,
     ScrollView,
-    Dimensions
+    Dimensions,
+    TextInput
 } from 'react-native';
 import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { location_SaveChooseLocation } from './action';
+import DelayInput from './DelayInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -30,6 +33,7 @@ const ModalLocation = (props) => {
     // Init
     const refSlider = useRef(null);
     const windowWidth = Math.round(Dimensions.get('window').width);
+    const windowHeight = Math.round(Dimensions.get('window').height);
 
     // Redux
     const locationinfo = useSelector((state) => state.locationReducer);
@@ -39,6 +43,9 @@ const ModalLocation = (props) => {
         'Chọn tỉnh, thành phố'
     );
     const [step, setStep] = useState(0);
+    const [textAt, settextAt] = useState('');
+
+    const [textSearch, setTextSearch] = useState('');
 
     const [chooseProvinceId, setchooseProvinceId] = useState(0);
     const [chooseProvinceFullName, setchooseProvinceFullName] = useState('');
@@ -71,12 +78,12 @@ const ModalLocation = (props) => {
             });
     };
 
-    const location_getDistrictByProince = (provinceId) => {
+    const location_getDistrictByProince = (ProvinceId) => {
         apiBase(
             API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
             METHOD.GET,
             {},
-            { params: { provinceId, clearcache: 'empty' } }
+            { params: { ProvinceId, clearcache: 'empty' } }
         )
             .then((response) => {
                 setIsLoadingDic(false);
@@ -87,12 +94,12 @@ const ModalLocation = (props) => {
             });
     };
 
-    const location_getWardByDistrictId = (provinceId, districtId) => {
+    const location_getWardByDistrictId = (ProvinceId, DistrictId) => {
         apiBase(
             API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
             METHOD.GET,
             {},
-            { params: { provinceId, districtId, clearcache: 'empty' } }
+            { params: { ProvinceId, DistrictId, clearcache: 'empty' } }
         )
             .then((response) => {
                 setIsLoadingWard(false);
@@ -104,6 +111,7 @@ const ModalLocation = (props) => {
     };
 
     const SliderGotTo = (_step) => {
+        console.log(_step);
         setStep(_step);
         refSlider?.current?.scrollTo({
             x: _step * windowWidth,
@@ -111,6 +119,7 @@ const ModalLocation = (props) => {
             animated: true
         });
         if (_step === 0) {
+            settextAt('');
             settxtTitleChoose('Chọn tỉnh, thành phố');
         } else if (_step === 1) {
             settxtTitleChoose('Chọn quận, huyện');
@@ -120,10 +129,7 @@ const ModalLocation = (props) => {
     };
 
     const changeStep = (_step, objLocation) => {
-        if (_step < 3) {
-            SliderGotTo(_step);
-        }
-
+        SliderGotTo(_step);
         if (_step === 0) {
             if (lstProvince === null) {
                 location_getAllProvince();
@@ -132,12 +138,16 @@ const ModalLocation = (props) => {
             }
         } else if (_step === 1) {
             setIsLoadingDic(true);
-            location_getDistrictByProince(objLocation.provinceId);
+            settextAt(`${objLocation.ProvinceShortName}`);
+            location_getDistrictByProince(objLocation.ProvinceId);
         } else if (_step === 2) {
             setIsLoadingWard(true);
+            settextAt(
+                `${objLocation.DistrictName}, ${chooseProvinceShortName}`
+            );
             location_getWardByDistrictId(
                 chooseProvinceId,
-                objLocation.districtId
+                objLocation.DistrictId
             );
         } else if (_step === 3) {
             const tmpMdLocal = {
@@ -148,10 +158,10 @@ const ModalLocation = (props) => {
                 DistrictId: chooseDistrictId,
                 DistrictName: chooseDistrictName,
 
-                WardId: objLocation.wardId,
-                WardName: objLocation.wardName,
+                WardId: objLocation.WardId,
+                WardName: objLocation.WardName,
 
-                FullAddress: `${objLocation.wardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
+                FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
             };
             dispatchlocation_SaveChooseLocation(tmpMdLocal);
             changeModalVisibleCallback(false);
@@ -160,6 +170,8 @@ const ModalLocation = (props) => {
 
     // Callback
     const changeModalVisibleCallback = (isVisible) => {
+        settextAt('');
+        SliderGotTo(0);
         props.changeModalVisibleCallback(isVisible);
     };
 
@@ -167,25 +179,35 @@ const ModalLocation = (props) => {
         <Modal
             visible={props.isModalVisible}
             index
-            onShow={() => SliderGotTo(0)}
             animationType="slide"
-            onRequestClose={() => changeModalVisibleCallback(false)}>
-            <View>
+            onRequestClose={() => {
+                changeModalVisibleCallback(false);
+            }}>
+            <SafeAreaView>
                 <Text style={styles.titleModal}>
                     Khu vực đã chọn: {locationinfo?.crrLocationRs.FullAddress}
                 </Text>
                 <View style={styles.chooseProvince}>
                     {step > 0 && (
                         <TouchableOpacity
+                            style={{ paddingHorizontal: 10 }}
                             onPress={() => {
                                 SliderGotTo(step - 1);
                             }}>
                             <Icon name="chevron-left" size={20} color="#fff" />
                         </TouchableOpacity>
                     )}
-                    <Text style={styles.chooseProvince_Text}>
-                        {txtTitleChoose}
-                    </Text>
+                    <View style={styles.chooseProvince_Gr}>
+                        <Text style={styles.chooseProvince_Text}>
+                            {txtTitleChoose}
+                        </Text>
+                        {textAt !== '' && (
+                            <Text
+                                style={
+                                    styles.chooseProvince_Text
+                                }>{`Tại ${textAt}`}</Text>
+                        )}
+                    </View>
                     <TouchableOpacity
                         style={styles.chooseProvince_Button}
                         onPress={() => changeModalVisibleCallback(false)}>
@@ -193,10 +215,27 @@ const ModalLocation = (props) => {
                     </TouchableOpacity>
                 </View>
                 <View>
+                    <DelayInput
+                        value={textSearch}
+                        minLength={2}
+                        delayTimeout={3000}
+                        placeholder="Tìm nhanh phường xã, quận huyện"
+                        style={{
+                            margin: 10,
+                            height: 40,
+                            borderColor: 'gray',
+                            borderWidth: 1
+                        }}
+                    />
+                </View>
+                <View>
                     <ScrollView
                         ref={refSlider}
                         horizontal
                         pagingEnabled
+                        style={{
+                            paddingBottom: 260
+                        }}
                         showsHorizontalScrollIndicator={false}
                         scrollEnabled={false}
                         nestedScrollEnabled={false}>
@@ -213,7 +252,9 @@ const ModalLocation = (props) => {
                                 lstProvince.length && (
                                     <FlatList
                                         data={lstProvince}
-                                        keyExtractor={(item) => item.ProvinceId}
+                                        keyExtractor={(index) => {
+                                            `prov_${index}`;
+                                        }}
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={
@@ -230,10 +271,12 @@ const ModalLocation = (props) => {
                                                         item.ProvinceShortName
                                                     );
                                                     changeStep(1, {
-                                                        provinceId:
+                                                        ProvinceId:
                                                             item.ProvinceId,
-                                                        districtId: 0,
-                                                        wardId: 0
+                                                        ProvinceShortName:
+                                                            item.ProvinceShortName,
+                                                        DistrictId: 0,
+                                                        WardId: 0
                                                     });
                                                 }}>
                                                 <Text>
@@ -257,7 +300,9 @@ const ModalLocation = (props) => {
                                 lstDistrict.length > 0 && (
                                     <FlatList
                                         data={lstDistrict}
-                                        keyExtractor={(item) => item.Item1}
+                                        keyExtractor={(index) => {
+                                            `dic_${index}`;
+                                        }}
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={
@@ -271,9 +316,11 @@ const ModalLocation = (props) => {
                                                         item.Item2
                                                     );
                                                     changeStep(2, {
-                                                        provinceId: 0,
-                                                        districtId: item.Item1,
-                                                        wardId: 0
+                                                        ProvinceId: 0,
+                                                        DistrictId: item.Item1,
+                                                        DistrictName:
+                                                            item.Item2,
+                                                        WardId: 0
                                                     });
                                                 }}>
                                                 <Text>{item.Item2}</Text>
@@ -295,7 +342,9 @@ const ModalLocation = (props) => {
                                 lstWard.length > 0 && (
                                     <FlatList
                                         data={lstWard}
-                                        keyExtractor={(item) => item.Item1}
+                                        keyExtractor={(index) => {
+                                            `ward_${index}`;
+                                        }}
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={
@@ -307,10 +356,10 @@ const ModalLocation = (props) => {
                                                         item.Item2
                                                     );
                                                     changeStep(3, {
-                                                        provinceId: 0,
-                                                        districtId: 0,
-                                                        wardId: item.Item1,
-                                                        wardName: item.Item2
+                                                        ProvinceId: 0,
+                                                        DistrictId: 0,
+                                                        WardId: item.Item1,
+                                                        WardName: item.Item2
                                                     });
                                                 }}>
                                                 <Text>{item.Item2}</Text>
@@ -321,7 +370,7 @@ const ModalLocation = (props) => {
                         </View>
                     </ScrollView>
                 </View>
-            </View>
+            </SafeAreaView>
         </Modal>
     );
 };
@@ -329,12 +378,17 @@ const ModalLocation = (props) => {
 const styles = StyleSheet.create({
     chooseProvince: {
         backgroundColor: Colors.GREEN_KEY,
-        padding: 15,
-        flexDirection: 'row'
+        height: 60,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    chooseProvince_Gr: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     chooseProvince_Text: {
         color: 'white',
-        flex: 1,
         textAlign: 'center'
     },
     chooseProvince_Button: {
@@ -343,7 +397,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#b3d6c6',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 22
+        borderRadius: 22,
+        marginRight: 10
     },
     titleModal: {
         backgroundColor: Colors.GREEN_KEY,

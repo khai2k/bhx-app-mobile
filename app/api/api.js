@@ -13,6 +13,7 @@ export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCo
 export const API_LOCATION_GETALLPROVINCE = `${API_BASE}/shared/GetAllProvince`;
 export const API_LOCATION_GETDICTRICTBYPROVINCE = `${API_BASE}/shared/GetDistrictsByProvince`;
 export const API_LOCATION_GETWARDBYDICANDPROVINCE = `${API_BASE}/shared/GetWard`;
+export const API_LOCATION_SEARCHLOCATION = `${API_BASE}/shared/ProvinceSearchAutocomplete`;
 
 // category
 export const API_CATEGORY_GET = `${API_BASE}Category/Get`;
