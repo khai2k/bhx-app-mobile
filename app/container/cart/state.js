@@ -16,7 +16,7 @@ export const cartState = {
         VoucherDiscount: 0
     },
     Cart: {
-        CartId: 'BFD6A4AACAAC267064158FA33FE5C18BF3DDDBFD46CCB2B9D2CF48F903823401',
+        CartId: '',
         ListCartItem: [
             {
                 OutputTypeId: 0,

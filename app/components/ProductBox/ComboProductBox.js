@@ -119,4 +119,4 @@ const ComboProductBox = (props) => {
     }
     return null;
 };
-export default ComboProductBox;
+export default React.memo(ComboProductBox);

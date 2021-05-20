@@ -179,4 +179,4 @@ const ProductExpiredBox = (props) => {
     return null;
 };
 
-export default ProductExpiredBox;
+export default React.memo(ProductExpiredBox);

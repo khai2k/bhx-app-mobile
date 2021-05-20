@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
-import styles from './style';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as cartCreator from '@app/container/cart/action';
 import BuyBox from './BuyBox';
+import styles from './style';
 
 const ProductBox = (props) => {
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
-    const navigation = useNavigation();
+
+    const cart = useSelector((state) => state.cartReducer.Cart);
+    const checkFillButtonBuy = () => {
+        if (cart && cart.ListCartItem.length > 0) {
+            const containsProduct = cart.ListCartItem.find(
+                (item) => item.Info.Id === props.bhxProduct.Id
+            );
+            if (containsProduct) {
+                setNumberItems(containsProduct.Quantity);
+                setBuyButtonVisible(true);
+            } else {
+                setNumberItems(1);
+                setBuyButtonVisible(false);
+            }
+        }
+    };
+    useEffect(() => {
+        checkFillButtonBuy();
+    });
+
+    const [guildId, setGuildId] = useState(cart.CartId);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
@@ -48,16 +75,86 @@ const ProductBox = (props) => {
             );
         }
     };
-    const onUpdateNumberItems = (number) => {
-        setNumberItems(number);
-    };
-    const onUpdateBuyButtonVisible = (status) => {
-        setBuyButtonVisible(status);
-    };
-
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
+
+    const addToCart = () => {
+        setNumberItems(1);
+        setBuyButtonVisible(true);
+        actionCart
+            .cart_add_item_product(props.bhxProduct.Id, 1)
+            .then((res) => {
+                console.log('cart_add_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                } else {
+                    setNumberItems(1);
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+    const setQuantityMinus = () => {
+        actionCart
+            .cart_update_item_product(guildId, numberItems - 1)
+            .then((res) => {
+                console.log('cart_update_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                } else {
+                    setNumberItems(numberItems - 1);
+                    if (numberItems <= 0) {
+                        setBuyButtonVisible(false);
+                    }
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+
+    const setQuantityPlus = () => {
+        if (numberItems > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            console.log('setQuantityPlus');
+            console.log(guildId);
+            console.log(numberItems);
+            actionCart
+                .cart_update_item_product(guildId, numberItems + 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        setNumberItems(numberItems + 1);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+    const alertAPI = (messages) => {
+        Alert.alert('', messages);
+    };
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý'
+            }
+        ]);
+    };
+
     return (
         <View
             className="product"
@@ -84,8 +181,7 @@ const ProductBox = (props) => {
                         props.bhxProduct.Price > 0 &&
                         props.bhxProduct.StockQuantityNew >= 1
                     ) {
-                        setNumberItems(1);
-                        setBuyButtonVisible(true);
+                        addToCart();
                     }
                 }}
                 style={
@@ -111,8 +207,8 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy={false}
                         numberItems={numberItems}
-                        onUpdateNumberItems={onUpdateNumberItems}
-                        onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                        setQuantityMinus={setQuantityMinus}
+                        setQuantityPlus={setQuantityPlus}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
@@ -163,8 +259,8 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy
                         numberItems={numberItems}
-                        onUpdateNumberItems={onUpdateNumberItems}
-                        onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                        setQuantityMinus={setQuantityMinus}
+                        setQuantityPlus={setQuantityPlus}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
@@ -189,4 +285,4 @@ const ProductBox = (props) => {
     );
 };
 
-export default ProductBox;
+export default React.memo(ProductBox);

@@ -5,7 +5,8 @@ import {
     FlatList,
     StyleSheet,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    Image
 } from 'react-native';
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -61,6 +62,7 @@ const Product = (props) => {
                 <FlatList
                     numColumns={3}
                     data={listProductLoadMore}
+                    keyExtractor={(item) => `product_${item.Id}`}
                     renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 />
                 {Total >= pageIndex * PageSize ? (
@@ -68,10 +70,14 @@ const Product = (props) => {
                         onPress={loadMoreProducts}
                         className="loadMore"
                         style={styles.loadMore}>
-                        <Text style={styles.loadMoreText}>
+                        <Text style={styles.loadMoresText}>
                             Còn {Total - pageIndex * PageSize} sản phẩm{' '}
                         </Text>
                         <Text style={styles.loadMoreTextBold}>{Name}</Text>
+                        <Image
+                            style={styles.iconDown}
+                            source={require('../../../assets/images/chevron-down.png')}
+                        />
                     </TouchableOpacity>
                 ) : null}
             </ScrollView>
@@ -97,6 +103,10 @@ const styles = StyleSheet.create({
         paddingTop: 45,
         textAlign: 'center',
         textAlignVertical: 'center'
+    },
+    iconDown: {
+        height: 3,
+        width: 6
     },
     loadMore: {
         alignItems: 'center',
@@ -130,4 +140,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Product;
+export default React.memo(Product);

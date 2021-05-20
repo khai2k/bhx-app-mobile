@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     View,
     Text,
@@ -206,4 +206,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ManufactureFilter;
+export default React.memo(ManufactureFilter);

@@ -28,14 +28,7 @@ const BuyBox = (props) => {
                         <View className="upDown" style={styles.upDownShow}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    props.onUpdateNumberItems(
-                                        props.numberItems > 0
-                                            ? props.numberItems - 1
-                                            : 0
-                                    );
-                                    props.onUpdateBuyButtonVisible(
-                                        props.numberItems !== 1
-                                    );
+                                    props.setQuantityMinus();
                                 }}
                                 className="down"
                                 style={styles.down}>
@@ -49,9 +42,7 @@ const BuyBox = (props) => {
                             />
                             <TouchableOpacity
                                 onPress={() => {
-                                    props.onUpdateNumberItems(
-                                        props.numberItems + 1
-                                    );
+                                    props.setQuantityPlus();
                                 }}
                                 className="up"
                                 style={styles.up}>
@@ -115,14 +106,7 @@ const BuyBox = (props) => {
                 <View className="upDown" style={styles.upDownShow}>
                     <TouchableOpacity
                         onPress={() => {
-                            props.onUpdateNumberItems(
-                                props.numberItems > 0
-                                    ? props.numberItems - 1
-                                    : 0
-                            );
-                            props.onUpdateBuyButtonVisible(
-                                props.numberItems !== 1
-                            );
+                            props.setQuantityMinus();
                         }}
                         className="down"
                         style={styles.down}>
@@ -136,7 +120,7 @@ const BuyBox = (props) => {
                     />
                     <TouchableOpacity
                         onPress={() => {
-                            props.onUpdateNumberItems(props.numberItems + 1);
+                            props.setQuantityPlus();
                         }}
                         className="up"
                         style={styles.up}>
@@ -160,4 +144,4 @@ const BuyBox = (props) => {
         );
     }
 };
-export default BuyBox;
+export default React.memo(BuyBox);

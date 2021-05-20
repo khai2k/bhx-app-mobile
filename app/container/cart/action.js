@@ -122,10 +122,10 @@ export const cart_add_item_product = function (prodId, quantityNum) {
                 // districtId: 0,
                 // wardId: 0,
                 // storeId: 6463,
-                provinceId: 8,
-                districtId: 723,
-                wardId: 11544,
-                storeId: 5771,
+                provinceId: 3,
+                districtId: 22,
+                wardId: 10194,
+                storeId: 7003,
                 data: {
                     cartId: getSate().cartReducer.Cart.CartId,
                     productId: prodId,
@@ -136,7 +136,7 @@ export const cart_add_item_product = function (prodId, quantityNum) {
                     isInCartSite: true
                 }
             };
-            apiBase(API_CONST.API_REQUEST_REMOVE_CART, METHOD.POST, bodyApi)
+            apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);
                     const cartInfo = response.Value;
