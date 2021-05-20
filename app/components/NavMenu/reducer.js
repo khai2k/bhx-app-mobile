@@ -6,11 +6,11 @@ const menuReducer = function (state = _state.menuState, action) {
         case _action.menuAction.MENU_GET:
             return {
                 ...state,
-                Menu: action.menu,
+                Menu: action.menu
             };
         default:
             return state;
     }
 };
 
-export{menuReducer}  ;
+export { menuReducer };

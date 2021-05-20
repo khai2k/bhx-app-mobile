@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SafeAreaView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
-import { Text, View, Picker, TextInput, StyleSheet } from 'react-native';
+import {
+    SafeAreaView,
+    Text,
+    View,
+    Picker,
+    TextInput,
+    Image
+} from 'react-native';
+import { helper } from '@app/common';
 import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 
@@ -12,6 +19,7 @@ class userinfo extends Component {
         super(props);
         this.state = {};
     }
+
     componentDidMount() {
         this.props.actionCart.cart_get();
     }
@@ -21,17 +29,21 @@ class userinfo extends Component {
             <SafeAreaView>
                 <Header />
                 <View style={styles.container}>
-                    <Text style={styles.backTop}>
-                      <Image
-                        style={styles.logoback}
-                        source={require('../../assets/images/icon-back.png')}
-                    />
-                    Xem lại giỏ hàng
-                    </Text>
+                    <View style={styles.backTop}>
+                        <Image
+                            style={styles.logoback}
+                            source={require('../../../assets/images/icon-back.png')}
+                        />
+                        <Text>Xem lại giỏ hàng</Text>
+                    </View>
                     <View style={styles.btnGetHistoryAddress}>
-                        <Text style={styles.textHistoryAddress}>
-                            LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY
-                        </Text>
+                        <View style={styles.textHistoryAddress}>
+                            <Image
+                                style={styles.logoback}
+                                source={require('../../../assets/images/icon-back.png')}
+                            />
+                            <Text>LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY</Text>
+                        </View>
                     </View>
                     <View style={styles.sectionInput}>
                         <Text style={styles.stepTitle}>
@@ -47,7 +59,11 @@ class userinfo extends Component {
                                 ]}
                                 placeholder="Vui lòng nhập số điện thoại"
                                 keyboardType="numeric"
-                                value={this.props.cart.CustomerPhone !== "" ? this.props.cart.CustomerPhone : "" }
+                                value={
+                                    this.props.cart.CustomerPhone !== ''
+                                        ? this.props.cart.CustomerPhone
+                                        : ''
+                                }
                             />
                         </View>
                     </View>
@@ -103,9 +119,8 @@ const UserProvAndDis = (props) => {
 };
 const mapStateToProps = (state) => {
     return {
-        cart: state.cartReducer.Cart
+        actioncart: state.cartReducer.Cart
     };
-    
 };
 
 const mapDispatchToProps = (dispatch) => {
