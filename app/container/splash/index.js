@@ -21,7 +21,7 @@ class Splash extends Component {
 
         const { isShowSplash } = this.props;
         if (isShowSplash) {
-            const delay = 1000 * 3;
+            const delay = 1000 * 5;
             setTimeout(() => {
                 this.props.actionAuthen.show_splash(false);
             }, delay);

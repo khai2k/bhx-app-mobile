@@ -57,7 +57,6 @@ const NavMenu = () => {
 };
 // Render danh sách cate cha
 const RenderNavCateParent = (props) => {
-    console.log('RenderNavCateParent');
     return (
         <View style={styles.navLeft}>
             <View style={styles.navLeftTop}>
@@ -75,8 +74,6 @@ const RenderNavCateParent = (props) => {
 
 const RenderCateItem = (props) => {
     const { item } = props.item;
-    console.log(`RenderCateItem${item.ReferenceId}`);
-
     const handleSelectCateParent = (id) => {
         props.setCateFilter(id);
     };
@@ -101,7 +98,6 @@ const RenderCateItem = (props) => {
 };
 
 const RenderButtonClose = (props) => {
-    console.log('RenderButtonClose');
     return (
         <TouchableOpacity
             style={styles.btnClose}
@@ -116,7 +112,6 @@ const RenderButtonClose = (props) => {
 };
 
 const RenderButtonHome = (props) => {
-    console.log('RenderButtonHome');
     return (
         <TouchableOpacity
             style={styles.btnHome}
@@ -127,7 +122,6 @@ const RenderButtonHome = (props) => {
 };
 
 const RenderListCateParent = (props) => {
-    console.log('RenderListCateParent');
     return (
         <FlatList
             style={styles.navLeftBottom}
@@ -148,7 +142,6 @@ const RenderListCateParent = (props) => {
 
 // Render danh sách cate con
 const RenderNavCateChild = (props) => {
-    console.log('RenderNavCateChild');
     return (
         <View style={styles.navRight}>
             <RenderTextSearch
@@ -177,9 +170,8 @@ const RenderNavCateChild = (props) => {
     );
 };
 
-const RenderCateChildItem = React.memo((props) => {
+const RenderCateChildItem = (props) => {
     const { item } = props.item;
-    console.log(`RenderCateChildItem${item.ReferenceId}`);
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
@@ -217,7 +209,7 @@ const RenderCateChildItem = React.memo((props) => {
             </Text>
         </TouchableOpacity>
     );
-});
+};
 
 // Function search danh sách cate con
 const searchFilter = (text, props) => {
@@ -257,7 +249,6 @@ const searchFilter = (text, props) => {
 
 // Render danh sách search cate con
 const RenderSearchCateChildItem = (props) => {
-    console.log('RenderSearchCateChildItem');
     const { item } = props.item;
 
     return (
@@ -274,7 +265,6 @@ const RenderSearchCateChildItem = (props) => {
 
 // TextInput Search
 const RenderTextSearch = (props) => {
-    console.log('RenderTextSearch');
     return (
         <View style={styles.navRightTop}>
             <TextInput
@@ -298,7 +288,6 @@ const RenderTextSearch = (props) => {
 
 // Render danh sách sp search
 const RenderListResultSearch = (props) => {
-    console.log('RenderListResultSearch');
     return (
         <FlatList
             style={styles.navRightBottom}
@@ -316,22 +305,21 @@ const RenderListResultSearch = (props) => {
 
 // Render cate con
 const RenderListCatesChild = (props) => {
-    console.log('RenderListCatesChild');
     const refContainer = React.useRef(null);
 
     useEffect(() => {
+        const index = props.listCate?.findIndex((ele) => {
+            return ele.ReferenceId === props.cateFilter;
+        });
         setTimeout(() => {
-            const index = props.listCate?.findIndex((ele) => {
-                return ele.ReferenceId === props.cateFilter;
-            });
-            index &&
+            index >= 0 &&
                 refContainer?.current?.scrollToLocation({
                     animated: true,
                     itemIndex: 0,
                     sectionIndex: index,
                     viewPosition: 0
                 });
-        }, 500);
+        }, 1000);
     }, [props.cateFilter]);
 
     return (
@@ -354,7 +342,6 @@ const RenderListCatesChild = (props) => {
                         numColumns="3"
                         data={section.data}
                         keyExtractor={(item) => item.ReferenceId}
-                        maxToRenderPerBatch={20}
                         renderItem={(item) => {
                             return (
                                 <RenderCateChildItem
