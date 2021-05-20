@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Image } from 'react-native';
-// import Carousel from 'react-native-snap-carousel';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import styles from './style';
 
 const SliderTitle = (props) => {
@@ -13,33 +14,32 @@ const SliderTitle = (props) => {
                         uri: 'https://cdn.tgdd.vn/bachhoaxanh/www/Content/images/mobile/freshBanner.v202104121406.png'
                     }}
                 />
-                {props.listTitle.map((element) => {
-                    return <Text>{element.name}</Text>;
-                })}
-                {/* <Carousel
-                    ref={(c) => {
-                        this._carousel = c;
-                    }}
-                    // autoplay
-                    // enableMomentum={false}
-                    // lockScrollWhileSnapping
-                    // loop
-                    // enableSnap
+                <SwiperFlatList
+                    autoplay
+                    autoplayDelay={3}
+                    autoplayLoop
+                    index={0}
                     data={props.listTitle}
-                    renderItem={renderItem}
-                    itemWidth={200}
-                    sliderWidth={200}
-                    // style={styles.boxCarousel}
-                /> */}
+                    vertical
+                    style={{ height: 50, overflow: 'hidden', flex: 1 }}
+                    renderItem={({ item }) => (
+                        <View
+                            style={{
+                                width: '100%',
+                                height: 50,
+                                justifyContent: 'center',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}>
+                            <Text style={styles.swiperItem}>{item.name}</Text>
+                        </View>
+                    )}
+                />
             </View>
         );
     } else {
         return null;
     }
 };
-
-// const renderItem = (item) => {
-//     return <Text style={styles.slideItem}>{item.name}</Text>;
-// };
 
 export default SliderTitle;

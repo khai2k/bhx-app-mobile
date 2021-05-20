@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         bottom: 10,
         display: 'flex',
+        height: 50,
         justifyContent: 'center',
         left: 0,
         marginVertical: 10,
@@ -39,13 +40,13 @@ const styles = StyleSheet.create({
     },
     imgTitle: {
         borderRadius: 50,
-        bottom: 0,
         height: 50,
-        left: '10%',
+        left: 10,
         marginHorizontal: 0,
         position: 'absolute',
-        right: '10%',
-        top: 0
+        right: 10,
+        top: 0,
+        width: windowWidth - 20
     },
     productList: {
         flexDirection: 'row',
@@ -60,6 +61,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         width: '100%'
+    },
+    swiperItem: {
+        color: Colors.WHITE
     },
     viewmoreProduct: {
         backgroundColor: Colors.WHITE,

@@ -58,7 +58,6 @@ class Product extends Component {
                 <ListCategories
                     listCate={this.props.HomeReducer.ListCategories}
                 />
-                <Text>{this.state.listTitle.length}</Text>
 
                 <SliderTitle listTitle={this.state.listTitle} />
 
