@@ -20,16 +20,16 @@ const SliderTitle = (props) => {
                     ref={(c) => {
                         this._carousel = c;
                     }}
-                    autoplay
-                    enableMomentum={false}
-                    lockScrollWhileSnapping
-                    loop
-                    enableSnap
+                    // autoplay
+                    // enableMomentum={false}
+                    // lockScrollWhileSnapping
+                    // loop
+                    // enableSnap
                     data={props.listTitle}
                     renderItem={renderItem}
                     itemWidth={200}
                     sliderWidth={200}
-                    style={styles.boxCarousel}
+                    // style={styles.boxCarousel}
                 /> */}
             </View>
         );
@@ -38,8 +38,8 @@ const SliderTitle = (props) => {
     }
 };
 
-const renderItem = (item) => {
-    return <Text style={styles.slideItem}>{item.name}</Text>;
-};
+// const renderItem = (item) => {
+//     return <Text style={styles.slideItem}>{item.name}</Text>;
+// };
 
 export default SliderTitle;
