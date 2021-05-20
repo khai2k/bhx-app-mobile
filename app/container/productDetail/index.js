@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Image, ScrollView, View } from 'react-native';
-
-import axios from 'axios';
+import { bindActionCreators } from 'redux';
+import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
 import ProductRelative from './productRelative';
@@ -14,120 +14,74 @@ class ProductDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isExchangeProduct: true,
-            bHXProduct: [],
-            exchangeProducts: [],
-            relativeProducts: [],
-            comboProducts: [],
-            banner: 'null'
+            comboProducts: true
         };
     }
 
     componentDidMount() {
-        axios({
-            method: 'get',
-            url:
-                'https://staging.bachhoaxanh.com/apiapp/api/product/ProductDetail?productId=76513&provinceId=3&storeId=6463&isMobile=true&clearcache=%22%22'
-        })
-            .then((res) => {
-                const { data } = res;
-                const { Value } = data;
-                const { exchangeProducts, bHXProduct } = Value;
-                this.setState({
-                    bHXProduct,
-                    exchangeProducts
-                });
-                if (exchangeProducts.length <= 1) {
-                    this.setState({ isExchangeProduct: false });
-                }
-            })
-            .catch((err) => console.log(err));
-        axios({
-            method: 'get',
-            url:
-                'https://staging.bachhoaxanh.com/apiapp/api/product/ProductRelative?productId=226339&provinceId=3&storeId=6463&totalSize=6&clearcache=%22%22'
-        })
-            .then((res) => {
-                const { data } = res;
-                const { Value } = data;
-                this.setState({
-                    relativeProducts: Value
-                });
-            })
-            .catch((err) => console.log(err));
-        axios({
-            method: 'get',
-            url:
-                'https://staging.bachhoaxanh.com/apiapp/api/product/ComboDetail?productCode=79387%2C85959&quantityPromotionId=2&provinceId=3&storeId=6463&clearcache=%22%22'
-        })
-            .then((res) => {
-                const { data } = res;
-                const { Value } = data;
-                this.setState({
-                    comboProducts: Value
-                });
-                console.log(
-                    JSON.stringify(Value, null, 2),
-                    'ValueValueValueValueValueValueValue'
-                );
-            })
-            .catch((err) => console.log(err));
-        axios({
-            method: 'get',
-            url:
-                'https://staging.bachhoaxanh.com/apiapp/api/product/BoxBanner?productId=226339&provinceId=3&storeId=6463&isMobile=true&clearcache=%22%22'
-        })
-            .then((res) => {
-                const { data } = res;
-                const { Value } = data;
-                this.setState({
-                    banner: Value.Image
-                });
-            })
-            .catch((err) => console.log(err));
+        this.props.actionProductDetail.get_product_detail();
+        this.props.actionProductDetail.get_product_relative();
+        this.props.actionProductDetail.get_combo_detail();
+        this.props.actionProductDetail.get_box_banner();
     }
 
     render() {
+        console.log(this.state.isExchangeProduct, 'xxxxxxxxxxxxxxxxx');
         return (
             <ScrollView>
                 <ProductGallery />
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
                         <ProductArticle />
+                        {!this.props.isExchangeProduct && (
+                            <View>
+                                <Box
+                                    bHXProduct={
+                                        this.props.Product_detail.bHXProduct ||
+                                        []
+                                    }
+                                />
+                            </View>
+                        )}
                     </View>
-                    {!this.state.isExchangeProduct && (
-                        <View>
-                            <Box bHXProduct={this.state.bHXProduct} />
-                        </View>
-                    )}
                 </View>
-                {this.state.isExchangeProduct && (
+                {this.props.isExchangeProduct && (
                     <GroupBoxOption
-                        exchangeProducts={this.state.exchangeProducts}
+                        exchangeProducts={
+                            this.props.Product_detail.exchangeProducts || []
+                        }
                     />
                 )}
-                {this.state.comboProducts !== [] && (
-                    <Combo comboProducts={this.state.comboProducts} />
+                {this.state.comboProducts && (
+                    <Combo comboProducts={this.props.Combo_detail} />
                 )}
                 <ProductRelative
-                    relativeProducts={this.state.relativeProducts}
+                    relativeProducts={this.props.Product_relative}
                 />
                 <Image
                     style={{ width: '100%', height: 80 }}
                     resizeMode="cover"
-                    source={{ uri: this.state.banner }}
+                    source={{ uri: this.props.Box_banner.Image }}
                 />
             </ScrollView>
         );
     }
 }
 
-const mapStateToProps = function () {
-    return {};
+const mapStateToProps = function (state) {
+    return {
+        Product_detail: state.productDetailReducer.Product_detail,
+        Product_relative: state.productDetailReducer.Product_relative,
+        Combo_detail: state.productDetailReducer.Combo_detail,
+        Box_banner: state.productDetailReducer.Box_banner,
+        isExchangeProduct: state.productDetailReducer.isExchangeProduct
+    };
 };
 
-const mapDispatchToProps = function () {
-    return {};
+const mapDispatchToProps = function (dispatch) {
+    return {
+        actionProductDetail: bindActionCreators(productDetailCreator, dispatch)
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail);
