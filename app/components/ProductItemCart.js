@@ -16,14 +16,12 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
 
 const ProductItemCart = (props) => {
-    console.log('ProductItemCart Render');
     //  const cart = useSelector((state) => state.cartReducer.Cart);
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
     const [guildId, setguildId] = useState(props.productCart.GuildId);
     useEffect(() => {
-        console.log('useEffect');
         setQuantity(props.productCart.Quantity);
         setguildId(props.productCart.GuildId);
     }); //  , [props.productCart.Quantity]
@@ -32,7 +30,29 @@ const ProductItemCart = (props) => {
         props.productCart.NoChangeQuantity === true;
 
     const handleInputQuantity = (number) => {
-        setQuantity(+number);
+        console.log('handleInputQuantity');
+        console.log(number);
+        if (number > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            console.log('setQuantityPlus');
+            console.log(guildId);
+            console.log(number);
+            actionCart
+                .cart_update_item_product(guildId, number)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        setQuantity(number);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
     };
 
     const setQuantityMinus = () => {
@@ -71,6 +91,12 @@ const ProductItemCart = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
+                        const cartItem = res.Value.Cart.ListCartItem.find(
+                            (item) => item.GuildId === guildId
+                        );
+                        if (quantity + 1 > cartItem.Quantity) {
+                            showMessageQuantity(cartItem.Quantity);
+                        }
                         setQuantity(quantity + 1);
                     }
                 })
@@ -135,10 +161,38 @@ const ProductItemCart = (props) => {
         }
     };
 
+    const showMessageQuantity = (maxQuantity) => {
+        console.log('showMessageQuantity');
+        console.log(maxQuantity);
+        if (maxQuantity > 0) {
+            return (
+                <View style={styles.boxerror}>
+                    <Text style={styles.error}>Chỉ còn</Text>
+                    <Text style={styles.errorbold}>
+                        {maxQuantity} {props.productCart.Unit}
+                    </Text>
+                </View>
+            );
+        }
+    };
+
     const showHideExpire = () => {
         if (props.productCart.InvoiceNote !== '') {
             return (
                 <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
+            );
+        }
+    };
+
+    const showHideMessage = () => {
+        if (
+            props.productCart.Message != null &&
+            !helper.isEmptyOrNull(props.productCart.Message)
+        ) {
+            return (
+                <Text style={styles.unit} numberOfLines={1}>
+                    {props.productCart.Message}
+                </Text>
             );
         }
     };
@@ -167,6 +221,8 @@ const ProductItemCart = (props) => {
                 </Text>
                 {showHideExpire()}
                 {showHideUnit()}
+                {showHideMessage()}
+                {showMessageQuantity(-1)}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
@@ -184,7 +240,8 @@ const ProductItemCart = (props) => {
                     </TouchableOpacity>
                     <TextInput
                         editable={!offItemProduct}
-                        onChangeText={handleInputQuantity}
+                        selectTextOnFocus
+                        onChange={handleInputQuantity}
                         style={styles.input}
                         value={quantity.toString()}
                         keyboardType="numeric"
@@ -205,6 +262,9 @@ const ProductItemCart = (props) => {
 };
 
 const styles = StyleSheet.create({
+    boxerror: {
+        flexDirection: 'row'
+    },
     boximg: {
         flex: 1.3
     },
@@ -235,6 +295,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 5,
         padding: 5
+    },
+    error: {
+        ...Typography.FONT_REGULAR_12,
+        color: Colors.MESSAGE_ERROR
+    },
+    errorbold: {
+        ...Typography.FONT_BOLD_12,
+        color: Colors.MESSAGE_ERROR,
+        marginLeft: 2
     },
     imgbind: {
         elevation: Platform.OS === 'android' ? 2 : 0,
