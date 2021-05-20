@@ -158,45 +158,47 @@ const RenderNavCateChild = (props) => {
     );
 };
 
-const RenderCateChildItem = (props) => {
+const RenderCateChildItem = React.memo((props) => {
     const { item } = props.item;
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
-        props.navigation.navigate('Group', { url: item.Url });
+        // props.navigation.navigate('Group', { url: item.Url });
     };
 
     return (
-        <TouchableOpacity
-            style={
-                styles.itemCateChild
-                // props.cateFilter === props.cateParent &&
-                //     styles.itemCateChildActive
-            }
-            onPress={() =>
-                handleSelectCateChild(item.ReferenceId, props.cateParent)
-            }>
-            {props.selectedCateChild === item.ReferenceId && (
+        <View>
+            <TouchableOpacity
+                style={
+                    styles.itemCateChild
+                    // props.cateFilter === props.cateParent &&
+                    //     styles.itemCateChildActive
+                }
+                onPress={() =>
+                    handleSelectCateChild(item.ReferenceId, props.cateParent)
+                }>
+                {props.selectedCateChild === item.ReferenceId && (
+                    <Image
+                        style={styles.iconChecked}
+                        source={ImageNavMenu.imgIconCheck}
+                    />
+                )}
                 <Image
-                    style={styles.iconChecked}
-                    source={ImageNavMenu.imgIconCheck}
+                    style={styles.iconCateChild}
+                    source={{ uri: `https://${item.ImgUrl}` }}
                 />
-            )}
-            <Image
-                style={styles.iconCateChild}
-                source={{ uri: `https://${item.ImgUrl}` }}
-            />
-            <Text
-                style={[
-                    styles.txtCateChild,
-                    props.selectedCateChild === item.ReferenceId &&
-                        styles.txtCateChildActive
-                ]}>
-                {item.Text}
-            </Text>
-        </TouchableOpacity>
+                <Text
+                    style={[
+                        styles.txtCateChild,
+                        props.selectedCateChild === item.ReferenceId &&
+                            styles.txtCateChildActive
+                    ]}>
+                    {item.Text}
+                </Text>
+            </TouchableOpacity>
+        </View>
     );
-};
+});
 
 // Function search danh sách cate con
 function searchFilter(text, props) {
@@ -248,7 +250,7 @@ const RenderListCatesChild = (props) => {
     const refContainer = React.useRef(null);
 
     const lstCateChild = [];
-    props.listCate.filter((value) => {
+    props.listCate?.filter((value) => {
         return (
             value.data.length > 0 &&
             value.data.map((element) => {
@@ -270,14 +272,16 @@ const RenderListCatesChild = (props) => {
                     animated: true,
                     offset: (index / 3) * 115
                 });
-        }, 100);
+        }, 10);
     }, [props.cateFilter]);
 
     return (
         <FlatList
             style={styles.navRightBottom}
             numColumns="3"
-            maxToRenderPerBatch="50"
+            initialNumToRender={20}
+            maxToRenderPerBatch={20}
+            windowSize={60}
             keyExtractor={(item) => item.ReferenceId}
             data={lstCateChild}
             ref={refContainer}
