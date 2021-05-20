@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, AsyncStorage } from 'react-native';
+import { View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { MyText } from '@app/components';
 import { setI18nConfig } from '@app/translate';
-import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import * as actionAuthenCreator from './action';
+import * as actionMenuCreator from '../../components/NavMenu/action';
 
 class Splash extends Component {
     constructor(props) {
@@ -15,64 +15,17 @@ class Splash extends Component {
         this.state = {};
     }
 
-    async componentDidMount() {
-        // Lấy dữ liệu danh sách cate Menu từ local
-        const data = await getListCateLocalStorage();
+    componentDidMount() {
+        // Lấy dữ liệu menu
+        this.props.actionGetMenu.menu_get();
 
         const { isShowSplash } = this.props;
         if (isShowSplash) {
-            const delay = 1000 * 3;
+            const delay = 1000 * 5;
             setTimeout(() => {
                 this.props.actionAuthen.show_splash(false);
             }, delay);
         }
-
-        // Call api lấy dữ liệu danh sách catemenu
-        // Param để lấy danh sách cate
-        const categoryId = 0;
-        const provinceId = 3;
-        const storeId = 6463;
-        const isCheckOnSales = true;
-        const phone = 0;
-        const isMobile = true;
-        const clearcache = '@ok';
-        // Nếu local có dữ liệu thì ko call API
-        data.length === 0 &&
-            apiBase(
-                API_CONST.API_GET_CATEGORY_NAVIGATION,
-                METHOD.GET,
-                {},
-                {
-                    params: {
-                        categoryId,
-                        provinceId,
-                        storeId,
-                        isCheckOnSales,
-                        phone,
-                        isMobile,
-                        clearcache
-                    }
-                }
-            )
-                .then((response) => {
-                    // Parse dữ liệu để dùng cho sectionList
-                    console.log('call api Slash');
-                    const res = response.Value.reduce(
-                        (accum, item) => [
-                            ...accum,
-                            {
-                                ...item,
-                                data:
-                                    item.Childrens != null ? item.Childrens : []
-                            }
-                        ],
-                        []
-                    );
-                    saveStoreDataCate(res);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
     }
 
     render() {
@@ -94,19 +47,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        actionAuthen: bindActionCreators(actionAuthenCreator, dispatch)
+        actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
+        actionGetMenu: bindActionCreators(actionMenuCreator, dispatch)
     };
-};
-
-// Lấy dữ liệu ở localStorage
-const getListCateLocalStorage = async () => {
-    const value = await AsyncStorage.getItem('ListCates');
-    return value ? JSON.parse(value) : [];
-};
-
-// Lưu dữ liệu vào localStorage
-const saveStoreDataCate = async (res) => {
-    await AsyncStorage.setItem('ListCates', JSON.stringify(res));
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Splash);

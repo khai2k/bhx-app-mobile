@@ -20,7 +20,7 @@ const Product = (props) => {
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
-    const [pageIndex, setPageIndex] = useState(1);
+    const [pageIndex, setPageIndex] = useState(PageIndex);
     useEffect(() => {
         setPageIndex(0);
     }, []);
@@ -58,19 +58,19 @@ const Product = (props) => {
 
     if (Products && Products.length > 0) {
         return (
-            <ScrollView>
+            <ScrollView nestedScrollEnabled>
                 <FlatList
                     numColumns={3}
                     data={listProductLoadMore}
                     keyExtractor={(item) => `product_${item.Id}`}
                     renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 />
-                {Total >= pageIndex * PageSize ? (
+                {Products.length === PageSize ? (
                     <TouchableOpacity
                         onPress={loadMoreProducts}
                         className="loadMore"
                         style={styles.loadMore}>
-                        <Text style={styles.loadMoresText}>
+                        <Text style={styles.loadMoreText}>
                             Còn {Total - pageIndex * PageSize} sản phẩm{' '}
                         </Text>
                         <Text style={styles.loadMoreTextBold}>{Name}</Text>
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     },
     iconDown: {
         height: 3,
+        marginLeft: 5,
         width: 6
     },
     loadMore: {
@@ -140,4 +141,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default React.memo(Product);
+export default Product;

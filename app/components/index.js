@@ -1,4 +1,4 @@
-import NavMenu from './Shared/navMenu/NavMenu';
+import NavMenu from './NavMenu';
 import MyText from './MyText';
 import CodePushUpdate from './CodePushUpdate';
 import Header from './Header';

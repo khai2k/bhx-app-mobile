@@ -17,6 +17,8 @@ const ProductBox = (props) => {
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
 
     const cart = useSelector((state) => state.cartReducer.Cart);
+    const [guildId, setGuildId] = useState(cart.CartId);
+
     const checkFillButtonBuy = () => {
         if (cart && cart.ListCartItem.length > 0) {
             const containsProduct = cart.ListCartItem.find(
@@ -34,8 +36,6 @@ const ProductBox = (props) => {
     useEffect(() => {
         checkFillButtonBuy();
     });
-
-    const [guildId, setGuildId] = useState(cart.CartId);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
@@ -91,6 +91,7 @@ const ProductBox = (props) => {
                     alertAPI(res.Message);
                 } else {
                     setNumberItems(1);
+                    setGuildId(res.Value?.cart.Cart.CartId);
                 }
             })
             .catch((error) => {

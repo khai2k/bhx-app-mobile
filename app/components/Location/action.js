@@ -6,25 +6,49 @@ export const locationAction = {
     LOCATION_GETCURRENT
 };
 
-export const location_getCurrent = function () {
+export const location_getCurrent = function (crrLat, crrLong) {
     return (dispatch) => {
         const bodyApi = {
             data: {
-                Lng: '10.8385859',
-                Lat: '106.8305654'
+                Lng: crrLat,
+                Lat: crrLong,
+                IsLive: false
             }
         };
-        apiBase(API_CONST.API_GET_LOCATION, METHOD.POST, bodyApi)
+        apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
             .then((response) => {
-                const rs = response.Value;
-                console.log(rs);
+                const tmpData = response.OrtherData;
+
+                const crrLocationRs = { ...tmpData, FullAddress: '' };
+                if (response.ResultCode === 0) {
+                    let _fullAddress = '';
+                    if (crrLocationRs.WardName !== '') {
+                        _fullAddress += `${crrLocationRs.WardName}, `;
+                    }
+                    if (crrLocationRs.DistrictName !== '') {
+                        _fullAddress += `${crrLocationRs.DistrictName}, `;
+                    }
+                    if (crrLocationRs.ProvinceFullName !== '') {
+                        _fullAddress += `${crrLocationRs.ProvinceFullName}`;
+                    }
+                    crrLocationRs.FullAddress = _fullAddress;
+                }
                 dispatch({
                     type: LOCATION_GETCURRENT,
-                    rs
+                    crrLocationRs
                 });
             })
             .catch((error) => {
                 console.log(error);
             });
+    };
+};
+
+export const location_SaveChooseLocation = function (crrLocationRs) {
+    return (dispatch) => {
+        dispatch({
+            type: LOCATION_GETCURRENT,
+            crrLocationRs
+        });
     };
 };

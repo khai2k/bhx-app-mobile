@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
 import axios from 'axios';
-import { apiBase, METHOD, API_CONST } from '@app/api';
 import {
     View,
     Modal,
@@ -25,12 +24,12 @@ class OrderSuccess extends Component {
             checkBox2: false,
             checkBox3: false,
             modalVisible: false,
-            infoOrder: {}
+            infoOrder: {},
+            productList: []
         };
     }
 
     componentDidMount() {
-        // this.props.actionOrderSuccess.order_success_get();
         axios({
             method: 'get',
             url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=43225473&sc=E214C53EC0384610FE95151117020DA6'
@@ -40,7 +39,9 @@ class OrderSuccess extends Component {
                 console.log('data', data);
                 const orderInfo = data.Value;
                 this.setState({
-                    infoOrder: orderInfo.Detail
+                    totalPrice: orderInfo.Total,
+                    infoOrder: orderInfo.Detail,
+                    productList: orderInfo.Detail.DeliveryList
                 });
             })
             .catch((err) => console.log('err', err));
@@ -50,9 +51,9 @@ class OrderSuccess extends Component {
         return (
             <View style={styles.infoLine}>
                 <View style={styles.dot} />
-                <Text>
-                    Người đặt: Anh NGHIÊNG, 09115511148
-                    {/* {this.state.infoOrder.ContactName} */}
+                <Text>Người đặt: {this.state.infoOrder.CustomerName}, </Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                    {this.state.infoOrder.ContactPhone}
                 </Text>
             </View>
         );
@@ -62,8 +63,7 @@ class OrderSuccess extends Component {
         return (
             <View style={styles.infoLine}>
                 <Text>
-                    Giao tại: Tòa nhà MWG, Phường Tân Phú, Quận 9, TP. Hồ Chí
-                    Minh {'  '}
+                    Giao tại: {this.state.infoOrder.Address} {'  '}
                     <View style={styles.dotActive} />
                     <Text> Sửa</Text>
                 </Text>
@@ -102,7 +102,9 @@ class OrderSuccess extends Component {
             <TouchableWithoutFeedback>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
-                    <Text>Xem các sản phẩm đã đặt:</Text>
+                    <Text>
+                        Xem {this.state.productList.length} sản phẩm đã đặt:{' '}
+                    </Text>
                 </View>
             </TouchableWithoutFeedback>
         );
@@ -113,7 +115,10 @@ class OrderSuccess extends Component {
             <>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
-                    <Text>Tổng tiền: 113.000đ </Text>
+                    <Text>Tổng tiền: </Text>
+                    <Text style={{ fontWeight: 'bold' }}>
+                        {this.state.totalPrice}đ
+                    </Text>
                     <View style={styles.PMHbox}>
                         <Text style={styles.PHMText}>
                             + Dùng phiếu mua hàng
@@ -326,7 +331,7 @@ class OrderSuccess extends Component {
                         <Text style={{ marginLeft: 10 }}>
                             Thanh toán tiền mặt khi nhận hàng
                         </Text>
-                        <Text style={{ marginLeft: 10 }}>
+                        <Text style={{ marginLeft: 10, marginTop: 5 }}>
                             Yêu cầu đồng kiểm tra sản phẩm khi nhận hàng
                         </Text>
                     </View>
