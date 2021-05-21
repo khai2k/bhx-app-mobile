@@ -142,6 +142,8 @@ const UserProvAndDis = (props) => {
         getLstProv();
     }, []);
     const [provinceSelect, setprovinceSelect] = useState(-1);
+    const [enableDis, setEnableDis] = useState(false);
+    const [enableWard, setEnableWard] = useState(false);
 
     const [lstProv, setLstProv] = useState(null);
     const [lstDis, setLstDis] = useState(null);
@@ -167,6 +169,7 @@ const UserProvAndDis = (props) => {
         )
             .then((response) => {
                 setLstDis(response.Value);
+                setEnableDis(true);
             })
             .catch(() => {});
     };
@@ -179,6 +182,7 @@ const UserProvAndDis = (props) => {
         )
             .then((response) => {
                 setLstWard(response.Value);
+                setEnableWard(true);
             })
             .catch(() => {});
     };
@@ -209,6 +213,7 @@ const UserProvAndDis = (props) => {
                 <View style={styles.disBox}>
                     <Picker
                         selectedValue={-1}
+                        enabled={enableDis}
                         style={{ height: 50, width: 150 }}
                         onValueChange={(itemValue, itemIndex) =>
                             getLstWard(itemValue)
@@ -231,7 +236,8 @@ const UserProvAndDis = (props) => {
             <View style={styles.wardBox}>
                 <Picker
                     selectedValue={-1}
-                    style={{ height: 50, width: 150 }}>
+                    enabled={enableWard}
+                    style={{ height: 50, width: "100%" }}>
                     {lstWard !== null && lstWard.length > 0 ? (
                         lstWard.map((ward) => {
                             return (
@@ -242,7 +248,7 @@ const UserProvAndDis = (props) => {
                             );
                         })
                     ) : (
-                        <Picker.Item label="Phường, Xã" value="-1" />
+                        <Picker.Item label="Phường, Xã" onPress={() => {return null;}} value="-1" />
                     )}
                 </Picker>
             </View>
