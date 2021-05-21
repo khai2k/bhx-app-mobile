@@ -7,11 +7,17 @@ const productDetailStateInit = {
     Product_relative: [],
     Combo_detail: [],
     Box_banner: '',
-    isExchangeProduct: true
+    isExchangeProduct: true,
+    Gallery_product: []
 };
 
 const productDetailReducer = function (state = productDetailStateInit, action) {
     switch (action.type) {
+        case _action.productDetailAction.GET_GALLERY_PRODUCT:
+            return {
+                ...state,
+                Gallery_product: action.data
+            };
         case _action.productDetailAction.GET_PRODUCT_DETAIL:
             if (action.data.exchangeProducts.length <= 1) {
                 return {

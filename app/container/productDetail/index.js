@@ -16,9 +16,7 @@ class ProductDetail extends Component {
         this.state = {
             comboProducts: true
         };
-    }
-
-    componentDidMount() {
+        this.props.actionProductDetail.get_gallery_product();
         this.props.actionProductDetail.get_product_detail();
         this.props.actionProductDetail.get_product_relative();
         this.props.actionProductDetail.get_combo_detail();
@@ -29,10 +27,10 @@ class ProductDetail extends Component {
         console.log(this.state.isExchangeProduct, 'xxxxxxxxxxxxxxxxx');
         return (
             <ScrollView>
-                <ProductGallery />
+                <ProductGallery Gallery_product={this.props.Gallery_product} />
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
-                        <ProductArticle />
+                        <ProductArticle product={this.props.Product_detail} />
                         {!this.props.isExchangeProduct && (
                             <View>
                                 <Box
@@ -74,7 +72,8 @@ const mapStateToProps = function (state) {
         Product_relative: state.productDetailReducer.Product_relative,
         Combo_detail: state.productDetailReducer.Combo_detail,
         Box_banner: state.productDetailReducer.Box_banner,
-        isExchangeProduct: state.productDetailReducer.isExchangeProduct
+        isExchangeProduct: state.productDetailReducer.isExchangeProduct,
+        Gallery_product: state.productDetailReducer.Gallery_product
     };
 };
 
