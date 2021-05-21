@@ -16,32 +16,33 @@ class ProductDetail extends Component {
         this.state = {
             comboProducts: true
         };
-        this.props.actionProductDetail.get_gallery_product();
-        this.props.actionProductDetail.get_product_detail();
-        this.props.actionProductDetail.get_product_relative();
-        this.props.actionProductDetail.get_combo_detail();
-        this.props.actionProductDetail.get_box_banner();
+        const { route } = props;
+        const { productId } = route.params;
+        console.log(productId, '=======================');
+        this.props.actionProductDetail.get_gallery_product(productId);
+        this.props.actionProductDetail.get_product_detail(productId);
+        this.props.actionProductDetail.get_product_relative(productId);
+        this.props.actionProductDetail.get_combo_detail(productId);
+        this.props.actionProductDetail.get_box_banner(productId);
     }
 
     render() {
-        console.log(this.state.isExchangeProduct, 'xxxxxxxxxxxxxxxxx');
         return (
             <ScrollView>
                 <ProductGallery Gallery_product={this.props.Gallery_product} />
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
                         <ProductArticle product={this.props.Product_detail} />
-                        {!this.props.isExchangeProduct && (
-                            <View>
-                                <Box
-                                    bHXProduct={
-                                        this.props.Product_detail.bHXProduct ||
-                                        []
-                                    }
-                                />
-                            </View>
-                        )}
                     </View>
+                    {!this.props.isExchangeProduct && (
+                        <View>
+                            <Box
+                                bHXProduct={
+                                    this.props.Product_detail.bHXProduct || []
+                                }
+                            />
+                        </View>
+                    )}
                 </View>
                 {this.props.isExchangeProduct && (
                     <GroupBoxOption

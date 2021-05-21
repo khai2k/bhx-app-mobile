@@ -14,20 +14,22 @@ export const productDetailAction = {
     GET_BOX_BANNER,
     GET_GALLERY_PRODUCT
 };
-export const get_gallery_product = function () {
+export const get_gallery_product = function (productId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
-                productId: 83581,
+                productId,
                 provinceId: 3,
                 storeId: 6463,
+                phone: '0328131471',
                 isMobile: true,
                 clearcache: ''
             };
             apiBase(
-                'https://staging.bachhoaxanh.com/apiapp/api/product/GalleryProduct?productId=176453&provinceId=3&storeId=6463&phone=0328131471&isMobile=true&clearcache=%22%22',
+                API_CONST.API_GET_GALLERY_PRODUCT,
                 METHOD.GET,
-                {}
+                {},
+                { params: bodyApi }
             )
                 .then((response) => {
                     const data = response.Value.productGalleriesItem;
@@ -45,11 +47,11 @@ export const get_gallery_product = function () {
         });
     };
 };
-export const get_product_detail = function () {
+export const get_product_detail = function (productId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
-                productId: 83581,
+                productId,
                 provinceId: 3,
                 storeId: 6463,
                 isMobile: true,
@@ -76,11 +78,11 @@ export const get_product_detail = function () {
         });
     };
 };
-export const get_product_relative = function () {
+export const get_product_relative = function (productId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
-                productId: 83581,
+                productId,
                 provinceId: 3,
                 storeId: 6463,
                 totalSize: 6,
@@ -108,7 +110,7 @@ export const get_product_relative = function () {
     };
 };
 
-export const get_combo_detail = function () {
+export const get_combo_detail = function (productId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
@@ -139,20 +141,21 @@ export const get_combo_detail = function () {
     };
 };
 
-export const get_box_banner = function () {
+export const get_box_banner = function (productId) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
-                productId: 226339,
+                productId,
                 provinceId: 3,
                 storeId: 6463,
                 isMobile: true,
                 clearcache: ''
             };
             apiBase(
-                'https://staging.bachhoaxanh.com/apiapp/api/product/BoxBanner?productId=226339&provinceId=3&storeId=6463&isMobile=true&clearcache=%22%22',
+                API_CONST.API_GET_BOX_BANNER,
                 METHOD.GET,
-                {}
+                {},
+                { params: bodyApi }
             )
                 .then((response) => {
                     const data = response.Value;

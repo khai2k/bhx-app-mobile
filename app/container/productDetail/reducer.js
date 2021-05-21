@@ -28,7 +28,8 @@ const productDetailReducer = function (state = productDetailStateInit, action) {
             } else {
                 return {
                     ...state,
-                    Product_detail: action.data
+                    Product_detail: action.data,
+                    isExchangeProduct: true
                 };
             }
         case _action.productDetailAction.GET_PRODUCT_RELATIVE:
