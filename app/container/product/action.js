@@ -83,6 +83,9 @@ export const get_more_listproducts = function (
 ) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
+            console.log('PageIndex: ', pageIndex);
+            console.log('excludeProductIds: ', excludeProductIds);
+            console.log('categoryIds: ', categoryIds);
             const bodyApi = {
                 token: '',
                 us: '',
@@ -112,7 +115,7 @@ export const get_more_listproducts = function (
                     resolve(response);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.log('GET_MORE_LIST_PRODUCT Error:', error);
                     reject(error);
                 });
         });
