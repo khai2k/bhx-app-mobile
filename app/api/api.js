@@ -4,6 +4,7 @@ export const API_REQUEST_GET_CART = `${API_BASE}Order/get`;
 export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
+// Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;

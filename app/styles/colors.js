@@ -43,6 +43,7 @@ export const LINK_WATER = '#ECF2FB';
 export const LINK_WATER_2 = '#F5F8FD';
 export const LINK_WATER_3 = '#EBF0F9';
 export const MYSTIC = '#E1E5EE';
+export const WHITE_FFF = '#fff';
 
 // RED
 export const BRIGHT_RED = 'rgba(240,68,68,1)';
@@ -108,6 +109,7 @@ export const SEA_BUCKTHORN = '#F2994A';
 
 export const MATTERHORN_1 = 'rgba(85,85,85,1)';
 export const COLOR_353638 = 'rgba(35,36,38,0.5)';
+export const ORANGE_FF9534 = '#FF9534';
 
 // GREEN
 export const JADE = '#00AC5B';
