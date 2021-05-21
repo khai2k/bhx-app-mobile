@@ -107,7 +107,7 @@ export const get_more_listproducts = function (
             apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('GET_MORE_LIST_PRODUCT Data:', response);
-                    const loadMoreProducts = { ...response.Value };
+                    const loadMoreProducts = { ...response };
                     dispatch({
                         type: GET_MORE_LIST_PRODUCT,
                         loadMoreProducts
