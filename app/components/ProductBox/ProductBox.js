@@ -64,7 +64,7 @@ const ProductBox = (props) => {
             style={buyButtonVisible ? styles.productSelected : styles.product}>
             <TouchableOpacity
                 onPress={() =>
-                    navigation.navigate('ProductDetail', {
+                    navigation.push('ProductDetail', {
                         productId: props.bhxProduct.Id
                     })
                 }

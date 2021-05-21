@@ -1,4 +1,5 @@
 // import { apiBase, METHOD, API_CONST } from '@app/api';
+import { useDispatch } from 'react-redux';
 import { apiBase, METHOD, API_CONST } from '../../api';
 
 const GET_PRODUCT_DETAIL = 'GET_PRODUCT_DETAIL';
@@ -6,15 +7,20 @@ const GET_PRODUCT_RELATIVE = 'GET_PRODUCT_RELATIVE';
 const GET_COMBO_DETAIL = 'GET_COMBO_DETAIL';
 const GET_BOX_BANNER = 'GET_BOX_BANNER';
 const GET_GALLERY_PRODUCT = 'GET_GALLERY_PRODUCT';
+const IS_LOADING = 'IS_LOADING';
 
 export const productDetailAction = {
     GET_PRODUCT_DETAIL,
     GET_PRODUCT_RELATIVE,
     GET_COMBO_DETAIL,
     GET_BOX_BANNER,
-    GET_GALLERY_PRODUCT
+    GET_GALLERY_PRODUCT,
+    IS_LOADING
 };
+
 export const get_gallery_product = function (productId) {
+    console.log('get_gallery_product++++++++++++++++');
+    console.log(productId);
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
@@ -159,7 +165,7 @@ export const get_box_banner = function (productId) {
             )
                 .then((response) => {
                     const data = response.Value;
-
+                    console.log('api-get_box');
                     dispatch({
                         type: GET_BOX_BANNER,
                         data
@@ -171,5 +177,19 @@ export const get_box_banner = function (productId) {
                     reject(error);
                 });
         });
+    };
+};
+
+export const fetchAll = function (productId) {
+    return async (dispatch) => {
+        dispatch({ type: IS_LOADING, data: true });
+        await Promise.all([
+            dispatch(get_gallery_product(productId)),
+            dispatch(get_product_detail(productId)),
+            dispatch(get_product_relative(productId)),
+            dispatch(get_combo_detail(productId)),
+            dispatch(get_box_banner(productId))
+        ]);
+        dispatch({ type: IS_LOADING, data: false });
     };
 };

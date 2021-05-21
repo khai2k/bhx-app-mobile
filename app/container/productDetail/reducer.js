@@ -8,11 +8,17 @@ const productDetailStateInit = {
     Combo_detail: [],
     Box_banner: '',
     isExchangeProduct: true,
-    Gallery_product: []
+    Gallery_product: [],
+    Is_loading: true
 };
 
 const productDetailReducer = function (state = productDetailStateInit, action) {
     switch (action.type) {
+        case _action.productDetailAction.IS_LOADING:
+            return {
+                ...state,
+                Is_loading: action.data
+            };
         case _action.productDetailAction.GET_GALLERY_PRODUCT:
             return {
                 ...state,
