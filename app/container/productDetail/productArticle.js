@@ -5,38 +5,88 @@ import {
     TouchableOpacity,
     Modal,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    Button,
+    useWindowDimensions
 } from 'react-native';
 import * as COLOR from '@app/styles/colors';
+import HTML from 'react-native-render-html';
 
 const ProductArticle = (props) => {
+    const contentWidth = useWindowDimensions().width;
     const { product } = props;
-    const { MetaDescription } = product;
+    const { MetaDescription, ProductArticle, FeatureSpecification } = product;
     const [isShowModal, setIsShowModal] = useState(false);
     return (
         <View style={{ margin: 5 }}>
             <Text>{MetaDescription}</Text>
-            <TouchableOpacity onPress={() => setIsShowModal(false)}>
+            <TouchableOpacity onPress={() => setIsShowModal(true)}>
                 <Text style={{ color: COLOR.PRIMARY }}>Xem chi tiet</Text>
             </TouchableOpacity>
             <Modal animationType="slide" transparent visible={isShowModal}>
-                <ScrollView style={styles.scrollView}>
-                    <View style={styles.modalView}>
-                        <Text>
-                            Thùng 12 hộp sữa tươi nguyên kem không đường Inex 1
-                            lít thơm ngon, giàu canxi và các dưỡng chất tốt cho
-                            sức khỏe. Mua hàng giá tốt, giao tận cửa tại Bách
-                            hóa XANH
-                        </Text>
-                        <View style={styles.product_info}>
-                            <View style={{ paddingVertical: 10 }}>
-                                <Text style={{ fontSize: 20 }}>
-                                    Thông tin sản phẩm{' '}
-                                </Text>
-                            </View>
+                <View style={styles.modalView}>
+                    <View style={styles.header}>
+                        <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                            <Text>Mô tả sản phẩm </Text>
                         </View>
+                        <TouchableOpacity onPress={() => setIsShowModal(false)}>
+                            <View
+                                style={{
+                                    paddingHorizontal: 10,
+                                    borderLeftWidth: 1
+                                }}>
+                                <Text>✕</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
-                </ScrollView>
+                    <ScrollView>
+                        <View
+                            style={{
+                                paddingHorizontal: 10,
+                                backgroundColor: '#fff',
+                                marginBottom: 10
+                            }}>
+                            <View style={{ paddingVertical: 10 }}>
+                                <Text>{MetaDescription}</Text>
+                            </View>
+
+                            <View style={styles.product_info}>
+                                <View style={{ paddingVertical: 10 }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: 'bold'
+                                        }}>
+                                        Thông tin sản phẩm{' '}
+                                    </Text>
+                                </View>
+                            </View>
+                            <HTML
+                                source={{ html: FeatureSpecification }}
+                                contentWidth={contentWidth}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                padding: 10,
+                                backgroundColor: '#fff'
+                            }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                                Bài viết sản phẩm
+                            </Text>
+                            <HTML
+                                source={{ html: ProductArticle }}
+                                contentWidth={contentWidth}
+                            />
+                        </View>
+                    </ScrollView>
+                    <Button
+                        title="Learn More"
+                        onPress={() => {
+                            setIsShowModal(false);
+                        }}
+                    />
+                </View>
             </Modal>
         </View>
     );
@@ -50,30 +100,18 @@ const styles = StyleSheet.create({
         marginTop: 22
     },
     header: {
-        borderBottomWidth: 1,
+        backgroundColor: '#fff',
         flexDirection: 'row',
         paddingVertical: 10
     },
     modalView: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderRadius: 20,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4
+        backgroundColor: '#f5f8fd',
+        zIndex: 1000
     },
     product_info: {},
     row_info: {
         flexDirection: 'row',
         minHeight: 30
-    },
-    scrollView: {
-        paddingVertical: 10
     }
 });
 
