@@ -25,3 +25,4 @@ export const API_GET_PRODUCT_DETAIL = `${API_BASE}product/ProductDetail`;
 export const API_GET_PRODUCT_RELATIVE = `${API_BASE}product/ProductRelative`;
 export const API_GET_BOX_BANNER = `${API_BASE}product/BoxBanner`;
 export const API_GET_COMBO_DETAIL = `${API_BASE}product/ComboDetail`;
+export const API_GET_GALLERY_PRODUCT = `${API_BASE}product/GalleryProduct`;
