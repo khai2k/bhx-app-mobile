@@ -26,6 +26,14 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F1F4F9'
     },
+    disBox: {
+        borderColor: '#D6E0F5',
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        paddingLeft: 10,
+        paddingRight: 10
+    },
     hasAbsTit: {
         paddingTop: 28
     },
@@ -50,6 +58,21 @@ const styles = StyleSheet.create({
     },
     noBorder: {
         borderWidth: 0
+    },
+    provAndDic: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+        width: '100%'
+    },
+    provBox: {
+        borderColor: '#D6E0F5',
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        paddingLeft: 10,
+        paddingRight: 10
     },
     radioButton: {
         alignItems: 'center',
@@ -92,6 +115,17 @@ const styles = StyleSheet.create({
         color: '#3B854E',
         fontWeight: '500',
         textAlign: 'center'
+    },
+    wardBox: {
+        borderColor: '#D6E0F5',
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        display: 'flex',
+        marginTop: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        width: '100%'
     }
 });
 

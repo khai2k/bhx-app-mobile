@@ -14,6 +14,8 @@ import { helper } from '@app/common';
 import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { apiBase, METHOD, API_CONST } from '@app/api';
+import { useDispatch } from 'react-redux';
 
 class UserInfo extends Component {
     constructor(props) {
@@ -86,6 +88,7 @@ class UserInfo extends Component {
                                     : ''
                             }
                         />
+                        <UserProvAndDis />
                     </View>
                 </View>
             </SafeAreaView>
@@ -118,7 +121,6 @@ const SexRadio = (props) => {
         );
         setSex(updatedState);
     };
-
     return (
         <View style={styles.radioButtonContainer}>
             {sex.map((item) => (
@@ -133,47 +135,117 @@ const SexRadio = (props) => {
     );
 };
 const UserProvAndDis = (props) => {
+    // if(this.props == undefined || this.props.cart == undefined || this.props.cart == null){
+    //     return null;
+    // }
+    useEffect(() => {
+        getLstProv();
+    }, []);
+    const [provinceSelect, setprovinceSelect] = useState(-1);
+
+    const [lstProv, setLstProv] = useState(null);
+    const [lstDis, setLstDis] = useState(null);
+    const [lstWard, setLstWard] = useState(null);
+
+    const getLstProv = function () {
+        apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
+            .then((response) => {
+                setLstProv(response.Value);
+                console.log(response.Value);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const getLstDis = (provinceId) => {
+        apiBase(
+            API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
+            METHOD.GET,
+            {},
+            { params: { provinceId, clearcache: '' } }
+        )
+            .then((response) => {
+                setLstDis(response.Value);
+            })
+            .catch(() => {});
+    };
+    const getLstWard = (disId) => {
+        apiBase(
+            API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
+            METHOD.GET,
+            {},
+            { params: { disId, clearcache: '' } }
+        )
+            .then((response) => {
+                setLstWard(response.Value);
+            })
+            .catch(() => {});
+    };
     return (
         <View>
-            <Picker
-                selectedValue={this.state.selectedProv}
-                onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                        selectedProv: itemValue,
-                        selectedProvinceId: itemIndex
-                    });
-                }}>
-                {this.state.cities.map((city) => {
-                    return (
-                        <Picker.Item
-                            label={city.city}
-                            value={city.city}
-                            key={city.plaka}
-                        />
-                    );
-                })}
-            </Picker>
-            <Picker
-                selectedValue={this.state.selectedDistrict}
-                onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                        selectedDistrict: itemValue
-                    });
-                }}>
-                //render district list based on selected city
-                {this.props.cities.length > 0 &&
-                    this.props.cities[
-                        this.state.selectedProvinceId
-                    ].districts.map((district) => {
-                        return (
-                            <Picker.Item
-                                label={district}
-                                value={district}
-                                key={district}
-                            />
-                        );
-                    })}
-            </Picker>
+            <View style={styles.provAndDic}>
+                <View style={[styles.provBox]}>
+                    <Picker
+                        selectedValue={-1}
+                        style={{ height: 50, width: 150 }}
+                        onValueChange={(itemValue, itemIndex) =>
+                            getLstDis(itemValue)
+                        }>
+                        {lstProv !== null && lstProv.length > 0 ? (
+                            lstProv.map((prov) => {
+                                return (
+                                    <Picker.Item
+                                        label={prov.ProvinceFullName}
+                                        value={prov.ProvinceId}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <Picker.Item label="Tỉnh thành" value="-1" />
+                        )}
+                    </Picker>
+                </View>
+                <View style={styles.disBox}>
+                    <Picker
+                        selectedValue={-1}
+                        style={{ height: 50, width: 150 }}
+                        onValueChange={(itemValue, itemIndex) =>
+                            getLstWard(itemValue)
+                        }>
+                        {lstDis !== null && lstDis.length > 0 ? (
+                            lstDis.map((dis) => {
+                                return (
+                                    <Picker.Item
+                                        label={dis.Item2}
+                                        value={dis.Item1}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <Picker.Item label="Quận huyện" value="-1" />
+                        )}
+                    </Picker>
+                </View>
+            </View>
+            <View style={styles.wardBox}>
+                <Picker
+                    selectedValue={-1}
+                    style={{ height: 50, width: 150 }}>
+                    {lstWard !== null && lstWard.length > 0 ? (
+                        lstWard.map((ward) => {
+                            return (
+                                <Picker.Item
+                                    label={ward.Item2}
+                                    value={ward.Item1}
+                                />
+                            );
+                        })
+                    ) : (
+                        <Picker.Item label="Phường, Xã" value="-1" />
+                    )}
+                </Picker>
+            </View>
         </View>
     );
 };
