@@ -16,6 +16,8 @@ export const API_LOCATION_GETDICTRICTBYPROVINCE = `${API_BASE}/shared/GetDistric
 export const API_LOCATION_GETWARDBYDICANDPROVINCE = `${API_BASE}/shared/GetWard`;
 export const API_LOCATION_SEARCHLOCATION = `${API_BASE}/shared/ProvinceSearchAutocomplete`;
 
+export const API_SEARCH_SUGGESTMODAL = `${API_BASE}/shared/SearchAutocomplete`;
+
 // category
 export const API_CATEGORY_GET = `${API_BASE}Category/Get`;
 export const API_CATEGORY_AJAX_PRODUCT = `${API_BASE}Category/AjaxProducts`;

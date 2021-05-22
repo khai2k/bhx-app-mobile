@@ -4,14 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import {
-    Text,
-    View,
-    StyleSheet,
-    Image,
-    TextInput,
-    TouchableOpacity
-} from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import LoadLocationTrigger from './Location';
 import LocationModal from './Location/ModalLocation';
@@ -37,7 +30,11 @@ const Header = () => {
                 </TouchableOpacity>
 
                 <View style={styles.boxsearch}>
-                    <TextInput style={styles.input} placeholder="Bạn tìm gì?" />
+                    <TouchableOpacity
+                        style={styles.input}
+                        onPress={() => navigation.navigate('SuggestSearch')}>
+                        <Text style={styles.inputText}>Bạn tìm gì</Text>
+                    </TouchableOpacity>
                     <Image
                         style={styles.iconsearch}
                         source={require('../../assets/images/icon-search.png')}
@@ -140,7 +137,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: Colors.WHITE,
         borderWidth: 0.5,
-        maxHeight: 36,
         borderColor: Colors.BLACK,
         fontSize: Typography.FONT_SIZE_10,
         borderRadius: 10,
@@ -173,6 +169,11 @@ const styles = StyleSheet.create({
     },
     input: {
         paddingLeft: 5
+    },
+    // eslint-disable-next-line react-native/no-color-literals
+    inputText: {
+        color: '#757575',
+        paddingVertical: 5
     },
     logo: {
         height: 40,
