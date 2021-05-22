@@ -77,7 +77,7 @@ const timeout = (time, promise) => {
 };
 
 const handleError = async (error) => {
-    console.log('handleError::: ', error);
+    // console.log('handleError::: ', error);
     if (
         helper.hasProperty(error, 'code') &&
         error.code === STATUS_CODE_TIMEOUT
@@ -140,10 +140,10 @@ const handleError = async (error) => {
         }
     }
 
-    console.log(
-        'error  ',
-        error.toString().includes('TypeError: Network request failed')
-    );
+    // console.log(
+    //     'error  ',
+    //     error.toString().includes('TypeError: Network request failed')
+    // );
 
     return Promise.reject(
         setCustomError(
@@ -155,7 +155,7 @@ const handleError = async (error) => {
 };
 
 const checkStatus = (response) => {
-    console.log('checkStatus', response);
+    // console.log('checkStatus', response);
     if (
         response.status >= STATUS_CODE_SUCCESS_200 &&
         response.status < STATUS_CODE_SUCCESS_300
@@ -167,7 +167,7 @@ const checkStatus = (response) => {
     return response
         .json()
         .then((json) => {
-            console.log('checkStatus: ', json);
+            // console.log('checkStatus: ', json);
             const status = helper.hasProperty(response, 'status')
                 ? response.status
                 : -1;
@@ -205,7 +205,7 @@ const checkStatus = (response) => {
 };
 
 const parseJSON = (response) => {
-    console.log('status response: ', response.status);
+    // console.log('status response: ', response.status);
     if (response.status === 204 || response.status === 205) {
         return null;
     }
@@ -311,7 +311,7 @@ export const apiBase = (
                     appendHeader(params, headers);
                 }
 
-                console.log('HEADER: ', headers);
+                // console.log('HEADER: ', headers);
                 if (!options.isUpload) {
                     /** Configure Body */
                     switch (method) {
@@ -334,14 +334,14 @@ export const apiBase = (
                                     CONTENT_TYPE_FORM
                                 ) {
                                     body = getQueryString(body);
-                                    console.log('CONTENT_TYPE_FORM', body);
+                                    // console.log('CONTENT_TYPE_FORM', body);
                                 } else if (
                                     headers.map[CONTENT_TYPE] ===
                                     CONTENT_TYPE_JSON
                                 ) {
                                     // add json object into body
                                     body = JSON.stringify(body);
-                                    console.log('CONTENT_TYPE_JSON', body);
+                                    // console.log('CONTENT_TYPE_JSON', body);
                                 }
                             }
                             break;
@@ -390,14 +390,14 @@ export const apiBase = (
                         method
                     };
                 }
-                console.log('API REQUEST: ', url, requests);
+                // console.log('API REQUEST: ', url, requests);
                 timeout(15000, fetch(url, requests))
                     .catch(handleError) // handle network issues
                     .then(checkStatus)
                     .then(parseJSON)
                     .then((json) => {
                         clearTimeout(_timeoutAPI);
-                        console.log('API RESPONSE: ', json);
+                        // console.log('API RESPONSE: ', json);
                         if (helper.hasProperty(json, 'error')) {
                             const { error } = json;
                             if (error) {
@@ -423,7 +423,7 @@ export const apiBase = (
                     })
                     .catch((error) => {
                         clearTimeout(_timeoutAPI);
-                        console.log('API RESPONSE ERROR: ', error);
+                        // console.log('API RESPONSE ERROR: ', error);
                         reject(error);
                         // reject(setCustomError(STATUS_CODE_SUCCESS_WITH_ERROR, "Vui lòng kiểm tra đường truyền và thử lại", "Vui lòng kiểm tra đường truyền và thử lại"));
                     });
@@ -451,7 +451,7 @@ export const UploadImage = async (dataImages) => {
             arrPromise.push(helper.getPathImageIOS(img.path));
         });
         const arrLocalPathIOS = await Promise.all(arrPromise);
-        console.log(arrLocalPathIOS);
+        // console.log(arrLocalPathIOS);
         arrLocalPathIOS.forEach((img, index) => {
             dataImages[index].path = img;
         });
@@ -512,7 +512,7 @@ export const UploadImage = async (dataImages) => {
             return Promise.resolve({ images: listImages });
         })
         .catch((err) => {
-            console.log('err: ', err);
+            // console.log('err: ', err);
             return Promise.reject(
                 setCustomError(
                     STATUS_CODE_FAILED_UPLOAD,

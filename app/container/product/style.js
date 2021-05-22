@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         bottom: 10,
         display: 'flex',
+        height: 50,
         justifyContent: 'center',
         left: 0,
         marginVertical: 10,
@@ -33,15 +34,19 @@ const styles = StyleSheet.create({
         marginTop: 5,
         padding: 10
     },
+    categoryItem_black: {
+        borderColor: Colors.ZAMBEZI,
+        color: Colors.BLACK
+    },
     imgTitle: {
         borderRadius: 50,
-        bottom: 0,
         height: 50,
-        left: '10%',
+        left: 10,
         marginHorizontal: 0,
         position: 'absolute',
-        right: '10%',
-        top: 0
+        right: 10,
+        top: 0,
+        width: windowWidth - 20
     },
     productList: {
         flexDirection: 'row',
@@ -57,28 +62,37 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: '100%'
     },
+    swiperItem: {
+        color: Colors.WHITE,
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
     viewmoreProduct: {
+        backgroundColor: Colors.WHITE,
         borderColor: Colors.TROPICAL_RAIN_FOREST,
-        borderRadius: 4,
+        borderRadius: 5,
         borderWidth: 1,
-        color: Colors.TROPICAL_RAIN_FOREST,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
         marginBottom: 10,
-        marginHorizontal: 5,
+        marginLeft: 5,
         marginTop: 5,
-        padding: 10,
         textAlign: 'center',
         width: windowWidth - 10
     },
-    viewmoreProduct_cate: {
+    viewmoreProduct_cateName: {
         color: Colors.TROPICAL_RAIN_FOREST,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        paddingLeft: 5
     },
-    viewmoreProduct_title: {
-        color: Colors.TROPICAL_RAIN_FOREST,
-        marginRight: 3
+    viewmoreProduct_text: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10,
+        textAlign: 'center',
+        justifyContent: 'center'
+    },
+    viewmoreProduct_total: {
+        color: Colors.TROPICAL_RAIN_FOREST
     }
 });
 export default styles;

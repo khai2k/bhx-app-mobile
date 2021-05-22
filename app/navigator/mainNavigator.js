@@ -15,7 +15,7 @@ import UserInfo from '../container/userinfocart';
 import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import NavMenu from '../components/NavMenu/NavMenu';
+import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 
 const MainStack = createStackNavigator();

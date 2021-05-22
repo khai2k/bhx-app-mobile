@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, PermissionsAndroid } from 'react-native';
+import { View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,30 +13,23 @@ class Location extends Component {
     }
 
     componentDidMount() {
-        const hasLocationPermission = PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        Geolocation.getCurrentPosition(
+            (position) => {
+                const crrLat = position.coords.latitude;
+                const crrLong = position.coords.longitude;
+
+                if (crrLat > 0 && crrLong > 0) {
+                    this.props.locationAction.location_getCurrent(
+                        crrLat,
+                        crrLong
+                    );
+                }
+            },
+            (error) => {
+                console.log(error);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
-
-        if (hasLocationPermission) {
-            Geolocation.getCurrentPosition(
-                (position) => {
-                    const crrLat = position.coords.latitude;
-                    const crrLong = position.coords.longitude;
-
-                    if (crrLat > 0 && crrLong > 0) {
-                        const value = this.props.locationAction.location_getCurrent();
-                        console.log('value');
-                        console.log(value);
-                    }
-                },
-                (error) => {
-                    console.log(error);
-                },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-            );
-        } else {
-            console.log('Denied');
-        }
     }
 
     render() {
@@ -46,7 +39,7 @@ class Location extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        cartInfo: state.cartReducer
+        crrLocationRs: state.locationReducer
     };
 };
 
