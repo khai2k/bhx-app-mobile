@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         fontSize: 15,
-        padding: 10
+        padding: 5
     },
     btnGetHistoryAddress: {
         alignItems: 'center',
@@ -23,8 +23,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 15
     },
+    checkbox: {
+        alignSelf: 'center'
+    },
+    checkboxContainer: {
+        flexDirection: 'row'
+    },
     container: {
         backgroundColor: '#F1F4F9'
+    },
+    delichoose: {
+        borderColor: '#D6E0F5',
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        display: 'flex',
+        width: '100%'
     },
     disBox: {
         borderColor: '#D6E0F5',
@@ -50,11 +64,33 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10
     },
+    inputNote: {
+        borderColor: '#D6E0F5',
+        borderRadius: 4,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        marginTop: 10,
+        padding: 10,
+        textAlignVertical: 'top',
+        width: '100%'
+    },
+    label: {
+        margin: 8
+    },
     logoback: {
-        marginLeft: 15
+        height: 10,
+        marginLeft: 15,
+        resizeMode: 'contain',
+        width: 5
     },
     logohome: {
-        marginRight: 10
+        height: 20,
+        marginRight: 10,
+        resizeMode: 'contain',
+        width: 20
+    },
+    marginTop: {
+        marginTop: 10
     },
     noBorder: {
         borderWidth: 0
@@ -77,7 +113,7 @@ const styles = StyleSheet.create({
     radioButton: {
         alignItems: 'center',
         backgroundColor: '#F8F8F8',
-        borderColor: '#E6E6E6',
+        borderColor: '#008848',
         borderRadius: 10,
         borderWidth: 1,
         height: 20,
@@ -92,7 +128,7 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     radioButtonIcon: {
-        backgroundColor: '#98CFB6',
+        backgroundColor: '#008848',
         borderRadius: 7,
         height: 14,
         width: 14
@@ -113,7 +149,7 @@ const styles = StyleSheet.create({
     },
     textHistoryAddress: {
         color: '#3B854E',
-        fontWeight: '500',
+        fontWeight: '600',
         textAlign: 'center'
     },
     wardBox: {

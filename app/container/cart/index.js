@@ -46,15 +46,8 @@ class Cart extends Component {
         return (
             <View style={styles.cartinfo}>
                 <Header />
-                <TouchableOpacity
-                    style={styles.btnbuy}
-                    onPress={() =>
-                        // this.props.navigation.navigate('Cart')
-                        this.props.navigation.navigate('UserInfo')
-                    }>
-                    <Text style={styles.textbtnbuy}>ĐẶT HÀNG</Text>
-                </TouchableOpacity>
                 <ScrollView
+                    style={{ marginBottom: 80 }}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isLoading}
