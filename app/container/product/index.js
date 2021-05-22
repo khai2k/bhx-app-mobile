@@ -5,8 +5,7 @@ import {
     Text,
     ScrollView,
     FlatList,
-    TouchableOpacity,
-    Alert
+    TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
@@ -36,10 +35,7 @@ class Product extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            currentPage: 1,
-            maxPage: 1
-        };
+        this.state = {};
     }
 
     componentDidMount() {
@@ -55,10 +51,12 @@ class Product extends Component {
                     listCate={this.props.HomeReducer?.ListCategories}
                 />
                 <SliderTitle listTitle={this.listTitle} />
+
+                {/* Render line */}
                 {this.props.HomeReducer.HomeData?.map((lineItem) => {
                     const viewMoreText = `Xem thêm ${lineItem.PromotionCount} sản phẩm`;
                     const productIds = [];
-                    const pIdx = this.state.currentPage;
+
                     return (
                         // <RenderLineItem
                         //     state={this.state}
@@ -68,29 +66,29 @@ class Product extends Component {
                         // />
 
                         <View>
+                            {/* Danh sách cate line fresh 8686 */}
                             <ShowMainCate
                                 categories={lineItem.Categorys}
                                 categoryId={lineItem.CategoryId}
                             />
+
+                            {/* Render Product */}
                             <View style={styles.productList}>
                                 {lineItem.Products?.map((item) => {
                                     productIds.push(item.Id);
                                     return <ProductBox bhxProduct={item} />;
                                 })}
                             </View>
-                            {this.state.maxPage > 0 && (
+
+                            {/* Show button viewmore */}
+                            {lineItem.MaxPage > 0 && (
                                 <TouchableOpacity
                                     onPress={() => {
                                         GenMoreProduct(
-                                            this.state,
-                                            pIdx,
+                                            1,
                                             lineItem.CategoryIds,
                                             productIds
                                         );
-                                        this.setState({
-                                            currentPage: pIdx + 1,
-                                            maxPage: -1
-                                        });
                                     }}
                                     style={styles.viewmoreProduct}>
                                     <View style={styles.viewmoreProduct_text}>
@@ -125,7 +123,7 @@ const handleScroll = (event) => {
     console.log('--------------');
 };
 
-function GenMoreProduct(props, currentPage, categoryIds, excludeProductIds) {
+function GenMoreProduct(currentPage, categoryIds, excludeProductIds) {
     console.log(currentPage.toString());
     console.log(categoryIds.toString());
     console.log(excludeProductIds.toString());
