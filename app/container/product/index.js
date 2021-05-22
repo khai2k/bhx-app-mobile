@@ -9,36 +9,33 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
-import { helper } from '@app/common';
 import * as homeCreator from './action';
 import ProductBox from '../../components/ProductBox/ProductBox';
-
 // import ProductExpiredBox from '../../components/ProductBox/ProductExpiredBox';
 // import ComboProductBox from '../../components/ProductBox/ComboProductBox';
-
 import ListCategories from './ListCategories';
 import SliderTitle from './SliderTitle';
 import styles from './style';
 
 class Product extends Component {
+    listTitle = [
+        {
+            titleId: 1,
+            name: '5 lần free ship cho khách hàng mới'
+        },
+        {
+            titleId: 2,
+            name: 'THỊT, CÁ, TRỨNG, RAU CỦ'
+        },
+        {
+            titleId: 3,
+            name: 'Hơn 10k sản phẩm đang kinh doanh'
+        }
+    ];
+
     constructor(props) {
         super(props);
-        this.state = {
-            listTitle: [
-                {
-                    titleId: 1,
-                    name: '5 lần free ship cho khách hàng mới'
-                },
-                {
-                    titleId: 2,
-                    name: 'THỊT, CÁ, TRỨNG, RAU CỦ'
-                },
-                {
-                    titleId: 3,
-                    name: 'Hơn 10k sản phẩm đang kinh doanh'
-                }
-            ]
-        };
+        this.state = {};
     }
 
     componentDidMount() {
@@ -47,22 +44,71 @@ class Product extends Component {
     }
 
     render() {
-        if (this.props.HomeReducer === null) {
-            return null;
-        }
-
         return (
             <ScrollView style={styles.body} onScroll={handleScroll}>
                 <Header navigation={this.props.navigation} />
-
                 <ListCategories
-                    listCate={this.props.HomeReducer.ListCategories}
+                    listCate={this.props.HomeReducer?.ListCategories}
                 />
+                <SliderTitle listTitle={this.listTitle} />
 
-                <SliderTitle listTitle={this.state.listTitle} />
+                {/* Render line */}
+                {this.props.HomeReducer.HomeData?.map((lineItem) => {
+                    const viewMoreText = `Xem thêm ${lineItem.PromotionCount} sản phẩm`;
+                    const productIds = [];
 
-                {this.props.HomeReducer.HomeData?.map((item) => {
-                    return ShowBoxCate(item);
+                    return (
+                        // <RenderLineItem
+                        //     state={this.state}
+                        //     actionHome={this.props.actionHome}
+                        //     category={lineItem}
+                        //     // productIds={this.productIds}
+                        // />
+
+                        <View>
+                            {/* Danh sách cate line fresh 8686 */}
+                            <ShowMainCate
+                                categories={lineItem.Categorys}
+                                categoryId={lineItem.CategoryId}
+                            />
+
+                            {/* Render Product */}
+                            <View style={styles.productList}>
+                                {lineItem.Products?.map((item) => {
+                                    productIds.push(item.Id);
+                                    return <ProductBox bhxProduct={item} />;
+                                })}
+                            </View>
+
+                            {/* Show button viewmore */}
+                            {lineItem.MaxPage > 0 && (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        GenMoreProduct(
+                                            1,
+                                            lineItem.CategoryIds,
+                                            productIds
+                                        );
+                                    }}
+                                    style={styles.viewmoreProduct}>
+                                    <View style={styles.viewmoreProduct_text}>
+                                        <Text
+                                            style={
+                                                styles.viewmoreProduct_total
+                                            }>
+                                            {viewMoreText}
+                                        </Text>
+                                        <Text
+                                            style={
+                                                styles.viewmoreProduct_cateName
+                                            }>
+                                            {lineItem.Text.toLowerCase()}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    );
                 })}
             </ScrollView>
         );
@@ -77,35 +123,81 @@ const handleScroll = (event) => {
     console.log('--------------');
 };
 
-const ShowBoxCate = (category) => {
-    if (category != null && !helper.IsEmptyArray(category)) {
-        const categoryName = category.Text;
-        const totalProduct = category.PromotionCount;
-        const viewMoreText = `Xem thêm ${totalProduct} sản phẩm ${categoryName.toLowerCase()}`;
+function GenMoreProduct(currentPage, categoryIds, excludeProductIds) {
+    console.log(currentPage.toString());
+    console.log(categoryIds.toString());
+    console.log(excludeProductIds.toString());
+    console.log('--------------');
+}
 
-        return (
-            <View>
-                {ShowMainCate(category)}
-                <View style={styles.productList}>
-                    {category.Products?.map((item) => {
-                        return <ProductBox bhxProduct={item} />;
-                    })}
-                </View>
-                {ShowViewmore(category.MaxPage, viewMoreText)}
-            </View>
-        );
-    } else {
-        return null;
-    }
-};
+// const RenderLineItem = (props) => {
+//     const productIds = [];
 
-const ShowMainCate = (category) => {
-    if (category.CategoryId === 8686) {
-        return (
+//     // function GenMoreProduct(pageIndex, categoryIds, excludeProductIds) {
+//     // props.actionHome
+//     //     .get_more_listproducts(
+//     //         categoryIds.toString(),
+//     //         excludeProductIds.toString(),
+//     //         pageIndex
+//     //     )
+//     //     .then((res) => {
+//     //         console.log('GenMoreProduct Data:');
+//     //         console.log(res);
+//     //         Alert.alert(res.Message);
+//     //     })
+//     //     .catch((error) => {
+//     //         console.log('GenMoreProduct Error: ', error);
+//     //     });
+//     // }
+
+//     const {
+//         Categorys,
+//         CategoryId,
+//         Products,
+//         PromotionCount,
+//         MaxPage,
+//         PageIndex,
+//         CategoryIds
+//     } = props.category;
+//     const viewMoreText = `Xem thêm ${PromotionCount} sản phẩm`;
+
+//     return (
+//         <View>
+//             <ShowMainCate categories={Categorys} categoryId={CategoryId} />
+//             <View style={styles.productList}>
+//                 {Products?.map((item) => {
+//                     productIds.push(item.Id);
+//                     return <ProductBox bhxProduct={item} />;
+//                 })}
+//             </View>
+//             {MaxPage > 0 && (
+//                 <TouchableOpacity
+//                     onPress={() =>
+//                         GenMoreProduct(PageIndex, CategoryIds, productIds)
+//                     }
+//                     style={styles.viewmoreProduct}>
+//                     <View style={styles.viewmoreProduct_text}>
+//                         <Text style={styles.viewmoreProduct_total}>
+//                             {viewMoreText}
+//                         </Text>
+//                         <Text style={styles.viewmoreProduct_cateName}>
+//                             {props.category.Text.toLowerCase()}
+//                         </Text>
+//                     </View>
+//                 </TouchableOpacity>
+//             )}
+//         </View>
+//     );
+// };
+
+const ShowMainCate = (props) => {
+    const { categories, categoryId } = props;
+    return (
+        categoryId === 8686 && (
             <View style={styles.boxCategory}>
                 <FlatList
                     horizontal
-                    data={category.Categorys}
+                    data={categories}
                     renderItem={({ item }) => (
                         <TouchableOpacity>
                             <View>
@@ -121,36 +213,8 @@ const ShowMainCate = (category) => {
                     )}
                 />
             </View>
-        );
-    }
-};
-
-const ShowViewmore = (maxpage, viewMoreText) => {
-    if (maxpage > 0) {
-        return (
-            <TouchableOpacity
-                onPress={GenMoreProduct()}
-                style={styles.viewmoreProduct}>
-                <Text style={styles.viewmoreProduct_text}>{viewMoreText}</Text>
-            </TouchableOpacity>
-        );
-    } else {
-        return null;
-    }
-};
-
-const GenMoreProduct = () => {
-    return console.log('test');
-
-    // this.props.actionHome
-    //     .get_more_listproducts('', '', 0)
-    //     .then((res) => {
-    //         console.log('get_more_listproducts');
-    //         console.log(res);
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     });
+        )
+    );
 };
 
 const mapStateToProps = (state) => {
