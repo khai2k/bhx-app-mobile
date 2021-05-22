@@ -56,8 +56,7 @@ export const cartState = {
                     ExpiredInfo: '',
                     GACategoryName: 'Nước ngọt, giải khát',
                     Id: 196828,
-                    Image:
-                        'https://cdn.tgdd.vn/Products/images/2443/196828/bhx/nuoc-ngot-coca-cola-zero-15-lit-201903181312204664_300x300.jpg',
+                    Image: 'https://cdn.tgdd.vn/Products/images/2443/196828/bhx/nuoc-ngot-coca-cola-zero-15-lit-201903181312204664_300x300.jpg',
                     IsExpiredCoolProduct: false,
                     IsFresh: false,
                     IsFreshExpired: false,
@@ -76,5 +75,6 @@ export const cartState = {
         ],
         ListCartItemBuy: [],
         ListCartItemOff: []
-    }
+    },
+    CartSimple: {}
 };

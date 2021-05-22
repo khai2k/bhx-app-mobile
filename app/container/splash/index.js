@@ -10,6 +10,7 @@ import { Storage } from '@app/common';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
+import * as cartCreator from '../../container/cart/action';
 
 class Splash extends Component {
     constructor(props) {
@@ -21,6 +22,7 @@ class Splash extends Component {
     componentDidMount() {
         // Lấy dữ liệu menu
         this.props.actionGetMenu.menu_get();
+        this.props.actionCart.cart_get_simple();
 
         const { isShowSplash } = this.props;
         messaging()
@@ -62,7 +64,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
-        actionGetMenu: bindActionCreators(actionMenuCreator, dispatch)
+        actionGetMenu: bindActionCreators(actionMenuCreator, dispatch),
+        actionCart: bindActionCreators(cartCreator, dispatch)
     };
 };
 

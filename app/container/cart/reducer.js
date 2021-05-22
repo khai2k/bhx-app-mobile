@@ -27,6 +27,11 @@ const cartReducer = function (state = _state.cartState, action) {
                 Cart: action.cartInfo.cart.Cart,
                 CartTotal: action.cartInfo.cart.CartTotal
             };
+        case _action.cartAction.CART_GET_SIMPLE:
+            return {
+                ...state,
+                CartSimple: action.cartInfo
+            };
         default:
             return state;
     }

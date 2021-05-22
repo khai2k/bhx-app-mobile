@@ -16,16 +16,15 @@ const ProductBox = (props) => {
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
 
-    const cart = useSelector((state) => state.cartReducer.Cart);
-    const [guildId, setGuildId] = useState(cart.CartId);
+    const cart = useSelector((state) => state.cartReducer.CartSimple);
+    const [guildId, setGuildId] = useState('');
 
     const checkFillButtonBuy = () => {
-        if (cart && cart.ListCartItem.length > 0) {
-            const containsProduct = cart.ListCartItem.find(
-                (item) => item.Info.Id === props.bhxProduct.Id
-            );
-            if (containsProduct) {
-                setNumberItems(containsProduct.Quantity);
+        var idProduct = props.bhxProduct.Id;
+        if (cart && cart.ProInCart) {
+            if (cart.ProInCart[idProduct]) {
+                setGuildId(cart.ProInCart[idProduct][0]);
+                setNumberItems(cart.ProInCart[idProduct][1]);
                 setBuyButtonVisible(true);
             } else {
                 setNumberItems(1);
@@ -90,8 +89,14 @@ const ProductBox = (props) => {
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
-                    setNumberItems(1);
-                    setGuildId(res.Value?.cart.Cart.CartId);
+                    // setNumberItems(1);
+                    // setBuyButtonVisible(true);
+                    // const infoCartProduct =
+                    //     res.Value?.cart.Cart.ListCartItem.find(
+                    //         (item) => item.Info.Id === props.bhxProduct.Id
+                    //     );
+                    // setGuildId(infoCartProduct.GuildId);
+                    actionCart.cart_get_simple();
                 }
             })
             .catch((error) => {
@@ -99,23 +104,39 @@ const ProductBox = (props) => {
             });
     };
     const setQuantityMinus = () => {
-        actionCart
-            .cart_update_item_product(guildId, numberItems - 1)
-            .then((res) => {
-                console.log('cart_update_item_product');
-                console.log(res);
-                if (res.ResultCode > 0) {
-                    alertAPI(res.Message);
-                } else {
-                    setNumberItems(numberItems - 1);
-                    if (numberItems <= 0) {
-                        setBuyButtonVisible(false);
+        if (numberItems <= 1) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        //setBuyButtonVisible(false);
+                        actionCart.cart_get_simple();
                     }
-                }
-            })
-            .catch((error) => {
-                alertAPI(error);
-            });
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, numberItems - 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        //setNumberItems(numberItems - 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
     };
 
     const setQuantityPlus = () => {
@@ -133,7 +154,8 @@ const ProductBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        setNumberItems(numberItems + 1);
+                        //setNumberItems(numberItems + 1);
+                        actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {

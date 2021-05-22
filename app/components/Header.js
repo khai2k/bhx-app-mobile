@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
     Text,
     View,
@@ -13,15 +14,22 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import * as cartCreator from '@app/container/cart/action';
 import LoadLocationTrigger from './Location';
 import LocationModal from './Location/ModalLocation';
 
 const Header = () => {
     const navigation = useNavigation();
-
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const locationinfo = useSelector((state) => state.locationReducer);
+    const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
+
+    useEffect(() => {
+        actionCart.cart_get_simple();
+    }, [cartSimpleInfo.Total]);
 
     return (
         <SafeAreaView>
@@ -66,10 +74,14 @@ const Header = () => {
                             <Text style={styles.textcolor}>
                                 {translate('Header_Cart')}
                             </Text>
-                            <Text style={styles.textcolor}>10.000.000đ</Text>
+                            <Text style={styles.textcolor}>
+                                {cartSimpleInfo?.TotalStr}
+                            </Text>
                         </View>
                         <View style={styles.boxnumber}>
-                            <Text style={styles.number}>5</Text>
+                            <Text style={styles.number}>
+                                {cartSimpleInfo?.Item}
+                            </Text>
                             <Image
                                 style={styles.iconcart}
                                 source={require('../../assets/images/icon-shopping-cart.png')}
@@ -200,4 +212,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Header;
+export default React.memo(Header);

@@ -23,7 +23,7 @@ const Product = (props) => {
     const [pageIndex, setPageIndex] = useState(PageIndex);
     useEffect(() => {
         setPageIndex(0);
-    }, []);
+    }, [PageIndex]);
 
     const loadMoreProducts = () => {
         const bodyApi = {
@@ -63,9 +63,11 @@ const Product = (props) => {
                     numColumns={3}
                     data={listProductLoadMore}
                     keyExtractor={(item) => `product_${item.Id}`}
+                    extraData={listProductLoadMore}
                     renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 />
-                {Products.length === PageSize ? (
+                {listProductLoadMore.length ===
+                (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
                     <TouchableOpacity
                         onPress={loadMoreProducts}
                         className="loadMore"

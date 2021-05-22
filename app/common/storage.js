@@ -30,14 +30,15 @@ export const saveImage = (filePath) => {
 };
 
 export const getItem = (key) => {
-    return new Promise((resolve, reject) => {
-        AsyncStorage.getItem(key, (error, result) => {
-            if (!helper.IsValidateObject(result)) {
-                return resolve(result);
-            }
-            console.log(`GET ITEM WITH KEY ${key} AND VALUE ${result}`);
-            resolve(result);
-        });
+    return new Promise(async (resolve, reject) => {
+        await AsyncStorage.getItem(key)
+            .then((values) => {
+                resolve(values);
+            })
+            .catch((error) => {
+                console.log(error);
+                reject(error);
+            });
     });
 };
 export const setItem = (key, value) => {
