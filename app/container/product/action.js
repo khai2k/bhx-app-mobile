@@ -77,9 +77,9 @@ export const get_listproducts = function () {
 };
 
 export const get_more_listproducts = function (
+    pageIndex,
     categoryIds,
-    excludeProductIds,
-    pageIndex
+    excludeProductIds
 ) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
