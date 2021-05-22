@@ -16,8 +16,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
-import FakeData from './FakeData';
-
 const THUMB_SIZE = 50;
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = width * 0.75;
@@ -33,7 +31,6 @@ export default class ProductGallery extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: FakeData,
             crrImgIdx: 0,
             showModal: false
         };
@@ -43,9 +40,10 @@ export default class ProductGallery extends Component {
     }
 
     render() {
-        const { data, crrImgIdx } = this.state;
+        const data = this.props.Gallery_product;
+        const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.uri }));
+        const images = data.map((s) => ({ url: s.ImageThumb }));
 
         return (
             <View
@@ -82,7 +80,7 @@ export default class ProductGallery extends Component {
                                             height: IMG_HEIGHT
                                         }}
                                         resizeMode="contain"
-                                        source={{ uri: item.uri }}
+                                        source={{ uri: item.ImageThumb }}
                                     />
                                 </TouchableOpacity>
                             );
@@ -187,7 +185,9 @@ export default class ProductGallery extends Component {
                             }}
                             backgroundColor="white"
                             footerContainerStyle={[styles.modalFooterStyle]}
-                            renderFooter={this._renderFooterModalItems}
+                            renderFooter={() =>
+                                this._renderFooterModalItems(data)
+                            }
                         />
                     </Modal>
                 </View>
@@ -195,7 +195,7 @@ export default class ProductGallery extends Component {
         );
     }
 
-    _renderFooterModalItems = () => (
+    _renderFooterModalItems = (data) => (
         <View
             style={{
                 width,
@@ -211,8 +211,8 @@ export default class ProductGallery extends Component {
                     alignItems: 'center',
                     minWidth: width
                 }}
-                data={this.state.data}
-                keyExtractor={(item) => `thumbRef_${item.uri}`}
+                data={data}
+                keyExtractor={(item) => `thumbRef_${item.ImageThumb}`}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -238,7 +238,7 @@ export default class ProductGallery extends Component {
                                         index === this.state.crrImgIdx ? 1 : 0.5
                                 }}
                                 source={{
-                                    uri: item.uri
+                                    uri: item.ImageThumb
                                 }}
                             />
                         </TouchableOpacity>

@@ -83,6 +83,9 @@ export const get_more_listproducts = function (
 ) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
+            console.log('PageIndex: ', pageIndex);
+            console.log('excludeProductIds: ', excludeProductIds);
+            console.log('categoryIds: ', categoryIds);
             const bodyApi = {
                 token: '',
                 us: '',
@@ -104,7 +107,7 @@ export const get_more_listproducts = function (
             apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('GET_MORE_LIST_PRODUCT Data:', response);
-                    const loadMoreProducts = { ...response.Value };
+                    const loadMoreProducts = { ...response };
                     dispatch({
                         type: GET_MORE_LIST_PRODUCT,
                         loadMoreProducts
@@ -112,7 +115,7 @@ export const get_more_listproducts = function (
                     resolve(response);
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.log('GET_MORE_LIST_PRODUCT Error:', error);
                     reject(error);
                 });
         });

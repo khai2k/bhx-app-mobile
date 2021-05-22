@@ -7,11 +7,23 @@ const productDetailStateInit = {
     Product_relative: [],
     Combo_detail: [],
     Box_banner: '',
-    isExchangeProduct: true
+    isExchangeProduct: true,
+    Gallery_product: [],
+    Is_loading: true
 };
 
 const productDetailReducer = function (state = productDetailStateInit, action) {
     switch (action.type) {
+        case _action.productDetailAction.IS_LOADING:
+            return {
+                ...state,
+                Is_loading: action.data
+            };
+        case _action.productDetailAction.GET_GALLERY_PRODUCT:
+            return {
+                ...state,
+                Gallery_product: action.data
+            };
         case _action.productDetailAction.GET_PRODUCT_DETAIL:
             if (action.data.exchangeProducts.length <= 1) {
                 return {
@@ -22,7 +34,8 @@ const productDetailReducer = function (state = productDetailStateInit, action) {
             } else {
                 return {
                     ...state,
-                    Product_detail: action.data
+                    Product_detail: action.data,
+                    isExchangeProduct: true
                 };
             }
         case _action.productDetailAction.GET_PRODUCT_RELATIVE:
