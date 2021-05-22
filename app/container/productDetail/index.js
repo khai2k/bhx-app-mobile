@@ -39,31 +39,12 @@ class ProductDetail extends Component {
                         <ProductGallery
                             Gallery_product={this.props.Gallery_product}
                         />
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                <ProductArticle
-                                    product={this.props.Product_detail}
-                                />
-                            </View>
-                            {!this.props.isExchangeProduct && (
-                                <View>
-                                    <Box
-                                        bHXProduct={
-                                            this.props.Product_detail
-                                                .bHXProduct || []
-                                        }
-                                    />
-                                </View>
-                            )}
-                        </View>
-                        {this.props.isExchangeProduct && (
-                            <GroupBoxOption
-                                exchangeProducts={
-                                    this.props.Product_detail
-                                        .exchangeProducts || []
-                                }
-                            />
-                        )}
+
+                        <ProductArticle
+                            product={this.props.Product_detail}
+                            isExchangeProduct={this.props.isExchangeProduct}
+                        />
+
                         {this.state.comboProducts && (
                             <Combo comboProducts={this.props.Combo_detail} />
                         )}

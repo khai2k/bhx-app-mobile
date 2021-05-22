@@ -11,18 +11,16 @@ import {
 } from 'react-native';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
+import Box from './box';
+import GroupBoxOption from './groupBoxOption';
 
 const ProductArticle = (props) => {
     const contentWidth = useWindowDimensions().width;
-    const { product } = props;
+    const { product, isExchangeProduct } = props;
     const { MetaDescription, ProductArticle, FeatureSpecification } = product;
     const [isShowModal, setIsShowModal] = useState(false);
-    return (
-        <View style={{ margin: 5 }}>
-            <Text>{MetaDescription}</Text>
-            <TouchableOpacity onPress={() => setIsShowModal(true)}>
-                <Text style={{ color: COLOR.PRIMARY }}>Xem chi tiet</Text>
-            </TouchableOpacity>
+    function renderModal() {
+        return (
             <Modal animationType="slide" transparent visible={isShowModal}>
                 <View style={styles.modalView}>
                     <View style={styles.header}>
@@ -39,6 +37,7 @@ const ProductArticle = (props) => {
                             </View>
                         </TouchableOpacity>
                     </View>
+
                     <ScrollView>
                         <View
                             style={{
@@ -71,7 +70,11 @@ const ProductArticle = (props) => {
                                 padding: 10,
                                 backgroundColor: '#fff'
                             }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 'bold'
+                                }}>
                                 Bài viết sản phẩm
                             </Text>
                             <HTML
@@ -80,14 +83,51 @@ const ProductArticle = (props) => {
                             />
                         </View>
                     </ScrollView>
-                    <Button
-                        title="Learn More"
-                        onPress={() => {
-                            setIsShowModal(false);
-                        }}
-                    />
+                    <View style={{ paddingVertical: 10, alignItems: 'center' }}>
+                        <ScrollView>
+                            {isExchangeProduct ? (
+                                <GroupBoxOption
+                                    exchangeProducts={
+                                        product.exchangeProducts || []
+                                    }
+                                />
+                            ) : (
+                                <Box bHXProduct={product.bHXProduct || []} />
+                            )}
+                        </ScrollView>
+                    </View>
                 </View>
             </Modal>
+        );
+    }
+    function renderDescription() {
+        return (
+            <View style={{ margin: 5, flex: 1 }}>
+                <Text>{MetaDescription}</Text>
+                <TouchableOpacity onPress={() => setIsShowModal(true)}>
+                    <Text style={{ color: COLOR.PRIMARY }}>Xem chi tiet</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+    return (
+        <View>
+            <View style={{ flexDirection: 'row' }}>
+                {renderDescription()}
+                {!isExchangeProduct && (
+                    <View>
+                        <Box bHXProduct={product.bHXProduct || []} />
+                    </View>
+                )}
+            </View>
+            {isExchangeProduct && (
+                <View>
+                    <GroupBoxOption
+                        exchangeProducts={product.exchangeProducts || []}
+                    />
+                </View>
+            )}
+            {renderModal()}
         </View>
     );
 };
@@ -99,6 +139,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 22
     },
+    fixBottom: {
+        position: 'absolute',
+        top: 100,
+        zIndex: 1111
+    },
     header: {
         backgroundColor: '#fff',
         flexDirection: 'row',
@@ -106,12 +151,11 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: '#f5f8fd',
-        zIndex: 1000
+        flex: 1
     },
     product_info: {},
     row_info: {
-        flexDirection: 'row',
-        minHeight: 30
+        flexDirection: 'row'
     }
 });
 
