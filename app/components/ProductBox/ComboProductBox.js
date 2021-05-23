@@ -34,7 +34,8 @@ const ComboProductBox = (props) => {
     };
     useEffect(() => {
         checkFillButtonBuy();
-    });
+    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+
     const handleInputNumber = (number) => {
         if (helper.isEmptyOrNull(number)) {
             return;

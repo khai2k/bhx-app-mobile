@@ -27,9 +27,9 @@ const Header = () => {
     const locationinfo = useSelector((state) => state.locationReducer);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
-    useEffect(() => {
-        actionCart.cart_get_simple();
-    }, [cartSimpleInfo.Total]);
+    // useEffect(() => {
+    //     actionCart.cart_get_simple();
+    // }, [cartSimpleInfo.Total]);
 
     return (
         <SafeAreaView>

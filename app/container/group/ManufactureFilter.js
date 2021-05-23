@@ -17,22 +17,19 @@ const ManufactureFilter = (props) => {
     const dispatch = useDispatch();
     const actionCategory = bindActionCreators(categoryCreator, dispatch);
     const [visiblePopup, setVisiblePopup] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     const updateVisibleStatus = (status) => {
         setVisiblePopup(status);
     };
 
-    const selectBrand = async (brandId) => {
-        setIsLoading(true);
+    const selectBrand = (brandId) => {
         const selectedBrand = brandId === props.selectedBrand ? 0 : brandId;
-        await actionCategory.category_filter(
+        actionCategory.category_filter(
             props.infoCate.Id,
             selectedBrand,
             props.selectedProps
         );
         actionCategory.select_brand(selectedBrand);
-        setIsLoading(false);
     };
 
     const isExtendBrands = props.brands && props.brands.length > 10;
@@ -61,6 +58,7 @@ const ManufactureFilter = (props) => {
                     ]}
                     horizontal
                     data={listBrands}
+                    keyExtractor={(item) => `manu_${item.Id}`}
                     renderItem={({ item, index }) => (
                         <View className="it" style={styles.it}>
                             {index === 10 ? (

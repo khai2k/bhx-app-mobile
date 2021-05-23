@@ -34,7 +34,8 @@ const ProductExpiredBox = (props) => {
     };
     useEffect(() => {
         checkFillButtonBuy();
-    });
+    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+
     const handleInputNumber = (number) => {
         if (helper.isEmptyOrNull(number)) {
             return;
@@ -86,13 +87,6 @@ const ProductExpiredBox = (props) => {
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
-                    // setNumberItems(1);
-                    // setBuyButtonVisible(true);
-                    // const infoCartProduct =
-                    //     res.Value?.cart.Cart.ListCartItem.find(
-                    //         (item) => item.Info.Id === props.bhxProduct.Id
-                    //     );
-                    // setGuildId(infoCartProduct.GuildId);
                     actionCart.cart_get_simple();
                 }
             })
@@ -110,7 +104,6 @@ const ProductExpiredBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        // setBuyButtonVisible(false);
                         actionCart.cart_get_simple();
                     }
                 })
@@ -126,7 +119,6 @@ const ProductExpiredBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        // setNumberItems(numberItems - 1);
                         actionCart.cart_get_simple();
                     }
                 })
@@ -151,7 +143,6 @@ const ProductExpiredBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        // setNumberItems(numberItems + 1);
                         actionCart.cart_get_simple();
                     }
                 })

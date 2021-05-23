@@ -56,34 +56,34 @@ const Product = (props) => {
                 console.log(error);
             });
     };
-
-    if (Products && Products.length > 0) {
-        return (
-            <ScrollView nestedScrollEnabled>
-                <FlatList
-                    numColumns={3}
-                    data={listProductLoadMore}
-                    keyExtractor={(item) => `product_${item.Id}`}
-                    extraData={listProductLoadMore}
-                    renderItem={({ item }) => <ProductBox bhxProduct={item} />}
+    const loadMoreButton = () => {
+        return listProductLoadMore.length ===
+            (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+            <TouchableOpacity
+                onPress={loadMoreProducts}
+                className="loadMore"
+                style={styles.loadMore}>
+                <Text style={styles.loadMoreText}>
+                    Còn {Total - pageIndex * PageSize} sản phẩm{' '}
+                </Text>
+                <Text style={styles.loadMoreTextBold}>{Name}</Text>
+                <Image
+                    style={styles.iconDown}
+                    source={require('../../../assets/images/chevron-down.png')}
                 />
-                {listProductLoadMore.length ===
-                (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
-                    <TouchableOpacity
-                        onPress={loadMoreProducts}
-                        className="loadMore"
-                        style={styles.loadMore}>
-                        <Text style={styles.loadMoreText}>
-                            Còn {Total - pageIndex * PageSize} sản phẩm{' '}
-                        </Text>
-                        <Text style={styles.loadMoreTextBold}>{Name}</Text>
-                        <Image
-                            style={styles.iconDown}
-                            source={require('../../../assets/images/chevron-down.png')}
-                        />
-                    </TouchableOpacity>
-                ) : null}
-            </ScrollView>
+            </TouchableOpacity>
+        ) : null;
+    };
+    if (listProductLoadMore && listProductLoadMore.length > 0) {
+        return (
+            <FlatList
+                numColumns={3}
+                data={listProductLoadMore}
+                keyExtractor={(item) => `product_${item.Id}`}
+                extraData={listProductLoadMore}
+                renderItem={({ item }) => <ProductBox bhxProduct={item} />}
+                ListFooterComponent={loadMoreButton}
+            />
         );
     } else {
         return (
@@ -144,4 +144,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Product;
+export default React.memo(Product);

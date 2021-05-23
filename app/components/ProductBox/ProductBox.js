@@ -9,6 +9,7 @@ import BuyBox from './BuyBox';
 import styles from './style';
 
 const ProductBox = (props) => {
+    console.log(`Init ProductBox ${props.bhxProduct.Id}`);
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
@@ -33,8 +34,9 @@ const ProductBox = (props) => {
         }
     };
     useEffect(() => {
+        console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
-    });
+    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
@@ -115,24 +117,24 @@ const ProductBox = (props) => {
     };
 
     const addToCart = (productID) => {
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
+
         setNumberItems(1);
         setBuyButtonVisible(true);
         actionCart
             .cart_add_item_product(productID, 1)
-            .then((res) => {
+            .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
-                    // setNumberItems(1);
-                    // setBuyButtonVisible(true);
-                    // const infoCartProduct =
-                    //     res.Value?.cart.Cart.ListCartItem.find(
-                    //         (item) => item.Info.Id === props.bhxProduct.Id
-                    //     );
-                    // setGuildId(infoCartProduct.GuildId);
-                    actionCart.cart_get_simple();
+                    console.log(`End addToCart ${props.bhxProduct.Id}`);
+
+                    await actionCart.cart_get_simple();
+                    console.log(
+                        `End update addToCart cartSimple ${props.bhxProduct.Id}`
+                    );
                 }
             })
             .catch((error) => {
@@ -140,6 +142,8 @@ const ProductBox = (props) => {
             });
     };
     const setQuantityMinus = () => {
+        console.log(`Begin setQuantityMinus ${props.bhxProduct.Id}`);
+
         if (numberItems <= 1) {
             actionCart
                 .cart_remove_item_product(guildId)
@@ -150,7 +154,14 @@ const ProductBox = (props) => {
                         alertAPI(res.Message);
                     } else {
                         // setBuyButtonVisible(false);
+                        console.log(
+                            `End setQuantityMinus ${props.bhxProduct.Id}`
+                        );
+
                         actionCart.cart_get_simple();
+                        console.log(
+                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
+                        );
                     }
                 })
                 .catch((error) => {
@@ -166,7 +177,13 @@ const ProductBox = (props) => {
                         alertAPI(res.Message);
                     } else {
                         // setNumberItems(numberItems - 1);
+                        console.log(
+                            `End setQuantityMinus ${props.bhxProduct.Id}`
+                        );
                         actionCart.cart_get_simple();
+                        console.log(
+                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
+                        );
                     }
                 })
                 .catch((error) => {
@@ -176,12 +193,11 @@ const ProductBox = (props) => {
     };
 
     const setQuantityPlus = () => {
+        console.log(`Begin setQuantityPlus ${props.bhxProduct.Id}`);
+
         if (numberItems > 50) {
             alertMaxQuantityItemProduct();
         } else {
-            console.log('setQuantityPlus');
-            console.log(guildId);
-            console.log(numberItems);
             actionCart
                 .cart_update_item_product(guildId, numberItems + 1)
                 .then((res) => {
@@ -191,7 +207,13 @@ const ProductBox = (props) => {
                         alertAPI(res.Message);
                     } else {
                         // setNumberItems(numberItems + 1);
+                        console.log(
+                            `End setQuantityPlus ${props.bhxProduct.Id}`
+                        );
                         actionCart.cart_get_simple();
+                        console.log(
+                            `End setQuantityPlus cartSimple ${props.bhxProduct.Id}`
+                        );
                     }
                 })
                 .catch((error) => {
