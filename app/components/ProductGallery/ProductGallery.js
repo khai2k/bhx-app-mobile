@@ -188,6 +188,16 @@ export default class ProductGallery extends Component {
                             this.changeOffsetThumb(this.state.crrImgIdx);
                         }}
                         onRequestClose={() => this.closeModal()}>
+                        <TouchableOpacity
+                            onPress={() => this.closeModal()}
+                            style={{
+                                position: 'absolute',
+                                top: 20,
+                                right: 20,
+                                zIndex: 111
+                            }}>
+                            <Text style={{ fontSize: 20 }}>X</Text>
+                        </TouchableOpacity>
                         <ImageViewer
                             imageUrls={images}
                             index={crrImgIdx}
