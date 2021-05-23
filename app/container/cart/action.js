@@ -23,12 +23,12 @@ export const cart_get = function () {
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 8,
-                districtId: 723,
-                wardId: 11544,
-                storeId: 5771,
+                provinceId: 3,
+                districtId: 22,
+                wardId: 10194,
+                storeId: 7003,
                 data: {
-                    cartId: cartId
+                    cartId
                 }
             };
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
@@ -62,7 +62,7 @@ export const cart_update_item_product = function (guildId, iQuantity) {
                 wardId: 10194,
                 storeId: 7003,
                 data: {
-                    cartId: cartId,
+                    cartId,
                     guid: guildId,
                     reloadShiping: true,
                     isSubmtypeitOrder: true,
@@ -100,7 +100,7 @@ export const cart_remove_item_product = function (guildId) {
                 wardId: 10194,
                 storeId: 7003,
                 data: {
-                    cartId: cartId,
+                    cartId,
                     guid: guildId,
                     reloadShiping: true,
                     isSubmitOrder: true
@@ -141,7 +141,7 @@ export const cart_add_item_product = function (prodId, quantityNum) {
                 wardId: 10194,
                 storeId: 7003,
                 data: {
-                    cartId: cartId,
+                    cartId,
                     productId: prodId,
                     quantity: quantityNum,
                     increase: true,
@@ -171,7 +171,7 @@ export const cart_add_item_product = function (prodId, quantityNum) {
 export const cart_get_simple = function () {
     return (dispatch, getSate) => {
         return new Promise(async (resolve, reject) => {
-            //get cart simple from storage
+            // get cart simple from storage
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const bodyApi = {
                 token: cartId,
@@ -181,7 +181,7 @@ export const cart_get_simple = function () {
                 wardId: 10194,
                 storeId: 7003,
                 data: {
-                    cartId: cartId
+                    cartId
                 }
             };
             apiBase(API_CONST.API_REQUEST_GET_SIMPLE_CART, METHOD.POST, bodyApi)

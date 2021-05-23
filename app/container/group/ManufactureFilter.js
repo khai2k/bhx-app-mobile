@@ -17,19 +17,22 @@ const ManufactureFilter = (props) => {
     const dispatch = useDispatch();
     const actionCategory = bindActionCreators(categoryCreator, dispatch);
     const [visiblePopup, setVisiblePopup] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const updateVisibleStatus = (status) => {
         setVisiblePopup(status);
     };
 
-    const selectBrand = (brandId) => {
+    const selectBrand = async (brandId) => {
+        setIsLoading(true);
         const selectedBrand = brandId === props.selectedBrand ? 0 : brandId;
-        actionCategory.category_filter(
+        await actionCategory.category_filter(
             props.infoCate.Id,
             selectedBrand,
             props.selectedProps
         );
         actionCategory.select_brand(selectedBrand);
+        setIsLoading(false);
     };
 
     const isExtendBrands = props.brands && props.brands.length > 10;

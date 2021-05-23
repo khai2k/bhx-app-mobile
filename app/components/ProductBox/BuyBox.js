@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { helper } from '@app/common';
 import styles from './style';
 
 const BuyBox = (props) => {
+    const [quantity, setQuantity] = useState(props.numberItems);
+    useEffect(() => setQuantity(props.numberItems));
     if (props.isPageExpired) {
         const expStore = props.bhxProduct.ExpStoreId;
         const obj =
             expStore !== undefined ? props.bhxProduct.Sales[expStore] : null;
-        if (obj != null) {
+        if (!helper.isEmptyOrNull(obj)) {
             if (obj.Price > 0 && obj.StockQuantityNew >= 1) {
                 if (!props.selectedBuy) {
                     return (
@@ -36,8 +38,13 @@ const BuyBox = (props) => {
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.inputBuy}
-                                onChangeText={props.handleInputNumber}
-                                value={props.numberItems.toString()}
+                                onChangeText={(number) => {
+                                    setQuantity(+number);
+                                }}
+                                onSubmitEditing={(e) => {
+                                    props.handleInputNumber(e.nativeEvent.text);
+                                }}
+                                value={quantity.toString()}
                                 keyboardType="numeric"
                             />
                             <TouchableOpacity
@@ -114,8 +121,13 @@ const BuyBox = (props) => {
                     </TouchableOpacity>
                     <TextInput
                         style={styles.inputBuy}
-                        onChangeText={props.handleInputNumber}
-                        value={props.numberItems.toString()}
+                        onChangeText={(number) => {
+                            setQuantity(+number);
+                        }}
+                        onSubmitEditing={(e) => {
+                            props.handleInputNumber(e.nativeEvent.text);
+                        }}
+                        value={quantity.toString()}
                         keyboardType="numeric"
                     />
                     <TouchableOpacity

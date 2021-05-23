@@ -132,6 +132,7 @@ const PropertyFilter = (props) => {
                     ]}
                     horizontal
                     data={listProps}
+                    keyExtractor={(item) => `prop_${item.ValueID}`}
                     renderItem={({ item, index }) => (
                         <View className="it" style={styles.it}>
                             {index === 10 ? (

@@ -20,11 +20,11 @@ const ProductBox = (props) => {
     const [guildId, setGuildId] = useState('');
 
     const checkFillButtonBuy = () => {
-        var idProduct = props.bhxProduct.Id;
+        const idProduct = props.bhxProduct.Id;
         if (cart && cart.ProInCart) {
             if (cart.ProInCart[idProduct]) {
                 setGuildId(cart.ProInCart[idProduct][0]);
-                setNumberItems(cart.ProInCart[idProduct][1]);
+                setNumberItems(+cart.ProInCart[idProduct][1]);
                 setBuyButtonVisible(true);
             } else {
                 setNumberItems(1);
@@ -75,14 +75,50 @@ const ProductBox = (props) => {
         }
     };
     const handleInputNumber = (number) => {
-        setNumberItems(+number);
+        if (helper.isEmptyOrNull(number)) {
+            return;
+        }
+        number = +number;
+        if (number <= 0) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setBuyButtonVisible(false);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, number)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems - 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
     };
 
-    const addToCart = () => {
+    const addToCart = (productID) => {
         setNumberItems(1);
         setBuyButtonVisible(true);
         actionCart
-            .cart_add_item_product(props.bhxProduct.Id, 1)
+            .cart_add_item_product(productID, 1)
             .then((res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
@@ -113,7 +149,7 @@ const ProductBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        //setBuyButtonVisible(false);
+                        // setBuyButtonVisible(false);
                         actionCart.cart_get_simple();
                     }
                 })
@@ -129,7 +165,7 @@ const ProductBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        //setNumberItems(numberItems - 1);
+                        // setNumberItems(numberItems - 1);
                         actionCart.cart_get_simple();
                     }
                 })
@@ -154,7 +190,7 @@ const ProductBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        //setNumberItems(numberItems + 1);
+                        // setNumberItems(numberItems + 1);
                         actionCart.cart_get_simple();
                     }
                 })
@@ -190,9 +226,12 @@ const ProductBox = (props) => {
                 }
                 style={styles.productImg}>
                 <View className="boxImg" style={styles.boxImg}>
-                    <Text className="boxExpired" style={styles.boxExpired}>
-                        {props.bhxProduct.ExpiredText}
-                    </Text>
+                    {!helper.isEmptyOrNull(props.bhxProduct.ExpiredText) ? (
+                        <Text className="boxExpired" style={styles.boxExpired}>
+                            {props.bhxProduct.ExpiredText}
+                        </Text>
+                    ) : null}
+
                     <View className="imgContent" style={styles.imgContent}>
                         <Image
                             style={styles.imageProduct}
@@ -208,7 +247,7 @@ const ProductBox = (props) => {
                         props.bhxProduct.Price > 0 &&
                         props.bhxProduct.StockQuantityNew >= 1
                     ) {
-                        addToCart();
+                        addToCart(props.bhxProduct.Id);
                     }
                 }}
                 style={
@@ -239,19 +278,44 @@ const ProductBox = (props) => {
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
-                {props.bhxProduct.Sales !== null &&
-                props.bhxProduct.Sales !== undefined ? (
+                {!helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                !helper.isEmptyOrNull(
+                    props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                ) ? (
                     <TouchableOpacity
+                        onPress={() => {
+                            addToCart(
+                                props.bhxProduct.Sales[
+                                    props.bhxProduct.ExpStoreId
+                                ]
+                            ).ProductId;
+                        }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>
                         <View style={styles.expiredLine}>
                             <Text style={styles.expiredText}>Hoặc </Text>
                             <Text style={styles.expiredPrice}>
-                                MUA 4.700đ{'\n'}
+                                MUA{' '}
+                                {helper.formatMoney(
+                                    props.bhxProduct.Sales[
+                                        props.bhxProduct.ExpStoreId
+                                    ].Price
+                                )}
+                                {'\n'}
                             </Text>
                         </View>
                         <Text style={styles.expiredText}>
-                            {props.bhxProduct.ExpiredText}
+                            {!helper.isEmptyOrNull(
+                                props.bhxProduct.Sales[
+                                    props.bhxProduct.ExpStoreId
+                                ].LabelText
+                            )
+                                ? props.bhxProduct.Sales[
+                                      props.bhxProduct.ExpStoreId
+                                  ].LabelText
+                                : props.bhxProduct.Sales[
+                                      props.bhxProduct.ExpStoreId
+                                  ].ExpiredDate}
                         </Text>
                     </TouchableOpacity>
                 ) : null}
@@ -291,19 +355,44 @@ const ProductBox = (props) => {
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
-                {props.bhxProduct.Sales !== null &&
-                props.bhxProduct.Sales !== undefined ? (
+                {!helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                !helper.isEmptyOrNull(
+                    props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                ) ? (
                     <TouchableOpacity
+                        onPress={() => {
+                            addToCart(
+                                props.bhxProduct.Sales[
+                                    props.bhxProduct.ExpStoreId
+                                ]
+                            ).ProductId;
+                        }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>
                         <View style={styles.expiredLine}>
                             <Text style={styles.expiredText}>Hoặc </Text>
                             <Text style={styles.expiredPrice}>
-                                MUA 4.700đ{'\n'}
+                                MUA{' '}
+                                {helper.formatMoney(
+                                    props.bhxProduct.Sales[
+                                        props.bhxProduct.ExpStoreId
+                                    ].Price
+                                )}
+                                {'\n'}
                             </Text>
                         </View>
                         <Text style={styles.expiredText}>
-                            {props.bhxProduct.ExpiredText}
+                            {!helper.isEmptyOrNull(
+                                props.bhxProduct.Sales[
+                                    props.bhxProduct.ExpStoreId
+                                ].LabelText
+                            )
+                                ? props.bhxProduct.Sales[
+                                      props.bhxProduct.ExpStoreId
+                                  ].LabelText
+                                : props.bhxProduct.Sales[
+                                      props.bhxProduct.ExpStoreId
+                                  ].ExpiredDate}
                         </Text>
                     </TouchableOpacity>
                 ) : null}

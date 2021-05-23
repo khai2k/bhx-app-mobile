@@ -17,6 +17,7 @@ const Product = (props) => {
     const { Name } = props.info;
     const { PageIndex, PageSize } = props.include.Paging;
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
+
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
