@@ -11,26 +11,27 @@ import { HomeReducer } from './reducer';
 const RenderLine = (props) => {
     const dispatch = useDispatch();
     const actionHome = bindActionCreators(homeCreator, dispatch);
-
     const [viewMoreText, setViewMoreText] = useState(
         `Xem thêm ${props.lineItem.PromotionCount} sản phẩm`
     );
-    const [productIds, setProductIds] = useState([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [products, setProducts] = useState(props.lineItem.Products);
-    // setProductIds([productIds, item.item.Id]);
-    // products?.map((item) => {
-    //     return (
-    //         setProductIds(item.Id);
-    //     );
-    // })
 
-    function GenMoreProduct(currentPage, categoryIds, excludeProductIds) {
-        setProductIds([]);
+    function GenMoreProduct(currentPage, categoryIds) {
+        // Chỉ lấy 9 productid mới nhất truyền vô excludeProductIds
+        const excludeProductIds = [];
+        const get9LastProduct = products.slice(
+            products.length - 9,
+            products.length
+        );
+        get9LastProduct?.map((item) => {
+            return excludeProductIds.push(item.Id);
+        });
+
         console.log('GenMoreProduct query:');
-        console.log(currentPage);
-        console.log(categoryIds);
-        console.log(excludeProductIds);
+        console.log('pageindex: ', currentPage);
+        console.log('categoryIds: ', categoryIds.toString());
+        console.log('excludeProductIds: ', excludeProductIds.toString());
 
         const bodyApi = {
             token: '',
@@ -52,9 +53,8 @@ const RenderLine = (props) => {
         };
         apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
             .then((response) => {
-                console.log(products);
-                console.log('GET_MORE_LIST_PRODUCT Data:', response);
                 setProducts([...products, ...response.Value]);
+                console.log('GET_MORE_LIST_PRODUCT Data Value:', products);
                 setPageIndex(pageIndex + 1);
                 setViewMoreText(
                     `Xem thêm ${response.OrtherData.TotalRest} sản phẩm`
@@ -89,8 +89,7 @@ const RenderLine = (props) => {
                         onPress={() => {
                             GenMoreProduct(
                                 pageIndex,
-                                props.lineItem.CategoryIds,
-                                productIds
+                                props.lineItem.CategoryIds
                             );
                         }}
                         style={styles.viewmoreProduct}>
