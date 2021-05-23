@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
 import * as homeCreator from '@app/container/product/action';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import { HomeReducer } from './reducer';
@@ -11,51 +12,57 @@ const RenderLine = (props) => {
     const dispatch = useDispatch();
     const actionHome = bindActionCreators(homeCreator, dispatch);
 
-    const viewMoreText = `Xem thêm ${props.lineItem.PromotionCount} sản phẩm`;
-    const productIds = [];
+    const [viewMoreText, setViewMoreText] = useState(
+        `Xem thêm ${props.lineItem.PromotionCount} sản phẩm`
+    );
+    const [productIds, setProductIds] = useState([]);
     const [pageIndex, setPageIndex] = useState(1);
-    const [product, setProduct] = useState([]);
+    const [products, setProducts] = useState(props.lineItem.Products);
+    // setProductIds([productIds, item.item.Id]);
+    // products?.map((item) => {
+    //     return (
+    //         setProductIds(item.Id);
+    //     );
+    // })
 
     function GenMoreProduct(currentPage, categoryIds, excludeProductIds) {
-        // await actionHome.get_more_listproducts(
-        //     currentPage,
-        //     categoryIds.toString(),
-        //     excludeProductIds.toString()
-        // );
-        // props.lineItem.Products = [
-        //     ...props.lineItem.Products,
-        //     ...(product && product.length > 0 ? product.Value : [])
-        // ];
-        // // product?.HttpCode === 200 && setPageIndex(pageIndex + 1);
-        // console.log(props.lineItem.Products);
-        // actionHome
-        //     .get_more_listproducts(
-        //         currentPage,
-        //         categoryIds.toString(),
-        //         excludeProductIds.toString()
-        //     )
-        //     .then((res) => {
-        //         console.log('get_more_listproducts');
-        //         const products = res.Value;
-        //         setProduct(products);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
-        // props.lineItem.Products = [...props.lineItem.Products, ...product];
-        // console.log(props.lineItem.Products);
-        // actionHome
-        //     .get_more_listproducts(
-        //         currentPage,
-        //         categoryIds.toString(),
-        //         excludeProductIds.toString()
-        //     )
-        //     .then((res) => {
-        //         console.log('get_more_listproducts');
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+        setProductIds([]);
+        console.log('GenMoreProduct query:');
+        console.log(currentPage);
+        console.log(categoryIds);
+        console.log(excludeProductIds);
+
+        const bodyApi = {
+            token: '',
+            us: '',
+            provinceId: 3,
+            districtId: 0,
+            wardId: 0,
+            storeId: 6463,
+            data: {
+                ListProducts: '',
+                PageIndex: currentPage,
+                PageSize: 9,
+                Phone: '',
+                CategoryIds: categoryIds.toString(),
+                ExcludeProductIds: excludeProductIds.toString(),
+                CategoryId: 0,
+                ListCategoryIds: ''
+            }
+        };
+        apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
+            .then((response) => {
+                console.log(products);
+                console.log('GET_MORE_LIST_PRODUCT Data:', response);
+                setProducts([...products, ...response.Value]);
+                setPageIndex(pageIndex + 1);
+                setViewMoreText(
+                    `Xem thêm ${response.OrtherData.TotalRest} sản phẩm`
+                );
+            })
+            .catch((error) => {
+                console.log('GET_MORE_LIST_PRODUCT Error:', error);
+            });
     }
 
     return (
@@ -65,14 +72,12 @@ const RenderLine = (props) => {
                 categories={props.lineItem.Categorys}
                 categoryId={props.lineItem.CategoryId}
             />
-
             {/* Render Product */}
             <View style={styles.productList}>
                 <FlatList
                     numColumns="3"
-                    data={props.lineItem.Products}
+                    data={products}
                     renderItem={(item) => {
-                        productIds.push(item.item.Id);
                         return <ProductBox bhxProduct={item.item} />;
                     }}
                     keyExtractor={(item) => item.Id}
@@ -94,7 +99,7 @@ const RenderLine = (props) => {
                                 {viewMoreText}
                             </Text>
                             <Text style={styles.viewmoreProduct_cateName}>
-                                {props.lineItem.Text.toLowerCase()} - pageindex{' '}
+                                {props.lineItem.Text.toLowerCase()} - pageindex
                                 {pageIndex}
                             </Text>
                         </View>
