@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
         zIndex: 5
     },
     container: {
-        borderBottomWidth: 1,
         borderColor: Colors.BORDER_GENERAL,
+        borderTopWidth: 1,
         flexDirection: 'row',
         marginBottom: 5,
         padding: 5

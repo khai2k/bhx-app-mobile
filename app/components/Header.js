@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import messaging from '@react-native-firebase/messaging';
 import {
     Text,
     View,
     StyleSheet,
     Image,
     TextInput,
+    Alert,
     TouchableOpacity
 } from 'react-native';
 
@@ -22,6 +24,16 @@ const Header = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const locationinfo = useSelector((state) => state.locationReducer);
+
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+            Alert.alert(
+                'A new FCM message arrived! Như',
+                JSON.stringify(remoteMessage)
+            );
+        });
+        return unsubscribe;
+    }, []);
 
     return (
         <SafeAreaView>

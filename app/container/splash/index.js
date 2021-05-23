@@ -30,6 +30,7 @@ class Splash extends Component {
                 console.log(token);
                 return saveTokenToDatabase(token);
             });
+
         if (isShowSplash) {
             const delay = 1000 * 5;
             setTimeout(() => {

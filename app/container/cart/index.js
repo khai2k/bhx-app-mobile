@@ -7,7 +7,12 @@ import {
     RefreshControl
 } from 'react-native';
 import { bindActionCreators } from 'redux';
-import { Header, ProductItemCart, ProductItemCartOff } from '@app/components';
+import {
+    Header,
+    CartTotal,
+    ProductItemCart,
+    ProductItemCartOff
+} from '@app/components';
 import { connect } from 'react-redux';
 import { helper } from '@app/common';
 import * as cartCreator from './action';
@@ -58,21 +63,7 @@ class Cart extends Component {
                     </View>
                     {showListCartItemOff(this.props.cart.ListCartItemOff)}
                     {showListCartItemBuy(this.props.cart.ListCartItemBuy)}
-                    <View style={styles.boxtotal}>
-                        <ComponentTotal
-                            total={this.props.cartTotal.Total}
-                            title="Tiền hàng:"
-                            bold
-                        />
-                        <ComponentTotal
-                            total={this.props.cartTotal.TotalBillPromotion}
-                            title="Hàng khuyến mãi:"
-                        />
-                        <ComponentTotalFee
-                            cartTotal={this.props.cartTotal}
-                            title="Phí giao dự kiến:"
-                        />
-                    </View>
+                    <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <TouchableOpacity
                             style={styles.btn}
@@ -98,6 +89,7 @@ class Cart extends Component {
                             <Text style={styles.textbtnbuy}>ĐẶT HÀNG</Text>
                         </TouchableOpacity>
                     </View>
+                    <View style={{ height: 5 }} />
                 </ScrollView>
             </View>
         );
@@ -106,78 +98,44 @@ class Cart extends Component {
 
 const showListCartItemOff = (listCartItemOff) => {
     if (listCartItemOff != null && !helper.IsEmptyArray(listCartItemOff)) {
-        return (
-            <View>
-                {listCartItemOff.map((itemCart) => {
-                    return <ProductItemCartOff productCart={itemCart} />;
-                })}
-            </View>
-        );
-    }
-};
-
-const showListCartItemBuy = (listCartItemBuy) => {
-    if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
-        const list = listCartItemBuy.filter(
-            (item) => item.TypeProduct != 3 && item.TypeProduct != 1
-        );
+        const list = listCartItemOff.filter((item) => item.TypeProduct !== 3);
         if (!helper.IsEmptyArray(list)) {
             return (
                 <View>
                     {list.map((itemCart) => {
-                        return <ProductItemCart productCart={itemCart} />;
+                        return (
+                            <ProductItemCartOff
+                                productCart={itemCart}
+                                key={itemCart.Info.GuildId}
+                            />
+                        );
                     })}
+                    <View style={styles.hr} />
                 </View>
             );
         }
     }
 };
 
-const ComponentTotal = (props) => {
-    if (props.total > 0) {
-        return (
-            <View style={styles.boxsum}>
-                <Text style={styles.boxleft}>{props.title}</Text>
-                <Text
-                    style={props.bold ? styles.boxrightfont : styles.boxright}>
-                    {helper.formatMoney(props.total)}
-                </Text>
-            </View>
+const showListCartItemBuy = (listCartItemBuy) => {
+    if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
+        const list = listCartItemBuy.filter(
+            (item) => item.TypeProduct !== 3 && item.TypeProduct !== 2
         );
-    }
-    return null;
-};
-
-const ComponentTotalFee = (props) => {
-    const totalFee = props.cartTotal.ApartmentShipFee + props.cartTotal.ShipFee;
-    if (totalFee > 0) {
-        return (
-            <View style={styles.boxsum}>
-                <Text style={styles.boxleft}>{props.title}</Text>
-                <Text style={styles.boxright}>
-                    {helper.formatMoney(totalFee)}
-                </Text>
-            </View>
-        );
-    } else if (props.cartTotal.ShipFeeBase > 0) {
-        return (
-            <View style={styles.boxsum}>
-                <Text style={styles.boxleft}>{props.title}</Text>
-                <View style={styles.boxright}>
-                    <Text style={styles.textdel}>
-                        {helper.formatMoney(props.cartTotal.ShipFeeBase)}
-                    </Text>
-                    <Text>Miễn Phí</Text>
+        if (!helper.IsEmptyArray(list)) {
+            return (
+                <View>
+                    {list.map((itemCart) => {
+                        return (
+                            <ProductItemCart
+                                productCart={itemCart}
+                                key={itemCart.Info.GuildId}
+                            />
+                        );
+                    })}
                 </View>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.boxsum}>
-                <Text style={styles.boxleft}>{props.title}</Text>
-                <Text style={styles.boxright}>Miễn Phí</Text>
-            </View>
-        );
+            );
+        }
     }
 };
 

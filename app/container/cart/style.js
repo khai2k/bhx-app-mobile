@@ -5,26 +5,9 @@ const styles = StyleSheet.create({
     boxbtn: {
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
-    },
-    boxleft: {
-        marginLeft: 5
-    },
-    boxright: {
-        flexDirection: 'row',
-        marginRight: 5
-    },
-    boxrightfont: {
-        ...Typography.FONT_BOLD_18,
-        marginRight: 5
-    },
-    boxsum: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5
-    },
-    boxtotal: {
-        padding: 8
+        justifyContent: 'space-evenly',
+        overflow: 'hidden',
+        paddingBottom: 10
     },
     btn: {
         borderColor: Colors.CART_BORDER_BTN,
@@ -48,6 +31,10 @@ const styles = StyleSheet.create({
     cartinfo: {
         backgroundColor: Colors.WHITE
     },
+    hr: {
+        backgroundColor: Colors.BORDER_GENERAL,
+        height: 5
+    },
     textbtn: {
         ...Typography.FONT_BOLD_14,
         textAlign: 'center'
@@ -67,7 +54,6 @@ const styles = StyleSheet.create({
         textDecorationLine: 'line-through'
     },
     titlecart: {
-        borderBottomWidth: 1,
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 5,
         justifyContent: 'center',
