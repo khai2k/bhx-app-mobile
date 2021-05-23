@@ -27,9 +27,10 @@ const Header = () => {
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+            console.log(remoteMessage);
             Alert.alert(
-                'A new FCM message arrived! Như',
-                JSON.stringify(remoteMessage)
+                remoteMessage.notification.title,
+                remoteMessage.notification.body
             );
         });
         return unsubscribe;

@@ -7,6 +7,7 @@ import { setI18nConfig } from '@app/translate';
 import { CONST_STORAGE } from '@app/constants';
 import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
+import * as actionCartCreator from '@app/container/cart/action';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
@@ -21,7 +22,7 @@ class Splash extends Component {
     componentDidMount() {
         // Lấy dữ liệu menu
         this.props.actionGetMenu.menu_get();
-
+        this.props.actionCart.cart_get();
         const { isShowSplash } = this.props;
         messaging()
             .getToken()
@@ -63,7 +64,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
-        actionGetMenu: bindActionCreators(actionMenuCreator, dispatch)
+        actionGetMenu: bindActionCreators(actionMenuCreator, dispatch),
+        actionCart: bindActionCreators(actionCartCreator, dispatch)
     };
 };
 

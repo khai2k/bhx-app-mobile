@@ -65,31 +65,42 @@ class Cart extends Component {
                     {showListCartItemBuy(this.props.cart.ListCartItemBuy)}
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
-                        <TouchableOpacity
-                            style={styles.btn}
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
-                            <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.btn}
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
-                            <Text style={styles.textbtn}>
-                                Dùng phiếu mua hàng
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.btnbuy}
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
-                            <Text style={styles.textbtnbuy}>ĐẶT HÀNG</Text>
-                        </TouchableOpacity>
+                        <View style={styles.btn}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
+                                <Text style={styles.textbtn}>
+                                    Xóa hết giỏ hàng
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btn}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
+                                <View>
+                                    <Text style={styles.textbtn}>
+                                        Dùng phiếu mua hàng
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btnbuy}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
+                                <View>
+                                    <Text style={styles.textbtnbuy}>
+                                        ĐẶT HÀNG
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={{ height: 5 }} />
+                    <View style={{ height: 60 }} />
                 </ScrollView>
             </View>
         );

@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        overflow: 'hidden',
         paddingBottom: 10
     },
     btn: {

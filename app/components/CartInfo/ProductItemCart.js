@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
 import HTML from 'react-native-render-html';
+import { useNavigation } from '@react-navigation/native';
 import {
     Text,
     Image,
@@ -22,6 +23,7 @@ const ProductItemCart = (props) => {
             (item) => item.TypeProduct === 2
         )
     );
+    const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
@@ -227,11 +229,19 @@ const ProductItemCart = (props) => {
                     {list.map((itemCb) => {
                         return (
                             <View style={styles.scombo}>
-                                <Text
-                                    style={styles.sitemcombo}
-                                    numberOfLines={1}>
-                                    {itemCb.Quantity} {itemCb.Info.Name}
-                                </Text>
+                                <TouchableOpacity
+                                    style={styles.sitemcombotitle}
+                                    onPress={() =>
+                                        navigation.push('ProductDetail', {
+                                            productId: itemCb.Info.Id
+                                        })
+                                    }>
+                                    <Text
+                                        style={styles.sitemcombo}
+                                        numberOfLines={1}>
+                                        {itemCb.Quantity} {itemCb.Info.Name}
+                                    </Text>
+                                </TouchableOpacity>
                                 <Text style={styles.sitemcomboprice}>
                                     {helper.formatMoney(itemCb.Price)}
                                 </Text>
@@ -322,7 +332,12 @@ const ProductItemCart = (props) => {
             );
         } else {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.push('ProductDetail', {
+                            productId: props.productCart.Info.Id
+                        })
+                    }>
                     <Text style={styles.title}>
                         {props.productCart.Info.ShortName} {textSub}
                     </Text>
@@ -490,14 +505,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     sitemcombo: {
-        fontSize: Typography.FONT_SIZE_12,
-        width: '70%'
+        fontSize: Typography.FONT_SIZE_12
     },
     sitemcomboprice: {
         ...Typography.FONT_BOLD_12,
-        marginLeft: 5,
-        textAlign: 'right',
-        width: 55
+        flex: 1,
+        textAlign: 'right'
+    },
+    sitemcombotitle: {
+        flex: 2
     },
     stextCombo: {
         fontSize: Typography.FONT_SIZE_12
