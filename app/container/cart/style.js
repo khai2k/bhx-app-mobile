@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     boxrightfont: {
-        ...Typography.FONT_BOLD_14,
+        ...Typography.FONT_BOLD_18,
         marginRight: 5
     },
     boxsum: {

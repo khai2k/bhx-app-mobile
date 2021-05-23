@@ -3,6 +3,7 @@ import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
 import { helper } from '@app/common';
+import HTML from 'react-native-render-html';
 import {
     Text,
     Image,
@@ -16,38 +17,44 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
 
 const ProductItemCart = (props) => {
-    console.log('ProductItemCart Render');
     //  const cart = useSelector((state) => state.cartReducer.Cart);
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
     const [guildId, setguildId] = useState(props.productCart.GuildId);
     useEffect(() => {
-        console.log('useEffect');
         setQuantity(props.productCart.Quantity);
         setguildId(props.productCart.GuildId);
-    }); //  , [props.productCart.Quantity]
+    }, []); //  , [props.productCart.Quantity]
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
 
     const handleInputQuantity = (number) => {
-        setQuantity(+number);
+        setQuantity(number);
     };
 
-    const setQuantityMinus = () => {
-        if (quantity <= 1) {
-            alertDeleteItemProduct();
+    const submitQuantity = () => {
+        if (helper.isEmptyOrNull(quantity)) {
+            return false;
+        }
+        if (quantity > 50) {
+            alertMaxQuantityItemProduct();
         } else {
             actionCart
-                .cart_update_item_product(guildId, quantity - 1)
+                .cart_update_item_product(guildId, quantity)
                 .then((res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        setQuantity(quantity - 1);
+                        const itemcart = res.Value.Cart.ListCartItem.find(
+                            (item) => item.GuildId === guildId
+                        );
+                        if (itemcart != null) {
+                            setQuantity(itemcart.Quantity);
+                        }
                     }
                 })
                 .catch((error) => {
@@ -56,13 +63,33 @@ const ProductItemCart = (props) => {
         }
     };
 
+    const setQuantityMinus = () => {
+        if (quantity <= 1) {
+            alertDeleteItemProduct();
+        } else {
+            setQuantity(quantity - 1);
+            actionCart
+                .cart_update_item_product(guildId, quantity - 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                        setQuantity(quantity + 1);
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                    setQuantity(quantity + 1);
+                });
+        }
+    };
+
     const setQuantityPlus = () => {
         if (quantity > 50) {
             alertMaxQuantityItemProduct();
         } else {
-            console.log('setQuantityPlus');
-            console.log(guildId);
-            console.log(quantity);
+            setQuantity(quantity + 1);
             actionCart
                 .cart_update_item_product(guildId, quantity + 1)
                 .then((res) => {
@@ -70,12 +97,12 @@ const ProductItemCart = (props) => {
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
-                    } else {
-                        setQuantity(quantity + 1);
+                        setQuantity(quantity - 1);
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
+                    setQuantity(quantity - 1);
                 });
         }
     };
@@ -135,10 +162,41 @@ const ProductItemCart = (props) => {
         }
     };
 
+    const showMessageQuantity = () => {
+        if (!helper.isEmptyOrNull(props.productCart.ErrorMessage)) {
+            return (
+                <View style={styles.boxerror}>
+                    <HTML
+                        classesStyles={styles.error}
+                        source={{ html: props.productCart.ErrorMessage }}
+                        contentWidth={200}
+                    />
+                    {/* <Text style={styles.error}>Chỉ còn</Text> */}
+                    {/* <Text style={styles.errorbold}>
+                        {props.productCart.ErrorMessage}
+                    </Text> */}
+                </View>
+            );
+        }
+    };
+
     const showHideExpire = () => {
-        if (props.productCart.InvoiceNote !== '') {
+        if (!helper.isEmptyOrNull(props.productCart.InvoiceNote)) {
             return (
                 <Text style={styles.unit}>{props.productCart.InvoiceNote}</Text>
+            );
+        }
+    };
+
+    const showHideMessage = () => {
+        if (
+            props.productCart.Message != null &&
+            !helper.isEmptyOrNull(props.productCart.Message)
+        ) {
+            return (
+                <Text style={styles.unit} numberOfLines={1}>
+                    {props.productCart.Message}
+                </Text>
             );
         }
     };
@@ -167,6 +225,8 @@ const ProductItemCart = (props) => {
                 </Text>
                 {showHideExpire()}
                 {showHideUnit()}
+                {showHideMessage()}
+                {showMessageQuantity(-1)}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
@@ -184,7 +244,10 @@ const ProductItemCart = (props) => {
                     </TouchableOpacity>
                     <TextInput
                         editable={!offItemProduct}
+                        selectTextOnFocus
                         onChangeText={handleInputQuantity}
+                        onBlur={submitQuantity}
+                        onSubmitEditing={submitQuantity}
                         style={styles.input}
                         value={quantity.toString()}
                         keyboardType="numeric"
@@ -205,6 +268,9 @@ const ProductItemCart = (props) => {
 };
 
 const styles = StyleSheet.create({
+    boxerror: {
+        flexDirection: 'row'
+    },
     boximg: {
         flex: 1.3
     },
@@ -235,6 +301,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 5,
         padding: 5
+    },
+    error: {
+        ...Typography.FONT_REGULAR_12,
+        color: Colors.MESSAGE_ERROR
+    },
+    errorbold: {
+        ...Typography.FONT_BOLD_12,
+        color: Colors.MESSAGE_ERROR,
+        marginLeft: 2
     },
     imgbind: {
         elevation: Platform.OS === 'android' ? 2 : 0,

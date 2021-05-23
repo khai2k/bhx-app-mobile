@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "600628542647",
+    "project_id": "demoappbhx",
+    "storage_bucket": "demoappbhx.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600628542647:android:6184e58d3e01e14ac92132",
+        "android_client_info": {
+          "package_name": "mwg.tgdd.bhxonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600628542647-mrkevkvguf1tb6t6vqdna85qhhi5lnjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlpqf0Mh5YjyTiIOmcNbKW2CRBK0e9zjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600628542647-mrkevkvguf1tb6t6vqdna85qhhi5lnjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

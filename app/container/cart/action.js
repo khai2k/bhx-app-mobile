@@ -14,29 +14,33 @@ export const cartAction = {
 
 export const cart_get = function () {
     return (dispatch, getSate) => {
-        const bodyApi = {
-            token: getSate().cartReducer.Cart.CartId,
-            us: '',
-            provinceId: 8,
-            districtId: 723,
-            wardId: 11544,
-            storeId: 5771,
-            data: {
-                cartId: getSate().cartReducer.Cart.CartId
-            }
-        };
-        apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
-            .then((response) => {
-                console.log('CART_GET Data:', response);
-                const cartInfo = response.Value;
-                dispatch({
-                    type: CART_GET,
-                    cartInfo
+        return new Promise((resolve, reject) => {
+            const bodyApi = {
+                token: getSate().cartReducer.Cart.CartId,
+                us: '',
+                provinceId: 8,
+                districtId: 723,
+                wardId: 11544,
+                storeId: 5771,
+                data: {
+                    cartId: getSate().cartReducer.Cart.CartId
+                }
+            };
+            apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
+                .then((response) => {
+                    console.log('CART_GET Data:', response);
+                    const cartInfo = response.Value;
+                    dispatch({
+                        type: CART_GET,
+                        cartInfo
+                    });
+                    resolve(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
                 });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        });
     };
 };
 

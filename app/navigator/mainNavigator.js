@@ -14,7 +14,7 @@ import Cart from '../container/cart';
 import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import NavMenu from '../components/Shared/navMenu/NavMenu';
+import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 import UseVoucher from '../container/useVoucher';
 

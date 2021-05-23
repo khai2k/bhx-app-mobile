@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { Component } from 'react';
 import { View, PermissionsAndroid } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as locationCreator from './action';
 
-const LocationModal = () => {
-    const value = useSelector((state) => state.value);
-    const dispatch = useDispatch();
+// create a component
+class Location extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
-    useEffect(() => {
+    componentDidMount() {
         const hasLocationPermission = PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
@@ -19,9 +24,10 @@ const LocationModal = () => {
                     const crrLong = position.coords.longitude;
 
                     if (crrLat > 0 && crrLong > 0) {
-                        dispatch({ type: 'LOCATION_GETCURRENT', payload: {} });
-                        console.log('value');
-                        console.log(value);
+                        this.props.locationAction.location_getCurrent(
+                            crrLat,
+                            crrLong
+                        );
                     }
                 },
                 (error) => {
@@ -32,9 +38,23 @@ const LocationModal = () => {
         } else {
             console.log('Denied');
         }
-    });
+    }
 
-    return <View />;
+    render() {
+        return <View />;
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        crrLocationRs: state.locationReducer
+    };
 };
 
-export default LocationModal;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        locationAction: bindActionCreators(locationCreator, dispatch)
+    };
+};
+// make this component available to the app
+export default connect(mapStateToProps, mapDispatchToProps)(Location);
