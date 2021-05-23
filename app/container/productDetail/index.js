@@ -12,9 +12,6 @@ import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
 import ProductRelative from './productRelative';
-import GroupBoxOption from './groupBoxOption';
-import Box from './box';
-import Combo from './combo';
 
 class ProductDetail extends Component {
     constructor(props) {
@@ -45,9 +42,6 @@ class ProductDetail extends Component {
                             isExchangeProduct={this.props.isExchangeProduct}
                         />
 
-                        {this.state.comboProducts && (
-                            <Combo comboProducts={this.props.Combo_detail} />
-                        )}
                         <ProductRelative
                             relativeProducts={this.props.Product_relative}
                         />

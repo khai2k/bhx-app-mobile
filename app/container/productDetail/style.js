@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         marginLeft: 3,
         marginRight: 3,
         marginTop: 7,
-        padding: 0,
+        paddingBottom: 10,
         position: 'relative',
         shadowColor: Colors.LINK_WATER,
         shadowOffset: { height: 3, width: 0 },

@@ -17,7 +17,17 @@ import GroupBoxOption from './groupBoxOption';
 const ProductArticle = (props) => {
     const contentWidth = useWindowDimensions().width;
     const { product, isExchangeProduct } = props;
-    const { MetaDescription, ProductArticle, FeatureSpecification } = product;
+    const {
+        MetaDescription,
+
+        FeatureSpecification,
+        bHXProduct
+    } = product;
+    let { ProductArticle } = product;
+
+    /// modify ProductArticle to display Image
+    ProductArticle = ProductArticle.split('data-src').join('src');
+    const { ShortName } = bHXProduct;
     const [isShowModal, setIsShowModal] = useState(false);
     function renderModal() {
         return (
@@ -42,46 +52,49 @@ const ProductArticle = (props) => {
                         <View
                             style={{
                                 paddingHorizontal: 10,
-                                backgroundColor: '#fff',
+                                backgroundColor: COLOR.WHITE,
                                 marginBottom: 10
                             }}>
                             <View style={{ paddingVertical: 10 }}>
                                 <Text>{MetaDescription}</Text>
                             </View>
-
-                            <View style={styles.product_info}>
-                                <View style={{ paddingVertical: 10 }}>
-                                    <Text
-                                        style={{
-                                            fontSize: 20,
-                                            fontWeight: 'bold'
-                                        }}>
-                                        Thông tin sản phẩm{' '}
-                                    </Text>
+                            {FeatureSpecification !== '' && (
+                                <View style={styles.product_info}>
+                                    <View style={{ paddingVertical: 10 }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 20,
+                                                fontWeight: 'bold'
+                                            }}>
+                                            Thông tin sản phẩm{' '}
+                                        </Text>
+                                    </View>
+                                    <HTML
+                                        source={{ html: FeatureSpecification }}
+                                        contentWidth={contentWidth}
+                                    />
                                 </View>
-                            </View>
-                            <HTML
-                                source={{ html: FeatureSpecification }}
-                                contentWidth={contentWidth}
-                            />
+                            )}
                         </View>
-                        <View
-                            style={{
-                                padding: 10,
-                                backgroundColor: '#fff'
-                            }}>
-                            <Text
+                        {ProductArticle !== '' && (
+                            <View
                                 style={{
-                                    fontSize: 20,
-                                    fontWeight: 'bold'
+                                    padding: 10,
+                                    backgroundColor: COLOR.WHITE
                                 }}>
-                                Bài viết sản phẩm
-                            </Text>
-                            <HTML
-                                source={{ html: ProductArticle }}
-                                contentWidth={contentWidth}
-                            />
-                        </View>
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        fontWeight: 'bold'
+                                    }}>
+                                    Bài viết sản phẩm
+                                </Text>
+                                <HTML
+                                    source={{ html: ProductArticle }}
+                                    contentWidth={contentWidth}
+                                />
+                            </View>
+                        )}
                     </ScrollView>
                     <View style={{ paddingVertical: 10, alignItems: 'center' }}>
                         <ScrollView>
@@ -101,17 +114,23 @@ const ProductArticle = (props) => {
         );
     }
     function renderDescription() {
+        let address = '';
         return (
             <View style={{ margin: 5, flex: 1 }}>
-                <Text>{MetaDescription}</Text>
-                <TouchableOpacity onPress={() => setIsShowModal(true)}>
-                    <Text style={{ color: COLOR.PRIMARY }}>Xem chi tiet</Text>
-                </TouchableOpacity>
+                <Text>
+                    <Text style={{ fontWeight: 'bold' }}>{ShortName}</Text>
+                    {` ${MetaDescription} `}
+                    <Text
+                        onPress={() => setIsShowModal(true)}
+                        style={{ color: COLOR.GREEN_KEY }}>
+                        Xem chi tiết
+                    </Text>
+                </Text>
             </View>
         );
     }
     return (
-        <View>
+        <View style={{ backgroundColor: COLOR.WHITE }}>
             <View style={{ flexDirection: 'row' }}>
                 {renderDescription()}
                 {!isExchangeProduct && (
@@ -145,7 +164,7 @@ const styles = StyleSheet.create({
         zIndex: 1111
     },
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.WHITE,
         flexDirection: 'row',
         paddingVertical: 10
     },

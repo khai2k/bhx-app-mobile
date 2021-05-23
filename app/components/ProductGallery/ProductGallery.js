@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import * as COLOR from '@app/styles/colors';
 
 const THUMB_SIZE = 50;
 const { width } = Dimensions.get('window');
@@ -39,6 +40,20 @@ export default class ProductGallery extends Component {
         }
     }
 
+    change(nativeEvent) {
+        if (nativeEvent) {
+            const slide = Math.round(
+                nativeEvent.contentOffset.x /
+                    nativeEvent.layoutMeasurement.width
+            );
+            if (slide !== this.state.crrImgIdx) {
+                this.setState({
+                    crrImgIdx: slide
+                });
+            }
+        }
+    }
+
     render() {
         const data = this.props.Gallery_product;
         const { crrImgIdx } = this.state;
@@ -56,6 +71,7 @@ export default class ProductGallery extends Component {
                         height: IMG_HEIGHT + 28
                     }}>
                     <ScrollView
+                        onScroll={({ nativeEvent }) => this.change(nativeEvent)}
                         ref={(snapScroll) => {
                             this._sliderRef = snapScroll;
                         }}
@@ -110,7 +126,11 @@ export default class ProductGallery extends Component {
                                     animated: true
                                 });
                             }}>
-                            <Icon name="angle-left" size={26} color="#fff" />
+                            <Icon
+                                name="angle-left"
+                                size={26}
+                                color={COLOR.WHITE}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View
@@ -136,14 +156,19 @@ export default class ProductGallery extends Component {
                                     animated: true
                                 });
                             }}>
-                            <Icon name="angle-right" size={26} color="#fff" />
+                            <Icon
+                                name="angle-right"
+                                size={26}
+                                color={COLOR.WHITE}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View
                         // eslint-disable-next-line react-native/no-color-literals
                         style={{
                             height: 28,
-                            alignItems: 'flex-end'
+                            alignItems: 'flex-end',
+                            backgroundColor: COLOR.WHITE
                         }}>
                         <View
                             style={{
@@ -286,7 +311,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     btnChangeSlider: {
-        backgroundColor: 'rgba(34, 43, 69, 0.5)',
+        backgroundColor: COLOR.GRAY_DARK,
         paddingHorizontal: 10,
         paddingVertical: 20
     },
@@ -306,7 +331,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     modalFooterStyle: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.WHITE,
         elevation: 9,
         padding: 5,
         shadowColor: '#000000',
@@ -319,7 +344,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     totalNumber: {
-        backgroundColor: '#d6e0f5',
+        backgroundColor: COLOR.GRAY_DARK,
         borderRadius: 16,
         color: '#fff',
         fontSize: 12,

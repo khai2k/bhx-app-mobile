@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 const Box = (props) => {
@@ -9,7 +8,6 @@ const Box = (props) => {
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
-    const navigation = useNavigation();
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
