@@ -83,9 +83,9 @@ const styles = StyleSheet.create({
         width: 100
     },
     closer: {
-        backgroundColor: '#8f9bb3',
+        backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
-        elevation: Platform.OS === 'android' ? 5 : 0,
+        //  elevation: Platform.OS === 'android' ? 5 : 0,
         left: 5,
         paddingHorizontal: 5,
         paddingVertical: 3,
@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
         zIndex: 5
     },
     container: {
-        borderBottomWidth: 1,
         borderColor: Colors.BORDER_GENERAL,
+        borderTopWidth: 1,
         flexDirection: 'row',
         marginBottom: 5,
         padding: 5
     },
     imgbind: {
-        elevation: Platform.OS === 'android' ? 2 : 0,
+        //  elevation: Platform.OS === 'android' ? 2 : 0,
         height: 60,
         resizeMode: 'contain',
         zIndex: 1

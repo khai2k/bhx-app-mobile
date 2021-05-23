@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Colors, Typography } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { translate } from '@app/translate';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import messaging from '@react-native-firebase/messaging';
 import {
     Text,
     View,
     StyleSheet,
     Image,
     TextInput,
+    Alert,
     TouchableOpacity
 } from 'react-native';
 
@@ -27,9 +29,16 @@ const Header = () => {
     const locationinfo = useSelector((state) => state.locationReducer);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
-    // useEffect(() => {
-    //     actionCart.cart_get_simple();
-    // }, [cartSimpleInfo.Total]);
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+            console.log(remoteMessage);
+            Alert.alert(
+                remoteMessage.notification.title,
+                remoteMessage.notification.body
+            );
+        });
+        return unsubscribe;
+    }, []);
 
     return (
         <SafeAreaView>

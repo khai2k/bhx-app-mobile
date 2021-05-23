@@ -7,10 +7,10 @@ import { setI18nConfig } from '@app/translate';
 import { CONST_STORAGE } from '@app/constants';
 import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
+import * as actionCartCreator from '@app/container/cart/action';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
-import * as cartCreator from '../../container/cart/action';
 
 class Splash extends Component {
     constructor(props) {
@@ -32,6 +32,7 @@ class Splash extends Component {
                 console.log(token);
                 return saveTokenToDatabase(token);
             });
+
         if (isShowSplash) {
             const delay = 1000 * 5;
             setTimeout(() => {
@@ -65,7 +66,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
         actionGetMenu: bindActionCreators(actionMenuCreator, dispatch),
-        actionCart: bindActionCreators(cartCreator, dispatch)
+        actionCart: bindActionCreators(actionCartCreator, dispatch)
     };
 };
 
