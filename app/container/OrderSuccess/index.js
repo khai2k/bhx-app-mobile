@@ -119,11 +119,16 @@ class OrderSuccess extends Component {
                     <Text style={{ fontWeight: 'bold' }}>
                         {this.state.totalPrice}đ
                     </Text>
-                    <View style={styles.PMHbox}>
-                        <Text style={styles.PHMText}>
-                            + Dùng phiếu mua hàng
-                        </Text>
-                    </View>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.props.navigation.navigate('UseVoucher')
+                        }>
+                        <View style={styles.PMHbox}>
+                            <Text style={styles.PHMText}>
+                                + Dùng phiếu mua hàng
+                            </Text>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </View>
             </>
         );
