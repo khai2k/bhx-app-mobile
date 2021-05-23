@@ -23,7 +23,9 @@ class Profile extends Component {
                 <Header />
                 <Button
                     onPress={() =>
-                        this.props.navigation.navigate('ProductDetail')
+                        this.props.navigation.navigate('ProductDetail', {
+                            productId: 176453
+                        })
                     }
                     title="Go to Product detail"
                 />

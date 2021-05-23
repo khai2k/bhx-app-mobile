@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Image, ScrollView, View } from 'react-native';
+import {
+    ActivityIndicator,
+    Image,
+    ScrollView,
+    StyleSheet,
+    View
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
 import ProductRelative from './productRelative';
-import GroupBoxOption from './groupBoxOption';
-import Box from './box';
-import Combo from './combo';
 
 class ProductDetail extends Component {
     constructor(props) {
@@ -16,53 +19,39 @@ class ProductDetail extends Component {
         this.state = {
             comboProducts: true
         };
-    }
-
-    componentDidMount() {
-        this.props.actionProductDetail.get_product_detail();
-        this.props.actionProductDetail.get_product_relative();
-        this.props.actionProductDetail.get_combo_detail();
-        this.props.actionProductDetail.get_box_banner();
+        const { route } = props;
+        const { productId } = route.params;
+        this.props.actionProductDetail.fetchAll(productId);
     }
 
     render() {
-        console.log(this.state.isExchangeProduct, 'xxxxxxxxxxxxxxxxx');
         return (
             <ScrollView>
-                <ProductGallery />
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }}>
-                        <ProductArticle />
-                        {!this.props.isExchangeProduct && (
-                            <View>
-                                <Box
-                                    bHXProduct={
-                                        this.props.Product_detail.bHXProduct ||
-                                        []
-                                    }
-                                />
-                            </View>
-                        )}
+                {this.props.Is_loading === true ? (
+                    <View style={[styles.container, styles.horizontal]}>
+                        <ActivityIndicator size="large" color="#00ff00" />
                     </View>
-                </View>
-                {this.props.isExchangeProduct && (
-                    <GroupBoxOption
-                        exchangeProducts={
-                            this.props.Product_detail.exchangeProducts || []
-                        }
-                    />
+                ) : (
+                    <View>
+                        <ProductGallery
+                            Gallery_product={this.props.Gallery_product}
+                        />
+
+                        <ProductArticle
+                            product={this.props.Product_detail}
+                            isExchangeProduct={this.props.isExchangeProduct}
+                        />
+
+                        <ProductRelative
+                            relativeProducts={this.props.Product_relative}
+                        />
+                        <Image
+                            style={{ width: '100%', height: 80 }}
+                            resizeMode="cover"
+                            source={{ uri: this.props.Box_banner.Image }}
+                        />
+                    </View>
                 )}
-                {this.state.comboProducts && (
-                    <Combo comboProducts={this.props.Combo_detail} />
-                )}
-                <ProductRelative
-                    relativeProducts={this.props.Product_relative}
-                />
-                <Image
-                    style={{ width: '100%', height: 80 }}
-                    resizeMode="cover"
-                    source={{ uri: this.props.Box_banner.Image }}
-                />
             </ScrollView>
         );
     }
@@ -74,10 +63,23 @@ const mapStateToProps = function (state) {
         Product_relative: state.productDetailReducer.Product_relative,
         Combo_detail: state.productDetailReducer.Combo_detail,
         Box_banner: state.productDetailReducer.Box_banner,
-        isExchangeProduct: state.productDetailReducer.isExchangeProduct
+        isExchangeProduct: state.productDetailReducer.isExchangeProduct,
+        Gallery_product: state.productDetailReducer.Gallery_product,
+        Is_loading: state.productDetailReducer.Is_loading
     };
 };
-
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        height: 200,
+        justifyContent: 'center'
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10
+    }
+});
 const mapDispatchToProps = function (dispatch) {
     return {
         actionProductDetail: bindActionCreators(productDetailCreator, dispatch)
