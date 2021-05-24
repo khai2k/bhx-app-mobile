@@ -22,8 +22,11 @@ const ProductBox = (props) => {
 
     const checkFillButtonBuy = () => {
         const idProduct = props.bhxProduct.Id;
-        if (cart && cart.ProInCart) {
-            if (cart.ProInCart[idProduct]) {
+        if (
+            !helper.isEmptyOrNull(cart) &&
+            !helper.isEmptyOrNull(cart.ProInCart)
+        ) {
+            if (!helper.isEmptyOrNull(cart.ProInCart[idProduct])) {
                 setGuildId(cart.ProInCart[idProduct][0]);
                 setNumberItems(+cart.ProInCart[idProduct][1]);
                 setBuyButtonVisible(true);
@@ -36,7 +39,7 @@ const ProductBox = (props) => {
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
-    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+    }, [numberItems]);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
