@@ -25,11 +25,15 @@ import { useDispatch } from 'react-redux';
 const UserInfo = (props) => {
     useEffect(() => {
         props.actionCart.cart_get();
+        setCusPhone(props?.cart?.CustomerPhone);
     }, []);
+    
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
     const [isSelectedXHD, setSelectedXHD] = useState(false);
+    const [cusPhone, setCusPhone] = useState();
+    const [isPhoneValid, setIsPhoneValid] = useState(false);
 
     return (
         <SafeAreaView>
@@ -68,13 +72,16 @@ const UserInfo = (props) => {
                                 styles.hasAbsTit
                             ]}
                             placeholder="Vui lòng nhập số điện thoại"
-                            keyboardType="numeric"
+                            keyboardType="phone-pad"
                             value={
-                                props?.cart?.CustomerPhone !== '' &&
-                                props?.cart?.CustomerPhone !== undefined
-                                    ? props?.cart.CustomerPhone
-                                    : ''
+                                cusPhone
                             }
+                            onChangeText={(value) => {
+                                setCusPhone({value}); 
+                            }}
+                            onBlur={() => {
+                                
+                            }}
                         />
                     </View>
                     {SexRadio(props?.cart?.CustomerGender)}
