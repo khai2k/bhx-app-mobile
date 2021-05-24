@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     View,
     Text,
@@ -58,6 +58,7 @@ const ManufactureFilter = (props) => {
                     ]}
                     horizontal
                     data={listBrands}
+                    keyExtractor={(item) => `manu_${item.Id}`}
                     renderItem={({ item, index }) => (
                         <View className="it" style={styles.it}>
                             {index === 10 ? (
@@ -206,4 +207,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ManufactureFilter;
+export default React.memo(ManufactureFilter);

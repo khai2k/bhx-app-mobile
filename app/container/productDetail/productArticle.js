@@ -11,18 +11,26 @@ import {
 } from 'react-native';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
+import Box from './box';
+import GroupBoxOption from './groupBoxOption';
 
 const ProductArticle = (props) => {
     const contentWidth = useWindowDimensions().width;
-    const { product } = props;
-    const { MetaDescription, ProductArticle, FeatureSpecification } = product;
+    const { product, isExchangeProduct } = props;
+    const {
+        MetaDescription,
+
+        FeatureSpecification,
+        bHXProduct
+    } = product;
+    let { ProductArticle } = product;
+
+    /// modify ProductArticle to display Image
+    ProductArticle = ProductArticle.split('data-src').join('src');
+    const { ShortName } = bHXProduct;
     const [isShowModal, setIsShowModal] = useState(false);
-    return (
-        <View style={{ margin: 5 }}>
-            <Text>{MetaDescription}</Text>
-            <TouchableOpacity onPress={() => setIsShowModal(true)}>
-                <Text style={{ color: COLOR.PRIMARY }}>Xem chi tiet</Text>
-            </TouchableOpacity>
+    function renderModal() {
+        return (
             <Modal animationType="slide" transparent visible={isShowModal}>
                 <View style={styles.modalView}>
                     <View style={styles.header}>
@@ -39,55 +47,106 @@ const ProductArticle = (props) => {
                             </View>
                         </TouchableOpacity>
                     </View>
+
                     <ScrollView>
                         <View
                             style={{
                                 paddingHorizontal: 10,
-                                backgroundColor: '#fff',
+                                backgroundColor: COLOR.WHITE,
                                 marginBottom: 10
                             }}>
                             <View style={{ paddingVertical: 10 }}>
                                 <Text>{MetaDescription}</Text>
                             </View>
-
-                            <View style={styles.product_info}>
-                                <View style={{ paddingVertical: 10 }}>
-                                    <Text
-                                        style={{
-                                            fontSize: 20,
-                                            fontWeight: 'bold'
-                                        }}>
-                                        Thông tin sản phẩm{' '}
-                                    </Text>
+                            {FeatureSpecification !== '' && (
+                                <View style={styles.product_info}>
+                                    <View style={{ paddingVertical: 10 }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 20,
+                                                fontWeight: 'bold'
+                                            }}>
+                                            Thông tin sản phẩm{' '}
+                                        </Text>
+                                    </View>
+                                    <HTML
+                                        source={{ html: FeatureSpecification }}
+                                        contentWidth={contentWidth}
+                                    />
                                 </View>
+                            )}
+                        </View>
+                        {ProductArticle !== '' && (
+                            <View
+                                style={{
+                                    padding: 10,
+                                    backgroundColor: COLOR.WHITE
+                                }}>
+                                <Text
+                                    style={{
+                                        fontSize: 20,
+                                        fontWeight: 'bold'
+                                    }}>
+                                    Bài viết sản phẩm
+                                </Text>
+                                <HTML
+                                    source={{ html: ProductArticle }}
+                                    contentWidth={contentWidth}
+                                />
                             </View>
-                            <HTML
-                                source={{ html: FeatureSpecification }}
-                                contentWidth={contentWidth}
-                            />
-                        </View>
-                        <View
-                            style={{
-                                padding: 10,
-                                backgroundColor: '#fff'
-                            }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                                Bài viết sản phẩm
-                            </Text>
-                            <HTML
-                                source={{ html: ProductArticle }}
-                                contentWidth={contentWidth}
-                            />
-                        </View>
+                        )}
                     </ScrollView>
-                    <Button
-                        title="Learn More"
-                        onPress={() => {
-                            setIsShowModal(false);
-                        }}
-                    />
+                    <View style={{ paddingVertical: 10, alignItems: 'center' }}>
+                        <ScrollView>
+                            {isExchangeProduct ? (
+                                <GroupBoxOption
+                                    exchangeProducts={
+                                        product.exchangeProducts || []
+                                    }
+                                />
+                            ) : (
+                                <Box bHXProduct={product.bHXProduct || []} />
+                            )}
+                        </ScrollView>
+                    </View>
                 </View>
             </Modal>
+        );
+    }
+    function renderDescription() {
+        let address = '';
+        return (
+            <View style={{ margin: 5, flex: 1 }}>
+                <Text>
+                    <Text style={{ fontWeight: 'bold' }}>{ShortName}</Text>
+                    {` ${MetaDescription} `}
+                    <Text
+                        onPress={() => setIsShowModal(true)}
+                        style={{ color: COLOR.GREEN_KEY }}>
+                        Xem chi tiết
+                    </Text>
+                </Text>
+            </View>
+        );
+    }
+    return (
+        <View style={{ backgroundColor: COLOR.WHITE }}>
+            <View style={{ flexDirection: 'row' }}>
+                {renderDescription()}
+                {!isExchangeProduct && (
+                    <View>
+                        <Box bHXProduct={product.bHXProduct || []} />
+                    </View>
+                )}
+            </View>
+            {isExchangeProduct && (
+                <View>
+                    <GroupBoxOption
+                        exchangeProducts={product.exchangeProducts || []}
+                    />
+                </View>
+            )}
+            {renderModal()}
         </View>
     );
 };
@@ -99,19 +158,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 22
     },
+    fixBottom: {
+        position: 'absolute',
+        top: 100,
+        zIndex: 1111
+    },
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.WHITE,
         flexDirection: 'row',
         paddingVertical: 10
     },
     modalView: {
         backgroundColor: '#f5f8fd',
-        zIndex: 1000
+        flex: 1
     },
     product_info: {},
     row_info: {
-        flexDirection: 'row',
-        minHeight: 30
+        flexDirection: 'row'
     }
 });
 

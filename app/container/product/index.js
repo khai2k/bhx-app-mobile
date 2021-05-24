@@ -27,7 +27,9 @@ class Product extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            // loadingLine: true
+        };
     }
 
     componentDidMount() {
@@ -35,9 +37,17 @@ class Product extends Component {
         this.props.actionHome.get_listcategories();
     }
 
+    handleScroll = (event) => {
+        const positionX = event.nativeEvent.contentOffset.x;
+        const positionY = event.nativeEvent.contentOffset.y;
+        console.log('X: ', positionX);
+        console.log('Y: ', positionY);
+        console.log('--------------');
+    };
+
     render() {
         return (
-            <ScrollView style={styles.body} onScroll={handleScroll}>
+            <ScrollView style={styles.body}>
                 <Header navigation={this.props.navigation} />
 
                 <ListCategories
@@ -55,14 +65,6 @@ class Product extends Component {
         );
     }
 }
-
-const handleScroll = (event) => {
-    const positionX = event.nativeEvent.contentOffset.x;
-    const positionY = event.nativeEvent.contentOffset.y;
-    console.log('X: ', positionX);
-    console.log('Y: ', positionY);
-    console.log('--------------');
-};
 
 const mapStateToProps = (state) => {
     return {
