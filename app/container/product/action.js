@@ -3,11 +3,13 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 const GET_LIST_CATEGORIES = 'GET_LIST_CATEGORIES';
 const GET_LIST_PRODUCT = 'GET_LIST_PRODUCT';
 const GET_MORE_LIST_PRODUCT = 'GET_MORE_LIST_PRODUCT';
+const GET_MORE_LINE = 'GET_MORE_LINE';
 
 export const homeAction = {
     GET_LIST_CATEGORIES,
     GET_LIST_PRODUCT,
-    GET_MORE_LIST_PRODUCT
+    GET_MORE_LIST_PRODUCT,
+    GET_MORE_LINE
 };
 
 export const get_listcategories = function () {
