@@ -11,7 +11,8 @@ import {
     Picker,
     TextInput,
     Image,
-    ScrollView
+    ScrollView,
+    Alert
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -19,15 +20,18 @@ import { helper } from '@app/common';
 import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useDispatch } from 'react-redux';
+import * as locationCreator from '@app/components/Location/action';
 
 const UserInfo = (props) => {
     useEffect(() => {
         props.actionCart.cart_get();
+        props.actionLocation.location_getCurrent();
+        debugger;
         setCusPhone(props?.cart?.CustomerPhone);
     }, []);
-    
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
@@ -73,22 +77,17 @@ const UserInfo = (props) => {
                             ]}
                             placeholder="Vui lòng nhập số điện thoại"
                             keyboardType="phone-pad"
-                            value={
-                                cusPhone
-                            }
+                            value={cusPhone}
                             onChangeText={(value) => {
-                                setCusPhone({value}); 
+                                setCusPhone({ value });
                             }}
-                            onBlur={() => {
-                                
-                            }}
+                            onBlur={() => {}}
                         />
                     </View>
                     {SexRadio(props?.cart?.CustomerGender)}
                     <TextInput
                         style={[styles.inputBox]}
                         placeholder="Họ và tên *"
-                        keyboardType="text"
                         value={
                             props?.cart?.CustomerName !== '' &&
                             props?.cart?.CustomerName !== undefined
@@ -96,11 +95,10 @@ const UserInfo = (props) => {
                                 : ''
                         }
                     />
-                    <UserProvAndDis />
+                    {UserProvAndDis(props)}
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Địa chỉ nhận"
-                        keyboardType="text"
                         value={
                             props?.cart?.CustomerAddress !== '' &&
                             props?.cart?.CustomerAddress !== undefined
@@ -140,7 +138,7 @@ const UserInfo = (props) => {
                     <View>
                         <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
                             Mua thêm để miễn phí giao với đơn trên 100.000đ (còn
-                            5 lần)
+                            5 lần) 
                             <Text
                                 style={{
                                     fontSize: 14,
@@ -164,7 +162,6 @@ const UserInfo = (props) => {
                     <TextInput
                         style={styles.inputNote}
                         placeholder="Ghi chú thêm (nếu có)"
-                        keyboardType="text"
                         numberOfLines={4}
                         multiline
                         editable
@@ -182,11 +179,11 @@ const chosenDeliDate = (props) => {
                 selectedValue={0}
                 style={{ height: 50, width: '100%' }}
                 onValueChange={(itemValue, itemIndex) =>
-                    props?.cart?.ShiptimeGroupList?.DateList
+                    props?.shipdatetime?.DateList
                 }>
-                {props?.cart?.ShiptimeGroupList?.DateList !== null &&
-                props?.cart?.ShiptimeGroupList?.DateList.length > 0 ? (
-                    props?.cart?.ShiptimeGroupList?.DateList.map((item) => {
+                {props?.shipdatetime?.DateList !== null &&
+                props?.shipdatetime?.DateList?.length > 0 ? (
+                    props?.shipdatetime?.DateList.map((item) => {
                         return <Picker.Item label={item} value={item} />;
                     })
                 ) : (
@@ -205,9 +202,9 @@ const chosenDeliTime = (props) => {
                 onValueChange={(itemValue, itemIndex) =>
                     props?.cart?.ShiptimeGroupList?.TimeList
                 }>
-                {props?.cart?.ShiptimeGroupList?.TimeList !== null &&
-                props?.cart?.ShiptimeGroupList?.TimeList.length > 0 ? (
-                    props?.cart?.ShiptimeGroupList?.TimeList.map((item) => {
+                {props?.shipdatetime?.TimeList !== null &&
+                props?.shipdatetime?.TimeList?.length > 0 ? (
+                    props?.shipdatetime?.TimeList.map((item) => {
                         return <Picker.Item label={item} value={item} />;
                     })
                 ) : (
@@ -283,6 +280,13 @@ const UserProvAndDis = (props) => {
         apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
             .then((response) => {
                 setLstProv(response.Value);
+                if (
+                    props?.location !== null &&
+                    props?.location.ProvinceId > 0
+                ) {
+                    setprovinceSelected(props.location.ProvinceId);
+                    getLstDis(props.location.ProvinceId);
+                }
             })
             .catch((err) => {});
     };
@@ -337,6 +341,7 @@ const UserProvAndDis = (props) => {
                                     <Picker.Item
                                         label={prov.ProvinceFullName}
                                         value={prov.ProvinceId}
+                                        key={prov.ProvinceId}
                                     />
                                 );
                             })
@@ -363,6 +368,7 @@ const UserProvAndDis = (props) => {
                                     <Picker.Item
                                         label={dis.Item2}
                                         value={dis.Item1}
+                                        key={dis.Item1}
                                     />
                                 );
                             })
@@ -373,7 +379,7 @@ const UserProvAndDis = (props) => {
                 </View>
             </View>
             <View style={styles.wardBox}>
-                <Picker
+            <Picker
                     selectedValue={-1}
                     enabled={enableWard}
                     style={{
@@ -401,13 +407,16 @@ const UserProvAndDis = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.cartReducer.Cart
+        cart: state.cartReducer.Cart,
+        shipdatetime: state.cartReducer.ShiptimeGroupList,
+        location: state.locationReducer.crrLocationRs
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        actionCart: bindActionCreators(cartCreator, dispatch)
+        actionCart: bindActionCreators(cartCreator, dispatch),
+        actionLocation: bindActionCreators(locationCreator, dispatch)
     };
 };
 

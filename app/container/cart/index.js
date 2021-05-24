@@ -67,40 +67,40 @@ class Cart extends Component {
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <View style={styles.btn}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
                                 <Text style={styles.textbtn}>
                                     Xóa hết giỏ hàng
                                 </Text>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.btn}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
                                 <View>
-                            <Text style={styles.textbtn}>
-                                Dùng phiếu mua hàng
-                            </Text>
+                                    <Text style={styles.textbtn}>
+                                        Dùng phiếu mua hàng
+                                    </Text>
                                 </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.btnbuy}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                // this.props.navigation.navigate('Cart')
-                                this.props.navigation.navigate('UserInfo')
-                            }>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    // this.props.navigation.navigate('Cart')
+                                    this.props.navigation.navigate('UserInfo')
+                                }>
                                 <View>
                                     <Text style={styles.textbtnbuy}>
                                         ĐẶT HÀNG
                                     </Text>
                                 </View>
-                        </TouchableOpacity>
-                    </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={{ height: 60 }} />
                 </ScrollView>
@@ -113,8 +113,8 @@ const showListCartItemOff = (listCartItemOff) => {
     if (listCartItemOff != null && !helper.IsEmptyArray(listCartItemOff)) {
         const list = listCartItemOff.filter((item) => item.TypeProduct !== 3);
         if (!helper.IsEmptyArray(list)) {
-        return (
-            <View>
+            return (
+                <View>
                     {list.map((itemCart) => {
                         return (
                             <ProductItemCartOff
@@ -122,11 +122,11 @@ const showListCartItemOff = (listCartItemOff) => {
                                 key={itemCart.Info.GuildId}
                             />
                         );
-                })}
+                    })}
                     <View style={styles.hr} />
-            </View>
-        );
-    }
+                </View>
+            );
+        }
     }
 };
 
