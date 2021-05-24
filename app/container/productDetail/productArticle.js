@@ -116,7 +116,7 @@ const ProductArticle = (props) => {
     function renderDescription() {
         let address = '';
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, padding: 5 }}>
                 <Text>
                     <Text style={{ fontWeight: 'bold' }}>{ShortName}</Text>
                     {` ${MetaDescription} `}
@@ -131,7 +131,7 @@ const ProductArticle = (props) => {
     }
     function renderPromotion() {
         return (
-            <View>
+            <View style={{ padding: 5 }}>
                 <Text style={styles.textPromotionSmall}>
                     {`* Khuyến mãi áp dụng khi mua ${bHXProduct.ShortName}`}
                 </Text>
@@ -150,7 +150,7 @@ const ProductArticle = (props) => {
         );
     }
     return (
-        <View style={{ backgroundColor: COLOR.WHITE, padding: 5 }}>
+        <View style={{ backgroundColor: COLOR.WHITE }}>
             {bHXProduct.PromotionText !== '' && renderPromotion()}
 
             <View style={{ flexDirection: 'row' }}>
