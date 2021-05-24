@@ -15,8 +15,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImageViewer from 'react-native-image-zoom-viewer';
-
-import FakeData from './FakeData';
+import * as COLOR from '@app/styles/colors';
 
 const THUMB_SIZE = 50;
 const { width } = Dimensions.get('window');
@@ -33,7 +32,6 @@ export default class ProductGallery extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: FakeData,
             crrImgIdx: 0,
             showModal: false
         };
@@ -42,10 +40,25 @@ export default class ProductGallery extends Component {
         }
     }
 
+    change(nativeEvent) {
+        if (nativeEvent) {
+            const slide = Math.round(
+                nativeEvent.contentOffset.x /
+                    nativeEvent.layoutMeasurement.width
+            );
+            if (slide !== this.state.crrImgIdx) {
+                this.setState({
+                    crrImgIdx: slide
+                });
+            }
+        }
+    }
+
     render() {
-        const { data, crrImgIdx } = this.state;
+        const data = this.props.Gallery_product;
+        const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.uri }));
+        const images = data.map((s) => ({ url: s.ImageThumb }));
 
         return (
             <View
@@ -58,6 +71,7 @@ export default class ProductGallery extends Component {
                         height: IMG_HEIGHT + 28
                     }}>
                     <ScrollView
+                        onScroll={({ nativeEvent }) => this.change(nativeEvent)}
                         ref={(snapScroll) => {
                             this._sliderRef = snapScroll;
                         }}
@@ -82,7 +96,7 @@ export default class ProductGallery extends Component {
                                             height: IMG_HEIGHT
                                         }}
                                         resizeMode="contain"
-                                        source={{ uri: item.uri }}
+                                        source={{ uri: item.ImageThumb }}
                                     />
                                 </TouchableOpacity>
                             );
@@ -112,7 +126,11 @@ export default class ProductGallery extends Component {
                                     animated: true
                                 });
                             }}>
-                            <Icon name="angle-left" size={26} color="#fff" />
+                            <Icon
+                                name="angle-left"
+                                size={26}
+                                color={COLOR.WHITE}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View
@@ -138,14 +156,19 @@ export default class ProductGallery extends Component {
                                     animated: true
                                 });
                             }}>
-                            <Icon name="angle-right" size={26} color="#fff" />
+                            <Icon
+                                name="angle-right"
+                                size={26}
+                                color={COLOR.WHITE}
+                            />
                         </TouchableOpacity>
                     </View>
                     <View
                         // eslint-disable-next-line react-native/no-color-literals
                         style={{
                             height: 28,
-                            alignItems: 'flex-end'
+                            alignItems: 'flex-end',
+                            backgroundColor: COLOR.WHITE
                         }}>
                         <View
                             style={{
@@ -165,6 +188,16 @@ export default class ProductGallery extends Component {
                             this.changeOffsetThumb(this.state.crrImgIdx);
                         }}
                         onRequestClose={() => this.closeModal()}>
+                        <TouchableOpacity
+                            onPress={() => this.closeModal()}
+                            style={{
+                                position: 'absolute',
+                                top: 20,
+                                right: 20,
+                                zIndex: 111
+                            }}>
+                            <Text style={{ fontSize: 20 }}>X</Text>
+                        </TouchableOpacity>
                         <ImageViewer
                             imageUrls={images}
                             index={crrImgIdx}
@@ -187,7 +220,9 @@ export default class ProductGallery extends Component {
                             }}
                             backgroundColor="white"
                             footerContainerStyle={[styles.modalFooterStyle]}
-                            renderFooter={this._renderFooterModalItems}
+                            renderFooter={() =>
+                                this._renderFooterModalItems(data)
+                            }
                         />
                     </Modal>
                 </View>
@@ -195,7 +230,7 @@ export default class ProductGallery extends Component {
         );
     }
 
-    _renderFooterModalItems = () => (
+    _renderFooterModalItems = (data) => (
         <View
             style={{
                 width,
@@ -211,8 +246,8 @@ export default class ProductGallery extends Component {
                     alignItems: 'center',
                     minWidth: width
                 }}
-                data={this.state.data}
-                keyExtractor={(item) => `thumbRef_${item.uri}`}
+                data={data}
+                keyExtractor={(item) => `thumbRef_${item.ImageThumb}`}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -238,7 +273,7 @@ export default class ProductGallery extends Component {
                                         index === this.state.crrImgIdx ? 1 : 0.5
                                 }}
                                 source={{
-                                    uri: item.uri
+                                    uri: item.ImageThumb
                                 }}
                             />
                         </TouchableOpacity>
@@ -286,7 +321,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     btnChangeSlider: {
-        backgroundColor: 'rgba(34, 43, 69, 0.5)',
+        backgroundColor: COLOR.GRAY_DARK,
         paddingHorizontal: 10,
         paddingVertical: 20
     },
@@ -306,7 +341,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     modalFooterStyle: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.WHITE,
         elevation: 9,
         padding: 5,
         shadowColor: '#000000',
@@ -319,7 +354,7 @@ const styles = StyleSheet.create({
     },
     // eslint-disable-next-line react-native/no-color-literals
     totalNumber: {
-        backgroundColor: '#d6e0f5',
+        backgroundColor: COLOR.GRAY_DARK,
         borderRadius: 16,
         color: '#fff',
         fontSize: 12,

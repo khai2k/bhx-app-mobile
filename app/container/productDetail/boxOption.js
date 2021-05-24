@@ -145,17 +145,13 @@ const BoxOption = (props) => {
             </View>
             {Sales !== null && !isSaleOnly && (
                 <View style={styles.productNearDate}>
-                    <View style={styles.textProductNearDate}>
-                        <Text style={{ fontWeight: 'bold' }}>
-                            {Sales && `MUA ${Sales['6613'].Price}`}
-                        </Text>
-                    </View>
-                    <View style={styles.textProductNearDate}>
-                        <Text style={styles.ExpiredText}>
-                            {' '}
-                            {Sales && Sales['6613'].ExpiredText}
-                        </Text>
-                    </View>
+                    <Text style={{ fontWeight: 'bold' }}>
+                        {Sales && `MUA ${Sales['6613'].Price}`}
+                    </Text>
+                    <Text style={styles.ExpiredText}>
+                        {' '}
+                        {Sales && Sales['6613'].ExpiredText}
+                    </Text>
                 </View>
             )}
         </View>

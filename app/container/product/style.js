@@ -48,9 +48,12 @@ const styles = StyleSheet.create({
         top: 0,
         width: windowWidth - 20
     },
+    product: {
+        height: 50,
+        width: 50
+    },
     productList: {
-        flexDirection: 'row',
-        flexWrap: 'wrap'
+        flex: 1
     },
     slideItem: {
         alignContent: 'center',
@@ -63,7 +66,9 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     swiperItem: {
-        color: Colors.WHITE
+        color: Colors.WHITE,
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     viewmoreProduct: {
         backgroundColor: Colors.WHITE,
@@ -76,10 +81,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: windowWidth - 10
     },
-    viewmoreProduct_text: {
+    viewmoreProduct_cateName: {
         color: Colors.TROPICAL_RAIN_FOREST,
+        fontWeight: 'bold',
+        paddingLeft: 5
+    },
+    viewmoreProduct_text: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         padding: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        justifyContent: 'center'
+    },
+    viewmoreProduct_total: {
+        color: Colors.TROPICAL_RAIN_FOREST
     }
 });
 export default styles;

@@ -163,7 +163,7 @@ const RenderCateChildItem = React.memo((props) => {
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
-        // props.navigation.navigate('Group', { url: item.Url });
+        props.navigation.navigate('Group', { url: item.Url });
     };
 
     return (

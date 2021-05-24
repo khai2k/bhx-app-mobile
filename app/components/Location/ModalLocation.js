@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react-native/sort-styles */
-import React, { useEffect, useState, useRef, createRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     Text,
@@ -11,15 +11,13 @@ import {
     ActivityIndicator,
     FlatList,
     ScrollView,
-    Dimensions,
-    TextInput
+    Dimensions
 } from 'react-native';
 import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
-import { location_SaveChooseLocation } from './action';
-import DelayInput from './DelayInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { location_SaveChooseLocation } from './action';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -33,7 +31,6 @@ const ModalLocation = (props) => {
     // Init
     const refSlider = useRef(null);
     const windowWidth = Math.round(Dimensions.get('window').width);
-    const windowHeight = Math.round(Dimensions.get('window').height);
 
     // Redux
     const locationinfo = useSelector((state) => state.locationReducer);
@@ -45,8 +42,6 @@ const ModalLocation = (props) => {
     const [step, setStep] = useState(0);
     const [textAt, settextAt] = useState('');
 
-    const [textSearch, setTextSearch] = useState('');
-
     const [chooseProvinceId, setchooseProvinceId] = useState(0);
     const [chooseProvinceFullName, setchooseProvinceFullName] = useState('');
     const [chooseProvinceShortName, setchooseProvinceShortName] = useState('');
@@ -54,7 +49,9 @@ const ModalLocation = (props) => {
     const [chooseDistrictId, setchooseDistrictId] = useState(0);
     const [chooseDistrictName, setchooseDistrictName] = useState('');
 
+    // eslint-disable-next-line no-unused-vars
     const [chooseWardId, setchooseWardId] = useState(0);
+    // eslint-disable-next-line no-unused-vars
     const [chooseWardName, setchooseWardName] = useState('');
 
     const [lstProvince, setLstProvince] = useState(null);
@@ -111,7 +108,6 @@ const ModalLocation = (props) => {
     };
 
     const SliderGotTo = (_step) => {
-        console.log(_step);
         setStep(_step);
         refSlider?.current?.scrollTo({
             x: _step * windowWidth,
@@ -168,6 +164,14 @@ const ModalLocation = (props) => {
         }
     };
 
+    const checkbackorclose = () => {
+        if (step > 0) {
+            SliderGotTo(step - 1);
+        } else {
+            changeModalVisibleCallback(false);
+        }
+    };
+
     // Callback
     const changeModalVisibleCallback = (isVisible) => {
         settextAt('');
@@ -181,7 +185,7 @@ const ModalLocation = (props) => {
             index
             animationType="slide"
             onRequestClose={() => {
-                changeModalVisibleCallback(false);
+                checkbackorclose();
             }}>
             <SafeAreaView>
                 <Text style={styles.titleModal}>
@@ -215,26 +219,12 @@ const ModalLocation = (props) => {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <DelayInput
-                        value={textSearch}
-                        minLength={2}
-                        delayTimeout={3000}
-                        placeholder="Tìm nhanh phường xã, quận huyện"
-                        style={{
-                            margin: 10,
-                            height: 40,
-                            borderColor: 'gray',
-                            borderWidth: 1
-                        }}
-                    />
-                </View>
-                <View>
                     <ScrollView
                         ref={refSlider}
                         horizontal
                         pagingEnabled
                         style={{
-                            paddingBottom: 260
+                            paddingBottom: 170
                         }}
                         showsHorizontalScrollIndicator={false}
                         scrollEnabled={false}

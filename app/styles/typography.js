@@ -58,6 +58,11 @@ export const FONT_BOLD_14 = {
     fontSize: FONT_SIZE_14
 };
 
+export const FONT_BOLD_16 = {
+    ...FONT_BOLD,
+    fontSize: FONT_BOLD_16
+};
+
 export const FONT_BOLD_18 = {
     ...FONT_BOLD,
     fontSize: FONT_SIZE_18

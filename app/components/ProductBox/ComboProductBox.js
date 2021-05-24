@@ -1,23 +1,181 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 import BuyBox from './BuyBox';
 
 const ComboProductBox = (props) => {
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
-    const navigation = useNavigation();
-    const onUpdateNumberItems = (number) => {
-        setNumberItems(number);
+
+    const cart = useSelector((state) => state.cartReducer.CartSimple);
+    const [guildId, setGuildId] = useState('');
+
+    const checkFillButtonBuy = () => {
+        const idProduct = props.bhxProduct.Id;
+        if (cart && cart.ProInCart) {
+            if (cart.ProInCart[idProduct]) {
+                setGuildId(cart.ProInCart[idProduct][0]);
+                setNumberItems(+cart.ProInCart[idProduct][1]);
+                setBuyButtonVisible(true);
+            } else {
+                setNumberItems(1);
+                setBuyButtonVisible(false);
+            }
+        }
     };
-    const onUpdateBuyButtonVisible = (status) => {
-        setBuyButtonVisible(status);
-    };
+    useEffect(() => {
+        checkFillButtonBuy();
+    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+
     const handleInputNumber = (number) => {
-        setNumberItems(+number);
+        if (helper.isEmptyOrNull(number)) {
+            return;
+        }
+        number = +number;
+        if (number <= 0) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setBuyButtonVisible(false);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, number)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems - 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
     };
+
+    const addToCart = () => {
+        setNumberItems(1);
+        setBuyButtonVisible(true);
+        actionCart
+            .cart_add_item_product(props.bhxProduct.Id, 1)
+            .then((res) => {
+                console.log('cart_add_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                } else {
+                    // setNumberItems(1);
+                    // setBuyButtonVisible(true);
+                    // const infoCartProduct =
+                    //     res.Value?.cart.Cart.ListCartItem.find(
+                    //         (item) => item.Info.Id === props.bhxProduct.Id
+                    //     );
+                    // setGuildId(infoCartProduct.GuildId);
+                    actionCart.cart_get_simple();
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+    const setQuantityMinus = () => {
+        if (numberItems <= 1) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setBuyButtonVisible(false);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, numberItems - 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems - 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+
+    const setQuantityPlus = () => {
+        if (numberItems > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            console.log('setQuantityPlus');
+            console.log(guildId);
+            console.log(numberItems);
+            actionCart
+                .cart_update_item_product(guildId, numberItems + 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems + 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+    const alertAPI = (messages) => {
+        Alert.alert('', messages);
+    };
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý'
+            }
+        ]);
+    };
+
     const imageModal =
         props.bhxProduct != null &&
         props.bhxProduct.FeatureImageModel != null &&
@@ -32,7 +190,11 @@ const ComboProductBox = (props) => {
                     buyButtonVisible ? styles.productSelected : styles.product
                 }>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('ProductDetail')}
+                    onPress={() =>
+                        navigation.navigate('ProductDetail', {
+                            productId: props.bhxProduct.Id
+                        })
+                    }
                     style={styles.productImg}>
                     <View className="boxImg" style={styles.boxImg}>
                         <View className="imgContent" style={styles.imgContent}>
@@ -59,8 +221,7 @@ const ComboProductBox = (props) => {
                             props.bhxProduct.Price > 0 &&
                             props.bhxProduct.StockQuantityNew >= 1
                         ) {
-                            setNumberItems(1);
-                            setBuyButtonVisible(true);
+                            addToCart();
                         }
                     }}
                     style={
@@ -79,8 +240,8 @@ const ComboProductBox = (props) => {
                             isPageExpired={false}
                             selectedBuy={false}
                             numberItems={numberItems}
-                            onUpdateNumberItems={onUpdateNumberItems}
-                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            setQuantityMinus={setQuantityMinus}
+                            setQuantityPlus={setQuantityPlus}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
@@ -108,8 +269,8 @@ const ComboProductBox = (props) => {
                             isPageExpired={false}
                             selectedBuy
                             numberItems={numberItems}
-                            onUpdateNumberItems={onUpdateNumberItems}
-                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            setQuantityMinus={setQuantityMinus}
+                            setQuantityPlus={setQuantityPlus}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
@@ -119,4 +280,4 @@ const ComboProductBox = (props) => {
     }
     return null;
 };
-export default ComboProductBox;
+export default React.memo(ComboProductBox);

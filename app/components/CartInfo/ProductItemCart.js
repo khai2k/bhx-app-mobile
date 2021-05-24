@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Colors, Typography } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
 import HTML from 'react-native-render-html';
+import { useNavigation } from '@react-navigation/native';
 import {
     Text,
     Image,
@@ -17,21 +18,33 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
 
 const ProductItemCart = (props) => {
-    //  const cart = useSelector((state) => state.cartReducer.Cart);
+    const listCartItem = useSelector((state) =>
+        state.cartReducer.Cart.ListCartItemBuy.filter(
+            (item) => item.TypeProduct === 2
+        )
+    );
+    const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
+    // eslint-disable-next-line no-unused-vars
     const [guildId, setguildId] = useState(props.productCart.GuildId);
+    const [isHideCombo, setisHideCombo] = useState(
+        props.productCart.TypeProduct === 1
+    );
     useEffect(() => {
         setQuantity(props.productCart.Quantity);
-        setguildId(props.productCart.GuildId);
-    }, []); //  , [props.productCart.Quantity]
+    }, []);
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
         props.productCart.NoChangeQuantity === true;
 
     const handleInputQuantity = (number) => {
         setQuantity(number);
+    };
+
+    const handleSetIsHideCombo = () => {
+        setisHideCombo(!isHideCombo);
     };
 
     const submitQuantity = () => {
@@ -44,8 +57,6 @@ const ProductItemCart = (props) => {
             actionCart
                 .cart_update_item_product(guildId, quantity)
                 .then((res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
@@ -71,11 +82,16 @@ const ProductItemCart = (props) => {
             actionCart
                 .cart_update_item_product(guildId, quantity - 1)
                 .then((res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                         setQuantity(quantity + 1);
+                    } else {
+                        const itemcart = res.Value.Cart.ListCartItem.find(
+                            (item) => item.GuildId === guildId
+                        );
+                        if (itemcart != null) {
+                            setQuantity(itemcart.Quantity);
+                        }
                     }
                 })
                 .catch((error) => {
@@ -93,11 +109,16 @@ const ProductItemCart = (props) => {
             actionCart
                 .cart_update_item_product(guildId, quantity + 1)
                 .then((res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                         setQuantity(quantity - 1);
+                    } else {
+                        const itemcart = res.Value.Cart.ListCartItem.find(
+                            (item) => item.GuildId === guildId
+                        );
+                        if (itemcart != null) {
+                            setQuantity(itemcart.Quantity);
+                        }
                     }
                 })
                 .catch((error) => {
@@ -111,7 +132,6 @@ const ProductItemCart = (props) => {
         actionCart
             .cart_remove_item_product(guildId)
             .then((res) => {
-                console.log('actionRemoveItemProduct');
                 if (res.ResultCode < 0) {
                     alertAPI(res.Message);
                 }
@@ -152,12 +172,83 @@ const ProductItemCart = (props) => {
     };
 
     const showHideUnit = () => {
-        if (quantity >= 2) {
+        if (
+            quantity >= 2 &&
+            props.productCart.TypeProduct !== 5 &&
+            props.productCart.TypeProduct !== 1
+        ) {
             return (
                 <Text style={styles.unit}>
                     {helper.formatMoney(props.productCart.Price)}/
                     {props.productCart.Unit}
                 </Text>
+            );
+        }
+    };
+
+    const showCombo = () => {
+        if (
+            listCartItem !== null &&
+            props.productCart.TypeProduct === 1 &&
+            !helper.IsEmptyArray(listCartItem)
+        ) {
+            const list = listCartItem.filter(
+                (item) => item.GuildIdRef === props.productCart.GuildId
+            );
+            if (!helper.IsEmptyArray(list)) {
+                return (
+                    <View>
+                        <TouchableOpacity
+                            style={styles.texttoggle}
+                            onPress={handleSetIsHideCombo}>
+                            <Text style={styles.stextCombo}>
+                                Xem chi tiết combo
+                            </Text>
+                            <Icon
+                                style={styles.icontoggle}
+                                name={
+                                    isHideCombo === false
+                                        ? 'angle-up'
+                                        : 'angle-down'
+                                }
+                                size={Typography.FONT_SIZE_14}
+                                color={Colors.GREEN_KEY}
+                            />
+                        </TouchableOpacity>
+                        {itemCombo(list)}
+                    </View>
+                );
+            }
+        }
+    };
+
+    const itemCombo = (list) => {
+        if (isHideCombo === false) {
+            return (
+                <View style={styles.sboxcombo}>
+                    {list.map((itemCb) => {
+                        return (
+                            <View style={styles.scombo}>
+                                <TouchableOpacity
+                                    style={styles.sitemcombotitle}
+                                    onPress={() =>
+                                        navigation.push('ProductDetail', {
+                                            productId: itemCb.Info.Id
+                                        })
+                                    }>
+                                    <Text
+                                        style={styles.sitemcombo}
+                                        numberOfLines={1}>
+                                        {itemCb.Quantity} {itemCb.Info.Name}
+                                    </Text>
+                                </TouchableOpacity>
+                                <Text style={styles.sitemcomboprice}>
+                                    {helper.formatMoney(itemCb.Price)}
+                                </Text>
+                            </View>
+                        );
+                    })}
+                </View>
             );
         }
     };
@@ -188,6 +279,25 @@ const ProductItemCart = (props) => {
         }
     };
 
+    const showExpireNow = () => {
+        if (
+            props.productCart.Info.IsFresh &&
+            !props.productCart.Info.IsFreshExpired
+        ) {
+            return (
+                <Text style={styles.unit} numberOfLines={1}>
+                    Chỉ giao trong hôm nay hoặc mai để đảm bảo chất lượng
+                </Text>
+            );
+        } else if (props.productCart.Info.IsFreshExpired) {
+            return (
+                <Text style={styles.unit} numberOfLines={1}>
+                    Chỉ giao trong hôm nay để đảm bảo chất lượng
+                </Text>
+            );
+        }
+    };
+
     const showHideMessage = () => {
         if (
             props.productCart.Message != null &&
@@ -201,10 +311,45 @@ const ProductItemCart = (props) => {
         }
     };
 
+    const showTitleItemProduct = () => {
+        let textSub = '';
+        if (
+            props.productCart.TypeProduct === 6 &&
+            props.productCart.Info.IsFreshExpired
+        ) {
+            textSub = '(Hàng qua ngày)';
+        } else if (
+            props.productCart.TypeProduct === 6 &&
+            !props.productCart.Info.IsFreshExpired
+        ) {
+            textSub = '(Hàng xả kho)';
+        }
+        if (props.TypeProduct === 3 || props.TypeProduct === 4) {
+            return (
+                <Text style={styles.title}>
+                    {props.productCart.Info.ShortName} {textSub}
+                </Text>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.push('ProductDetail', {
+                            productId: props.productCart.Info.Id
+                        })
+                    }>
+                    <Text style={styles.title}>
+                        {props.productCart.Info.ShortName} {textSub}
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={alertDeleteItemProduct}>
                     <Icon
                         style={styles.closer}
                         name="times"
@@ -220,13 +365,13 @@ const ProductItemCart = (props) => {
                 />
             </View>
             <View style={styles.boxinfo}>
-                <Text style={styles.title}>
-                    {props.productCart.Info.ShortName}
-                </Text>
+                {showTitleItemProduct()}
                 {showHideExpire()}
                 {showHideUnit()}
                 {showHideMessage()}
-                {showMessageQuantity(-1)}
+                {showMessageQuantity()}
+                {showExpireNow()}
+                {showCombo()}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
@@ -287,7 +432,7 @@ const styles = StyleSheet.create({
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
-        elevation: Platform.OS === 'android' ? 5 : 0,
+        //  elevation: Platform.OS === 'android' ? 5 : 0,
         left: 5,
         paddingHorizontal: 5,
         paddingVertical: 3,
@@ -296,8 +441,8 @@ const styles = StyleSheet.create({
         zIndex: 5
     },
     container: {
-        borderBottomWidth: 1,
         borderColor: Colors.BORDER_GENERAL,
+        borderTopWidth: 1,
         flexDirection: 'row',
         marginBottom: 5,
         padding: 5
@@ -311,8 +456,11 @@ const styles = StyleSheet.create({
         color: Colors.MESSAGE_ERROR,
         marginLeft: 2
     },
+    icontoggle: {
+        marginLeft: 5
+    },
     imgbind: {
-        elevation: Platform.OS === 'android' ? 2 : 0,
+        //  elevation: Platform.OS === 'android' ? 2 : 0,
         height: 60,
         resizeMode: 'contain',
         zIndex: 1
@@ -348,10 +496,33 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 5
     },
-    statusoff: {
-        color: Colors.CART_STOPSALES,
-        fontSize: Typography.FONT_SIZE_12,
-        marginTop: 5
+    sboxcombo: {
+        backgroundColor: Colors.BG_COMBO,
+        borderRadius: 5,
+        padding: 5
+    },
+    scombo: {
+        flexDirection: 'row'
+    },
+    sitemcombo: {
+        fontSize: Typography.FONT_SIZE_12
+    },
+    sitemcomboprice: {
+        ...Typography.FONT_BOLD_12,
+        flex: 1,
+        textAlign: 'right'
+    },
+    sitemcombotitle: {
+        flex: 2
+    },
+    stextCombo: {
+        fontSize: Typography.FONT_SIZE_12
+    },
+    texttoggle: {
+        alignContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
     },
     title: {
         color: Colors.BLACK,

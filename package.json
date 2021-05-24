@@ -46,6 +46,7 @@
         "lodash.memoize": "^4.1.2",
         "moment": "^2.29.1",
         "react": "17.0.1",
+        "react-devtools": "^4.13.3",
         "react-dom": "^17.0.2",
         "react-native": "0.64.0",
         "react-native-code-push": "git+https://sourceapp.tgdd.vn/appplugins/react-native-code-push-0.60.git",
