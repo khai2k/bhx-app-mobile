@@ -6,9 +6,9 @@ import {
     View,
     Modal,
     Text,
-    TouchableWithoutFeedback,
     Image,
-    TextInput
+    TextInput,
+    TouchableOpacity
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 // import * as orderSuccessCreator from './action';
@@ -20,19 +20,29 @@ class OrderSuccess extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            doneIcon: true,
             checkBox1: false,
             checkBox2: false,
             checkBox3: false,
             modalVisible: false,
             infoOrder: {},
-            productList: []
+            productList: [],
+            purchaseMethodText: 'tiền mặt'
         };
     }
 
     componentDidMount() {
         axios({
-            method: 'get',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=43225473&sc=E214C53EC0384610FE95151117020DA6'
+            method: 'post',
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult',
+            data: {
+                ProvinceId: 3,
+                DistrictId: 2087,
+                WardId: 27125,
+                StoreId: 6463,
+                Sc: 'E214C53EC0384610FE95151117020DA6',
+                OrderId: 43225473
+            }
         })
             .then((res) => {
                 const { data } = res;
@@ -40,6 +50,7 @@ class OrderSuccess extends Component {
                 const orderInfo = data.Value;
                 this.setState({
                     totalPrice: orderInfo.Total,
+                    deliveryTime: orderInfo.DeliveryTextTime,
                     infoOrder: orderInfo.Detail,
                     productList: orderInfo.Detail.DeliveryList
                 });
@@ -62,6 +73,7 @@ class OrderSuccess extends Component {
     _renderAddress() {
         return (
             <View style={styles.infoLine}>
+                <View style={styles.dot} />
                 <Text>
                     Giao tại: {this.state.infoOrder.Address} {'  '}
                     <View style={styles.dotActive} />
@@ -76,7 +88,11 @@ class OrderSuccess extends Component {
             <View style={styles.infoLine}>
                 <View style={styles.dot} />
                 <Text>
-                    Giao vào: 08h-12h-Ngày mai (16/11) {'  '}
+                    Giao vào:{' '}
+                    <Text style={{ fontWeight: 'bold' }}>
+                        {this.state.deliveryTime}
+                    </Text>{' '}
+                    {'  '}
                     <View style={styles.dotActive} />
                     <Text> Sửa</Text>
                 </Text>
@@ -86,27 +102,27 @@ class OrderSuccess extends Component {
 
     _renderNote() {
         return (
-            <TouchableWithoutFeedback>
+            <TouchableOpacity>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
                     <Text style={{ textDecorationLine: 'underline' }}>
                         Thêm ghi chú:
                     </Text>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 
     _renderProducts() {
         return (
-            <TouchableWithoutFeedback>
+            <TouchableOpacity>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
                     <Text>
                         Xem {this.state.productList.length} sản phẩm đã đặt:{' '}
                     </Text>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 
@@ -119,14 +135,43 @@ class OrderSuccess extends Component {
                     <Text style={{ fontWeight: 'bold' }}>
                         {this.state.totalPrice}đ
                     </Text>
-                    <View style={styles.PMHbox}>
-                        <Text style={styles.PHMText}>
-                            + Dùng phiếu mua hàng
-                        </Text>
-                    </View>
+                    <TouchableOpacity
+                        onPress={() =>
+                            this.props.navigation.navigate('UseVoucher')
+                        }>
+                        <View style={styles.PMHbox}>
+                            <Text style={styles.PHMText}>
+                                + Dùng phiếu mua hàng
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </>
         );
+    }
+
+    _renderDoneIcon1() {
+        if (this.state.doneIcon == true) {
+            return (
+                <Image
+                    style={styles.imageDone}
+                    source={require('../../../assets/images/done.png')}
+                />
+            );
+        }
+        return null;
+    }
+
+    _renderDoneIcon2() {
+        if (this.state.doneIcon == false) {
+            return (
+                <Image
+                    style={styles.imageDone}
+                    source={require('../../../assets/images/done.png')}
+                />
+            );
+        }
+        return null;
     }
 
     _renderPurchaseMethod() {
@@ -135,14 +180,28 @@ class OrderSuccess extends Component {
                 <Text>Thanh toán khi nhận hàng bằng cách:</Text>
                 <View style={styles.buttonRow}>
                     <View style={styles.boxRow}>
-                        <Image
-                            style={styles.imageDone}
-                            source={require('../../../assets/images/done.png')}
-                        />
-                        <Text style={styles.textButton}>Tiền mặt</Text>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState({
+                                    doneIcon: true,
+                                    purchaseMethodText: 'tiền mặt'
+                                })
+                            }>
+                            {this._renderDoneIcon1()}
+                            <Text style={styles.textButton}>Tiền mặt</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.box}>
-                        <Text style={styles.textButton}>Cà thẻ</Text>
+                    <View style={styles.boxRow}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState({
+                                    doneIcon: false,
+                                    purchaseMethodText: 'cà thẻ'
+                                })
+                            }>
+                            {this._renderDoneIcon2()}
+                            <Text style={styles.textButton}>Cà thẻ</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -184,27 +243,38 @@ class OrderSuccess extends Component {
         return (
             <View style={styles.buttonContainer}>
                 <View style={styles.buttonRow}>
-                    <TouchableWithoutFeedback
-                        onPress={() =>
-                            this.setState({
-                                modalVisible: !this.state.modalVisible
-                            })
-                        }>
-                        <View style={styles.editBox}>
+                    <View style={styles.editBox}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState({
+                                    modalVisible: !this.state.modalVisible
+                                })
+                            }>
                             <Text style={styles.editTextButton}>
                                 × Hủy đơn hàng
                             </Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.editBox}>
-                        <Image
-                            style={styles.iconEdit}
-                            source={require('../../../assets/images/edit-circle.png')}
-                        />
-                        <Text style={styles.editTextButton}>Sửa đơn hàng</Text>
-                        <Text style={styles.editText}>
-                            (Thêm/bớt SP, đổi địa chỉ/giờ giao)
-                        </Text>
+                        <TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'center'
+                                }}>
+                                <Image
+                                    style={styles.iconEdit}
+                                    source={require('../../../assets/images/edit-circle.png')}
+                                />
+                                <Text style={styles.editTextButton}>
+                                    Sửa đơn hàng
+                                </Text>
+                            </View>
+
+                            <Text style={styles.editText}>
+                                (Thêm/bớt SP, đổi địa chỉ/giờ giao)
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -278,23 +348,24 @@ class OrderSuccess extends Component {
                             />
                         </View>
                         <View style={styles.modalButtonView}>
-                            <TouchableWithoutFeedback
-                                onPress={() =>
-                                    this.setState({
-                                        modalVisible: !this.state.modalVisible
-                                    })
-                                }>
-                                <View style={styles.cancelButton}>
+                            <View style={styles.cancelButton}>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        this.setState({
+                                            modalVisible:
+                                                !this.state.modalVisible
+                                        })
+                                    }>
                                     <Text style={styles.canceltext}>ĐÓNG</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.confirmButton}>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.confirmButton}>
+                                <TouchableOpacity>
                                     <Text style={styles.confirmText}>
                                         XÁC NHẬN HỦY ĐƠN HÀNG
                                     </Text>
-                                </View>
-                            </TouchableWithoutFeedback>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -329,7 +400,11 @@ class OrderSuccess extends Component {
                         {this._renderProducts()}
                         {this._renderPrice()}
                         <Text style={{ marginLeft: 10 }}>
-                            Thanh toán tiền mặt khi nhận hàng
+                            Thanh toán{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.purchaseMethodText}
+                            </Text>{' '}
+                            khi nhận hàng
                         </Text>
                         <Text style={{ marginLeft: 10, marginTop: 5 }}>
                             Yêu cầu đồng kiểm tra sản phẩm khi nhận hàng
@@ -342,7 +417,10 @@ class OrderSuccess extends Component {
                 </View>
                 {this._renderEditButton()}
                 {this._renderCancelOrderModal()}
-                <Text style={styles.backToHomeText}>Về trang chủ</Text>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
+                    <Text style={styles.backToHomeText}>Về trang chủ</Text>
+                </TouchableOpacity>
             </View>
         );
     }

@@ -17,6 +17,7 @@ import Notification from '../container/notification';
 import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 import SuggestSearch from '../container/SuggestSearch/md';
+import UseVoucher from '../container/useVoucher';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -81,6 +82,15 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="SuggestSearch"
                 component={SuggestSearch}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="UseVoucher"
+                component={UseVoucher}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);

@@ -134,16 +134,16 @@ const styles = StyleSheet.create({
         width: win.width / 3 - 6
     },
     productNearDate: {
-        backgroundColor: Colors.WHITE,
-        // borderColor: Colors.TROPICAL_RAIN_FOREST,
+        alignItems: 'center',
+        backgroundColor: Colors.GRAY_E4E9F2,
         borderRadius: 8,
-        // borderWidth: 1,
         height: 'auto',
-        marginBottom: 0,
+        justifyContent: 'center',
+        marginBottom: 10,
         marginLeft: 3,
         marginRight: 3,
         marginTop: 7,
-        padding: 0,
+        paddingVertical: 5,
         position: 'relative',
         shadowColor: Colors.LINK_WATER,
         shadowOffset: { height: 3, width: 0 },
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     },
     textProductNearDate: {
         alignItems: 'center',
-        backgroundColor: Colors.GRAY_LIGHT,
+        backgroundColor: Colors.GRAY_EAEEF7,
         justifyContent: 'center',
         paddingVertical: 2
     },

@@ -48,9 +48,12 @@ const styles = StyleSheet.create({
         top: 0,
         width: windowWidth - 20
     },
+    product: {
+        height: 50,
+        width: 50
+    },
     productList: {
-        flexDirection: 'row',
-        flexWrap: 'wrap'
+        flex: 1
     },
     slideItem: {
         alignContent: 'center',

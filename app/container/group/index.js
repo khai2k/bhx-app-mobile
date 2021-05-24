@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, ActivityIndicator, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
+import { Colors } from '@app/styles';
 import Filter from './Filter';
 import Product from './Product';
 import * as categoryCreator from './action';
 
 class Group extends Component {
-    componentDidMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true
+        };
+    }
+
+    async componentDidMount() {
         const option = {
             params: {
                 categoryUrl: this.props.route.params.url,
@@ -19,11 +27,21 @@ class Group extends Component {
                 clearcache: ''
             }
         };
-        this.props.actionCategory.category_get(option);
+        await this.props.actionCategory.category_get(option);
+        this.setState({ isLoading: false });
     }
 
     render() {
-        return (
+        return this.state.isLoading ? (
+            <SafeAreaView style={{ flex: 1 }}>
+                <Header />
+                <ActivityIndicator
+                    style={{ marginTop: 50 }}
+                    size="large"
+                    color={Colors.GREEN_KEY}
+                />
+            </SafeAreaView>
+        ) : (
             <SafeAreaView style={{ flex: 1 }}>
                 <Header />
                 <Filter
