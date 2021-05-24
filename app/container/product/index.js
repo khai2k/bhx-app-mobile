@@ -4,7 +4,6 @@ import { ScrollView, ActivityIndicator } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Header } from '@app/components';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from './action';
 import ListCategories from './ListCategories';
 import SliderTitle from './SliderTitle';
@@ -109,18 +108,18 @@ class Product extends Component {
                     { params: bodyApi }
                 )
                     .then((response) => {
-                        self.setState({
-                            homeData: [
-                                ...self.state.homeData,
-                                ...response.Value
-                            ],
-                            loadingLine: response.OrtherData?.IsNextGroup,
-                            pageIndexLine: self.state.pageIndexLine + 1,
-                            isLoading: true,
-                            showLoading: false
-                        });
-                        console.log('---GET_MORE_LINE-----');
-                        console.log(response);
+                        response !== null &&
+                            response.Value !== null &&
+                            self.setState({
+                                homeData: [
+                                    ...self.state.homeData,
+                                    ...response.Value
+                                ],
+                                loadingLine: response.OrtherData?.IsNextGroup,
+                                pageIndexLine: self.state.pageIndexLine + 1,
+                                isLoading: true,
+                                showLoading: false
+                            });
                     })
                     .catch((error) => {
                         console.log(error);
@@ -135,6 +134,7 @@ class Product extends Component {
                 <Header navigation={this.props.navigation} />
 
                 <ListCategories listCate={this.state.listCategories} />
+
                 <SliderTitle listTitle={this.listTitle} />
 
                 {/* Render line */}
