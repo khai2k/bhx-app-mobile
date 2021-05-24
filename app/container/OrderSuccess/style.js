@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginTop: 10,
-        marginBottom: 5
+        marginBottom: 5,
+        alignItems: 'center'
     },
     buttonContainer: {
         marginLeft: 15,
@@ -138,8 +139,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 20,
         height: 20,
-        position: 'absolute',
-        left: 25
+        marginRight: 3
     },
     editText: {
         textAlign: 'center',

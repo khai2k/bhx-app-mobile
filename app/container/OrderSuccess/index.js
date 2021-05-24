@@ -26,7 +26,8 @@ class OrderSuccess extends Component {
             checkBox3: false,
             modalVisible: false,
             infoOrder: {},
-            productList: []
+            productList: [],
+            purchaseMethodText: 'tiền mặt'
         };
     }
 
@@ -49,16 +50,13 @@ class OrderSuccess extends Component {
                 const orderInfo = data.Value;
                 this.setState({
                     totalPrice: orderInfo.Total,
+                    deliveryTime: orderInfo.DeliveryTextTime,
                     infoOrder: orderInfo.Detail,
                     productList: orderInfo.Detail.DeliveryList
                 });
             })
             .catch((err) => console.log('err', err));
     }
-
-    choosePurchaseMethod = () => {
-        this.setState({ doneIcon: !this.state.doneIcon });
-    };
 
     _renderUserInfo() {
         return (
@@ -75,6 +73,7 @@ class OrderSuccess extends Component {
     _renderAddress() {
         return (
             <View style={styles.infoLine}>
+                <View style={styles.dot} />
                 <Text>
                     Giao tại: {this.state.infoOrder.Address} {'  '}
                     <View style={styles.dotActive} />
@@ -89,7 +88,11 @@ class OrderSuccess extends Component {
             <View style={styles.infoLine}>
                 <View style={styles.dot} />
                 <Text>
-                    Giao vào: 08h-12h-Ngày mai (16/11) {'  '}
+                    Giao vào:{' '}
+                    <Text style={{ fontWeight: 'bold' }}>
+                        {this.state.deliveryTime}
+                    </Text>{' '}
+                    {'  '}
                     <View style={styles.dotActive} />
                     <Text> Sửa</Text>
                 </Text>
@@ -180,7 +183,8 @@ class OrderSuccess extends Component {
                         <TouchableOpacity
                             onPress={() =>
                                 this.setState({
-                                    doneIcon: true
+                                    doneIcon: true,
+                                    purchaseMethodText: 'tiền mặt'
                                 })
                             }>
                             {this._renderDoneIcon1()}
@@ -191,7 +195,8 @@ class OrderSuccess extends Component {
                         <TouchableOpacity
                             onPress={() =>
                                 this.setState({
-                                    doneIcon: false
+                                    doneIcon: false,
+                                    purchaseMethodText: 'cà thẻ'
                                 })
                             }>
                             {this._renderDoneIcon2()}
@@ -252,13 +257,20 @@ class OrderSuccess extends Component {
                     </View>
                     <View style={styles.editBox}>
                         <TouchableOpacity>
-                            <Image
-                                style={styles.iconEdit}
-                                source={require('../../../assets/images/edit-circle.png')}
-                            />
-                            <Text style={styles.editTextButton}>
-                                Sửa đơn hàng
-                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'center'
+                                }}>
+                                <Image
+                                    style={styles.iconEdit}
+                                    source={require('../../../assets/images/edit-circle.png')}
+                                />
+                                <Text style={styles.editTextButton}>
+                                    Sửa đơn hàng
+                                </Text>
+                            </View>
+
                             <Text style={styles.editText}>
                                 (Thêm/bớt SP, đổi địa chỉ/giờ giao)
                             </Text>
@@ -388,7 +400,11 @@ class OrderSuccess extends Component {
                         {this._renderProducts()}
                         {this._renderPrice()}
                         <Text style={{ marginLeft: 10 }}>
-                            Thanh toán tiền mặt khi nhận hàng
+                            Thanh toán{' '}
+                            <Text style={{ fontWeight: 'bold' }}>
+                                {this.state.purchaseMethodText}
+                            </Text>{' '}
+                            khi nhận hàng
                         </Text>
                         <Text style={{ marginLeft: 10, marginTop: 5 }}>
                             Yêu cầu đồng kiểm tra sản phẩm khi nhận hàng
