@@ -144,7 +144,7 @@ const UserInfo = (props) => {
                                     fontWeight: 'normal',
                                     color: '#8F9BB3'
                                 }}>
-                                không tính hàng nặng, to: Bia, Nước các loại
+                                &nbsp;không tính hàng nặng, to: Bia, Nước các loại
                             </Text>
                         </Text>
                     </View>
