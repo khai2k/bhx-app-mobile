@@ -8,7 +8,8 @@ import {
     Text,
     TouchableWithoutFeedback,
     Image,
-    TextInput
+    TextInput,
+    TouchableOpacity
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 // import * as orderSuccessCreator from './action';
@@ -20,6 +21,7 @@ class OrderSuccess extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            doneIcon: false,
             checkBox1: false,
             checkBox2: false,
             checkBox3: false,
@@ -31,7 +33,7 @@ class OrderSuccess extends Component {
 
     componentDidMount() {
         axios({
-            method: 'get',
+            method: 'post',
             url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=43225473&sc=E214C53EC0384610FE95151117020DA6'
         })
             .then((res) => {
@@ -46,6 +48,10 @@ class OrderSuccess extends Component {
             })
             .catch((err) => console.log('err', err));
     }
+
+    choosePurchaseMethod = () => {
+        this.setState({ doneIcon: true });
+    };
 
     _renderUserInfo() {
         return (
@@ -86,27 +92,27 @@ class OrderSuccess extends Component {
 
     _renderNote() {
         return (
-            <TouchableWithoutFeedback>
+            <TouchableOpacity>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
                     <Text style={{ textDecorationLine: 'underline' }}>
                         Thêm ghi chú:
                     </Text>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 
     _renderProducts() {
         return (
-            <TouchableWithoutFeedback>
+            <TouchableOpacity>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
                     <Text>
                         Xem {this.state.productList.length} sản phẩm đã đặt:{' '}
                     </Text>
                 </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
         );
     }
 
@@ -119,7 +125,7 @@ class OrderSuccess extends Component {
                     <Text style={{ fontWeight: 'bold' }}>
                         {this.state.totalPrice}đ
                     </Text>
-                    <TouchableWithoutFeedback
+                    <TouchableOpacity
                         onPress={() =>
                             this.props.navigation.navigate('UseVoucher')
                         }>
@@ -128,10 +134,21 @@ class OrderSuccess extends Component {
                                 + Dùng phiếu mua hàng
                             </Text>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                 </View>
             </>
         );
+    }
+
+    _renderDoneIcon() {
+        if (this.state.doneIcon) {
+            return (
+                <Image
+                    style={styles.imageDone}
+                    source={require('../../../assets/images/done.png')}
+                />
+            );
+        }
     }
 
     _renderPurchaseMethod() {
@@ -140,14 +157,18 @@ class OrderSuccess extends Component {
                 <Text>Thanh toán khi nhận hàng bằng cách:</Text>
                 <View style={styles.buttonRow}>
                     <View style={styles.boxRow}>
-                        <Image
-                            style={styles.imageDone}
-                            source={require('../../../assets/images/done.png')}
-                        />
-                        <Text style={styles.textButton}>Tiền mặt</Text>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState(this.choosePurchaseMethod())
+                            }>
+                            {this._renderDoneIcon()}
+                            <Text style={styles.textButton}>Tiền mặt</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.box}>
-                        <Text style={styles.textButton}>Cà thẻ</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.textButton}>Cà thẻ</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -189,27 +210,31 @@ class OrderSuccess extends Component {
         return (
             <View style={styles.buttonContainer}>
                 <View style={styles.buttonRow}>
-                    <TouchableWithoutFeedback
-                        onPress={() =>
-                            this.setState({
-                                modalVisible: !this.state.modalVisible
-                            })
-                        }>
-                        <View style={styles.editBox}>
+                    <View style={styles.editBox}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState({
+                                    modalVisible: !this.state.modalVisible
+                                })
+                            }>
                             <Text style={styles.editTextButton}>
                                 × Hủy đơn hàng
                             </Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.editBox}>
-                        <Image
-                            style={styles.iconEdit}
-                            source={require('../../../assets/images/edit-circle.png')}
-                        />
-                        <Text style={styles.editTextButton}>Sửa đơn hàng</Text>
-                        <Text style={styles.editText}>
-                            (Thêm/bớt SP, đổi địa chỉ/giờ giao)
-                        </Text>
+                        <TouchableOpacity>
+                            <Image
+                                style={styles.iconEdit}
+                                source={require('../../../assets/images/edit-circle.png')}
+                            />
+                            <Text style={styles.editTextButton}>
+                                Sửa đơn hàng
+                            </Text>
+                            <Text style={styles.editText}>
+                                (Thêm/bớt SP, đổi địa chỉ/giờ giao)
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -283,23 +308,24 @@ class OrderSuccess extends Component {
                             />
                         </View>
                         <View style={styles.modalButtonView}>
-                            <TouchableWithoutFeedback
-                                onPress={() =>
-                                    this.setState({
-                                        modalVisible: !this.state.modalVisible
-                                    })
-                                }>
-                                <View style={styles.cancelButton}>
+                            <View style={styles.cancelButton}>
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        this.setState({
+                                            modalVisible:
+                                                !this.state.modalVisible
+                                        })
+                                    }>
                                     <Text style={styles.canceltext}>ĐÓNG</Text>
-                                </View>
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.confirmButton}>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.confirmButton}>
+                                <TouchableOpacity>
                                     <Text style={styles.confirmText}>
                                         XÁC NHẬN HỦY ĐƠN HÀNG
                                     </Text>
-                                </View>
-                            </TouchableWithoutFeedback>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -347,7 +373,10 @@ class OrderSuccess extends Component {
                 </View>
                 {this._renderEditButton()}
                 {this._renderCancelOrderModal()}
-                <Text style={styles.backToHomeText}>Về trang chủ</Text>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
+                    <Text style={styles.backToHomeText}>Về trang chủ</Text>
+                </TouchableOpacity>
             </View>
         );
     }
