@@ -57,7 +57,10 @@ class Cart extends Component {
                             refreshing={this.state.isLoading}
                             onRefresh={this.onRefresh}
                         />
-                    }>
+                    }
+                    contentContainerStyle={{
+                        paddingBottom: 10
+                    }}>
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
@@ -100,7 +103,6 @@ class Cart extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ height: 60 }} />
                 </ScrollView>
             </View>
         );
