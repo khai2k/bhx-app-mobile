@@ -33,10 +33,10 @@ const ProductBox = (props) => {
             }
         }
     };
-    useEffect(() => {
-        console.log(`Fill button ${props.bhxProduct.Id}`);
-        checkFillButtonBuy();
-    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+    // useEffect(() => {
+    //     console.log(`Fill button ${props.bhxProduct.Id}`);
+    //     checkFillButtonBuy();
+    // }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
