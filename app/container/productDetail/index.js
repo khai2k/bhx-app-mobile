@@ -8,6 +8,7 @@ import {
     View
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import { Header } from '@app/components';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
@@ -26,33 +27,36 @@ class ProductDetail extends Component {
 
     render() {
         return (
-            <ScrollView>
-                {this.props.Is_loading === true ? (
-                    <View style={[styles.container, styles.horizontal]}>
-                        <ActivityIndicator size="large" color="#00ff00" />
-                    </View>
-                ) : (
-                    <View>
-                        <ProductGallery
-                            Gallery_product={this.props.Gallery_product}
-                        />
+            <View style={{ flex: 1 }}>
+                <Header navigation={this.props.navigation} />
+                <ScrollView>
+                    {this.props.Is_loading === true ? (
+                        <View style={[styles.container, styles.horizontal]}>
+                            <ActivityIndicator size="large" color="#00ff00" />
+                        </View>
+                    ) : (
+                        <View>
+                            <ProductGallery
+                                Gallery_product={this.props.Gallery_product}
+                            />
 
-                        <ProductArticle
-                            product={this.props.Product_detail}
-                            isExchangeProduct={this.props.isExchangeProduct}
-                        />
+                            <ProductArticle
+                                product={this.props.Product_detail}
+                                isExchangeProduct={this.props.isExchangeProduct}
+                            />
 
-                        <ProductRelative
-                            relativeProducts={this.props.Product_relative}
-                        />
-                        <Image
-                            style={{ width: '100%', height: 80 }}
-                            resizeMode="cover"
-                            source={{ uri: this.props.Box_banner.Image }}
-                        />
-                    </View>
-                )}
-            </ScrollView>
+                            <ProductRelative
+                                relativeProducts={this.props.Product_relative}
+                            />
+                            <Image
+                                style={{ width: '100%', height: 80 }}
+                                resizeMode="cover"
+                                source={{ uri: this.props.Box_banner.Image }}
+                            />
+                        </View>
+                    )}
+                </ScrollView>
+            </View>
         );
     }
 }
