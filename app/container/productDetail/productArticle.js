@@ -7,7 +7,8 @@ import {
     StyleSheet,
     ScrollView,
     Button,
-    useWindowDimensions
+    useWindowDimensions,
+    Image
 } from 'react-native';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
@@ -24,7 +25,6 @@ const ProductArticle = (props) => {
         bHXProduct
     } = product;
     let { ProductArticle } = product;
-
     /// modify ProductArticle to display Image
     ProductArticle = ProductArticle.split('data-src').join('src');
     const { ShortName } = bHXProduct;
@@ -116,7 +116,7 @@ const ProductArticle = (props) => {
     function renderDescription() {
         let address = '';
         return (
-            <View style={{ margin: 5, flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <Text>
                     <Text style={{ fontWeight: 'bold' }}>{ShortName}</Text>
                     {` ${MetaDescription} `}
@@ -129,8 +129,30 @@ const ProductArticle = (props) => {
             </View>
         );
     }
+    function renderPromotion() {
+        return (
+            <View>
+                <Text style={styles.textPromotionSmall}>
+                    {`* Khuyến mãi áp dụng khi mua ${bHXProduct.ShortName}`}
+                </Text>
+                <View style={styles.promotionBox}>
+                    <View style={{ padding: 5 }}>
+                        <Image
+                            style={styles.Image}
+                            source={{ uri: bHXProduct.Avatar }}
+                        />
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Text>{bHXProduct.PromotionText}</Text>
+                    </View>
+                </View>
+            </View>
+        );
+    }
     return (
-        <View style={{ backgroundColor: COLOR.WHITE }}>
+        <View style={{ backgroundColor: COLOR.WHITE, padding: 5 }}>
+            {bHXProduct.PromotionText !== '' && renderPromotion()}
+
             <View style={{ flexDirection: 'row' }}>
                 {renderDescription()}
                 {!isExchangeProduct && (
@@ -175,6 +197,22 @@ const styles = StyleSheet.create({
     product_info: {},
     row_info: {
         flexDirection: 'row'
+    },
+    Image: {
+        height: 25,
+        margin: 5,
+        width: 25
+    },
+    textPromotionSmall: {
+        fontSize: 12,
+        color: COLOR.GRAY_DARK
+    },
+    promotionBox: {
+        flexDirection: 'row',
+        backgroundColor: COLOR.DANDELION,
+        borderRadius: 8,
+        padding: 5,
+        marginVertical: 5
     }
 });
 

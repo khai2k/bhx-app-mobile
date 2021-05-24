@@ -29,7 +29,6 @@ const UserInfo = (props) => {
     useEffect(() => {
         props.actionCart.cart_get();
         props.actionLocation.location_getCurrent();
-        debugger;
         setCusPhone(props?.cart?.CustomerPhone);
     }, []);
 
@@ -138,7 +137,7 @@ const UserInfo = (props) => {
                     <View>
                         <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
                             Mua thêm để miễn phí giao với đơn trên 100.000đ (còn
-                            5 lần) 
+                            5 lần)
                             <Text
                                 style={{
                                     fontSize: 14,
@@ -163,7 +162,7 @@ const UserInfo = (props) => {
                         style={styles.inputNote}
                         placeholder="Ghi chú thêm (nếu có)"
                         numberOfLines={4}
-                        multiline
+                        multiline 
                         editable
                         maxLength={150}
                     />
@@ -379,7 +378,7 @@ const UserProvAndDis = (props) => {
                 </View>
             </View>
             <View style={styles.wardBox}>
-            <Picker
+                <Picker
                     selectedValue={-1}
                     enabled={enableWard}
                     style={{

@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
         borderColor: Colors.TROPICAL_RAIN_FOREST,
         borderRadius: 5,
         borderWidth: 1,
-        marginBottom: 10,
+        marginBottom: 20,
         marginLeft: 5,
-        marginTop: 5,
+        marginTop: 10,
         textAlign: 'center',
         width: windowWidth - 10
     },
