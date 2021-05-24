@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
+import * as COLOR from '@app/styles/colors';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
@@ -32,7 +33,10 @@ class ProductDetail extends Component {
                 <ScrollView>
                     {this.props.Is_loading === true ? (
                         <View style={[styles.container, styles.horizontal]}>
-                            <ActivityIndicator size="large" color="#00ff00" />
+                            <ActivityIndicator
+                                size="large"
+                                color={COLOR.GREEN_KEY}
+                            />
                         </View>
                     ) : (
                         <View>
