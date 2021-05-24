@@ -30,16 +30,16 @@ const ProductBox = (props) => {
                 setGuildId(cart.ProInCart[idProduct][0]);
                 setNumberItems(+cart.ProInCart[idProduct][1]);
                 setBuyButtonVisible(true);
-            } else {
-                setNumberItems(1);
-                setBuyButtonVisible(false);
             }
+        } else {
+            setNumberItems(1);
+            setBuyButtonVisible(false);
         }
     };
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
-    }, [numberItems]);
+    }, [cart.Total]);
 
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
@@ -203,7 +203,7 @@ const ProductBox = (props) => {
         } else {
             actionCart
                 .cart_update_item_product(guildId, numberItems + 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
@@ -213,7 +213,7 @@ const ProductBox = (props) => {
                         console.log(
                             `End setQuantityPlus ${props.bhxProduct.Id}`
                         );
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                         console.log(
                             `End setQuantityPlus cartSimple ${props.bhxProduct.Id}`
                         );
