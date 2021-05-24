@@ -131,15 +131,14 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         position: 'absolute',
-        left: 25
+        left: -35
     },
     iconEdit: {
         resizeMode: 'contain',
         width: 20,
         height: 20,
         position: 'absolute',
-        left: 25,
-        top: 5
+        left: 25
     },
     editText: {
         textAlign: 'center',
