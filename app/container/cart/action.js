@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Storage } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
@@ -20,13 +21,17 @@ export const cart_get = function () {
     return (dispatch, getSate) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = useSelector(
+                (state) => state.locationReducer.locationState?.crrLocationRs
+            );
+
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 22,
-                wardId: 10194,
-                storeId: 7003,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId: location.StoreId,
                 data: {
                     cartId
                 }
@@ -53,14 +58,17 @@ export const cart_update_item_product = function (guildId, iQuantity) {
     return (dispatch, getSate) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = useSelector(
+                (state) => state.locationReducer.locationState?.crrLocationRs
+            );
 
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 22,
-                wardId: 10194,
-                storeId: 7003,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId: location.StoreId,
                 data: {
                     cartId,
                     guid: guildId,
@@ -92,13 +100,17 @@ export const cart_remove_item_product = function (guildId) {
     return (dispatch, getSate) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = useSelector(
+                (state) => state.locationReducer.locationState?.crrLocationRs
+            );
+
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 22,
-                wardId: 10194,
-                storeId: 7003,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId: location.StoreId,
                 data: {
                     cartId,
                     guid: guildId,
@@ -124,22 +136,28 @@ export const cart_remove_item_product = function (guildId) {
     };
 };
 
-export const cart_add_item_product = function (prodId, quantityNum) {
+export const cart_add_item_product = function (
+    prodId,
+    quantityNum,
+    expStoreId
+) {
     return (dispatch, getSate) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = useSelector(
+                (state) => state.locationReducer.locationState?.crrLocationRs
+            );
 
             const bodyApi = {
                 token: cartId,
                 us: '',
-                // provinceId: 3,
-                // districtId: 0,
-                // wardId: 0,
-                // storeId: 6463,
-                provinceId: 3,
-                districtId: 22,
-                wardId: 10194,
-                storeId: 7003,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId:
+                    expStoreId && expStoreId > 0
+                        ? expStoreId
+                        : location.StoreId,
                 data: {
                     cartId,
                     productId: prodId,
@@ -173,13 +191,17 @@ export const cart_get_simple = function () {
         return new Promise(async (resolve, reject) => {
             // get cart simple from storage
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = useSelector(
+                (state) => state.locationReducer.locationState?.crrLocationRs
+            );
+
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 22,
-                wardId: 10194,
-                storeId: 7003,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId: location.StoreId,
                 data: {
                     cartId
                 }

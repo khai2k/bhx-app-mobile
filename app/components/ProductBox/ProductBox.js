@@ -14,6 +14,11 @@ const ProductBox = (props) => {
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
 
+    // reminder select location
+    const location = useSelector(
+        (state) => state.locationReducer.locationState?.crrLocationRs
+    );
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
 
@@ -119,13 +124,13 @@ const ProductBox = (props) => {
         }
     };
 
-    const addToCart = (productID) => {
+    const addToCart = (productID, expStoreId) => {
         console.log(`Begin addToCart ${props.bhxProduct.Id}`);
 
         setNumberItems(1);
         setBuyButtonVisible(true);
         actionCart
-            .cart_add_item_product(productID, 1)
+            .cart_add_item_product(productID, 1, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
@@ -312,8 +317,9 @@ const ProductBox = (props) => {
                             addToCart(
                                 props.bhxProduct.Sales[
                                     props.bhxProduct.ExpStoreId
-                                ]
-                            ).ProductId;
+                                ].ProductId,
+                                props.bhxProduct.ExpStoreId
+                            );
                         }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>
@@ -389,8 +395,9 @@ const ProductBox = (props) => {
                             addToCart(
                                 props.bhxProduct.Sales[
                                     props.bhxProduct.ExpStoreId
-                                ]
-                            ).ProductId;
+                                ].ProductId,
+                                props.bhxProduct.ExpStoreId
+                            );
                         }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>
