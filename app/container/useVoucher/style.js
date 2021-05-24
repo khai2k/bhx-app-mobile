@@ -26,6 +26,11 @@ const styles = StyleSheet.create({
         borderLeftWidth: 2,
         justifyContent: 'center'
     },
+    closeImage: {
+        alignSelf: 'center',
+        width: 15,
+        height: 15
+    },
     voucherInput: {
         borderRadius: 10,
         borderColor: '#8F9BB3',
@@ -99,11 +104,86 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center'
     },
+    submitButton: {
+        backgroundColor: 'green',
+        marginHorizontal: 8,
+        marginVertical: 8,
+        borderRadius: 10,
+        height: 50,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     closeButtonText: {
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#FFF',
         fontSize: 15
+    },
+    submitButtonText: {
+        fontWeight: 'bold',
+        color: '#FFF',
+        fontSize: 15,
+        left: 15
+    },
+    submitPrice: {
+        right: 15
+    },
+    oldPrice: {
+        color: 'white',
+        fontSize: 12,
+        textDecorationLine: 'line-through'
+    },
+    newPrice: {
+        color: 'white',
+        fontSize: 14,
+        fontWeight: 'bold'
+    },
+    voucherContainer: {
+        paddingHorizontal: 10
+    },
+    voucherBox: {
+        marginHorizontal: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderColor: 'green',
+        borderWidth: 1,
+        height: 60,
+        alignItems: 'center',
+        borderRadius: 10
+    },
+    voucherPriceBox: {
+        left: -4,
+        backgroundColor: 'green',
+        width: 52,
+        height: 35,
+        justifyContent: 'center',
+        borderRadius: 5
+    },
+    voucherLabel: {
+        marginBottom: 7
+    },
+    voucherInfoBox: {
+        right: -4
+    },
+    imageVoucher: {
+        width: 35,
+        height: 18,
+        alignSelf: 'center'
+    },
+    voucherDate: {
+        color: '#8F9BB3',
+        fontSize: 12
+    },
+    voucherCancelText: {
+        color: '#FF001E',
+        fontSize: 12,
+        fontWeight: 'bold'
+    },
+    calVoucher: {
+        marginVertical: 3,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     }
 });
 

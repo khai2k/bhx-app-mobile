@@ -6,27 +6,30 @@ export const orderSuccessAction = {
     ORDER_SUCCESS_GET
 };
 
+const provinceId = 3;
+const districtId = 2087;
+const wardId = 27125;
+const storeId = 6463;
+const orderId = 43225473;
+const sc = 'E214C53EC0384610FE95151117020DA6';
+
 export const orderSuccess_get = function () {
-    return (dispatch, getSate) => {
+    return (dispatch) => {
         const bodyApi = {
-            // token: getSate().cartReducer.Cart.CartId,
-            provinceId: 3,
-            districtId: 2087,
-            wardId: 27125,
-            storeId: 6463,
-            orderId: 26068531,
-            sc: 'A1BF50D1DB6874A4ADBF4834773F15B5',
-            data: {
-                cartId: getSate().cartReducer.Cart.CartId
-            }
+            provinceId,
+            districtId,
+            wardId,
+            storeId,
+            orderId,
+            sc
         };
-        apiBase(API_CONST.API_REQUEST_GET_ODER_SUCCESS, METHOD.GET, bodyApi)
+        apiBase(API_CONST.API_REQUEST_GET_ODER_SUCCESS, METHOD.POST, bodyApi)
             .then((response) => {
                 console.log('Data:', response);
-                const cartInfo = response.Value;
+                const orderInfo = response.Value;
                 dispatch({
-                    type: CART_GET,
-                    cartInfo
+                    type: ORDER_SUCCESS_GET,
+                    orderInfo
                 });
             })
             .catch((error) => {
