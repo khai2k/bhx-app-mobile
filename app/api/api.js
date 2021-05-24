@@ -9,6 +9,7 @@ export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
 export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
+export const API_REQUEST_GET_ODER_SUCCESS = `${API_BASE}Order/OrderResult`;
 
 // Location
 export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;

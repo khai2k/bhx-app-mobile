@@ -6,7 +6,6 @@ import {
     View,
     Modal,
     Text,
-    TouchableWithoutFeedback,
     Image,
     TextInput,
     TouchableOpacity
@@ -21,7 +20,7 @@ class OrderSuccess extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            doneIcon: false,
+            doneIcon: true,
             checkBox1: false,
             checkBox2: false,
             checkBox3: false,
@@ -34,7 +33,15 @@ class OrderSuccess extends Component {
     componentDidMount() {
         axios({
             method: 'post',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult?provinceId=3&districtId=2087&wardId=27125&storeId=6463&orderid=43225473&sc=E214C53EC0384610FE95151117020DA6'
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult',
+            data: {
+                ProvinceId: 3,
+                DistrictId: 2087,
+                WardId: 27125,
+                StoreId: 6463,
+                Sc: 'E214C53EC0384610FE95151117020DA6',
+                OrderId: 43225473
+            }
         })
             .then((res) => {
                 const { data } = res;
@@ -50,7 +57,7 @@ class OrderSuccess extends Component {
     }
 
     choosePurchaseMethod = () => {
-        this.setState({ doneIcon: true });
+        this.setState({ doneIcon: !this.state.doneIcon });
     };
 
     _renderUserInfo() {
@@ -140,8 +147,8 @@ class OrderSuccess extends Component {
         );
     }
 
-    _renderDoneIcon() {
-        if (this.state.doneIcon) {
+    _renderDoneIcon1() {
+        if (this.state.doneIcon == true) {
             return (
                 <Image
                     style={styles.imageDone}
@@ -149,6 +156,19 @@ class OrderSuccess extends Component {
                 />
             );
         }
+        return null;
+    }
+
+    _renderDoneIcon2() {
+        if (this.state.doneIcon == false) {
+            return (
+                <Image
+                    style={styles.imageDone}
+                    source={require('../../../assets/images/done.png')}
+                />
+            );
+        }
+        return null;
     }
 
     _renderPurchaseMethod() {
@@ -159,14 +179,22 @@ class OrderSuccess extends Component {
                     <View style={styles.boxRow}>
                         <TouchableOpacity
                             onPress={() =>
-                                this.setState(this.choosePurchaseMethod())
+                                this.setState({
+                                    doneIcon: true
+                                })
                             }>
-                            {this._renderDoneIcon()}
+                            {this._renderDoneIcon1()}
                             <Text style={styles.textButton}>Tiền mặt</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.box}>
-                        <TouchableOpacity>
+                    <View style={styles.boxRow}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.setState({
+                                    doneIcon: false
+                                })
+                            }>
+                            {this._renderDoneIcon2()}
                             <Text style={styles.textButton}>Cà thẻ</Text>
                         </TouchableOpacity>
                     </View>
