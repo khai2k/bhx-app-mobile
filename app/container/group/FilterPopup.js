@@ -91,18 +91,17 @@ const FilterPopup = (props) => {
     const processSelectedProps = (propertyId) => {
         let currentSelectProps = popupSelectedProps;
         const selectPropertyInfo = propertyId.split(':');
-        const indexContainSelectedPropertyStart = currentSelectProps.indexOf(
-            propertyId
-        );
-        const indexContainSelectedGroupPropertyStart = currentSelectProps.indexOf(
-            `${selectPropertyInfo[0]}:`
-        );
+        const indexContainSelectedPropertyStart =
+            currentSelectProps.indexOf(propertyId);
+        const indexContainSelectedGroupPropertyStart =
+            currentSelectProps.indexOf(`${selectPropertyInfo[0]}:`);
         // nếu có tồn tại nhóm props trong listprops đã chọn
         if (indexContainSelectedGroupPropertyStart > -1) {
-            const indexContainSelectedGroupPropertyEnd = currentSelectProps.indexOf(
-                ',',
-                indexContainSelectedGroupPropertyStart
-            );
+            const indexContainSelectedGroupPropertyEnd =
+                currentSelectProps.indexOf(
+                    ',',
+                    indexContainSelectedGroupPropertyStart
+                );
             currentSelectProps = replaceBetween(
                 indexContainSelectedGroupPropertyStart,
                 indexContainSelectedGroupPropertyEnd,
@@ -150,6 +149,7 @@ const FilterPopup = (props) => {
                             {ListSort.map((filter) => {
                                 return (
                                     <TouchableOpacity
+                                        key={`popup_sort_${filter.ValueID}`}
                                         onPress={() => {
                                             setPopupSelectedSort(
                                                 popupSelectedSort ===
@@ -176,7 +176,9 @@ const FilterPopup = (props) => {
                     </View>
                     {props.properties.map((property) => {
                         return (
-                            <View className="boxFilter">
+                            <View
+                                key={`popup_mainprop_${property.PropertyName}`}
+                                className="boxFilter">
                                 <Text style={styles.filterTitle}>
                                     {property.PropertyName}
                                 </Text>
@@ -185,6 +187,7 @@ const FilterPopup = (props) => {
                                         (propValue) => {
                                             return (
                                                 <TouchableOpacity
+                                                    key={`popup_prop_${propValue.ValueID}`}
                                                     onPress={() => {
                                                         selectProperty(
                                                             `${propValue.PropertyID}:${propValue.ValueID}`
@@ -223,6 +226,7 @@ const FilterPopup = (props) => {
                             {props.brands.map((brand) => {
                                 return (
                                     <TouchableOpacity
+                                        key={`popup_brand_${brand.Id}`}
                                         onPress={() => {
                                             setPopupSelectedBrand(
                                                 popupSelectedBrand === brand.Id
@@ -405,4 +409,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default FilterPopup;
+export default React.memo(FilterPopup);

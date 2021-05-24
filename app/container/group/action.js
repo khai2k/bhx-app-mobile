@@ -16,18 +16,22 @@ export const categoryAction = {
 
 export const category_get = function (option) {
     return (dispatch, getState) => {
-        apiBase(API_CONST.API_CATEGORY_GET, METHOD.GET, null, option)
-            .then((response) => {
-                console.log('CATEGORY_GET Data:', response);
-                const categoryInfo = response.Value;
-                dispatch({
-                    type: CATEGORY_GET,
-                    categoryInfo
+        return new Promise((resolve, reject) => {
+            apiBase(API_CONST.API_CATEGORY_GET, METHOD.GET, null, option)
+                .then((response) => {
+                    console.log('CATEGORY_GET Data:', response);
+                    const categoryInfo = response.Value;
+                    dispatch({
+                        type: CATEGORY_GET,
+                        categoryInfo
+                    });
+                    resolve(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
                 });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        });
     };
 };
 export const category_filter = (
@@ -64,7 +68,7 @@ export const category_filter = (
             };
             apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
                 .then((response) => {
-                    // console.log('API_CATEGORY_AJAX_PRODUCT Data:', response);
+                    console.log('API_CATEGORY_AJAX_PRODUCT Data:', response);
                     const categoryInfo = response.Value;
                     dispatch({
                         type: CATEGORY_FILTER,

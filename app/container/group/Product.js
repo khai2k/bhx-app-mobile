@@ -5,7 +5,8 @@ import {
     FlatList,
     StyleSheet,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    Image
 } from 'react-native';
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -16,13 +17,14 @@ const Product = (props) => {
     const { Name } = props.info;
     const { PageIndex, PageSize } = props.include.Paging;
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
+
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
-    const [pageIndex, setPageIndex] = useState(1);
+    const [pageIndex, setPageIndex] = useState(PageIndex);
     useEffect(() => {
         setPageIndex(0);
-    }, []);
+    }, [PageIndex]);
 
     const loadMoreProducts = () => {
         const bodyApi = {
@@ -54,27 +56,34 @@ const Product = (props) => {
                 console.log(error);
             });
     };
-
-    if (Products && Products.length > 0) {
-        return (
-            <ScrollView>
-                <FlatList
-                    numColumns={3}
-                    data={listProductLoadMore}
-                    renderItem={({ item }) => <ProductBox bhxProduct={item} />}
+    const loadMoreButton = () => {
+        return listProductLoadMore.length ===
+            (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+            <TouchableOpacity
+                onPress={loadMoreProducts}
+                className="loadMore"
+                style={styles.loadMore}>
+                <Text style={styles.loadMoreText}>
+                    Còn {Total - pageIndex * PageSize} sản phẩm{' '}
+                </Text>
+                <Text style={styles.loadMoreTextBold}>{Name}</Text>
+                <Image
+                    style={styles.iconDown}
+                    source={require('../../../assets/images/chevron-down.png')}
                 />
-                {Total >= pageIndex * PageSize ? (
-                    <TouchableOpacity
-                        onPress={loadMoreProducts}
-                        className="loadMore"
-                        style={styles.loadMore}>
-                        <Text style={styles.loadMoreText}>
-                            Còn {Total - pageIndex * PageSize} sản phẩm{' '}
-                        </Text>
-                        <Text style={styles.loadMoreTextBold}>{Name}</Text>
-                    </TouchableOpacity>
-                ) : null}
-            </ScrollView>
+            </TouchableOpacity>
+        ) : null;
+    };
+    if (listProductLoadMore && listProductLoadMore.length > 0) {
+        return (
+            <FlatList
+                numColumns={3}
+                data={listProductLoadMore}
+                keyExtractor={(item) => `product_${item.Id}`}
+                extraData={listProductLoadMore}
+                renderItem={({ item }) => <ProductBox bhxProduct={item} />}
+                ListFooterComponent={loadMoreButton}
+            />
         );
     } else {
         return (
@@ -97,6 +106,11 @@ const styles = StyleSheet.create({
         paddingTop: 45,
         textAlign: 'center',
         textAlignVertical: 'center'
+    },
+    iconDown: {
+        height: 3,
+        marginLeft: 5,
+        width: 6
     },
     loadMore: {
         alignItems: 'center',
@@ -130,4 +144,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Product;
+export default React.memo(Product);

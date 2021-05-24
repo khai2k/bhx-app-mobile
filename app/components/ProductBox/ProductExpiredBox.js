@@ -1,22 +1,169 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 import BuyBox from './BuyBox';
 
 const ProductExpiredBox = (props) => {
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
     const navigation = useNavigation();
-    const onUpdateNumberItems = (number) => {
-        setNumberItems(number);
+
+    const cart = useSelector((state) => state.cartReducer.CartSimple);
+    const [guildId, setGuildId] = useState('');
+
+    const checkFillButtonBuy = () => {
+        const idProduct = props.bhxProduct.Id;
+        if (cart && cart.ProInCart) {
+            if (cart.ProInCart[idProduct]) {
+                setGuildId(cart.ProInCart[idProduct][0]);
+                setNumberItems(+cart.ProInCart[idProduct][1]);
+                setBuyButtonVisible(true);
+            } else {
+                setNumberItems(1);
+                setBuyButtonVisible(false);
+            }
+        }
     };
-    const onUpdateBuyButtonVisible = (status) => {
-        setBuyButtonVisible(status);
-    };
+    useEffect(() => {
+        checkFillButtonBuy();
+    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+
     const handleInputNumber = (number) => {
-        setNumberItems(+number);
+        if (helper.isEmptyOrNull(number)) {
+            return;
+        }
+        number = +number;
+        if (number <= 0) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setBuyButtonVisible(false);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, number)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems - 1);
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+
+    const addToCart = (productID) => {
+        setNumberItems(1);
+        setBuyButtonVisible(true);
+        actionCart
+            .cart_add_item_product(productID, 1)
+            .then((res) => {
+                console.log('cart_add_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                } else {
+                    actionCart.cart_get_simple();
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+    const setQuantityMinus = () => {
+        if (numberItems <= 1) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log('cart_remove_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, numberItems - 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+
+    const setQuantityPlus = () => {
+        if (numberItems > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            console.log('setQuantityPlus');
+            console.log(guildId);
+            console.log(numberItems);
+            actionCart
+                .cart_update_item_product(guildId, numberItems + 1)
+                .then((res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+    const alertAPI = (messages) => {
+        Alert.alert('', messages);
+    };
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý'
+            }
+        ]);
     };
     const boxLabel = () => {
         if (props.bhxProduct.IsPreOrder && props.bhxProduct.PreAmount > 0) {
@@ -43,8 +190,7 @@ const ProductExpiredBox = (props) => {
     const isNearlyExpiredProduct =
         bhxProduct.Sales !== null && bhxProduct.Sales !== undefined;
     if (isNearlyExpiredProduct && bhxProduct.ExpStoreId > 0) {
-        const expiredProduct =
-            bhxProduct.Sales[bhxProduct.ExpStoreId.toString()];
+        const expiredProduct = bhxProduct.Sales[bhxProduct.ExpStoreId];
         return (
             <View
                 className="product"
@@ -52,12 +198,20 @@ const ProductExpiredBox = (props) => {
                     buyButtonVisible ? styles.productSelected : styles.product
                 }>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('ProductDetail')}
+                    onPress={() =>
+                        navigation.navigate('ProductDetail', {
+                            productId: props.bhxProduct.Id
+                        })
+                    }
                     style={styles.productImg}>
                     <View className="boxImg" style={styles.boxImg}>
-                        <Text className="boxExpired" style={styles.boxExpired}>
-                            {expiredProduct.ExpiredText}
-                        </Text>
+                        {!helper.isEmptyOrNull(props.bhxProduct.ExpiredText) ? (
+                            <Text
+                                className="boxExpired"
+                                style={styles.boxExpired}>
+                                {expiredProduct.ExpiredText}
+                            </Text>
+                        ) : null}
                         <View className="imgContent" style={styles.imgContent}>
                             <Image
                                 style={styles.imageProduct}
@@ -72,11 +226,10 @@ const ProductExpiredBox = (props) => {
                 <TouchableOpacity
                     onPress={() => {
                         if (
-                            props.bhxProduct.Price > 0 &&
-                            props.bhxProduct.StockQuantityNew >= 1
+                            expiredProduct.Price > 0 &&
+                            expiredProduct.StockQuantityNew >= 1
                         ) {
-                            setNumberItems(1);
-                            setBuyButtonVisible(true);
+                            addToCart(expiredProduct.ProductId);
                         }
                     }}
                     style={
@@ -101,8 +254,8 @@ const ProductExpiredBox = (props) => {
                             isPageExpired={false}
                             selectedBuy={false}
                             numberItems={numberItems}
-                            onUpdateNumberItems={onUpdateNumberItems}
-                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            setQuantityMinus={setQuantityMinus}
+                            setQuantityPlus={setQuantityPlus}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
@@ -152,8 +305,8 @@ const ProductExpiredBox = (props) => {
                             isPageExpired={false}
                             selectedBuy
                             numberItems={numberItems}
-                            onUpdateNumberItems={onUpdateNumberItems}
-                            onUpdateBuyButtonVisible={onUpdateBuyButtonVisible}
+                            setQuantityMinus={setQuantityMinus}
+                            setQuantityPlus={setQuantityPlus}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
@@ -164,7 +317,8 @@ const ProductExpiredBox = (props) => {
                             <View style={styles.expiredLine}>
                                 <Text style={styles.expiredText}>Hoặc </Text>
                                 <Text style={styles.expiredPrice}>
-                                    MUA 4.700đ{'\n'}
+                                    MUA {helper.formatMoney(bhxProduct.Price)}
+                                    {'\n'}
                                 </Text>
                             </View>
                             <Text style={styles.expiredText}>
@@ -179,4 +333,4 @@ const ProductExpiredBox = (props) => {
     return null;
 };
 
-export default ProductExpiredBox;
+export default React.memo(ProductExpiredBox);

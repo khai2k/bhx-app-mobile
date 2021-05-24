@@ -25,4 +25,4 @@ const Filter = (props) => {
         </View>
     );
 };
-export default Filter;
+export default React.memo(Filter);

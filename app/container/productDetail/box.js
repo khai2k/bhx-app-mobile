@@ -1,7 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 const Box = (props) => {
@@ -9,7 +8,6 @@ const Box = (props) => {
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
-    const navigation = useNavigation();
     const handleInputNumber = (number) => {
         setNumberItems(+number);
     };
@@ -136,17 +134,11 @@ const Box = (props) => {
             </View>
             {Sales !== null && !isSaleOnly && (
                 <View style={styles.productNearDate}>
-                    <View style={styles.textProductNearDate}>
-                        <Text style={{ fontWeight: 'bold' }}>
-                            {Sales && `MUA ${Sales['6613'].Price}`}
-                        </Text>
-                    </View>
-                    <View style={styles.textProductNearDate}>
-                        <Text style={styles.ExpiredText}>
-                            {' '}
-                            {Sales && Sales['6613'].ExpiredText}
-                        </Text>
-                    </View>
+                    <Text>{Sales && `MUA ${Sales['6613'].Price}đ`}</Text>
+                    <Text style={styles.ExpiredText}>
+                        {' '}
+                        {Sales && Sales['6613'].ExpiredText}
+                    </Text>
                 </View>
             )}
         </View>
