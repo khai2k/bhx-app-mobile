@@ -1,8 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Header } from '@app/components';
-import { Cart } from '@app/components';
+import { Header, CartTotal, Cart } from '@app/components';
 
 import {
     SafeAreaView,
@@ -144,7 +143,8 @@ const UserInfo = (props) => {
                                     fontWeight: 'normal',
                                     color: '#8F9BB3'
                                 }}>
-                                &nbsp;không tính hàng nặng, to: Bia, Nước các loại
+                                &nbsp;không tính hàng nặng, to: Bia, Nước các
+                                loại
                             </Text>
                         </Text>
                     </View>
@@ -162,11 +162,12 @@ const UserInfo = (props) => {
                         style={styles.inputNote}
                         placeholder="Ghi chú thêm (nếu có)"
                         numberOfLines={4}
-                        multiline 
+                        multiline
                         editable
                         maxLength={150}
                     />
                 </View>
+                <CartTotal cartInfo={props.cartTotal} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -407,6 +408,7 @@ const UserProvAndDis = (props) => {
 const mapStateToProps = (state) => {
     return {
         cart: state.cartReducer.Cart,
+        cartTotal: state.cartReducer.CartTotal,
         shipdatetime: state.cartReducer.ShiptimeGroupList,
         location: state.locationReducer.crrLocationRs
     };
