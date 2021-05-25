@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { View } from 'react-native';
 import styles from './style';
-import BoxOption from './boxOption';
+import BoxOption from './BoxOption';
 
 class GroupBoxOption extends Component {
     render() {
