@@ -12,8 +12,8 @@ import { Header } from '@app/components';
 import * as COLOR from '@app/styles/colors';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
-import ProductArticle from './ProductArticle';
-import ProductRelative from './ProductRelative';
+import ProductArticle from './productArticle';
+import ProductRelative from './productRelative';
 
 class ProductDetail extends Component {
     constructor(props) {

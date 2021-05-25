@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
-import Box from './Box';
-import GroupBoxOption from './GroupBoxOption';
+import Box from './box';
+import GroupBoxOption from './groupBoxOption';
 
 const ProductArticle = (props) => {
     const contentWidth = useWindowDimensions().width;
