@@ -74,9 +74,7 @@ const ProductItemCartOff = (props) => {
                 <Text style={styles.statusoff}>Tạm hết hàng</Text>
             </View>
             <View style={styles.boxprice} />
-            <TouchableOpacity
-                style={styles.link}
-                onPress={alertDeleteItemProduct}>
+            <TouchableOpacity style={styles.link}>
                 <Text>Xem sản phẩm tương tự</Text>
             </TouchableOpacity>
         </View>

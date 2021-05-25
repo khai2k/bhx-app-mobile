@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
 import HTML from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 import {
     Text,
     Image,
