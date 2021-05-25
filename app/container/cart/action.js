@@ -138,7 +138,6 @@ export const cart_remove_item_product = function (guildId) {
 export const cart_remove = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            Storage.setItem(CONST_STORAGE.CARTID, '');
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
             const bodyApi = {
@@ -156,10 +155,11 @@ export const cart_remove = function () {
             apiBase(API_CONST.API_REQUEST_REMOVE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_REMOVE Data:', response);
-                    const cartInfo = response.Value;
+                    const rmCartId = response.Value;
+                    Storage.setItem(CONST_STORAGE.CARTID, rmCartId);
                     dispatch({
-                        type: CART_REMOVE_ITEM_PRODUCT,
-                        cartInfo
+                        type: CART_REMOVE,
+                        rmCartId
                     });
                     resolve(response);
                 })
