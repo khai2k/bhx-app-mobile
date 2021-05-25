@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Colors, Typography } from '@app/styles';
+import { Colors, Typography, Mixins } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
 import HTML from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 import {
     Text,
     Image,
@@ -27,13 +28,17 @@ const ProductItemCart = (props) => {
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const [quantity, setQuantity] = useState(props.productCart.Quantity);
+    const [totalPrice, setTotalPrice] = useState(props.productCart.Total);
     // eslint-disable-next-line no-unused-vars
     const [guildId, setguildId] = useState(props.productCart.GuildId);
     const [isHideCombo, setisHideCombo] = useState(
         props.productCart.TypeProduct === 1
     );
     useEffect(() => {
+        console.log('useEffect');
+        console.log(props.productCart.Quantity);
         setQuantity(props.productCart.Quantity);
+        setTotalPrice(props.productCart.Total);
     }, []);
     const offItemProduct =
         props.productCart.IsAllowQuantityChange === false ||
@@ -54,6 +59,7 @@ const ProductItemCart = (props) => {
         if (quantity > 50) {
             alertMaxQuantityItemProduct();
         } else {
+            updateTempItemCart(quantity);
             actionCart
                 .cart_update_item_product(guildId, quantity)
                 .then((res) => {
@@ -65,6 +71,7 @@ const ProductItemCart = (props) => {
                         );
                         if (itemcart != null) {
                             setQuantity(itemcart.Quantity);
+                            setTotalPrice(itemcart.Total);
                         }
                     }
                 })
@@ -79,6 +86,7 @@ const ProductItemCart = (props) => {
             alertDeleteItemProduct();
         } else {
             setQuantity(quantity - 1);
+            updateTempItemCart(quantity - 1);
             actionCart
                 .cart_update_item_product(guildId, quantity - 1)
                 .then((res) => {
@@ -91,6 +99,7 @@ const ProductItemCart = (props) => {
                         );
                         if (itemcart != null) {
                             setQuantity(itemcart.Quantity);
+                            setTotalPrice(itemcart.Total);
                         }
                     }
                 })
@@ -106,6 +115,7 @@ const ProductItemCart = (props) => {
             alertMaxQuantityItemProduct();
         } else {
             setQuantity(quantity + 1);
+            updateTempItemCart(quantity + 1);
             actionCart
                 .cart_update_item_product(guildId, quantity + 1)
                 .then((res) => {
@@ -118,6 +128,7 @@ const ProductItemCart = (props) => {
                         );
                         if (itemcart != null) {
                             setQuantity(itemcart.Quantity);
+                            setTotalPrice(itemcart.Total);
                         }
                     }
                 })
@@ -126,6 +137,11 @@ const ProductItemCart = (props) => {
                     setQuantity(quantity - 1);
                 });
         }
+    };
+
+    const updateTempItemCart = (iQuantity) => {
+        console.log('updateTempItemCart');
+        setTotalPrice(props.productCart.Price * iQuantity);
     };
 
     const actionRemoveItemProduct = () => {
@@ -228,7 +244,7 @@ const ProductItemCart = (props) => {
                 <View style={styles.sboxcombo}>
                     {list.map((itemCb) => {
                         return (
-                            <View style={styles.scombo}>
+                            <View style={styles.scombo} key={itemCb.GuildId}>
                                 <TouchableOpacity
                                     style={styles.sitemcombotitle}
                                     onPress={() =>
@@ -258,14 +274,11 @@ const ProductItemCart = (props) => {
             return (
                 <View style={styles.boxerror}>
                     <HTML
-                        classesStyles={styles.error}
+                        style={styles.error}
+                        tagsStyles={{ b: styles.errorbold }}
                         source={{ html: props.productCart.ErrorMessage }}
                         contentWidth={200}
                     />
-                    {/* <Text style={styles.error}>Chỉ còn</Text> */}
-                    {/* <Text style={styles.errorbold}>
-                        {props.productCart.ErrorMessage}
-                    </Text> */}
                 </View>
             );
         }
@@ -349,33 +362,34 @@ const ProductItemCart = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
-                <TouchableOpacity onPress={alertDeleteItemProduct}>
-                    <Icon
-                        style={styles.closer}
-                        name="times"
-                        size={Typography.FONT_SIZE_10}
-                        color={Colors.WHITE}
-                    />
-                </TouchableOpacity>
-                <Image
+                <FastImage
                     style={styles.imgbind}
                     source={{
                         uri: props.productCart.Info.Image
                     }}
                 />
+                <TouchableOpacity
+                    style={styles.closer}
+                    onPress={alertDeleteItemProduct}>
+                    <Icon
+                        name="times"
+                        size={Typography.FONT_SIZE_10}
+                        color={Colors.WHITE}
+                    />
+                </TouchableOpacity>
             </View>
             <View style={styles.boxinfo}>
                 {showTitleItemProduct()}
                 {showHideExpire()}
                 {showHideUnit()}
                 {showHideMessage()}
-                {showMessageQuantity()}
                 {showExpireNow()}
                 {showCombo()}
+                {showMessageQuantity()}
             </View>
             <View style={styles.boxprice}>
                 <Text style={styles.price}>
-                    {helper.formatMoney(props.productCart.Total)}
+                    {helper.formatMoney(totalPrice)}
                 </Text>
                 <View style={styles.quantity}>
                     <TouchableOpacity
@@ -414,6 +428,8 @@ const ProductItemCart = (props) => {
 
 const styles = StyleSheet.create({
     boxerror: {
+        ...Typography.FONT_REGULAR_12,
+        color: Colors.MESSAGE_ERROR,
         flexDirection: 'row'
     },
     boximg: {
@@ -432,20 +448,19 @@ const styles = StyleSheet.create({
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
-        //  elevation: Platform.OS === 'android' ? 5 : 0,
-        left: 5,
+        left: -5,
         paddingHorizontal: 5,
         paddingVertical: 3,
         position: 'absolute',
-        top: 5,
+        top: -5,
         zIndex: 5
     },
     container: {
+        ...Mixins.padding(10, 0, 10, 10),
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 1,
         flexDirection: 'row',
-        marginBottom: 5,
-        padding: 5
+        marginBottom: 5
     },
     error: {
         ...Typography.FONT_REGULAR_12,
@@ -462,8 +477,7 @@ const styles = StyleSheet.create({
     imgbind: {
         //  elevation: Platform.OS === 'android' ? 2 : 0,
         height: 60,
-        resizeMode: 'contain',
-        zIndex: 1
+        resizeMode: 'contain'
     },
     input: {
         borderColor: Colors.BORDER_GENERAL,

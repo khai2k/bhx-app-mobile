@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Colors, Typography } from '@app/styles';
+import { Colors, Typography, Mixins } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
 import {
@@ -19,7 +19,20 @@ const ProductItemCartOff = (props) => {
     const [guildId, setguildId] = useState(props.productCart.GuildId);
 
     const actionRemoveItemProduct = () => {
-        actionCart.cart_remove_item_product(guildId);
+        actionCart
+            .cart_remove_item_product(guildId)
+            .then((res) => {
+                if (res.ResultCode < 0) {
+                    alertAPI(res.Message);
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
+    };
+
+    const alertAPI = (mesages) => {
+        Alert.alert('', mesages);
     };
 
     const alertDeleteItemProduct = () => {
@@ -38,20 +51,21 @@ const ProductItemCartOff = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
-                <TouchableOpacity>
-                    <Icon
-                        style={styles.closer}
-                        name="times"
-                        size={Typography.FONT_SIZE_10}
-                        color={Colors.WHITE}
-                    />
-                </TouchableOpacity>
                 <Image
                     style={styles.imgbind}
                     source={{
                         uri: props.productCart.Info.Image
                     }}
                 />
+                <TouchableOpacity
+                    style={styles.closer}
+                    onPress={alertDeleteItemProduct}>
+                    <Icon
+                        name="times"
+                        size={Typography.FONT_SIZE_10}
+                        color={Colors.WHITE}
+                    />
+                </TouchableOpacity>
             </View>
             <View style={styles.boxinfo}>
                 <Text style={styles.title}>
@@ -60,9 +74,7 @@ const ProductItemCartOff = (props) => {
                 <Text style={styles.statusoff}>Tạm hết hàng</Text>
             </View>
             <View style={styles.boxprice} />
-            <TouchableOpacity
-                style={styles.link}
-                onPress={alertDeleteItemProduct}>
+            <TouchableOpacity style={styles.link}>
                 <Text>Xem sản phẩm tương tự</Text>
             </TouchableOpacity>
         </View>
@@ -85,20 +97,19 @@ const styles = StyleSheet.create({
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
-        //  elevation: Platform.OS === 'android' ? 5 : 0,
-        left: 5,
+        left: 0,
         paddingHorizontal: 5,
         paddingVertical: 3,
         position: 'absolute',
-        top: 5,
+        top: -5,
         zIndex: 5
     },
     container: {
+        ...Mixins.padding(10, 0, 10, 10),
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 1,
         flexDirection: 'row',
-        marginBottom: 5,
-        padding: 5
+        marginBottom: 5
     },
     imgbind: {
         //  elevation: Platform.OS === 'android' ? 2 : 0,
