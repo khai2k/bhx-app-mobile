@@ -7,6 +7,7 @@ export const locationState = {
         ProvinceShortName: '',
         WardId: 0,
         WardName: '',
-        FullAddress: ''
+        FullAddress: '',
+        StoreId: 0
     }
 };
