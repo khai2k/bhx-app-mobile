@@ -119,29 +119,29 @@ const RenderLineDealShock = (props) => {
 // Render từng line sản phẩm
 const RenderGroupCate = React.memo((props) => {
     function renderGroupCate(item) {
-        if (item.CategoryId !== 9998) {
-            return (
-                <View>
+        return (
+            <View>
+                {item.item.CategoryId === 9998 && (
+                    <RenderLineExpired nameCategory={item.item.Text} />
+                )}
+                {item.item.CategoryId !== 9998 && (
                     <RenderCategoryFilter
                         categorys={item.item.Categorys}
                         nameCategory={item.item.Text}
+                        lineColor={item.item.LineColor}
+                        promotionCount={item.item.PromotionCount}
                     />
-                    <RenderProductEachCategory
-                        lstProducts={item.item.Products}
+                )}
+                <RenderProductEachCategory lstProducts={item.item.Products} />
+                {item.item.Query.PromotionCount > 0 && (
+                    <RenderLoadMoreProduct
+                        promotionCount={item.item.Query.PromotionCount}
+                        query={item.item.Query}
+                        dispatch={props.dispatch}
                     />
-                    {item.item.PromotionCount > 0 && (
-                        <RenderLoadMoreProduct
-                            promotionCount={item.item.PromotionCount}
-                            query={item.item.Query}
-                            dispatch={props.dispatch}
-                        />
-                    )}
-                </View>
-            );
-        }
-        // } else {
-        //     return <RenderLineExpired />;
-        // }
+                )}
+            </View>
+        );
     }
 
     return (
@@ -158,8 +158,30 @@ const RenderGroupCate = React.memo((props) => {
 
 // Render list Category filter of line category
 const RenderCategoryFilter = React.memo((props) => {
+    function renderColorLine() {
+        switch (props.lineColor) {
+            case 'green-line':
+                return styles.greenLine;
+            case 'orange-line':
+                return styles.orangeLine;
+            case 'blue-line':
+                return styles.blueLine;
+            case 'pink-line':
+                return styles.pinkLine;
+            case 'aqua-line':
+                return styles.aquaLine;
+            case 'skyblue-line':
+                return styles.skyblueLine;
+            case 'purple-line':
+                return styles.purpleLine;
+            case 'red-line':
+                return styles.redLine;
+            default:
+                return styles.greenLine;
+        }
+    }
     return (
-        <View style={styles.groupCateFilter}>
+        <View style={[styles.groupCateFilter, renderColorLine()]}>
             <View>
                 <Text style={styles.nameGroupCategory}>
                     {props.nameCategory}
@@ -174,7 +196,13 @@ const RenderCategoryFilter = React.memo((props) => {
                 data={props.categorys}
                 keyExtractor={(item) => item.Id}
                 renderItem={(item) => {
-                    return <RenderItemCateFilter item={item.item} />;
+                    return (
+                        <RenderItemCateFilter
+                            item={item.item}
+                            index={item.index}
+                            promotionCount={props.promotionCount}
+                        />
+                    );
                 }}
             />
         </View>
@@ -184,10 +212,31 @@ const RenderCategoryFilter = React.memo((props) => {
 // Render Item Cate filter
 const RenderItemCateFilter = React.memo((props) => {
     return (
-        <View style={styles.itemCateFilter}>
-            <TouchableOpacity>
-                <Text style={styles.txtItemCateFilter}>{props.item.Name}</Text>
-            </TouchableOpacity>
+        <View style={styles.itemGroupCateFilter}>
+            {props.index === 0 && (
+                <View
+                    style={[
+                        styles.itemCateFilter,
+                        styles.itemCateFilterActive
+                    ]}>
+                    <TouchableOpacity>
+                        <Text
+                            style={[
+                                styles.txtItemCateFilter,
+                                styles.txtItemCateFilterActive
+                            ]}>
+                            {props.promotionCount} Khuyến mãi Hot
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+            <View style={styles.itemCateFilter}>
+                <TouchableOpacity>
+                    <Text style={styles.txtItemCateFilter}>
+                        {props.item.Name}
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 });
@@ -197,6 +246,7 @@ const RenderProductEachCategory = React.memo((props) => {
     return (
         <View>
             <FlatList
+                style={styles.lstProducts}
                 windowSize={60}
                 numColumns={3}
                 data={props.lstProducts}
@@ -234,8 +284,12 @@ const RenderLoadMoreProduct = React.memo((props) => {
 });
 
 // RenderLine Xả kho giá sốc
-// const RenderLineExpired = (props) => {
-//     return <View />;
-// };
+const RenderLineExpired = (props) => {
+    return (
+        <View style={styles.lineExpired}>
+            <Text style={styles.txtTitleExpired}>{props.nameCategory}</Text>
+        </View>
+    );
+};
 
 export default Promotion;

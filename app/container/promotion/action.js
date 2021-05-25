@@ -32,10 +32,26 @@ export const promotionPage_get = function () {
             }
         )
             .then((response) => {
-                const dataPromotionPage = response.Value;
-                dataPromotionPage?.GroupCate?.push(
-                    dataPromotionPage?.GroupCate?.shift()
+                const LINE_COLOR = [
+                    'orange-line',
+                    'green-line',
+                    'blue-line',
+                    'red-line',
+                    'pink-line',
+                    'aqua-line',
+                    'skyblue-line',
+                    'purple-line',
+                    'red-line'
+                ];
+                response.Value.GroupCate.map(
+                    // eslint-disable-next-line array-callback-return
+                    (element, index) => {
+                        element.LineColor = LINE_COLOR[index];
+                        element.Query.PromotionCount =
+                            element.PromotionCount - 6;
+                    }
                 );
+                const dataPromotionPage = response.Value;
                 dispatch({
                     type: PROMOTIONPAGE_GET,
                     dataPromotionPage
