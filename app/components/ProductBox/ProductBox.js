@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import BuyBox from './BuyBox';
 import styles from './style';
 
@@ -59,7 +60,7 @@ const ProductBox = (props) => {
                     </Text>
                     {props.bhxProduct.PromotionGiftImgs !== null &&
                     props.bhxProduct.PromotionGiftImgs.trim().length > 0 ? (
-                        <Image
+                        <FastImage
                             style={styles.imagePromotion}
                             source={{
                                 uri: props.bhxProduct.PromotionGiftImgs
@@ -280,8 +281,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -355,8 +358,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>

@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -191,7 +192,8 @@ const ProductExpiredBox = (props) => {
 
     const { bhxProduct } = props;
     const isNearlyExpiredProduct =
-        bhxProduct.Sales !== null && bhxProduct.Sales !== undefined;
+        !helper.isEmptyOrNull(bhxProduct.Sales) &&
+        !helper.isEmptyOrNull(bhxProduct.Sales[bhxProduct.ExpStoreId]);
     if (isNearlyExpiredProduct && bhxProduct.ExpStoreId > 0) {
         const expiredProduct = bhxProduct.Sales[bhxProduct.ExpStoreId];
         return (
@@ -216,7 +218,7 @@ const ProductExpiredBox = (props) => {
                             </Text>
                         ) : null}
                         <View className="imgContent" style={styles.imgContent}>
-                            <Image
+                            <FastImage
                                 style={styles.imageProduct}
                                 source={{
                                     uri: bhxProduct.Avatar
