@@ -42,7 +42,7 @@ export default class ProductGallery extends Component {
 
     change(nativeEvent) {
         if (nativeEvent) {
-            const slide = Math.round(
+            const slide = Math.ceil(
                 nativeEvent.contentOffset.x /
                     nativeEvent.layoutMeasurement.width
             );

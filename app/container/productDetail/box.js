@@ -1,15 +1,135 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { helper } from '@app/common';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as cartCreator from '@app/container/cart/action';
 import styles from './style';
 
 const Box = (props) => {
     const { bHXProduct } = props;
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
+    const cart = useSelector((state) => state.cartReducer.CartSimple);
+    const [guildId, setGuildId] = useState('');
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
     const handleInputNumber = (number) => {
         setNumberItems(+number);
+    };
+    const checkFillButtonBuy = () => {
+        const idProduct = bHXProduct.Id;
+        if (
+            !helper.isEmptyOrNull(cart) &&
+            !helper.isEmptyOrNull(cart.ProInCart)
+        ) {
+            if (!helper.isEmptyOrNull(cart.ProInCart[idProduct])) {
+                setGuildId(cart.ProInCart[idProduct][0]);
+                setNumberItems(+cart.ProInCart[idProduct][1]);
+                setBuyButtonVisible(true);
+            }
+        } else {
+            setNumberItems(1);
+            setBuyButtonVisible(false);
+        }
+    };
+    useEffect(() => {
+        console.log(`Fill button ${props.bHXProduct.Id}`);
+        checkFillButtonBuy();
+    }, [cart.Total]);
+    const alertAPI = (messages) => {
+        Alert.alert('', messages);
+    };
+    const alertMaxQuantityItemProduct = () => {
+        Alert.alert('', 'Chưa có thông tin?', [
+            {
+                text: 'Không xóa',
+                style: 'cancel'
+            },
+            {
+                text: 'Đồng ý'
+            }
+        ]);
+    };
+    const setQuantityMinus = () => {
+        if (numberItems <= 1) {
+            actionCart
+                .cart_remove_item_product(guildId)
+                .then((res) => {
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, numberItems - 1)
+                .then((res) => {
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+
+    const setQuantityPlus = () => {
+        if (numberItems > 50) {
+            alertMaxQuantityItemProduct();
+        } else {
+            actionCart
+                .cart_update_item_product(guildId, numberItems + 1)
+                .then(async (res) => {
+                    console.log('cart_update_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        // setNumberItems(numberItems + 1);
+
+                        await actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+        }
+    };
+    const addToCart = (productID) => {
+        console.log(`Begin addToCart ${props.bHXProduct.Id}`);
+
+        setNumberItems(1);
+        setBuyButtonVisible(true);
+        actionCart
+            .cart_add_item_product(productID, 1)
+            .then(async (res) => {
+                console.log('cart_add_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                } else {
+                    console.log(`End addToCart ${props.bHXProduct.Id}`);
+
+                    await actionCart.cart_get_simple();
+                    console.log(
+                        `End update addToCart cartSimple ${props.bHXProduct.Id}`
+                    );
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
     };
     const checkWebStatusId = (Price, StockQuantityNew) => {
         if (Price > 0) {
@@ -52,14 +172,16 @@ const Box = (props) => {
                     }>
                     <View style={styles.center}>
                         <View style={styles.boxBuy}>
-                            <Text>{`${Price}đ`}</Text>
+                            <Text>{helper.formatMoney(Price)}</Text>
                         </View>
                     </View>
                     {isSaleOnly ? (
                         <View style={styles.boxBuy}>
                             <Text style={styles.ExpiredText}>
                                 {' '}
-                                {Sales && Sales['6613'].ExpiredText}
+                                {Sales['6613'].ExpiredText === ''
+                                    ? Sales['6613'].LabelText
+                                    : Sales['6613'].ExpiredText}
                             </Text>
                         </View>
                     ) : (
@@ -97,7 +219,7 @@ const Box = (props) => {
                     }>
                     <View style={styles.boxBuy}>
                         <View style={styles.center}>
-                            <Text>{`${Price}đ`}</Text>
+                            <Text>{helper.formatMoney(Price)}</Text>
                         </View>
                     </View>
                     <View className="boxBuy" style={styles.boxBuy}>
@@ -134,10 +256,15 @@ const Box = (props) => {
             </View>
             {Sales !== null && !isSaleOnly && (
                 <View style={styles.productNearDate}>
-                    <Text>{Sales && `MUA ${Sales['6613'].Price}đ`}</Text>
+                    <Text>
+                        {Sales &&
+                            `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
+                    </Text>
                     <Text style={styles.ExpiredText}>
                         {' '}
-                        {Sales && Sales['6613'].ExpiredText}
+                        {Sales['6613'].ExpiredText === ''
+                            ? Sales['6613'].LabelText
+                            : Sales['6613'].ExpiredText}
                     </Text>
                 </View>
             )}

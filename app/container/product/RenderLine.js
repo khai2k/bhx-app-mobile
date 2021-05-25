@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    SafeAreaView
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
 import * as homeCreator from '@app/container/product/action';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import ProductBox from '../../components/ProductBox/ProductBox';
-import { HomeReducer } from './reducer';
 
 const RenderLine = (props) => {
     const dispatch = useDispatch();
     const actionHome = bindActionCreators(homeCreator, dispatch);
-    const [viewMoreText, setViewMoreText] = useState(
-        `Xem thêm ${props.lineItem.PromotionCount} sản phẩm`
-    );
+
     const [pageIndex, setPageIndex] = useState(1);
     const [products, setProducts] = useState(props.lineItem.Products);
+    const [totalProduct, setTotalProduct] = useState(
+        props.lineItem.PromotionCount
+    );
 
     function GenMoreProduct(currentPage, categoryIds) {
         // Chỉ lấy 9 productid mới nhất truyền vô excludeProductIds
@@ -27,11 +33,6 @@ const RenderLine = (props) => {
         get9LastProduct?.map((item) => {
             return excludeProductIds.push(item.Id);
         });
-
-        console.log('GenMoreProduct query:');
-        console.log('pageindex: ', currentPage);
-        console.log('categoryIds: ', categoryIds.toString());
-        console.log('excludeProductIds: ', excludeProductIds.toString());
 
         const bodyApi = {
             token: '',
@@ -54,11 +55,13 @@ const RenderLine = (props) => {
         apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
             .then((response) => {
                 setProducts([...products, ...response.Value]);
-                console.log('GET_MORE_LIST_PRODUCT Data Value:', products);
-                setPageIndex(pageIndex + 1);
-                setViewMoreText(
-                    `Xem thêm ${response.OrtherData.TotalRest} sản phẩm`
-                );
+                if (response.OrtherData?.TotalRest > 0) {
+                    setPageIndex(pageIndex + 1);
+                    setTotalProduct(response.OrtherData.TotalRest);
+                } else {
+                    setPageIndex(1);
+                    setTotalProduct(0);
+                }
             })
             .catch((error) => {
                 console.log('GET_MORE_LIST_PRODUCT Error:', error);
@@ -73,7 +76,7 @@ const RenderLine = (props) => {
                 categoryId={props.lineItem.CategoryId}
             />
             {/* Render Product */}
-            <View style={styles.productList}>
+            <SafeAreaView style={styles.productList}>
                 <FlatList
                     numColumns="3"
                     data={products}
@@ -84,27 +87,29 @@ const RenderLine = (props) => {
                 />
 
                 {/* Show button viewmore */}
-                {props.lineItem.MaxPage > 0 && (
-                    <TouchableOpacity
-                        onPress={() => {
-                            GenMoreProduct(
-                                pageIndex,
-                                props.lineItem.CategoryIds
-                            );
-                        }}
-                        style={styles.viewmoreProduct}>
-                        <View style={styles.viewmoreProduct_text}>
-                            <Text style={styles.viewmoreProduct_total}>
-                                {viewMoreText}
-                            </Text>
-                            <Text style={styles.viewmoreProduct_cateName}>
-                                {props.lineItem.Text.toLowerCase()} - pageindex
-                                {pageIndex}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            </View>
+                {products !== null &&
+                    products.length > 0 &&
+                    props.lineItem.MaxPage > 0 &&
+                    totalProduct > 0 && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                GenMoreProduct(
+                                    pageIndex,
+                                    props.lineItem.CategoryIds
+                                );
+                            }}
+                            style={styles.viewmoreProduct}>
+                            <View style={styles.viewmoreProduct_text}>
+                                <Text style={styles.viewmoreProduct_total}>
+                                    {`Xem thêm ${totalProduct} sản phẩm`}
+                                </Text>
+                                <Text style={styles.viewmoreProduct_cateName}>
+                                    {props.lineItem.Text.toLowerCase()}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+            </SafeAreaView>
         </View>
     );
 };
@@ -117,6 +122,7 @@ const ShowMainCate = (props) => {
                 <FlatList
                     horizontal
                     data={categories}
+                    keyExtractor={(item) => item.Id}
                     renderItem={({ item }) => (
                         <TouchableOpacity>
                             <View>

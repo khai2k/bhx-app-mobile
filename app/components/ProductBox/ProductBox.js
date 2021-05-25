@@ -36,11 +36,10 @@ const ProductBox = (props) => {
             setGuildId(cart.ProInCart[idProduct][0]);
             setNumberItems(+cart.ProInCart[idProduct][1]);
             setBuyButtonVisible(true);
-        } else {
-            console.log(`Reset button ${props.bhxProduct.Id}`);
-            setNumberItems(1);
-            setBuyButtonVisible(false);
-        }
+            } else {
+                setNumberItems(1);
+                setBuyButtonVisible(false);
+            }
     };
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);

@@ -1,16 +1,30 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import {
+    Text,
+    View,
+    SafeAreaView,
+    FlatList,
+    TouchableOpacity
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 const ListCategories = (props) => {
     if (props.listCate != null && props.listCate.length > 0) {
+        const navigation = useNavigation();
+        const handleSelectCateChild = (groupUrl) => {
+            navigation.navigate('Group', { url: groupUrl });
+            console.log('groupUrl', groupUrl);
+        };
         return (
-            <View style={styles.boxCategory}>
+            <SafeAreaView style={styles.boxCategory}>
                 <FlatList
                     horizontal
                     data={props.listCate}
+                    keyExtractor={(item) => item.Id}
                     renderItem={({ item }) => (
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => handleSelectCateChild(item.Url)}>
                             <View>
                                 <Text style={styles.categoryItem}>
                                     {item.Name}
@@ -19,7 +33,7 @@ const ListCategories = (props) => {
                         </TouchableOpacity>
                     )}
                 />
-            </View>
+            </SafeAreaView>
         );
     } else {
         return null;
