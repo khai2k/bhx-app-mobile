@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     iconDealShock: {
         position: 'absolute',
         resizeMode: 'contain',
-        width: '80%'
+        width: '95%'
     },
     imgIconDealShock: {
         alignItems: 'center',

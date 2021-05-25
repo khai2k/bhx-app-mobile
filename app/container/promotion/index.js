@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Image,
     View,
@@ -13,6 +13,7 @@ import Header from '../../components/Header';
 import { IconPromotion } from '../../images';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import * as promotionAction from './action';
+import Loading from '../../components/Loading';
 
 const Promotion = () => {
     const dispatch = useDispatch();
@@ -23,8 +24,15 @@ const Promotion = () => {
         (state) => state.promotionReducer.TopDealPromotion
     );
 
+    const [isLoading, setIsLoading] = useState(true);
     const listCategoryTop = promotionData?.Categorys;
     const listGroupCate = promotionData?.GroupCate;
+
+    useEffect(() => {
+        if (promotionTopDealData && promotionData) {
+            setIsLoading(false);
+        }
+    }, [promotionTopDealData, promotionData]);
 
     useEffect(() => {
         dispatch(promotionAction.promotionPage_get());
@@ -34,11 +42,19 @@ const Promotion = () => {
     return (
         <View style={styles.container}>
             <Header />
-            <ScrollView nestedScrollEnabled>
-                <RenderListCategory lstCategoryTop={listCategoryTop} />
-                <RenderLineDealShock lstProductTopDeal={promotionTopDealData} />
-                <RenderGroupCate listGroupCate={listGroupCate} />
-            </ScrollView>
+            {isLoading && <Loading />}
+            {!isLoading && (
+                <ScrollView nestedScrollEnabled>
+                    <RenderListCategory lstCategoryTop={listCategoryTop} />
+                    <RenderLineDealShock
+                        lstProductTopDeal={promotionTopDealData}
+                    />
+                    <RenderGroupCate
+                        listGroupCate={listGroupCate}
+                        dispatch={dispatch}
+                    />
+                </ScrollView>
+            )}
         </View>
     );
 };
@@ -102,6 +118,32 @@ const RenderLineDealShock = (props) => {
 
 // Render từng line sản phẩm
 const RenderGroupCate = React.memo((props) => {
+    function renderGroupCate(item) {
+        if (item.CategoryId !== 9998) {
+            return (
+                <View>
+                    <RenderCategoryFilter
+                        categorys={item.item.Categorys}
+                        nameCategory={item.item.Text}
+                    />
+                    <RenderProductEachCategory
+                        lstProducts={item.item.Products}
+                    />
+                    {item.item.PromotionCount > 0 && (
+                        <RenderLoadMoreProduct
+                            promotionCount={item.item.PromotionCount}
+                            query={item.item.Query}
+                            dispatch={props.dispatch}
+                        />
+                    )}
+                </View>
+            );
+        }
+        // } else {
+        //     return <RenderLineExpired />;
+        // }
+    }
+
     return (
         <FlatList
             initialNumToRender={2}
@@ -109,24 +151,7 @@ const RenderGroupCate = React.memo((props) => {
             windowSize={60}
             data={props.listGroupCate}
             keyExtractor={(item) => item.CategoryId}
-            renderItem={(item) => {
-                return (
-                    item.item.CategoryId !== 9998 && (
-                        <View>
-                            <RenderCategoryFilter
-                                categorys={item.item.Categorys}
-                                nameCategory={item.item.Text}
-                            />
-                            <RenderProductEachCategory
-                                lstProducts={item.item.Products}
-                            />
-                            <RenderLoadMoreProduct
-                                promotionCount={item.item.PromotionCount}
-                            />
-                        </View>
-                    )
-                );
-            }}
+            renderItem={renderGroupCate}
         />
     );
 });
@@ -186,9 +211,20 @@ const RenderProductEachCategory = React.memo((props) => {
 
 // Render Load more product
 const RenderLoadMoreProduct = React.memo((props) => {
+    function loadMoreProduct() {
+        props.dispatch(
+            promotionAction.loadMoreProductsGroup_post(
+                props.query.PageIndex + 1,
+                props.query.PageSize,
+                props.query.ExcludeProductIds,
+                props.query.CategoryId,
+                props.query.StringCates
+            )
+        );
+    }
     return (
         <View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => loadMoreProduct()}>
                 <Text style={styles.loadMoreProduct}>
                     Xem thêm {props.promotionCount} sản phẩm
                 </Text>
@@ -196,5 +232,10 @@ const RenderLoadMoreProduct = React.memo((props) => {
         </View>
     );
 });
+
+// RenderLine Xả kho giá sốc
+// const RenderLineExpired = (props) => {
+//     return <View />;
+// };
 
 export default Promotion;
