@@ -18,14 +18,6 @@ class UseVoucher extends Component {
         };
     }
 
-    cancelVoucher = () => {
-        this.setState({ isChange: false });
-    };
-
-    useVoucher = () => {
-        this.setState({ isChange: true });
-    };
-
     _renderHeader() {
         return (
             <View style={styles.header}>
@@ -54,21 +46,20 @@ class UseVoucher extends Component {
                         keyboardType="numeric"
                     />
                     <TouchableOpacity
-                        onPress={
-                            (() => this.setState(this.useVoucher()),
-                            () => console.log(this.state.isChange))
-                        }>
+                        onPress={() => this.setState({ isChange: true })}>
                         <View style={styles.submitPhone}>
                             <Text style={styles.textSubmitPhone}>Sử dụng</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.pinCode}>
-                    <TextInput
-                        placeholder="Nhập Pincode"
-                        keyboardType="numeric"
-                    />
-                </View>
+            </View>
+        );
+    }
+
+    _renderPincodeInput() {
+        return (
+            <View style={styles.pinCode}>
+                <TextInput placeholder="Nhập Pincode" keyboardType="numeric" />
             </View>
         );
     }
@@ -96,9 +87,8 @@ class UseVoucher extends Component {
                                 Hạn sử dụng đến: 31/12/2020
                             </Text>
                             <TouchableOpacity
-                                onPress={
-                                    (() => this.setState(this.cancelVoucher()),
-                                    () => console.log(this.state.isChange))
+                                onPress={() =>
+                                    this.setState({ isChange: false })
                                 }>
                                 <Text style={styles.voucherCancelText}>
                                     Hủy dùng
@@ -112,36 +102,42 @@ class UseVoucher extends Component {
     }
 
     _renderSubmitContainer() {
-        return (
-            <>
-                <View style={styles.calVoucher}>
-                    <Text style={{ color: '#8F9BB3' }}>
-                        Phiếu mua hàng(...821):
-                    </Text>
-                    <Text style={{ right: -20 }}>×</Text>
-                    <Text>-100.000đ</Text>
-                </View>
-                <TouchableOpacity>
-                    <View style={styles.submitButton}>
-                        <Text style={styles.submitButtonText}>Áp dụng</Text>
-                        <View style={styles.submitPrice}>
-                            <Text style={styles.oldPrice}>1.300.000đ</Text>
-                            <Text style={styles.newPrice}>1.200.000đ</Text>
-                        </View>
+        if (this.state.isChange == true) {
+            return (
+                <>
+                    <View style={styles.calVoucher}>
+                        <Text style={{ color: '#8F9BB3' }}>
+                            Phiếu mua hàng(...821):
+                        </Text>
+                        <Text style={{ right: -20 }}>×</Text>
+                        <Text>-100.000đ</Text>
                     </View>
-                </TouchableOpacity>
-            </>
-        );
+                    <TouchableOpacity>
+                        <View style={styles.submitButton}>
+                            <Text style={styles.submitButtonText}>Áp dụng</Text>
+                            <View style={styles.submitPrice}>
+                                <Text style={styles.oldPrice}>1.300.000đ</Text>
+                                <Text style={styles.newPrice}>1.200.000đ</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </>
+            );
+        }
+        return null;
     }
 
     _renderCloseContainer() {
-        return (
-            <TouchableOpacity onPress={() => console.log('test')}>
-                <View style={styles.closeButton}>
-                    <Text style={styles.closeButtonText}>Đóng</Text>
-                </View>
-            </TouchableOpacity>
-        );
+        if (this.state.isChange == false) {
+            return (
+                <TouchableOpacity onPress={() => console.log('test')}>
+                    <View style={styles.closeButton}>
+                        <Text style={styles.closeButtonText}>Đóng</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        return null;
     }
 
     _renderFooterContainer() {
@@ -154,9 +150,8 @@ class UseVoucher extends Component {
                         ngày
                     </Text>
                 </View>
-                {this.state.isShowSubmit === 2
-                    ? this._renderCloseContainer()
-                    : this._renderSubmitContainer()}
+                {this._renderCloseContainer()}
+                {this._renderSubmitContainer()}
             </View>
         );
     }
