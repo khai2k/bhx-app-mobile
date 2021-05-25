@@ -1,13 +1,12 @@
 import React from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, SafeAreaView } from 'react-native';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import styles from './style';
 
 const SliderTitle = (props) => {
     if (props.listTitle != null && props.listTitle.length > 0) {
         return (
-            <View style={styles.boxTitle}>
+            <SafeAreaView style={styles.boxTitle}>
                 <Image
                     style={styles.imgTitle}
                     source={{
@@ -35,7 +34,7 @@ const SliderTitle = (props) => {
                         </View>
                     )}
                 />
-            </View>
+            </SafeAreaView>
         );
     } else {
         return null;

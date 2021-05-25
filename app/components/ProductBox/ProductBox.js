@@ -14,6 +14,11 @@ const ProductBox = (props) => {
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
 
+    // reminder select location
+    const location = useSelector(
+        (state) => state.locationReducer.locationState?.crrLocationRs
+    );
+
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
 
@@ -24,17 +29,17 @@ const ProductBox = (props) => {
         const idProduct = props.bhxProduct.Id;
         if (
             !helper.isEmptyOrNull(cart) &&
-            !helper.isEmptyOrNull(cart.ProInCart)
+            !helper.isEmptyOrNull(cart.ProInCart) &&
+            !helper.isEmptyOrNull(cart.ProInCart[idProduct])
         ) {
-            if (!helper.isEmptyOrNull(cart.ProInCart[idProduct])) {
-                setGuildId(cart.ProInCart[idProduct][0]);
-                setNumberItems(+cart.ProInCart[idProduct][1]);
-                setBuyButtonVisible(true);
+            console.log(`Change button ${props.bhxProduct.Id}`);
+            setGuildId(cart.ProInCart[idProduct][0]);
+            setNumberItems(+cart.ProInCart[idProduct][1]);
+            setBuyButtonVisible(true);
+            } else {
+                setNumberItems(1);
+                setBuyButtonVisible(false);
             }
-        } else {
-            setNumberItems(1);
-            setBuyButtonVisible(false);
-        }
     };
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);
@@ -119,13 +124,9 @@ const ProductBox = (props) => {
         }
     };
 
-    const addToCart = (productID) => {
-        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
-
-        setNumberItems(1);
-        setBuyButtonVisible(true);
+    const addToCart = (productID, expStoreId) => {
         actionCart
-            .cart_add_item_product(productID, 1)
+            .cart_add_item_product(productID, 1, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
@@ -150,7 +151,7 @@ const ProductBox = (props) => {
         if (numberItems <= 1) {
             actionCart
                 .cart_remove_item_product(guildId)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_remove_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
@@ -161,7 +162,7 @@ const ProductBox = (props) => {
                             `End setQuantityMinus ${props.bhxProduct.Id}`
                         );
 
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                         console.log(
                             `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
                         );
@@ -173,7 +174,7 @@ const ProductBox = (props) => {
         } else {
             actionCart
                 .cart_update_item_product(guildId, numberItems - 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
@@ -183,7 +184,7 @@ const ProductBox = (props) => {
                         console.log(
                             `End setQuantityMinus ${props.bhxProduct.Id}`
                         );
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                         console.log(
                             `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
                         );
@@ -312,8 +313,9 @@ const ProductBox = (props) => {
                             addToCart(
                                 props.bhxProduct.Sales[
                                     props.bhxProduct.ExpStoreId
-                                ]
-                            ).ProductId;
+                                ].ProductId,
+                                props.bhxProduct.ExpStoreId
+                            );
                         }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>
@@ -389,8 +391,9 @@ const ProductBox = (props) => {
                             addToCart(
                                 props.bhxProduct.Sales[
                                     props.bhxProduct.ExpStoreId
-                                ]
-                            ).ProductId;
+                                ].ProductId,
+                                props.bhxProduct.ExpStoreId
+                            );
                         }}
                         className="nearlyExpired"
                         style={styles.nearlyExpired}>

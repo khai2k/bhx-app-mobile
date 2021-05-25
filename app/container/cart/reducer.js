@@ -7,7 +7,8 @@ const cartReducer = function (state = _state.cartState, action) {
             return {
                 ...state,
                 Cart: action.cartInfo.Cart,
-                CartTotal: action.cartInfo.CartTotal
+                CartTotal: action.cartInfo.CartTotal,
+                ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
             };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {

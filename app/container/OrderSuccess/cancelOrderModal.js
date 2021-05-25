@@ -20,11 +20,12 @@ class CancelOrderModal extends Component {
             modalVisible: false
         };
     }
+
     render() {
         return (
             <Modal
                 animationType="slide"
-                transparent={true}
+                transparent
                 visible={this.state.modalVisible}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>

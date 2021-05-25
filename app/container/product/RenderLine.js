@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    SafeAreaView
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
 import * as homeCreator from '@app/container/product/action';
@@ -70,7 +76,7 @@ const RenderLine = (props) => {
                 categoryId={props.lineItem.CategoryId}
             />
             {/* Render Product */}
-            <View style={styles.productList}>
+            <SafeAreaView style={styles.productList}>
                 <FlatList
                     numColumns="3"
                     data={products}
@@ -81,26 +87,29 @@ const RenderLine = (props) => {
                 />
 
                 {/* Show button viewmore */}
-                {props.lineItem.MaxPage > 0 && totalProduct > 0 && (
-                    <TouchableOpacity
-                        onPress={() => {
-                            GenMoreProduct(
-                                pageIndex,
-                                props.lineItem.CategoryIds
-                            );
-                        }}
-                        style={styles.viewmoreProduct}>
-                        <View style={styles.viewmoreProduct_text}>
-                            <Text style={styles.viewmoreProduct_total}>
-                                {`Xem thêm ${totalProduct} sản phẩm`}
-                            </Text>
-                            <Text style={styles.viewmoreProduct_cateName}>
-                                {props.lineItem.Text.toLowerCase()}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            </View>
+                {products !== null &&
+                    products.length > 0 &&
+                    props.lineItem.MaxPage > 0 &&
+                    totalProduct > 0 && (
+                        <TouchableOpacity
+                            onPress={() => {
+                                GenMoreProduct(
+                                    pageIndex,
+                                    props.lineItem.CategoryIds
+                                );
+                            }}
+                            style={styles.viewmoreProduct}>
+                            <View style={styles.viewmoreProduct_text}>
+                                <Text style={styles.viewmoreProduct_total}>
+                                    {`Xem thêm ${totalProduct} sản phẩm`}
+                                </Text>
+                                <Text style={styles.viewmoreProduct_cateName}>
+                                    {props.lineItem.Text.toLowerCase()}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+            </SafeAreaView>
         </View>
     );
 };

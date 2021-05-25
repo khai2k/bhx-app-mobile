@@ -21,20 +21,25 @@ const ProductExpiredBox = (props) => {
 
     const checkFillButtonBuy = () => {
         const idProduct = props.bhxProduct.Id;
-        if (cart && cart.ProInCart) {
-            if (cart.ProInCart[idProduct]) {
-                setGuildId(cart.ProInCart[idProduct][0]);
-                setNumberItems(+cart.ProInCart[idProduct][1]);
-                setBuyButtonVisible(true);
-            } else {
-                setNumberItems(1);
-                setBuyButtonVisible(false);
-            }
+        if (
+            !helper.isEmptyOrNull(cart) &&
+            !helper.isEmptyOrNull(cart.ProInCart_Exp) &&
+            !helper.isEmptyOrNull(cart.ProInCart_Exp[idProduct])
+        ) {
+            console.log(`Change button ${props.bhxProduct.Id}`);
+            setGuildId(cart.ProInCart_Exp[idProduct][0]);
+            setNumberItems(+cart.ProInCart_Exp[idProduct][1]);
+            setBuyButtonVisible(true);
+        } else {
+            console.log(`Reset button ${props.bhxProduct.Id}`);
+            setNumberItems(1);
+            setBuyButtonVisible(false);
         }
     };
     useEffect(() => {
+        console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
-    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+    }, [cart.Total]);
 
     const handleInputNumber = (number) => {
         if (helper.isEmptyOrNull(number)) {
@@ -77,17 +82,15 @@ const ProductExpiredBox = (props) => {
     };
 
     const addToCart = (productID) => {
-        setNumberItems(1);
-        setBuyButtonVisible(true);
         actionCart
             .cart_add_item_product(productID, 1)
-            .then((res) => {
+            .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
-                    actionCart.cart_get_simple();
+                    await actionCart.cart_get_simple();
                 }
             })
             .catch((error) => {
@@ -98,13 +101,13 @@ const ProductExpiredBox = (props) => {
         if (numberItems <= 1) {
             actionCart
                 .cart_remove_item_product(guildId)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_remove_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
@@ -113,13 +116,13 @@ const ProductExpiredBox = (props) => {
         } else {
             actionCart
                 .cart_update_item_product(guildId, numberItems - 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
@@ -137,13 +140,13 @@ const ProductExpiredBox = (props) => {
             console.log(numberItems);
             actionCart
                 .cart_update_item_product(guildId, numberItems + 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
