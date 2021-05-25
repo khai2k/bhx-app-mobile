@@ -1,0 +1,56 @@
+import * as _action from './action';
+
+const initialState = [];
+
+const promotionReducer = function (state = initialState, action) {
+    switch (action.type) {
+        case _action.promotionAction.PROMOTIONPAGE_GET:
+            return {
+                ...state,
+                Promotion: action.dataPromotionPage
+            };
+        case _action.promotionAction.TOPDEALPROMOTION_GET:
+            return {
+                ...state,
+                TopDealPromotion: action.dataTopDealPromotion
+            };
+        case _action.promotionAction.LOAD_MORE_PRODUCTS_GROUP: {
+            const cloneGroupCate = state.Promotion.GroupCate.map((element) => {
+                if (
+                    element.CategoryId ===
+                    action.dataLoadMoreProductsGroup.CategoryId
+                ) {
+                    return {
+                        ...element,
+                        Products: [
+                            ...element.Products,
+                            ...action.dataLoadMoreProductsGroup.Value
+                        ],
+                        Query: {
+                            ...element.Query,
+                            PageIndex: element.Query.PageIndex + 1,
+                            PromotionCount:
+                                element.Query.PromotionCount -
+                                element.Query.PageSize
+                        }
+                    };
+                } else {
+                    return element;
+                }
+            });
+            console.log(cloneGroupCate);
+            return {
+                ...state,
+                Promotion: {
+                    ...state.Promotion,
+                    GroupCate: cloneGroupCate
+                }
+            };
+        }
+
+        default:
+            return state;
+    }
+};
+
+export { promotionReducer };

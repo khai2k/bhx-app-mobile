@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -194,14 +195,14 @@ const ComboProductBox = (props) => {
                     style={styles.productImg}>
                     <View className="boxImg" style={styles.boxImg}>
                         <View className="imgContent" style={styles.imgContent}>
-                            <Image
+                            <FastImage
                                 style={styles.comboTheme}
                                 source={{
                                     uri: imageModal.ThemeMobile
                                 }}
                             />
                             <View style={styles.wrapImageProductCombo}>
-                                <Image
+                                <FastImage
                                     style={styles.imageProductCombo}
                                     source={{
                                         uri: imageModal.ImageMobile

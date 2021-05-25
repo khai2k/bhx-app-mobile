@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import BuyBox from './BuyBox';
 import styles from './style';
 
@@ -13,11 +14,6 @@ const ProductBox = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
-
-    // reminder select location
-    const location = useSelector(
-        (state) => state.locationReducer.locationState?.crrLocationRs
-    );
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
@@ -36,10 +32,10 @@ const ProductBox = (props) => {
             setGuildId(cart.ProInCart[idProduct][0]);
             setNumberItems(+cart.ProInCart[idProduct][1]);
             setBuyButtonVisible(true);
-            } else {
-                setNumberItems(1);
-                setBuyButtonVisible(false);
-            }
+        } else {
+            setNumberItems(1);
+            setBuyButtonVisible(false);
+        }
     };
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);
@@ -64,7 +60,7 @@ const ProductBox = (props) => {
                     </Text>
                     {props.bhxProduct.PromotionGiftImgs !== null &&
                     props.bhxProduct.PromotionGiftImgs.trim().length > 0 ? (
-                        <Image
+                        <FastImage
                             style={styles.imagePromotion}
                             source={{
                                 uri: props.bhxProduct.PromotionGiftImgs
@@ -125,6 +121,7 @@ const ProductBox = (props) => {
     };
 
     const addToCart = (productID, expStoreId) => {
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
         actionCart
             .cart_add_item_product(productID, 1, expStoreId)
             .then(async (res) => {
@@ -284,8 +281,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -359,8 +358,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
