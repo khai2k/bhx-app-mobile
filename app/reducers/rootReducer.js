@@ -8,6 +8,7 @@ import { locationReducer } from '../components/Location/reducer';
 import { homeReducer } from '../container/product/reducer';
 import { menuReducer } from '../components/NavMenu/reducer';
 import { productDetailReducer } from '../container/productDetail/reducer';
+import { promotionReducer } from '../container/promotion/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
@@ -17,7 +18,8 @@ const appReducer = combineReducers({
     categoryReducer,
     homeReducer,
     menuReducer,
-    productDetailReducer
+    productDetailReducer,
+    promotionReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {

@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     cartinfo: {
-        backgroundColor: Colors.WHITE
+        backgroundColor: Colors.WHITE,
+        flex: 1
     },
     hr: {
         backgroundColor: Colors.BORDER_GENERAL,
