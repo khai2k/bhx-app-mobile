@@ -200,30 +200,29 @@ const RenderCateChildItem = React.memo((props) => {
     );
 });
 
-// Function search danh sách cate con
-function searchFilter(text, props) {
-    if (text) {
-        const filtered = props.masterData.map((element) => {
-            return {
-                // ...element,
-                data: (element.data || []).filter(
-                    (subElement) =>
-                        subElement.Text.toUpperCase().indexOf(
-                            text.toUpperCase()
-                        ) > -1
-                )
-            };
-        });
-        props.setListCate(filtered);
-        props.setSearch(text);
-    } else {
-        props.setListCate(props.masterData);
-        props.setSearch(text);
-    }
-}
-
 // TextInput Search
 const RenderTextSearch = (props) => {
+    // Function search danh sách cate con
+    function searchFilter(text) {
+        if (text) {
+            const filtered = props.masterData.map((element) => {
+                return {
+                    // ...element,
+                    data: (element.data || []).filter(
+                        (subElement) =>
+                            subElement.Text.toUpperCase().indexOf(
+                                text.toUpperCase()
+                            ) > -1
+                    )
+                };
+            });
+            props.setListCate(filtered);
+            props.setSearch(text);
+        } else {
+            props.setListCate(props.masterData);
+            props.setSearch(text);
+        }
+    }
     return (
         <View style={styles.navRightTop}>
             <TextInput
@@ -266,13 +265,11 @@ const RenderListCatesChild = (props) => {
             const arrParent = ele.ParentId?.split(',');
             return arrParent && arrParent[0] === props.cateFilter;
         });
-        setTimeout(() => {
-            index >= 0 &&
-                refContainer?.current?.scrollToOffset({
-                    animated: true,
-                    offset: (index / 3) * 115
-                });
-        }, 10);
+        index >= 0 &&
+            refContainer?.current?.scrollToOffset({
+                animated: true,
+                offset: (index / 3) * 115
+            });
     }, [props.cateFilter]);
 
     return (

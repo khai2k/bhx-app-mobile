@@ -1,3 +1,1 @@
-export const menuState = {
-
-};
+export const menuState = {};
