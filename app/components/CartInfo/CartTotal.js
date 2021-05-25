@@ -90,6 +90,12 @@ const styles = StyleSheet.create({
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 1,
         padding: 10
+    },
+    textdel: {
+        ...Typography.FONT_REGULAR_14,
+        color: Colors.CART_UNIT,
+        marginRight: 5,
+        textDecorationLine: 'line-through'
     }
 });
 

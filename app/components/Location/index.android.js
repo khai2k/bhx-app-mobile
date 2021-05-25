@@ -12,8 +12,8 @@ class Location extends Component {
         this.state = {};
     }
 
-    componentDidMount() {
-        const hasLocationPermission = PermissionsAndroid.check(
+    async componentDidMount() {
+        const hasLocationPermission = await PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
 
@@ -36,6 +36,7 @@ class Location extends Component {
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             );
         } else {
+            this.props.locationAction.location_getCurrent(10.8516, 106.7975);
             console.log('Denied');
         }
     }

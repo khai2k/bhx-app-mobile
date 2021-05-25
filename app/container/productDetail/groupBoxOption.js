@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { View } from 'react-native';
 import styles from './style';
-import BoxSelect from './boxOption';
+import BoxOption from './boxOption';
 
 class GroupBoxOption extends Component {
     render() {
@@ -11,7 +11,7 @@ class GroupBoxOption extends Component {
             <View style={styles.container}>
                 <View style={styles.productList}>
                     {this.props.exchangeProducts.map((product) => {
-                        return <BoxSelect exchangeProduct={product} />;
+                        return <BoxOption exchangeProduct={product} />;
                     })}
                 </View>
             </View>

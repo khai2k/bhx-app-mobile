@@ -42,7 +42,7 @@ export default class ProductGallery extends Component {
 
     change(nativeEvent) {
         if (nativeEvent) {
-            const slide = Math.ceil(
+            const slide = Math.round(
                 nativeEvent.contentOffset.x /
                     nativeEvent.layoutMeasurement.width
             );
@@ -58,7 +58,7 @@ export default class ProductGallery extends Component {
         const data = this.props.Gallery_product;
         const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.ImageThumb }));
+        const images = data.map((s) => ({ url: s.ImageMobile }));
 
         return (
             <View
@@ -119,7 +119,6 @@ export default class ProductGallery extends Component {
                                     crrImgIdx - 1 < 0
                                         ? DATA_IMAGES_LENGTH - 1
                                         : crrImgIdx - 1;
-                                this.setState({ crrImgIdx: tmpcrridx });
                                 this._sliderRef.scrollTo({
                                     x: tmpcrridx * width,
                                     y: 0,
@@ -149,7 +148,6 @@ export default class ProductGallery extends Component {
                                     crrImgIdx + 1 >= DATA_IMAGES_LENGTH
                                         ? 0
                                         : crrImgIdx + 1;
-                                this.setState({ crrImgIdx: tmpcrridx });
                                 this._sliderRef.scrollTo({
                                     x: tmpcrridx * width,
                                     y: 0,

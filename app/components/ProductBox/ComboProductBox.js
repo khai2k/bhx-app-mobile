@@ -21,20 +21,25 @@ const ComboProductBox = (props) => {
 
     const checkFillButtonBuy = () => {
         const idProduct = props.bhxProduct.Id;
-        if (cart && cart.ProInCart) {
-            if (cart.ProInCart[idProduct]) {
-                setGuildId(cart.ProInCart[idProduct][0]);
-                setNumberItems(+cart.ProInCart[idProduct][1]);
-                setBuyButtonVisible(true);
-            } else {
-                setNumberItems(1);
-                setBuyButtonVisible(false);
-            }
+        if (
+            !helper.isEmptyOrNull(cart) &&
+            !helper.isEmptyOrNull(cart.ProInCart) &&
+            !helper.isEmptyOrNull(cart.ProInCart[idProduct])
+        ) {
+            console.log(`Change button ${props.bhxProduct.Id}`);
+            setGuildId(cart.ProInCart[idProduct][0]);
+            setNumberItems(+cart.ProInCart[idProduct][1]);
+            setBuyButtonVisible(true);
+        } else {
+            console.log(`Reset button ${props.bhxProduct.Id}`);
+            setNumberItems(1);
+            setBuyButtonVisible(false);
         }
     };
     useEffect(() => {
+        console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
-    }, [numberItems, cart.ProInCart[props.bhxProduct.Id]]);
+    }, [cart.Total]);
 
     const handleInputNumber = (number) => {
         if (helper.isEmptyOrNull(number)) {
@@ -77,24 +82,15 @@ const ComboProductBox = (props) => {
     };
 
     const addToCart = () => {
-        setNumberItems(1);
-        setBuyButtonVisible(true);
         actionCart
             .cart_add_item_product(props.bhxProduct.Id, 1)
-            .then((res) => {
+            .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
-                    // setNumberItems(1);
-                    // setBuyButtonVisible(true);
-                    // const infoCartProduct =
-                    //     res.Value?.cart.Cart.ListCartItem.find(
-                    //         (item) => item.Info.Id === props.bhxProduct.Id
-                    //     );
-                    // setGuildId(infoCartProduct.GuildId);
-                    actionCart.cart_get_simple();
+                    await actionCart.cart_get_simple();
                 }
             })
             .catch((error) => {
@@ -105,14 +101,14 @@ const ComboProductBox = (props) => {
         if (numberItems <= 1) {
             actionCart
                 .cart_remove_item_product(guildId)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_remove_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
                         // setBuyButtonVisible(false);
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
@@ -121,14 +117,14 @@ const ComboProductBox = (props) => {
         } else {
             actionCart
                 .cart_update_item_product(guildId, numberItems - 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
                         // setNumberItems(numberItems - 1);
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
@@ -146,14 +142,14 @@ const ComboProductBox = (props) => {
             console.log(numberItems);
             actionCart
                 .cart_update_item_product(guildId, numberItems + 1)
-                .then((res) => {
+                .then(async (res) => {
                     console.log('cart_update_item_product');
                     console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
                         // setNumberItems(numberItems + 1);
-                        actionCart.cart_get_simple();
+                        await actionCart.cart_get_simple();
                     }
                 })
                 .catch((error) => {
