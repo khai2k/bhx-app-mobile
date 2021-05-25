@@ -11,7 +11,8 @@ import {
     TextInput,
     Image,
     ScrollView,
-    Alert
+    Alert,
+    Dimensions
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -23,18 +24,22 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
+const { width: WIDTH } = Dimensions.get('window');
 
 const UserInfo = (props) => {
     useEffect(() => {
         props.actionCart.cart_get();
         props.actionLocation.location_getCurrent();
         setCusPhone(props?.cart?.CustomerPhone);
+        setCusName(props?.cart?.CustomerName);
+        console.log(props?.shipdatetime);
     }, []);
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
     const [isSelectedXHD, setSelectedXHD] = useState(false);
-    const [cusPhone, setCusPhone] = useState();
+    const [cusPhone, setCusPhone] = useState("");
+    const [cusName, setCusName] = useState("");
     const [isPhoneValid, setIsPhoneValid] = useState(false);
 
     return (
@@ -43,7 +48,7 @@ const UserInfo = (props) => {
             <ScrollView style={[styles.container, { marginBottom: 60 }]}>
                 <TouchableOpacity
                     style={styles.backTop}
-                    onpress={() => props.navigation.navigate('Cart')}>
+                    onPress={() => props.navigation.navigate('Cart')}>
                     <Image
                         style={styles.logoback}
                         source={require('../../../assets/images/icon-back.png')}
@@ -52,7 +57,7 @@ const UserInfo = (props) => {
                         Xem lại giỏ hàng
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                     <View style={styles.btnGetHistoryAddress}>
                         <Image
                             style={styles.logohome}
@@ -62,11 +67,11 @@ const UserInfo = (props) => {
                             LẤY ĐỊA CHỈ MUA HÀNG TRƯỚC ĐÂY
                         </Text>
                     </View>
-                </TouchableOpacity>
-                <View style={styles.sectionInput}>
+                </TouchableOpacity> */}
+                <View style={styles.sectionInputTop}>
                     <Text style={styles.stepTitle}>1. Thông tin nhận hàng</Text>
                     <View style={styles.inputAndTit}>
-                        <Text style={styles.absTit}>Số điện thoại *</Text>
+                        <Text style={styles.absTit}>Số điện thoại {<Text style={{color: "#ff001f"}}>*</Text>}</Text>
                         <TextInput
                             style={[
                                 styles.inputBox,
@@ -83,16 +88,23 @@ const UserInfo = (props) => {
                         />
                     </View>
                     {SexRadio(props?.cart?.CustomerGender)}
-                    <TextInput
-                        style={[styles.inputBox]}
-                        placeholder="Họ và tên *"
-                        value={
-                            props?.cart?.CustomerName !== '' &&
-                            props?.cart?.CustomerName !== undefined
-                                ? props?.cart.CustomerName
-                                : ''
-                        }
-                    />
+                    <View style={styles.inputAndTit}>
+                        <Text style={styles.absTit}>Họ và tên {<Text style={{color: "#ff001f"}}>*</Text>}</Text>
+                        <TextInput
+                            style={[
+                                styles.inputBox,
+                                styles.noBorder,
+                                styles.hasAbsTit
+                            ]}
+                            placeholder="Vui lòng nhập Họ và tên"
+                            keyboardType="default"
+                            value={cusName}
+                            onChangeText={(value) => {
+                                setCusName({ value });
+                            }}
+                            onBlur={() => {}}
+                        />
+                    </View>                   
                     {UserProvAndDis(props)}
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
@@ -132,7 +144,7 @@ const UserInfo = (props) => {
                         2. Chọn thời gian nhận hàng
                     </Text>
                     {chosenDeliDate(props)}
-                    {chosenDeliTime(props)}
+                    {chosenDeliTime(null)}
                     <View>
                         <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
                             Mua thêm để miễn phí giao với đơn trên 100.000đ (còn
@@ -168,44 +180,85 @@ const UserInfo = (props) => {
                     />
                 </View>
                 <CartTotal cartInfo={props.cartTotal} />
+                <View style={styles.boxbtn}>
+                    <View style={styles.btn}>
+                        <TouchableOpacity onPress={() => {}}>
+                            <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.btn}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                this.props.navigation.navigate('Cart')
+                            }>
+                            <View>
+                                <Text style={styles.textbtn}>
+                                    Dùng phiếu mua hàng
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.btnbuy}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                props.navigation.navigate('UserInfo')
+                            }>
+                            <View>
+                                <Text style={styles.textbtnbuy}>
+                                    Hoàn tất mua
+                                </Text>
+                                <Text style={styles.textPriceTotal}>
+                                    {props?.cartTotal?.SumTotal > 0 &&
+                                        helper.formatMoney(
+                                            props.cartTotal.SumTotal
+                                        )}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
 };
 const chosenDeliDate = (props) => {
+    const isActive = props?.shipdatetime[0]?.DateList !== null &&
+    props?.shipdatetime[0]?.DateList?.length > 0;
     return (
         <View style={[styles.delichoose]}>
             <Picker
                 selectedValue={0}
                 style={{ height: 50, width: '100%' }}
+                enabled={isActive}
                 onValueChange={(itemValue, itemIndex) =>
-                    props?.shipdatetime?.DateList
+                    {debugger; chosenDeliTime(props?.shipdatetime[0]?.DateList[itemIndex]?.TimeList)}
                 }>
-                {props?.shipdatetime?.DateList !== null &&
-                props?.shipdatetime?.DateList?.length > 0 ? (
-                    props?.shipdatetime?.DateList.map((item) => {
-                        return <Picker.Item label={item} value={item} />;
+                { isActive ? (
+                    props?.shipdatetime[0]?.DateList.map((item) => {
+                        return <Picker.Item label={item.text} value={item.timeid} />;
                     })
                 ) : (
-                    <Picker.Item label="Chọn ngày nhận hàng" value="-1" />
+                    <Picker.Item enable={false} label="Chọn ngày nhận hàng" value="-1" />
                 )}
             </Picker>
         </View>
     );
 };
-const chosenDeliTime = (props) => {
+const chosenDeliTime = (timelist) => {
+    const isActive = timelist !== null && timelist !== undefined &&
+    timelist.length > 0;
     return (
         <View style={[styles.delichoose, { marginTop: 10, marginBottom: 10 }]}>
             <Picker
                 selectedValue={0}
                 style={{ height: 50, width: '100%' }}
+                enabled={isActive}
                 onValueChange={(itemValue, itemIndex) =>
                     props?.cart?.ShiptimeGroupList?.TimeList
                 }>
-                {props?.shipdatetime?.TimeList !== null &&
-                props?.shipdatetime?.TimeList?.length > 0 ? (
-                    props?.shipdatetime?.TimeList.map((item) => {
-                        return <Picker.Item label={item} value={item} />;
+                { isActive ? (
+                    timelist.map((item) => {
+                        return <Picker.Item label={item.text} value={item.id} />;
                     })
                 ) : (
                     <Picker.Item label="Chọn thời gian nhận hàng" value="-1" />

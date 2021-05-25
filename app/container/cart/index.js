@@ -39,10 +39,6 @@ class Cart extends Component {
             });
     };
 
-    handleRemoveCart = () => {
-        this.props.actionCart.cart_remove();
-    };
-
     componentDidMount() {
         this.props.actionCart.cart_get();
     }
@@ -62,10 +58,7 @@ class Cart extends Component {
                             refreshing={this.state.isLoading}
                             onRefresh={this.onRefresh}
                         />
-                    }
-                    contentContainerStyle={{
-                        paddingBottom: 10
-                    }}>
+                    }>
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
@@ -74,7 +67,10 @@ class Cart extends Component {
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <View style={styles.btn}>
-                            <TouchableOpacity onPress={this.handleRemoveCart}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    this.props.navigation.navigate('Cart')
+                                }>
                                 <Text style={styles.textbtn}>
                                     Xóa hết giỏ hàng
                                 </Text>
@@ -106,6 +102,7 @@ class Cart extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    <View style={{ height: 60 }} />
                 </ScrollView>
             </View>
         );
