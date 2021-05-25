@@ -149,119 +149,7 @@ const Box = (props) => {
     const { StockQuantityNew, Price, Sales } = bHXProduct;
     const webStatusId = checkWebStatusId(Price, StockQuantityNew);
     const isSaleOnly = checkIsSaleOnly(webStatusId, Sales);
-    function renderBoxBuy() {
-        return (
-            <View className="boxBuy" style={styles.boxBuy}>
-                <View className="upDown" style={styles.upDownShow}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setNumberItems(
-                                numberItems > 0 ? numberItems - 1 : 0
-                            );
-                            setBuyButtonVisible(numberItems !== 1);
-                        }}
-                        className="down"
-                        style={styles.down}>
-                        <Text style={styles.downIcon} />
-                    </TouchableOpacity>
-                    <TextInput
-                        style={styles.inputBuy}
-                        onChangeText={handleInputNumber}
-                        value={numberItems.toString()}
-                        keyboardType="numeric"
-                    />
-                    <TouchableOpacity
-                        onPress={() => {
-                            setNumberItems(numberItems + 1);
-                        }}
-                        className="up"
-                        style={styles.up}>
-                        <Text style={styles.upIcon1} />
-                        <Text style={styles.upIcon2} />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    }
 
-    function renderBottomBox() {
-        return (
-            <View>
-                {buyButtonVisible ? (
-                    renderBoxBuy()
-                ) : (
-                    <View>
-                        {isSaleOnly ? (
-                            <View style={styles.boxBuy}>
-                                <Text style={styles.ExpiredText}>
-                                    {' '}
-                                    {Sales['6613'].ExpiredText === ''
-                                        ? Sales['6613'].LabelText
-                                        : Sales['6613'].ExpiredText}
-                                </Text>
-                            </View>
-                        ) : (
-                            <View className="boxBuy" style={styles.boxBuy}>
-                                {webStatusId === 3 ? (
-                                    <View
-                                        className="priceInfo"
-                                        style={styles.priceInfo}>
-                                        <View
-                                            className="buy"
-                                            style={styles.buy}>
-                                            <Text>MUA NGAY</Text>
-                                        </View>
-                                    </View>
-                                ) : webStatusId === 5 ? (
-                                    <View style={styles.center}>
-                                        <Text>TẠM HẾT HÀNG</Text>
-                                    </View>
-                                ) : (
-                                    <View style={styles.center}>
-                                        <Text style={{ fontSize: 12 }}>
-                                            NGƯNG KINH DANH
-                                        </Text>
-                                    </View>
-                                )}
-                            </View>
-                        )}
-                    </View>
-                )}
-            </View>
-        );
-    }
-
-    function renderTopBox() {
-        return (
-            <View style={styles.center}>
-                {isSaleOnly ? (
-                    <Text style={{ fontWeight: 'bold' }}>
-                        {Sales &&
-                            `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
-                    </Text>
-                ) : (
-                    <View style={styles.boxBuy}>
-                        <Text>{helper.formatMoney(Price)}</Text>
-                    </View>
-                )}
-            </View>
-        );
-    }
-    function renderSale() {
-        return (
-            <View style={styles.productNearDate}>
-                <Text>
-                    {Sales && `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
-                </Text>
-                <Text style={styles.ExpiredText}>
-                    {' '}
-                    {Sales['6613'].ExpiredText === ''
-                        ? Sales['6613'].LabelText
-                        : Sales['6613'].ExpiredText}
-                </Text>
-            </View>
-        );
-    }
     return (
         <View>
             <View
@@ -272,15 +160,114 @@ const Box = (props) => {
                 }>
                 <TouchableOpacity
                     onPress={() => {
-                        if (webStatusId === 3) {
-                            addToCart(bHXProduct.Id);
+                        if (webStatusId === 3 || isSaleOnly) {
+                            setNumberItems(1);
+                            setBuyButtonVisible(true);
                         }
-                    }}>
-                    {renderTopBox()}
-                    {renderBottomBox()}
+                    }}
+                    style={
+                        buyButtonVisible
+                            ? styles.unvisibleProductBuy
+                            : styles.visibleProductBuy
+                    }>
+                    <View style={styles.center}>
+                        <View style={styles.boxBuy}>
+                            <Text>{helper.formatMoney(Price)}</Text>
+                        </View>
+                    </View>
+                    {isSaleOnly ? (
+                        <View style={styles.boxBuy}>
+                            <Text style={styles.ExpiredText}>
+                                {' '}
+                                {Sales['6613'].ExpiredText === ''
+                                    ? Sales['6613'].LabelText
+                                    : Sales['6613'].ExpiredText}
+                            </Text>
+                        </View>
+                    ) : (
+                        <View className="boxBuy" style={styles.boxBuy}>
+                            {webStatusId === 3 ? (
+                                <View
+                                    className="priceInfo"
+                                    style={styles.priceInfo}>
+                                    <View className="buy" style={styles.buy}>
+                                        <Text>MUA NGAY</Text>
+                                    </View>
+                                </View>
+                            ) : webStatusId === 5 ? (
+                                <View style={styles.center}>
+                                    <Text>TẠM HẾT HÀNG</Text>
+                                </View>
+                            ) : (
+                                <View style={styles.center}>
+                                    <Text style={{ fontSize: 12 }}>
+                                        NGUNG KINH DANH
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
                 </TouchableOpacity>
+                <View
+                    onPress={() => {
+                        setBuyButtonVisible(true);
+                    }}
+                    style={
+                        buyButtonVisible
+                            ? styles.visibleProductBuy
+                            : styles.unvisibleProductBuy
+                    }>
+                    <View style={styles.boxBuy}>
+                        <View style={styles.center}>
+                            <Text>{helper.formatMoney(Price)}</Text>
+                        </View>
+                    </View>
+                    <View className="boxBuy" style={styles.boxBuy}>
+                        <View className="upDown" style={styles.upDownShow}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setNumberItems(
+                                        numberItems > 0 ? numberItems - 1 : 0
+                                    );
+                                    setBuyButtonVisible(numberItems !== 1);
+                                }}
+                                className="down"
+                                style={styles.down}>
+                                <Text style={styles.downIcon} />
+                            </TouchableOpacity>
+                            <TextInput
+                                style={styles.inputBuy}
+                                onChangeText={handleInputNumber}
+                                value={numberItems.toString()}
+                                keyboardType="numeric"
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setNumberItems(numberItems + 1);
+                                }}
+                                className="up"
+                                style={styles.up}>
+                                <Text style={styles.upIcon1} />
+                                <Text style={styles.upIcon2} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
             </View>
-            {Sales !== null && !isSaleOnly && renderSale()}
+            {Sales !== null && !isSaleOnly && (
+                <View style={styles.productNearDate}>
+                    <Text>
+                        {Sales &&
+                            `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
+                    </Text>
+                    <Text style={styles.ExpiredText}>
+                        {' '}
+                        {Sales['6613'].ExpiredText === ''
+                            ? Sales['6613'].LabelText
+                            : Sales['6613'].ExpiredText}
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };
