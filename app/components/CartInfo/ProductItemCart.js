@@ -362,7 +362,7 @@ const ProductItemCart = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.boximg}>
-                <Image
+                <FastImage
                     style={styles.imgbind}
                     source={{
                         uri: props.productCart.Info.Image
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
         borderRadius: 15,
-        left: 0,
+        left: -5,
         paddingHorizontal: 5,
         paddingVertical: 3,
         position: 'absolute',
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
         zIndex: 5
     },
     container: {
-        ...Mixins.padding(10, 5, 10, 5),
+        ...Mixins.padding(10, 0, 10, 10),
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 1,
         flexDirection: 'row',

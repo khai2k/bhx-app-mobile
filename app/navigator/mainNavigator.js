@@ -11,11 +11,13 @@ import Profile from '../container/profile';
 import Product from '../container/product';
 import ProductDetail from '../container/productDetail';
 import Cart from '../container/cart';
+import UserInfo from '../container/userinfocart';
 import Group from '../container/group';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
 import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
+import SuggestSearch from '../container/SuggestSearch/md';
 import UseVoucher from '../container/useVoucher';
 
 const MainStack = createStackNavigator();
@@ -52,6 +54,15 @@ const MainNavigator = () => {
                 }}
             />
             <MainStack.Screen
+                name="UserInfo"
+                component={UserInfo}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
                 name="NavMenu"
                 component={NavMenu}
                 options={({ route }) => {
@@ -72,6 +83,15 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="OrderSuccess"
                 component={OrderSuccess}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="SuggestSearch"
+                component={SuggestSearch}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);

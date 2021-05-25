@@ -390,7 +390,7 @@ export const apiBase = (
                         method
                     };
                 }
-                // console.log('API REQUEST: ', url, requests);
+                console.log('API REQUEST: ', url, requests);
                 timeout(15000, fetch(url, requests))
                     .catch(handleError) // handle network issues
                     .then(checkStatus)

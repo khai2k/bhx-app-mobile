@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderColor: 'green',
         justifyContent: 'center',
+        alignItems: 'center',
         borderWidth: 1,
         borderRadius: 5,
         marginLeft: 15,
@@ -94,7 +95,8 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginRight: 15,
         marginTop: 10,
-        marginBottom: 5
+        marginBottom: 5,
+        alignItems: 'center'
     },
     buttonContainer: {
         marginLeft: 15,
@@ -131,15 +133,13 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         position: 'absolute',
-        left: 25
+        left: -35
     },
     iconEdit: {
         resizeMode: 'contain',
         width: 20,
         height: 20,
-        position: 'absolute',
-        left: 25,
-        top: 5
+        marginRight: 3
     },
     editText: {
         textAlign: 'center',

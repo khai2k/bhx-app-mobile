@@ -7,7 +7,8 @@ const cartReducer = function (state = _state.cartState, action) {
             return {
                 ...state,
                 Cart: action.cartInfo.Cart,
-                CartTotal: action.cartInfo.CartTotal
+                CartTotal: action.cartInfo.CartTotal,
+                ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
             };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {
@@ -24,8 +25,13 @@ const cartReducer = function (state = _state.cartState, action) {
         case _action.cartAction.CART_ADD_ITEM_PRODUCT:
             return {
                 ...state,
-                Cart: action.cartInfo.Cart,
-                CartTotal: action.cartInfo.CartTotal
+                Cart: action.cartInfo.cart.Cart,
+                CartTotal: action.cartInfo.cart.CartTotal
+            };
+        case _action.cartAction.CART_GET_SIMPLE:
+            return {
+                ...state,
+                CartSimple: action.cartInfo
             };
         default:
             return state;

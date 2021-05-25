@@ -242,9 +242,9 @@ const ModalLocation = (props) => {
                                 lstProvince.length && (
                                     <FlatList
                                         data={lstProvince}
-                                        keyExtractor={(index) => {
-                                            `prov_${index}`;
-                                        }}
+                                        keyExtractor={(item, index) =>
+                                            `prov_${index}`
+                                        }
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={
@@ -290,9 +290,9 @@ const ModalLocation = (props) => {
                                 lstDistrict.length > 0 && (
                                     <FlatList
                                         data={lstDistrict}
-                                        keyExtractor={(index) => {
-                                            `dic_${index}`;
-                                        }}
+                                        keyExtractor={(item, index) =>
+                                            `dic_${index}`
+                                        }
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={
@@ -332,9 +332,9 @@ const ModalLocation = (props) => {
                                 lstWard.length > 0 && (
                                     <FlatList
                                         data={lstWard}
-                                        keyExtractor={(index) => {
-                                            `ward_${index}`;
-                                        }}
+                                        keyExtractor={(item, index) =>
+                                            `ward_${index}`
+                                        }
                                         renderItem={({ item }) => (
                                             <TouchableOpacity
                                                 style={

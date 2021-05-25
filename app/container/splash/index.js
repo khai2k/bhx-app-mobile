@@ -22,7 +22,8 @@ class Splash extends Component {
     componentDidMount() {
         // Lấy dữ liệu menu
         this.props.actionGetMenu.menu_get();
-        this.props.actionCart.cart_get();
+        this.props.actionCart.cart_get_simple();
+
         const { isShowSplash } = this.props;
         messaging()
             .getToken()

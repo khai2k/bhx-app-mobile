@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     },
     boxBuy: {
         alignItems: 'center',
-        backgroundColor: Colors.WHITE,
         borderBottomLeftRadius: 7,
         borderBottomRightRadius: 7,
         borderTopColor: Colors.CATSKILL_WHITE,

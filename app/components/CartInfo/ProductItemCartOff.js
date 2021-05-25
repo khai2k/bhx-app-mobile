@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         zIndex: 5
     },
     container: {
-        ...Mixins.padding(10, 5, 10, 5),
+        ...Mixins.padding(10, 0, 10, 10),
         borderColor: Colors.BORDER_GENERAL,
         borderTopWidth: 1,
         flexDirection: 'row',
