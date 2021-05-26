@@ -38,3 +38,6 @@ export const API_GET_GALLERY_PRODUCT = `${API_BASE}product/GalleryProduct`;
 export const API_GET_PROMOTIONPAGE_GETLISTCATEGORY = `${API_BASE}PromotionPage/GetListCategory`;
 export const API_GET_TOPDEALPROMOTION = `${API_BASE}PromotionPage/TopDealPromotion`;
 export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxProductsGroup`;
+
+// Search
+export const API_GET_SEARCH = `${API_BASE}SearchPage/Get`;

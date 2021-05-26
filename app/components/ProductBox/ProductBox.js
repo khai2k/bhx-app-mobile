@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
 import * as locationCreator from '@app/components/Location/action';
 import FastImage from 'react-native-fast-image';
+import HTML from 'react-native-render-html';
 import BuyBox from './BuyBox';
 import styles from './style';
 
