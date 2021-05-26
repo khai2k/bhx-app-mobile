@@ -17,7 +17,7 @@ export const location_getCurrent = function (crrLat, crrLong) {
         };
         apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
             .then((response) => {
-                const tmpData = response.OrtherData;
+                const tmpData = response.OtherData;
 
                 const crrLocationRs = { ...tmpData, FullAddress: '' };
                 if (response.ResultCode === 0) {
