@@ -120,10 +120,15 @@ const ProductBox = (props) => {
         }
     };
 
-    const addToCart = (productID, expStoreId) => {
+    const addToCart = (
+        productID,
+        expStoreId = 0,
+        quantity = 1,
+        increase = true
+    ) => {
         console.log(`Begin addToCart ${props.bhxProduct.Id}`);
         actionCart
-            .cart_add_item_product(productID, 1, expStoreId)
+            .cart_add_item_product(productID, quantity, increase, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
@@ -142,99 +147,8 @@ const ProductBox = (props) => {
                 alertAPI(error);
             });
     };
-    const setQuantityMinus = () => {
-        console.log(`Begin setQuantityMinus ${props.bhxProduct.Id}`);
-
-        if (numberItems <= 1) {
-            actionCart
-                .cart_remove_item_product(guildId)
-                .then(async (res) => {
-                    console.log('cart_remove_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setBuyButtonVisible(false);
-                        console.log(
-                            `End setQuantityMinus ${props.bhxProduct.Id}`
-                        );
-
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems - 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setNumberItems(numberItems - 1);
-                        console.log(
-                            `End setQuantityMinus ${props.bhxProduct.Id}`
-                        );
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
-
-    const setQuantityPlus = () => {
-        console.log(`Begin setQuantityPlus ${props.bhxProduct.Id}`);
-
-        if (numberItems > 50) {
-            alertMaxQuantityItemProduct();
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems + 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setNumberItems(numberItems + 1);
-                        console.log(
-                            `End setQuantityPlus ${props.bhxProduct.Id}`
-                        );
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityPlus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
     const alertAPI = (messages) => {
         Alert.alert('', messages);
-    };
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý'
-            }
-        ]);
     };
 
     return (
@@ -298,8 +212,7 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy={false}
                         numberItems={numberItems}
-                        setQuantityMinus={setQuantityMinus}
-                        setQuantityPlus={setQuantityPlus}
+                        addToCart={addToCart}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
@@ -378,8 +291,7 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy
                         numberItems={numberItems}
-                        setQuantityMinus={setQuantityMinus}
-                        setQuantityPlus={setQuantityPlus}
+                        addToCart={addToCart}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
