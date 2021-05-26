@@ -85,10 +85,10 @@ const Product = (props) => {
             </TouchableOpacity>
         ) : null;
     };
-    if (listProductLoadMore && listProductLoadMore.length > 0) {
-        console.log(
-            `Render list product ${listProductLoadMore.length}, ${pageIndex}, ${Total}, ${Products.length}`
-        );
+    if (
+        !helper.isEmptyOrNull(listProductLoadMore) &&
+        listProductLoadMore.length > 0
+    ) {
         return (
             <FlatList
                 numColumns={3}
