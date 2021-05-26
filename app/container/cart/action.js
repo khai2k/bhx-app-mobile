@@ -21,20 +21,32 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            // consoleconst cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                '6E941396616C945AEB5A8EB061E900330076C10B8EA2896F953ACFD4336FFDDD';
             const location = getState().locationReducer;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.crrLocationRs.ProvinceId,
-                districtId: location.crrLocationRs.DistrictId,
-                wardId: location.crrLocationRs.WardId,
-                storeId: location.crrLocationRs.StoreId,
+                provinceId: 3,
+                districtId: 2087,
+                wardId: 27116,
+                storeId: 6463,
                 data: {
                     cartId
                 }
             };
+            // const bodyApi = {
+            //     token: cartId,
+            //     us: '',
+            //     provinceId: location.crrLocationRs.ProvinceId,
+            //     districtId: location.crrLocationRs.DistrictId,
+            //     wardId: location.crrLocationRs.WardId,
+            //     storeId: location.crrLocationRs.StoreId,
+            //     data: {
+            //         cartId
+            //     }
+            // };
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_GET Data:', response);
