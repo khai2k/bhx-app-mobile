@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
 import * as categoryCreator from '@app/container/group/action';
+import { helper } from '@app/common';
 import FilterPopup from './FilterPopup';
 
 const PropertyFilter = (props) => {
@@ -49,9 +50,9 @@ const PropertyFilter = (props) => {
         setVisiblePopup(status);
     };
 
-    let listAllProperties = props.properties.flatMap(
-        (property) => property.ProductPropValueBOLst
-    );
+    let listAllProperties = !helper.isEmptyOrNull(props.properties)
+        ? props.properties.flatMap((property) => property.ProductPropValueBOLst)
+        : [];
     listAllProperties = [...listAllProperties, ...ListSort];
     const replaceBetween = (start, end, currentString, replaceString) => {
         return (

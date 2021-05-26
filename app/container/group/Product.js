@@ -96,6 +96,8 @@ const Product = (props) => {
                 keyExtractor={(item) => `product_${item.Id}`}
                 renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 ListFooterComponent={loadMoreButton}
+                onRefresh={() => props.onRefresh()}
+                refreshing={props.isLoading}
             />
         );
     } else {
