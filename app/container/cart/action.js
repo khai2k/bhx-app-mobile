@@ -228,12 +228,16 @@ export const cart_add_item_product = function (
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_ADD_ITEM_PRODUCT,
-                        cartInfo
-                    });
-                    resolve(response);
+                    if (response.ResultCode > 0) {
+                        resolve(response);
+                    } else {
+                        const cartInfo = response.Value;
+                        dispatch({
+                            type: CART_ADD_ITEM_PRODUCT,
+                            cartInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);

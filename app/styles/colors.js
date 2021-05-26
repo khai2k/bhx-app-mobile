@@ -67,6 +67,7 @@ export const CORN_SILK = '#FEF8E1';
 export const MILAN = '#F5F896';
 export const ORANGE_1 = '#FFA803';
 export const TURBO = '#FFF101';
+export const GOLDEN_BELL = '#DA880D';
 
 // PURPLE
 export const JACKSONS_PURPLE = 'rgba(53,56,138,1)';
