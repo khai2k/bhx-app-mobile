@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {
     Text,
-    Image,
     View,
     TouchableOpacity,
     TextInput,

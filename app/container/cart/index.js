@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 import {
     Header,
     CartTotal,
+    CartEmpty,
     ProductItemCart,
     ProductItemCartOff
 } from '@app/components';
@@ -52,6 +53,17 @@ class Cart extends Component {
     }
 
     render() {
+        if (
+            this.props.cart.ListCartItemBuy == null ||
+            helper.IsEmptyArray(this.props.cart.ListCartItemBuy)
+        ) {
+            return (
+                <View>
+                    <Header />
+                    <CartEmpty />
+                </View>
+            );
+        }
         return (
             <View style={styles.cartinfo}>
                 <Header />
