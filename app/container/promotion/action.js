@@ -5,13 +5,15 @@ const TOPDEALPROMOTION_GET = 'TOPDEALPROMOTION_GET';
 const LOAD_MORE_PRODUCTS_GROUP = 'LOAD_MORE_PRODUCTS_GROUP';
 const GET_PRODUCT_BY_SUB_CATE = 'GET_PRODUCT_BY_SUB_CATE';
 const DATA_LOADING = 'DATA_LOADING';
+const DATA_LOADED = 'DATA_LOADED';
 
 export const promotionAction = {
     PROMOTIONPAGE_GET,
     TOPDEALPROMOTION_GET,
     LOAD_MORE_PRODUCTS_GROUP,
     GET_PRODUCT_BY_SUB_CATE,
-    DATA_LOADING
+    DATA_LOADING,
+    DATA_LOADED
 };
 
 // Param để lấy danh sách cate
@@ -64,6 +66,7 @@ export const promotionPage_get = function () {
                     type: PROMOTIONPAGE_GET,
                     dataPromotionPage
                 });
+                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -133,6 +136,7 @@ export const loadMoreProductsGroup_post = (
                     type: LOAD_MORE_PRODUCTS_GROUP,
                     dataLoadMoreProductsGroup
                 });
+                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -171,6 +175,7 @@ export const productBySubCate_post = (
                     type: GET_PRODUCT_BY_SUB_CATE,
                     dataProductBySubCate
                 });
+                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);

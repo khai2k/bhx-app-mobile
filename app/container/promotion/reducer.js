@@ -9,11 +9,15 @@ const promotionReducer = function (state = initialState, action) {
                 ...state,
                 IsLoading: true
             };
+        case _action.promotionAction.DATA_LOADED:
+            return {
+                ...state,
+                IsLoading: false
+            };
         case _action.promotionAction.PROMOTIONPAGE_GET:
             return {
                 ...state,
-                Promotion: action.dataPromotionPage,
-                IsLoading: false
+                Promotion: action.dataPromotionPage
             };
         case _action.promotionAction.TOPDEALPROMOTION_GET:
             return {
@@ -49,8 +53,7 @@ const promotionReducer = function (state = initialState, action) {
                 Promotion: {
                     ...state.Promotion,
                     GroupCate: cloneGroupCate
-                },
-                IsLoading: false
+                }
             };
         }
         case _action.promotionAction.GET_PRODUCT_BY_SUB_CATE: {
@@ -83,8 +86,7 @@ const promotionReducer = function (state = initialState, action) {
                 Promotion: {
                     ...state.Promotion,
                     GroupCate: cloneSubCate
-                },
-                IsLoading: false
+                }
             };
         }
 
