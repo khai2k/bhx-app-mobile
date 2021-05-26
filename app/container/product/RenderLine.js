@@ -22,6 +22,18 @@ const RenderLine = (props) => {
     const [totalProduct, setTotalProduct] = useState(
         props.lineItem.PromotionCount
     );
+    const [listMainCateId, setListMainCateId] = useState([]);
+    if (
+        props.lineItem.CategoryId === 8686 &&
+        props.lineItem.Categorys !== null &&
+        listMainCateId.length <= 0
+    ) {
+        const listId = [];
+        props.lineItem.Categorys?.map((item) => {
+            return listId.push(item.Id);
+        });
+        setListMainCateId(listId);
+    }
 
     function GenMoreProduct(currentPage, categoryIds) {
         // Chỉ lấy 9 productid mới nhất truyền vô excludeProductIds
@@ -68,13 +80,50 @@ const RenderLine = (props) => {
             });
     }
 
+    function GetProductMainCate(category) {
+        const listChildCateId =
+            category.VirtualChildCateIds !== null &&
+            category.VirtualChildCateIds.length > 0
+                ? category.VirtualChildCateIds.toString()
+                : '';
+        console.log('listMainCateId', listMainCateId?.toString());
+        console.log('listChildCateId', listChildCateId);
+    }
+
+    const ShowMainCate = () => {
+        return (
+            props.lineItem.CategoryId === 8686 && (
+                <View style={styles.boxCategory}>
+                    <FlatList
+                        horizontal
+                        data={props.lineItem.Categorys}
+                        keyExtractor={(item) => item.Id}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    GetProductMainCate(item);
+                                }}>
+                                <View>
+                                    <Text
+                                        style={[
+                                            styles.categoryItem,
+                                            styles.categoryItem_black
+                                        ]}>
+                                        {item.Name}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+            )
+        );
+    };
+
     return (
         <View>
             {/* Danh sách cate line fresh 8686 */}
-            <ShowMainCate
-                categories={props.lineItem.Categorys}
-                categoryId={props.lineItem.CategoryId}
-            />
+            <ShowMainCate />
             {/* Render Product */}
             <SafeAreaView style={styles.productList}>
                 <FlatList
@@ -111,34 +160,6 @@ const RenderLine = (props) => {
                     )}
             </SafeAreaView>
         </View>
-    );
-};
-
-const ShowMainCate = (props) => {
-    const { categories, categoryId } = props;
-    return (
-        categoryId === 8686 && (
-            <View style={styles.boxCategory}>
-                <FlatList
-                    horizontal
-                    data={categories}
-                    keyExtractor={(item) => item.Id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity>
-                            <View>
-                                <Text
-                                    style={[
-                                        styles.categoryItem,
-                                        styles.categoryItem_black
-                                    ]}>
-                                    {item.Name}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
-        )
     );
 };
 
