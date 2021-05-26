@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-color-literals */
 import { StyleSheet } from 'react-native';
+import { Colors, Typography } from '@app/styles';
 
 const styles = StyleSheet.create({
     absTit: {
@@ -15,6 +16,21 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 5
     },
+    boxbtn: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingBottom: 10
+    },
+    btn: {
+        borderColor: Colors.CART_BORDER_BTN,
+        borderRadius: 10,
+        borderWidth: 1,
+        height: 50,
+        justifyContent: 'center',
+        padding: 5,
+        width: '30%'
+    },
     btnGetHistoryAddress: {
         alignItems: 'center',
         backgroundColor: '#fff',
@@ -22,6 +38,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         padding: 15
+    },
+    btnbuy: {
+        backgroundColor: Colors.BG_BUTTON_BUY,
+        borderColor: Colors.CART_BORDER_BTN,
+        borderRadius: 10,
+        borderWidth: 1,
+        height: 50,
+        justifyContent: 'center',
+        padding: 5,
+        width: '30%'
     },
     checkbox: {
         alignSelf: 'center'
@@ -142,6 +168,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         padding: 10
     },
+    sectionInputTop: {
+        backgroundColor: '#fff',
+        padding: 10
+    },
     stepTitle: {
         fontSize: 17,
         fontWeight: 'bold',
@@ -150,6 +180,20 @@ const styles = StyleSheet.create({
     textHistoryAddress: {
         color: '#3B854E',
         fontWeight: '600',
+        textAlign: 'center'
+    },
+    textPriceTotal: {
+        color: Colors.WHITE,
+        fontSize: 13,
+        textAlign: 'center'
+    },
+    textbtn: {
+        ...Typography.FONT_BOLD_14,
+        textAlign: 'center'
+    },
+    textbtnbuy: {
+        ...Typography.FONT_BOLD_14,
+        color: Colors.WHITE,
         textAlign: 'center'
     },
     wardBox: {
