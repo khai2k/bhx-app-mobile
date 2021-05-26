@@ -55,9 +55,9 @@ const RenderLine = (props) => {
         apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
             .then((response) => {
                 setProducts([...products, ...response.Value]);
-                if (response.OrtherData?.TotalRest > 0) {
+                if (response.OtherData?.TotalRest > 0) {
                     setPageIndex(pageIndex + 1);
-                    setTotalProduct(response.OrtherData.TotalRest);
+                    setTotalProduct(response.OtherData.TotalRest);
                 } else {
                     setPageIndex(1);
                     setTotalProduct(0);

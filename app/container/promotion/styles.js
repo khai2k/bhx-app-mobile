@@ -88,6 +88,16 @@ export const styles = StyleSheet.create({
         paddingVertical: 10,
         textAlign: 'center'
     },
+    loading: {
+        height: '100%',
+        position: 'absolute',
+        width: '100%'
+    },
+    loadingActive: {
+        backgroundColor: Colors.GRAY_F8FBFF,
+        opacity: 0.3,
+        zIndex: 1
+    },
     lstProducts: {
         marginBottom: 10
     },
