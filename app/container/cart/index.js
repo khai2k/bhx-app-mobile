@@ -10,6 +10,8 @@ import { bindActionCreators } from 'redux';
 import {
     Header,
     CartTotal,
+    CartEmpty,
+    LoadingCart,
     ProductItemCart,
     ProductItemCartOff
 } from '@app/components';
@@ -23,7 +25,7 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false
+            isLoading: true
         };
     }
 
@@ -39,8 +41,14 @@ class Cart extends Component {
             });
     };
 
+    handleRemoveCart = () => {
+        this.props.actionCart.cart_remove();
+    };
+
     componentDidMount() {
-        this.props.actionCart.cart_get();
+        this.props.actionCart.cart_get().then((res) => {
+            this.setState({ isLoading: false });
+        });
     }
 
     componentDidUpdate() {
@@ -48,17 +56,40 @@ class Cart extends Component {
     }
 
     render() {
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.cartinfo}>
+                    <Header />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                </View>
+            );
+        } else if (
+            this.props.cart.ListCartItemBuy == null ||
+            helper.IsEmptyArray(this.props.cart.ListCartItemBuy)
+        ) {
+            return (
+                <View style={styles.cartempty}>
+                    <Header />
+                    <CartEmpty />
+                </View>
+            );
+        }
         return (
             <View style={styles.cartinfo}>
                 <Header />
                 <ScrollView
-                    style={{ marginBottom: 80 }}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isLoading}
                             onRefresh={this.onRefresh}
                         />
-                    }>
+                    }
+                    contentContainerStyle={{
+                        paddingBottom: 10
+                    }}>
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
@@ -67,10 +98,7 @@ class Cart extends Component {
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <View style={styles.btn}>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    this.props.navigation.navigate('Cart')
-                                }>
+                            <TouchableOpacity onPress={this.handleRemoveCart}>
                                 <Text style={styles.textbtn}>
                                     Xóa hết giỏ hàng
                                 </Text>
@@ -102,7 +130,6 @@ class Cart extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{ height: 60 }} />
                 </ScrollView>
             </View>
         );

@@ -12,7 +12,7 @@ import BuyBox from './BuyBox';
 import styles from './style';
 
 const ProductBox = (props) => {
-    console.log(`Init ProductBox ${props.bhxProduct.Id}`);
+    // console.log(`Init ProductBox ${props.bhxProduct.Id}`);
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
@@ -41,7 +41,7 @@ const ProductBox = (props) => {
         }
     };
     useEffect(() => {
-        console.log(`Fill button ${props.bhxProduct.Id}`);
+        // console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
     }, [cart.Total]);
 

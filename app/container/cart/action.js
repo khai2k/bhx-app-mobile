@@ -21,32 +21,19 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            // consoleconst cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            const cartId =
-                '6E941396616C945AEB5A8EB061E900330076C10B8EA2896F953ACFD4336FFDDD';
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 2087,
-                wardId: 27116,
-                storeId: 6463,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId
                 }
             };
-            // const bodyApi = {
-            //     token: cartId,
-            //     us: '',
-            //     provinceId: location.crrLocationRs.ProvinceId,
-            //     districtId: location.crrLocationRs.DistrictId,
-            //     wardId: location.crrLocationRs.WardId,
-            //     storeId: location.crrLocationRs.StoreId,
-            //     data: {
-            //         cartId
-            //     }
-            // };
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_GET Data:', response);
@@ -194,7 +181,6 @@ export const cart_add_item_product = function (
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -225,6 +211,7 @@ export const cart_add_item_product = function (
                     isInCartSite: false
                 }
             };
+            console.log(bodyApi);
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);

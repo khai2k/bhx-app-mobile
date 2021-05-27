@@ -13,7 +13,8 @@
         "prettier": "prettier --write ./app",
         "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
         "eslint": "node_modules/.bin/eslint \"./**/*.js\"",
-        "pod-install": "cd ios && pod install"
+        "pod-install": "cd ios && pod install",
+        "build-android-prod": "cd android && ./gradlew assembleRelease"
     },
     "lint-staged": {
         "app/**/*.{js,ts,tsx}": [
@@ -53,8 +54,8 @@
         "react-native": "0.64.0",
         "react-native-code-push": "git+https://sourceapp.tgdd.vn/appplugins/react-native-code-push-0.60.git",
         "react-native-config": "^1.4.2",
-        "react-native-fast-image": "^8.3.4",
         "react-native-dropdown-picker": "^5.1.16",
+        "react-native-fast-image": "^8.3.4",
         "react-native-fs": "^2.17.0",
         "react-native-geolocation-service": "^5.3.0-beta.1",
         "react-native-gesture-handler": "^1.10.3",
@@ -71,6 +72,7 @@
         "react-native-show-hide-toggle-box": "^1.0.1",
         "react-native-snap-carousel": "^1.6.1",
         "react-native-sticky-parallax-header": "^0.4.0",
+        "react-native-svg": "^12.1.1",
         "react-native-swiper-flatlist": "^3.0.14",
         "react-native-vector-icons": "^8.1.0",
         "react-redux": "^7.2.4",
