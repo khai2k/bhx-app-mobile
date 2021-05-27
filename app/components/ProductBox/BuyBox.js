@@ -5,7 +5,16 @@ import styles from './style';
 
 const BuyBox = (props) => {
     const [quantity, setQuantity] = useState(props.numberItems);
-    useEffect(() => setQuantity(props.numberItems));
+    useEffect(() => setQuantity(props.numberItems), [props.numberItems]);
+
+    const inputQuantity = (number) => {
+        if (number !== '') {
+            setQuantity(+number);
+        } else {
+            setQuantity(0);
+        }
+    };
+
     if (props.isPageExpired) {
         const expStore = props.bhxProduct.ExpStoreId;
         const obj =
@@ -44,10 +53,21 @@ const BuyBox = (props) => {
                             <TextInput
                                 style={styles.inputBuy}
                                 onChangeText={(number) => {
-                                    setQuantity(+number);
+                                    inputQuantity(number);
                                 }}
                                 onSubmitEditing={(e) => {
-                                    props.handleInputNumber(e.nativeEvent.text);
+                                    props.handleInputNumber(
+                                        obj.ProductId,
+                                        expStore,
+                                        e.nativeEvent.text
+                                    );
+                                }}
+                                onBlur={(e) => {
+                                    props.handleInputNumber(
+                                        obj.ProductId,
+                                        expStore,
+                                        e.nativeEvent.text
+                                    );
                                 }}
                                 value={quantity.toString()}
                                 keyboardType="numeric"
@@ -127,10 +147,21 @@ const BuyBox = (props) => {
                     <TextInput
                         style={styles.inputBuy}
                         onChangeText={(number) => {
-                            setQuantity(+number);
+                            inputQuantity(number);
                         }}
                         onSubmitEditing={(e) => {
-                            props.handleInputNumber(e.nativeEvent.text);
+                            props.handleInputNumber(
+                                props.bhxProduct.Id,
+                                0,
+                                e.nativeEvent.text
+                            );
+                        }}
+                        onBlur={(e) => {
+                            props.handleInputNumber(
+                                props.bhxProduct.Id,
+                                0,
+                                e.nativeEvent.text
+                            );
                         }}
                         value={quantity.toString()}
                         keyboardType="numeric"
