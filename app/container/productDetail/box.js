@@ -36,7 +36,7 @@ const Box = (props) => {
         }
     };
     useEffect(() => {
-        console.log(`Fill button ${props.bHXProduct.Id}`);
+        // console.log(`Fill button ${props.bHXProduct.Id}`);
         checkFillButtonBuy();
     }, [cart.Total]);
     const alertAPI = (messages) => {
