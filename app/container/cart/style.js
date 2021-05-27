@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
         padding: 5,
         width: '30%'
     },
+    cartempty: {
+        backgroundColor: Colors.CART_BG_EMPTY
+    },
     cartinfo: {
         backgroundColor: Colors.WHITE,
         flex: 1

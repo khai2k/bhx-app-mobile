@@ -14,6 +14,7 @@ class Group extends Component {
         this.state = {
             isLoading: true
         };
+        this.refreshGroup = this.refreshGroup.bind(this);
     }
 
     async componentDidMount() {
@@ -29,6 +30,29 @@ class Group extends Component {
         };
         await this.props.actionCategory.category_get(option);
         this.setState({ isLoading: false });
+    }
+
+    refreshGroup() {
+        this.setState({ isLoading: true }, async () => {
+            const option = {
+                params: {
+                    categoryUrl: this.props.route.params.url,
+                    provinceId: 3,
+                    storeId: 6463,
+                    phone: 0,
+                    isMobile: 'true',
+                    clearcache: ''
+                }
+            };
+            await this.props.actionCategory
+                .category_get(option)
+                .then((res) => {
+                    this.setState({ isLoading: false });
+                })
+                .catch(() => {
+                    this.setState({ isLoading: false });
+                });
+        });
     }
 
     render() {
@@ -59,6 +83,8 @@ class Group extends Component {
                     selectedBrand={this.props.categoryInfo.SelectedBrand}
                     selectedProps={this.props.categoryInfo.SelectedProps}
                     selectedSort={this.props.categoryInfo.SelectedSort}
+                    onRefresh={this.refreshGroup}
+                    isLoading={this.state.isLoading}
                 />
             </SafeAreaView>
         );

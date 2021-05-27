@@ -8,9 +8,11 @@ import {
     Text,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import { helper } from '@app/common';
 // import * as orderSuccessCreator from './action';
 // import CancelOrderModal from './cancelOrderModal';
 import Header from '../../components/Header';
@@ -36,17 +38,25 @@ class OrderSuccess extends Component {
             method: 'post',
             url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult',
             data: {
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                Sc: 'E214C53EC0384610FE95151117020DA6',
-                OrderId: 43225473
+                token: '',
+                us: '',
+                provinceId: 3,
+                districtId: 51,
+                wardId: 10399,
+                storeId: 6463,
+                data: {
+                    ProvinceId: 3,
+                    DistrictId: 51,
+                    WardId: 10399,
+                    StoreId: 6463,
+                    Sc: '36453A19D07F4258AC18570F1960E391',
+                    OrderId: 43422249
+                },
+                IsMobile: true
             }
         })
             .then((res) => {
                 const { data } = res;
-                console.log('data', data);
                 const orderInfo = data.Value;
                 this.setState({
                     totalPrice: orderInfo.Total,
@@ -133,7 +143,8 @@ class OrderSuccess extends Component {
                     <View style={styles.dot} />
                     <Text>Tổng tiền: </Text>
                     <Text style={{ fontWeight: 'bold' }}>
-                        {this.state.totalPrice}đ
+                        {this.state.totalPrice &&
+                            helper.formatMoney(this.state.totalPrice)}
                     </Text>
                     <TouchableOpacity
                         onPress={() =>
@@ -179,30 +190,30 @@ class OrderSuccess extends Component {
             <View style={styles.buttonContainer}>
                 <Text>Thanh toán khi nhận hàng bằng cách:</Text>
                 <View style={styles.buttonRow}>
-                    <View style={styles.boxRow}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.setState({
-                                    doneIcon: true,
-                                    purchaseMethodText: 'tiền mặt'
-                                })
-                            }>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                doneIcon: true,
+                                purchaseMethodText: 'tiền mặt'
+                            })
+                        }>
+                        <View style={styles.boxRow}>
                             {this._renderDoneIcon1()}
                             <Text style={styles.textButton}>Tiền mặt</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.boxRow}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.setState({
-                                    doneIcon: false,
-                                    purchaseMethodText: 'cà thẻ'
-                                })
-                            }>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                doneIcon: false,
+                                purchaseMethodText: 'cà thẻ'
+                            })
+                        }>
+                        <View style={styles.boxRow}>
                             {this._renderDoneIcon2()}
                             <Text style={styles.textButton}>Cà thẻ</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </View>
             </View>
         );

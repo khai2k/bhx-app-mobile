@@ -23,12 +23,10 @@ class Splash extends Component {
         // Lấy dữ liệu menu
         this.props.actionGetMenu.menu_get();
         this.props.actionCart.cart_get_simple();
-
         const { isShowSplash } = this.props;
         messaging()
             .getToken()
             .then((token) => {
-                console.log('messaging');
                 console.log(token);
                 return saveTokenToDatabase(token);
             });
@@ -55,8 +53,6 @@ const saveTokenToDatabase = (token) => {
 };
 
 const mapStateToProps = (state) => {
-    console.log(state);
-    console.log('mapStateToProps authenReducer');
     return {
         isShowSplash: state.authenReducer.isShowSplash
     };

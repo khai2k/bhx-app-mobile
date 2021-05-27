@@ -14,6 +14,8 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
 import * as categoryCreator from '@app/container/group/action';
+import { helper } from '@app/common';
+import { ImageNavMenu } from '../../images';
 
 const { width, height } = Dimensions.get('window');
 
@@ -138,8 +140,8 @@ const FilterPopup = (props) => {
                         className="closeFilter"
                         style={styles.closeFilter}>
                         <Image
-                            style={styles.iconSearch}
-                            source={require('../../../assets/images/searchFilterCate.png')}
+                            style={styles.iconClose}
+                            source={ImageNavMenu.imgIconClose}
                         />
                         <Text style={styles.closeFilterText}>Đóng</Text>
                     </TouchableOpacity>
@@ -174,84 +176,88 @@ const FilterPopup = (props) => {
                             })}
                         </View>
                     </View>
-                    {props.properties.map((property) => {
-                        return (
-                            <View
-                                key={`popup_mainprop_${property.PropertyName}`}
-                                className="boxFilter">
-                                <Text style={styles.filterTitle}>
-                                    {property.PropertyName}
-                                </Text>
-                                <View style={styles.listFilter}>
-                                    {property.ProductPropValueBOLst.map(
-                                        (propValue) => {
-                                            return (
-                                                <TouchableOpacity
-                                                    key={`popup_prop_${propValue.ValueID}`}
-                                                    onPress={() => {
-                                                        selectProperty(
-                                                            `${propValue.PropertyID}:${propValue.ValueID}`
-                                                        );
-                                                    }}
-                                                    style={styles.it}>
-                                                    <Text
-                                                        style={
-                                                            styles.filterName
-                                                        }>
-                                                        {propValue.Value}
-                                                    </Text>
-                                                    {popupSelectedProps.includes(
-                                                        `${propValue.PropertyID}:${propValue.ValueID}`
-                                                    ) ? (
-                                                        <Image
+                    {!helper.isEmptyOrNull(props.properties) &&
+                        props.properties.map((property) => {
+                            return (
+                                <View
+                                    key={`popup_mainprop_${property.PropertyName}`}
+                                    className="boxFilter">
+                                    <Text style={styles.filterTitle}>
+                                        {property.PropertyName}
+                                    </Text>
+                                    <View style={styles.listFilter}>
+                                        {property.ProductPropValueBOLst.map(
+                                            (propValue) => {
+                                                return (
+                                                    <TouchableOpacity
+                                                        key={`popup_prop_${propValue.ValueID}`}
+                                                        onPress={() => {
+                                                            selectProperty(
+                                                                `${propValue.PropertyID}:${propValue.ValueID}`
+                                                            );
+                                                        }}
+                                                        style={styles.it}>
+                                                        <Text
                                                             style={
-                                                                styles.iconCheck
-                                                            }
-                                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
-                                                        />
-                                                    ) : null}
-                                                </TouchableOpacity>
-                                            );
-                                        }
-                                    )}
+                                                                styles.filterName
+                                                            }>
+                                                            {propValue.Value}
+                                                        </Text>
+                                                        {popupSelectedProps.includes(
+                                                            `${propValue.PropertyID}:${propValue.ValueID}`
+                                                        ) ? (
+                                                            <Image
+                                                                style={
+                                                                    styles.iconCheck
+                                                                }
+                                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                            />
+                                                        ) : null}
+                                                    </TouchableOpacity>
+                                                );
+                                            }
+                                        )}
+                                    </View>
                                 </View>
-                            </View>
-                        );
-                    })}
-                    <View className="boxBrand" style={styles.boxBrand}>
-                        <Text style={styles.filterTitle}>
-                            Lọc theo thương hiệu
-                        </Text>
-                        <View style={styles.listFilter}>
-                            {props.brands.map((brand) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={`popup_brand_${brand.Id}`}
-                                        onPress={() => {
-                                            setPopupSelectedBrand(
-                                                popupSelectedBrand === brand.Id
-                                                    ? 0
-                                                    : brand.Id
-                                            );
-                                        }}
-                                        style={[styles.it, styles.itBrand]}>
-                                        <Image
-                                            style={styles.brandLogo}
-                                            source={{
-                                                uri: `https://cdn.tgdd.vn/Brand/11/${brand.Logo}`
+                            );
+                        })}
+                    {!helper.isEmptyOrNull(props.brands) && (
+                        <View className="boxBrand" style={styles.boxBrand}>
+                            <Text style={styles.filterTitle}>
+                                Lọc theo thương hiệu
+                            </Text>
+                            <View style={styles.listFilter}>
+                                {props.brands.map((brand) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={`popup_brand_${brand.Id}`}
+                                            onPress={() => {
+                                                setPopupSelectedBrand(
+                                                    popupSelectedBrand ===
+                                                        brand.Id
+                                                        ? 0
+                                                        : brand.Id
+                                                );
                                             }}
-                                        />
-                                        {popupSelectedBrand === brand.Id ? (
+                                            style={[styles.it, styles.itBrand]}>
                                             <Image
-                                                style={styles.iconCheck}
-                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                style={styles.brandLogo}
+                                                source={{
+                                                    uri: `https://cdn.tgdd.vn/Brand/11/${brand.Logo}`
+                                                }}
                                             />
-                                        ) : null}
-                                    </TouchableOpacity>
-                                );
-                            })}
+                                            {popupSelectedBrand === brand.Id ? (
+                                                <Image
+                                                    style={styles.iconCheck}
+                                                    source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                                />
+                                            ) : null}
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
                         </View>
-                    </View>
+                    )}
                 </ScrollView>
                 <View class="boxApply" style={styles.boxApply}>
                     <TouchableOpacity
@@ -356,6 +362,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: -2,
         top: -2,
+        width: 16
+    },
+    iconClose: {
+        height: 16,
+        marginRight: 2,
         width: 16
     },
     it: {
