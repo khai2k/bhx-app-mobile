@@ -6,6 +6,7 @@ export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_ITEM_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
+// Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
@@ -32,3 +33,8 @@ export const API_GET_PRODUCT_RELATIVE = `${API_BASE}product/ProductRelative`;
 export const API_GET_BOX_BANNER = `${API_BASE}product/BoxBanner`;
 export const API_GET_COMBO_DETAIL = `${API_BASE}product/ComboDetail`;
 export const API_GET_GALLERY_PRODUCT = `${API_BASE}product/GalleryProduct`;
+
+// Promotion
+export const API_GET_PROMOTIONPAGE_GETLISTCATEGORY = `${API_BASE}PromotionPage/GetListCategory`;
+export const API_GET_TOPDEALPROMOTION = `${API_BASE}PromotionPage/TopDealPromotion`;
+export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxProductsGroup`;

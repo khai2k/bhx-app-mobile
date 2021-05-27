@@ -11,6 +11,7 @@ import {
     Header,
     CartTotal,
     CartEmpty,
+    LoadingCart,
     ProductItemCart,
     ProductItemCartOff
 } from '@app/components';
@@ -24,7 +25,7 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false
+            isLoading: true
         };
     }
 
@@ -45,7 +46,9 @@ class Cart extends Component {
     };
 
     componentDidMount() {
-        this.props.actionCart.cart_get();
+        this.props.actionCart.cart_get().then((res) => {
+            this.setState({ isLoading: false });
+        });
     }
 
     componentDidUpdate() {
@@ -53,12 +56,22 @@ class Cart extends Component {
     }
 
     render() {
-        if (
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.cartinfo}>
+                    <Header />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                </View>
+            );
+        } else if (
             this.props.cart.ListCartItemBuy == null ||
             helper.IsEmptyArray(this.props.cart.ListCartItemBuy)
         ) {
             return (
-                <View>
+                <View style={styles.cartempty}>
                     <Header />
                     <CartEmpty />
                 </View>
@@ -68,7 +81,6 @@ class Cart extends Component {
             <View style={styles.cartinfo}>
                 <Header />
                 <ScrollView
-                    style={{ marginBottom: 80 }}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isLoading}

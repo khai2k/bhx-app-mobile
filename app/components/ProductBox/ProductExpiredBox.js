@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import styles from './style';
 import BuyBox from './BuyBox';
 
@@ -81,93 +82,38 @@ const ProductExpiredBox = (props) => {
         }
     };
 
-    const addToCart = (productID) => {
+    const addToCart = (
+        productID,
+        expStoreId = 0,
+        quantity = 1,
+        increase = true
+    ) => {
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
         actionCart
-            .cart_add_item_product(productID, 1)
+            .cart_add_item_product(productID, quantity, increase, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
                 } else {
+                    console.log(`End addToCart ${props.bhxProduct.Id}`);
+
                     await actionCart.cart_get_simple();
+                    console.log(
+                        `End update addToCart cartSimple ${props.bhxProduct.Id}`
+                    );
                 }
             })
             .catch((error) => {
                 alertAPI(error);
             });
     };
-    const setQuantityMinus = () => {
-        if (numberItems <= 1) {
-            actionCart
-                .cart_remove_item_product(guildId)
-                .then(async (res) => {
-                    console.log('cart_remove_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        await actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems - 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        await actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
 
-    const setQuantityPlus = () => {
-        if (numberItems > 50) {
-            alertMaxQuantityItemProduct();
-        } else {
-            console.log('setQuantityPlus');
-            console.log(guildId);
-            console.log(numberItems);
-            actionCart
-                .cart_update_item_product(guildId, numberItems + 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        await actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
     const alertAPI = (messages) => {
         Alert.alert('', messages);
     };
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý'
-            }
-        ]);
-    };
+
     const boxLabel = () => {
         if (props.bhxProduct.IsPreOrder && props.bhxProduct.PreAmount > 0) {
             return (
@@ -191,7 +137,8 @@ const ProductExpiredBox = (props) => {
 
     const { bhxProduct } = props;
     const isNearlyExpiredProduct =
-        bhxProduct.Sales !== null && bhxProduct.Sales !== undefined;
+        !helper.isEmptyOrNull(bhxProduct.Sales) &&
+        !helper.isEmptyOrNull(bhxProduct.Sales[bhxProduct.ExpStoreId]);
     if (isNearlyExpiredProduct && bhxProduct.ExpStoreId > 0) {
         const expiredProduct = bhxProduct.Sales[bhxProduct.ExpStoreId];
         return (
@@ -216,7 +163,7 @@ const ProductExpiredBox = (props) => {
                             </Text>
                         ) : null}
                         <View className="imgContent" style={styles.imgContent}>
-                            <Image
+                            <FastImage
                                 style={styles.imageProduct}
                                 source={{
                                     uri: bhxProduct.Avatar
@@ -232,7 +179,10 @@ const ProductExpiredBox = (props) => {
                             expiredProduct.Price > 0 &&
                             expiredProduct.StockQuantityNew >= 1
                         ) {
-                            addToCart(expiredProduct.ProductId);
+                            addToCart(
+                                expiredProduct.ProductId,
+                                bhxProduct.ExpStoreId
+                            );
                         }
                     }}
                     style={
@@ -257,13 +207,15 @@ const ProductExpiredBox = (props) => {
                             isPageExpired={false}
                             selectedBuy={false}
                             numberItems={numberItems}
-                            setQuantityMinus={setQuantityMinus}
-                            setQuantityPlus={setQuantityPlus}
+                            addToCart={addToCart}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
                     {canBuyProduct(bhxProduct) ? (
                         <TouchableOpacity
+                            onPress={() => {
+                                addToCart(bhxProduct.Id);
+                            }}
                             className="nearlyExpired"
                             style={styles.nearlyExpired}>
                             <View style={styles.expiredLine}>
@@ -308,13 +260,15 @@ const ProductExpiredBox = (props) => {
                             isPageExpired={false}
                             selectedBuy
                             numberItems={numberItems}
-                            setQuantityMinus={setQuantityMinus}
-                            setQuantityPlus={setQuantityPlus}
+                            addToCart={addToCart}
                             handleInputNumber={handleInputNumber}
                         />
                     </View>
                     {canBuyProduct(bhxProduct) ? (
                         <TouchableOpacity
+                            onPress={() => {
+                                addToCart(bhxProduct.Id);
+                            }}
                             className="nearlyExpired"
                             style={styles.nearlyExpired}>
                             <View style={styles.expiredLine}>

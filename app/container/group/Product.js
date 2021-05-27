@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
+import { helper } from '@app/common';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const Product = (props) => {
@@ -23,8 +24,17 @@ const Product = (props) => {
     }, [Products]);
     const [pageIndex, setPageIndex] = useState(PageIndex);
     useEffect(() => {
-        setPageIndex(0);
-    }, [PageIndex]);
+        console.log('reset pageindex');
+        if (
+            !helper.isEmptyOrNull(props.selectedBrand) ||
+            !helper.isEmptyOrNull(props.selectedProps) ||
+            !helper.isEmptyOrNull(props.selectedSort)
+        ) {
+            setPageIndex(1);
+        } else {
+            setPageIndex(0);
+        }
+    }, [Products]);
 
     const loadMoreProducts = () => {
         const bodyApi = {
@@ -43,22 +53,23 @@ const Product = (props) => {
                 sort: props.selectedSort
             }
         };
+        console.log('Start call api');
         apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
             .then((response) => {
                 console.log(response);
+                setPageIndex(pageIndex + 1);
                 setListProductLoadMore([
                     ...listProductLoadMore,
                     ...response.Value.CurrentData.Products
                 ]);
-                setPageIndex(pageIndex + 1);
+                console.log('End call api');
             })
             .catch((error) => {
                 console.log(error);
             });
     };
     const loadMoreButton = () => {
-        return listProductLoadMore.length ===
-            (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+        return Total > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
             <TouchableOpacity
                 onPress={loadMoreProducts}
                 className="loadMore"
@@ -74,15 +85,19 @@ const Product = (props) => {
             </TouchableOpacity>
         ) : null;
     };
-    if (listProductLoadMore && listProductLoadMore.length > 0) {
+    if (
+        !helper.isEmptyOrNull(listProductLoadMore) &&
+        listProductLoadMore.length > 0
+    ) {
         return (
             <FlatList
                 numColumns={3}
                 data={listProductLoadMore}
                 keyExtractor={(item) => `product_${item.Id}`}
-                extraData={listProductLoadMore}
                 renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 ListFooterComponent={loadMoreButton}
+                onRefresh={() => props.onRefresh()}
+                refreshing={props.isLoading}
             />
         );
     } else {

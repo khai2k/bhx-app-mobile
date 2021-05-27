@@ -16,14 +16,11 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import * as cartCreator from '@app/container/cart/action';
 import LoadLocationTrigger from './Location';
 import LocationModal from './Location/ModalLocation';
 
 const Header = () => {
     const navigation = useNavigation();
-    const dispatch = useDispatch();
-    const actionCart = bindActionCreators(cartCreator, dispatch);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const locationinfo = useSelector((state) => state.locationReducer);

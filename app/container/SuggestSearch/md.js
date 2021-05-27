@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react-native/sort-styles */
 import React, { useEffect, useState, createRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { useNavigation } from '@react-navigation/native';
 import {
     // Dimensions,
@@ -11,13 +12,15 @@ import {
     TouchableOpacity,
     Image,
     FlatList,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Colors } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HTML from 'react-native-render-html';
+import * as cartCreator from '@app/container/cart/action';
 import DelayInputCmp from '../../components/DelayInput';
 
 const SuggestSearchModal = () => {
@@ -43,6 +46,8 @@ const SuggestSearchModal = () => {
 
     // Redux
     const locationinfo = useSelector((state) => state.locationReducer);
+    const dispatch = useDispatch();
+    const actionCart = bindActionCreators(cartCreator, dispatch);
 
     // Function
     useEffect(() => {
@@ -125,7 +130,9 @@ const SuggestSearchModal = () => {
                         <TouchableOpacity style={{ flex: 1 }}>
                             <Text>{product.Price}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnBuyNow}>
+                        <TouchableOpacity
+                            onPress={() => addToCart(product.Id)}
+                            style={styles.btnBuyNow}>
                             <Text style={{ color: Colors.GREEN_KEY }}>
                                 Mua ngay
                             </Text>
@@ -134,6 +141,22 @@ const SuggestSearchModal = () => {
                 </View>
             </View>
         );
+    };
+    const addToCart = (productID, expStoreId) => {
+        actionCart
+            .cart_add_item_product(productID, 1, expStoreId)
+            .then(async (res) => {
+                console.log('cart_add_item_product');
+                console.log(res);
+                if (res.ResultCode > 0) {
+                    Alert.alert('', res.messages);
+                } else {
+                    await actionCart.cart_get_simple();
+                }
+            })
+            .catch((error) => {
+                Alert.alert('', error);
+            });
     };
 
     // Callback

@@ -23,7 +23,6 @@ export const cart_get = function () {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -174,18 +173,14 @@ export const cart_remove = function () {
 export const cart_add_item_product = function (
     prodId,
     quantityNum,
-    expStoreId
+    increase,
+    expStoreId,
+    isUpdate = false
 ) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
-            const storeId =
-                expStoreId > 0
-                    ? expStoreId
-                    : !helper.isEmptyOrNull(location)
-                    ? location.crrLocationRs.StoreId
-                    : 6815;
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -198,15 +193,22 @@ export const cart_add_item_product = function (
                 wardId: !helper.isEmptyOrNull(location)
                     ? location.crrLocationRs.WardId
                     : 0,
-                storeId,
+                storeId:
+                    expStoreId > 0
+                        ? expStoreId
+                        : !helper.isEmptyOrNull(location) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs.StoreId)
+                        ? location.crrLocationRs.StoreId
+                        : 6815,
                 data: {
                     cartId,
                     productId: prodId,
                     quantity: quantityNum,
-                    increase: true,
-                    isUpdate: true,
+                    increase,
+                    isUpdate,
                     promoCode: '',
-                    isInCartSite: true
+                    isInCartSite: false
                 }
             };
             console.log(bodyApi);

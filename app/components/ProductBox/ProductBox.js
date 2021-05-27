@@ -5,6 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/container/cart/action';
+import FastImage from 'react-native-fast-image';
 import BuyBox from './BuyBox';
 import styles from './style';
 
@@ -13,11 +14,6 @@ const ProductBox = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
-
-    // reminder select location
-    const location = useSelector(
-        (state) => state.locationReducer.locationState?.crrLocationRs
-    );
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
@@ -36,10 +32,10 @@ const ProductBox = (props) => {
             setGuildId(cart.ProInCart[idProduct][0]);
             setNumberItems(+cart.ProInCart[idProduct][1]);
             setBuyButtonVisible(true);
-            } else {
-                setNumberItems(1);
-                setBuyButtonVisible(false);
-            }
+        } else {
+            setNumberItems(1);
+            setBuyButtonVisible(false);
+        }
     };
     useEffect(() => {
         console.log(`Fill button ${props.bhxProduct.Id}`);
@@ -64,7 +60,7 @@ const ProductBox = (props) => {
                     </Text>
                     {props.bhxProduct.PromotionGiftImgs !== null &&
                     props.bhxProduct.PromotionGiftImgs.trim().length > 0 ? (
-                        <Image
+                        <FastImage
                             style={styles.imagePromotion}
                             source={{
                                 uri: props.bhxProduct.PromotionGiftImgs
@@ -124,9 +120,15 @@ const ProductBox = (props) => {
         }
     };
 
-    const addToCart = (productID, expStoreId) => {
+    const addToCart = (
+        productID,
+        expStoreId = 0,
+        quantity = 1,
+        increase = true
+    ) => {
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
         actionCart
-            .cart_add_item_product(productID, 1, expStoreId)
+            .cart_add_item_product(productID, quantity, increase, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
@@ -145,99 +147,8 @@ const ProductBox = (props) => {
                 alertAPI(error);
             });
     };
-    const setQuantityMinus = () => {
-        console.log(`Begin setQuantityMinus ${props.bhxProduct.Id}`);
-
-        if (numberItems <= 1) {
-            actionCart
-                .cart_remove_item_product(guildId)
-                .then(async (res) => {
-                    console.log('cart_remove_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setBuyButtonVisible(false);
-                        console.log(
-                            `End setQuantityMinus ${props.bhxProduct.Id}`
-                        );
-
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems - 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setNumberItems(numberItems - 1);
-                        console.log(
-                            `End setQuantityMinus ${props.bhxProduct.Id}`
-                        );
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityMinus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
-
-    const setQuantityPlus = () => {
-        console.log(`Begin setQuantityPlus ${props.bhxProduct.Id}`);
-
-        if (numberItems > 50) {
-            alertMaxQuantityItemProduct();
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems + 1)
-                .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setNumberItems(numberItems + 1);
-                        console.log(
-                            `End setQuantityPlus ${props.bhxProduct.Id}`
-                        );
-                        await actionCart.cart_get_simple();
-                        console.log(
-                            `End setQuantityPlus cartSimple ${props.bhxProduct.Id}`
-                        );
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
     const alertAPI = (messages) => {
         Alert.alert('', messages);
-    };
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý'
-            }
-        ]);
     };
 
     return (
@@ -284,8 +195,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -299,8 +212,7 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy={false}
                         numberItems={numberItems}
-                        setQuantityMinus={setQuantityMinus}
-                        setQuantityPlus={setQuantityPlus}
+                        addToCart={addToCart}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
@@ -359,8 +271,10 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        props.bhxProduct.Sales !== null &&
-                        props.bhxProduct.Sales !== undefined
+                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
+                        !helper.isEmptyOrNull(
+                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                        )
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -377,8 +291,7 @@ const ProductBox = (props) => {
                         isPageExpired={false}
                         selectedBuy
                         numberItems={numberItems}
-                        setQuantityMinus={setQuantityMinus}
-                        setQuantityPlus={setQuantityPlus}
+                        addToCart={addToCart}
                         handleInputNumber={handleInputNumber}
                     />
                 </View>

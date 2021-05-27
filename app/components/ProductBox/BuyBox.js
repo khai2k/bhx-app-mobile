@@ -30,7 +30,12 @@ const BuyBox = (props) => {
                         <View className="upDown" style={styles.upDownShow}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    props.setQuantityMinus();
+                                    props.addToCart(
+                                        obj.ProductId,
+                                        expStore,
+                                        1,
+                                        false
+                                    );
                                 }}
                                 className="down"
                                 style={styles.down}>
@@ -49,7 +54,7 @@ const BuyBox = (props) => {
                             />
                             <TouchableOpacity
                                 onPress={() => {
-                                    props.setQuantityPlus();
+                                    props.addToCart(obj.ProductId, expStore);
                                 }}
                                 className="up"
                                 style={styles.up}>
@@ -113,7 +118,7 @@ const BuyBox = (props) => {
                 <View className="upDown" style={styles.upDownShow}>
                     <TouchableOpacity
                         onPress={() => {
-                            props.setQuantityMinus();
+                            props.addToCart(props.bhxProduct.Id, 0, 1, false);
                         }}
                         className="down"
                         style={styles.down}>
@@ -132,7 +137,7 @@ const BuyBox = (props) => {
                     />
                     <TouchableOpacity
                         onPress={() => {
-                            props.setQuantityPlus();
+                            props.addToCart(props.bhxProduct.Id);
                         }}
                         className="up"
                         style={styles.up}>

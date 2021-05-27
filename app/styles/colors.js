@@ -43,6 +43,7 @@ export const LINK_WATER = '#ECF2FB';
 export const LINK_WATER_2 = '#F5F8FD';
 export const LINK_WATER_3 = '#EBF0F9';
 export const MYSTIC = '#E1E5EE';
+export const WHITE_FFF = '#fff';
 
 // RED
 export const BRIGHT_RED = 'rgba(240,68,68,1)';
@@ -108,6 +109,7 @@ export const SEA_BUCKTHORN = '#F2994A';
 
 export const MATTERHORN_1 = 'rgba(85,85,85,1)';
 export const COLOR_353638 = 'rgba(35,36,38,0.5)';
+export const ORANGE_FF9534 = '#FF9534';
 
 // GREEN
 export const JADE = '#00AC5B';
@@ -120,6 +122,7 @@ export const BORDER_1 = '#D6E0F5';
 export const MESSAGE_ERROR = '#f30600';
 export const RED = 'red';
 export const HEADER_CART = '#FFF87C';
+export const GREEN_3B854E = '#3B854E';
 
 // GREEN
 export const GREEN_00AC5B = '#00AC5B';
@@ -135,3 +138,14 @@ export const BG_COMBO = '#f5f8fd';
 
 // GRAY
 export const GRAY_F8FBFF = '#F8FBFF';
+export const GRAY_c5cee0 = '#c5cee0';
+
+// Color line promotion
+export const BLUE_8ed1d6 = '#8ed1d6';
+export const GREEN_a2e362 = '#a2e362';
+export const ORANGE_ff7500 = '#ff7500';
+export const PURPLE_739aff = '#739aff';
+export const AQUA_91dacf = '#91dacf';
+export const SKY_BLUE_90e0ff = '#90e0ff';
+export const RED_e72323 = '#e72323';
+export const PINK_ffb7b7 = '#ffb7b7';

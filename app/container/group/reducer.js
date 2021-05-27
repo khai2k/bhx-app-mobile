@@ -10,7 +10,11 @@ const categoryReducer = function (state = _state.categoryState, action) {
                 Brands: action.categoryInfo.Brands,
                 Filters: action.categoryInfo.Filters,
                 CurrentData: action.categoryInfo.CurrentData,
-                Query: action.categoryInfo.Query
+                Query: action.categoryInfo.Query,
+                SelectedBrand: 0,
+                SelectedProps: '',
+                SelectedSort: 0,
+                PageIndex: 0
             };
         case _action.categoryAction.CATEGORY_FILTER:
             return {
