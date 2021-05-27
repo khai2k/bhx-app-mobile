@@ -26,11 +26,13 @@ const Promotion = () => {
 
     const isLoading = useSelector((state) => state.promotionReducer.IsLoading);
 
-    // const [isLoading, setIsLoading] = useState(true);
     const listCategoryTop = promotionData?.Categorys;
     const listGroupCate = promotionData?.GroupCate;
 
     const [lstGroupCateFilter, setListGroupCateFilter] = useState([]);
+
+    // Cate Filter Top
+    const [groupCateFilter, setGroupCateFilter] = useState([]);
 
     useEffect(() => {
         if (promotionData && promotionTopDealData) {
@@ -50,6 +52,24 @@ const Promotion = () => {
         dispatch(promotionAction.topDealPromotion_get());
     }, []);
 
+    useEffect(() => {
+        getPosition();
+    }, [groupCateFilter]);
+
+    function getPosition() {
+        const positionFirstLine = 730;
+        const heightEachLine = 550;
+        const index = listGroupCate?.findIndex((ele) => {
+            return ele.CategoryId === groupCateFilter;
+        });
+
+        if (index >= 0) {
+            return positionFirstLine + (index - 2) * heightEachLine;
+        } else {
+            return 0;
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Header />
@@ -59,14 +79,20 @@ const Promotion = () => {
                 size="large"
                 color="#00ff00"
             />
-            <ScrollView nestedScrollEnabled>
-                <RenderListCategory lstCategoryTop={listCategoryTop} />
+            <ScrollView
+                nestedScrollEnabled
+                contentOffset={{ x: 0, y: getPosition() }}>
+                <RenderListCategory
+                    lstCategoryTop={listCategoryTop}
+                    setGroupCateFilter={setGroupCateFilter}
+                />
                 <RenderLineDealShock lstProductTopDeal={promotionTopDealData} />
                 <RenderGroupCate
                     listGroupCate={listGroupCate}
                     dispatch={dispatch}
                     lstGroupCateFilter={lstGroupCateFilter}
                     setListGroupCateFilter={setListGroupCateFilter}
+                    groupCateFilter={groupCateFilter}
                 />
             </ScrollView>
         </View>
@@ -87,7 +113,12 @@ const RenderListCategory = (props) => {
                 keyExtractor={(item) => item.Id}
                 renderItem={(item) => {
                     return (
-                        item.item.Id !== 8686 && <RenderCategory item={item} />
+                        item.item.Id !== 8686 && (
+                            <RenderCategory
+                                item={item}
+                                setGroupCateFilter={props.setGroupCateFilter}
+                            />
+                        )
                     );
                 }}
             />
@@ -98,8 +129,13 @@ const RenderListCategory = (props) => {
 // Render category
 const RenderCategory = React.memo((props) => {
     const { item } = props.item;
+    function handleSelectCateFilter() {
+        props.setGroupCateFilter(item.Id);
+    }
     return (
-        <TouchableOpacity style={styles.categoryItem}>
+        <TouchableOpacity
+            style={styles.categoryItem}
+            onPress={() => handleSelectCateFilter()}>
             <Image
                 style={styles.iconCategory}
                 source={{ uri: `https://${item.ImgUrl}` }}
@@ -368,4 +404,4 @@ const RenderLineExpired = (props) => {
     );
 };
 
-export default Promotion;
+export default React.memo(Promotion);

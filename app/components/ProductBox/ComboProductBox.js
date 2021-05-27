@@ -38,7 +38,7 @@ const ComboProductBox = (props) => {
         }
     };
     useEffect(() => {
-        console.log(`Fill button ${props.bhxProduct.Id}`);
+        // console.log(`Fill button ${props.bhxProduct.Id}`);
         checkFillButtonBuy();
     }, [cart.Total]);
 
