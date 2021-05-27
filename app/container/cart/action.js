@@ -30,7 +30,7 @@ export const cart_get = function () {
                 us: '',
                 provinceId: 3,
                 districtId: 2087,
-                wardId: 27116,
+                wardId: 27125,
                 storeId: 6463,
                 data: {
                     cartId
