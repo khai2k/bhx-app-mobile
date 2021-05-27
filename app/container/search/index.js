@@ -49,6 +49,24 @@ class Search extends Component {
                     selectedBrand={this.props.searchInfo.SelectedBrand}
                     selectedProps={this.props.searchInfo.SelectedProps}
                     selectedSort={this.props.searchInfo.SelectedSort}
+                    isShowResult
+                />
+                <Product
+                    currentData={this.props.searchInfo.Products}
+                    info={this.props.searchInfo.Filter.Query}
+                    selectedBrand={this.props.searchInfo.SelectedBrand}
+                    selectedProps={this.props.searchInfo.SelectedProps}
+                    selectedSort={this.props.searchInfo.SelectedSort}
+                />
+                <Filter
+                    brands={this.props.searchInfo.Filter.Manufactures}
+                    properties={this.props.searchInfo.Filter.Categories}
+                    sort={this.props.searchInfo.Filter.FilterSorts}
+                    info={this.props.searchInfo.Filter.Query}
+                    selectedBrand={this.props.searchInfo.SelectedBrand}
+                    selectedProps={this.props.searchInfo.SelectedProps}
+                    selectedSort={this.props.searchInfo.SelectedSort}
+                    isShowResult={false}
                 />
             </SafeAreaView>
         );

@@ -9,12 +9,14 @@ const Filter = (props) => {
     const htmlResult = `<span>Tìm thấy <b>${props.info.TotalRecord}</b> kết quả phù hợp với từ khoá <b>${props.info.Key}</b></span>`;
     return (
         <View>
-            <View style={styles.resultSearch}>
-                <HTML
-                    style={styles.resultSearchText}
-                    source={{ html: htmlResult }}
-                />
-            </View>
+            {props.isShowResult && (
+                <View style={styles.resultSearch}>
+                    <HTML
+                        style={styles.resultSearchText}
+                        source={{ html: htmlResult }}
+                    />
+                </View>
+            )}
             <PropertyFilter
                 brands={props.brands}
                 properties={props.properties}

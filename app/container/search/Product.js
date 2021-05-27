@@ -14,9 +14,8 @@ import { helper } from '@app/common';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const Product = (props) => {
-    const { Products, Total } = props.currentData;
-    const { Name } = props.info;
-    const { PageIndex, PageSize } = props.include.Paging;
+    const { Products } = props.currentData;
+    const { PageIndex, PageSize, TotalRecord } = props.info;
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
 
     useEffect(() => {
@@ -37,58 +36,53 @@ const Product = (props) => {
     }, [Products]);
 
     const loadMoreProducts = () => {
-        const bodyApi = {
-            provinceId: 3,
-            storeId: 6463,
-            data: {
-                categoryId: props.info.Id,
-                selectedBrandId: props.selectedBrand,
-                phone: 0,
-                cateListFilter: '',
-                propertyIdList: props.selectedProps,
-                pageIndex,
-                pageSize: PageSize,
-                isLoadVideo: false,
-                isPromotion: false,
-                sort: props.selectedSort
-            }
-        };
-        console.log('Start call api');
-        apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
-            .then((response) => {
-                console.log(response);
-                setPageIndex(pageIndex + 1);
-                setListProductLoadMore([
-                    ...listProductLoadMore,
-                    ...response.Value.CurrentData.Products
-                ]);
-                console.log('End call api');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        // const bodyApi = {
+        //     provinceId: 3,
+        //     storeId: 6463,
+        //     data: {
+        //         categoryId: props.info.Id,
+        //         selectedBrandId: props.selectedBrand,
+        //         phone: 0,
+        //         cateListFilter: '',
+        //         propertyIdList: props.selectedProps,
+        //         pageIndex,
+        //         pageSize: PageSize,
+        //         isLoadVideo: false,
+        //         isPromotion: false,
+        //         sort: props.selectedSort
+        //     }
+        // };
+        // console.log('Start call api');
+        // apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
+        //     .then((response) => {
+        //         console.log(response);
+        //         setPageIndex(pageIndex + 1);
+        //         setListProductLoadMore([
+        //             ...listProductLoadMore,
+        //             ...response.Value.CurrentData.Products
+        //         ]);
+        //         console.log('End call api');
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
     };
     const loadMoreButton = () => {
-        return Total > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+        return TotalRecord > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
             <TouchableOpacity
                 onPress={loadMoreProducts}
                 className="loadMore"
                 style={styles.loadMore}>
                 <Text style={styles.loadMoreText}>
-                    Còn {Total - pageIndex * PageSize} sản phẩm{' '}
+                    Còn {TotalRecord - pageIndex * PageSize} sản phẩm
                 </Text>
-                <Text style={styles.loadMoreTextBold}>{Name}</Text>
-                <Image
-                    style={styles.iconDown}
-                    source={require('../../../assets/images/chevron-down.png')}
-                />
             </TouchableOpacity>
         ) : null;
     };
     if (listProductLoadMore && listProductLoadMore.length > 0) {
-        console.log(
-            `Render list product ${listProductLoadMore.length}, ${pageIndex}, ${Total}, ${Products.length}`
-        );
+        // console.log(
+        //     `Render list product ${listProductLoadMore.length}, ${pageIndex}, ${TotalRecord}, ${Products.length}`
+        // );
         return (
             <FlatList
                 numColumns={3}
