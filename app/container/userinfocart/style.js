@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 5
     },
+    boxCallOther: {
+        padding: 7
+    },
     boxbtn: {
         alignItems: 'center',
         flexDirection: 'row',
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
         position: 'relative'
     },
     floatingBox: {
-        borderColor: '#000',
+        borderColor: '#D6E0F5',
         borderRadius: 8,
         borderWidth: 1,
         fontSize: 14,
@@ -90,6 +93,20 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         fontSize: 14,
         marginBottom: 10,
+        padding: 10
+    },
+    floatingBoxErrNoMargin: {
+        borderColor: '#d0021b',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
+        padding: 10
+    },
+    floatingBoxNoMargin: {
+        borderColor: '#D6E0F5',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
         padding: 10
     },
     hasAbsTit: {
@@ -141,6 +158,9 @@ const styles = StyleSheet.create({
     },
     noBorder: {
         borderWidth: 0
+    },
+    noMarginBottom: {
+        marginBottom: 0
     },
     provAndDic: {
         display: 'flex',

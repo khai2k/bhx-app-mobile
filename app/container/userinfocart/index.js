@@ -54,23 +54,25 @@ const UserInfoCart = (props) => {
     );
 
     const [cartState, setCartState] = useState(cart);
-    const [cartUserInfo, setCartUserInfo] = useState({
-        CustomerName: '',
-        CustomerGender: -1,
-        CustomerPhone: '',
-        ShipProvince: 0,
-        ShipDistrict: 0,
-        ShipWard: 0,
-        IsCallOthers: false,
-        OthersGenderCall: '',
-        OthersPhone: '',
-        OthersName: '',
-        IsGetBill: false,
-        CompanyName: '',
-        CompanyAddress: '',
-        CompanyTaxNumber: '',
-        Note: ''
-    });
+    const [cartUserInfo, setCartUserInfo] = useState([
+        {
+            CustomerName: '',
+            CustomerGender: 1,
+            CustomerPhone: '',
+            ShipProvince: 0,
+            ShipDistrict: 0,
+            ShipWard: 0,
+            IsCallOthers: false,
+            OthersGenderCall: '',
+            OthersPhone: '',
+            OthersName: '',
+            IsGetBill: false,
+            CompanyName: '',
+            CompanyAddress: '',
+            CompanyTaxNumber: '',
+            Note: ''
+        }
+    ]);
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
@@ -89,10 +91,15 @@ const UserInfoCart = (props) => {
     const [phoneErrMessage, setphoneErrMessage] = useState(
         'Số điện thoại không được để trống!'
     );
+    const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
+        'Số điện thoại không được để trống!'
+    );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
         'Họ và tên không được để trống!'
     );
-
+    const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
+        'Họ và tên không được để trống!'
+    );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
     const [districtSelected, setdistrictSelected] = useState(-1);
@@ -109,12 +116,26 @@ const UserInfoCart = (props) => {
             setphoneErrMessage('Số điện thoại không đúng định dạng!');
         } else setphoneErrMessage('');
     };
+    const handleErrorPhoneOther = (value) => {
+        if (helper.isEmptyOrNull(value)) {
+            setphoneOtherErrMessage('Số điện thoại không được để trống!');
+        } else if (helper.isPhoneNumber(value) == false) {
+            setphoneOtherErrMessage('Số điện thoại không đúng định dạng!');
+        } else setphoneOtherErrMessage('');
+    };
     const handleErrorCusName = (value, maxlength) => {
         if (helper.isEmptyOrNull(value)) {
             setcusNameErrMessage('Họ và tên không được để trống!');
         } else if (value.length > maxlength) {
             setcusNameErrMessage('Họ và tên quá dài, vui lòng nhập lại!');
         } else setcusNameErrMessage('');
+    };
+    const handleErrorCusNameOther = (value, maxlength) => {
+        if (helper.isEmptyOrNull(value)) {
+            setcusNameOtherErrMessage('Họ và tên không được để trống!');
+        } else if (value.length > maxlength) {
+            setcusNameOtherErrMessage('Họ và tên quá dài, vui lòng nhập lại!');
+        } else setcusNameOtherErrMessage('');
     };
     const chosenDeliDate = () => {
         const isActive =
@@ -125,13 +146,24 @@ const UserInfoCart = (props) => {
             <View style={[styles.delichoose]}>
                 <Picker
                     selectedValue={0}
-                    style={{ height: 50, width: '100%' }}
+                    style={{
+                        height: 50,
+                        width: '100%',
+                        color: isActive ? '#000' : '#C2C2C2'
+                    }}
                     enabled={isActive}
                     onValueChange={(itemValue, itemIndex) => {
-                        setcurDateDeli(shipdatetime[0]?.DateList[itemIndex]);
-                        setdateDeliID(itemValue);
+                        if (itemValue > 0) {
+                            setcurDateDeli(
+                                shipdatetime[0]?.DateList[itemIndex]
+                            );
+                            setdateDeliID(itemValue);
+                        } else {
+                            setcurDateDeli(null);
+                        }
                     }}>
-                    {isActive ? (
+                    <Picker.Item label="Chọn ngày nhận hàng" value="-1" />
+                    {isActive &&
                         shipdatetime[0]?.DateList.map((item) => {
                             return (
                                 <Picker.Item
@@ -139,14 +171,7 @@ const UserInfoCart = (props) => {
                                     value={item.timeid}
                                 />
                             );
-                        })
-                    ) : (
-                        <Picker.Item
-                            enable={false}
-                            label="Chọn ngày nhận hàng"
-                            value="-1"
-                        />
-                    )}
+                        })}
                 </Picker>
             </View>
         );
@@ -163,7 +188,11 @@ const UserInfoCart = (props) => {
                 ]}>
                 <Picker
                     selectedValue={0}
-                    style={{ height: 50, width: '100%' }}
+                    style={{
+                        height: 50,
+                        width: '100%',
+                        color: isActive ? '#000' : '#C2C2C2'
+                    }}
                     enabled={isActive}
                     onValueChange={(itemValue, itemIndex) =>
                         settimeDeliID(itemValue)
@@ -204,7 +233,12 @@ const UserInfoCart = (props) => {
                                 ? styles.floatingBoxErr
                                 : styles.floatingBox
                         }
-                        label={<Text>Tên Công Ty <Text style={{ color: '#ff001f' }}>*</Text></Text>}
+                        label={
+                            <Text>
+                                Tên Công Ty{' '}
+                                <Text style={{ color: '#ff001f' }}>*</Text>
+                            </Text>
+                        }
                         value={companyName}
                         onChangeText={(value) => setcompanyName(value)}
                     />
@@ -220,7 +254,12 @@ const UserInfoCart = (props) => {
                                 ? styles.floatingBoxErr
                                 : styles.floatingBox
                         }
-                        label={<Text>Địa chỉ công Ty <Text style={{ color: '#ff001f' }}>*</Text></Text>}
+                        label={
+                            <Text>
+                                Địa chỉ công Ty{' '}
+                                <Text style={{ color: '#ff001f' }}>*</Text>
+                            </Text>
+                        }
                         value={companyAddress}
                         onChangeText={(value) => setcompanyAddress(value)}
                     />
@@ -236,7 +275,13 @@ const UserInfoCart = (props) => {
                                 ? styles.floatingBoxErr
                                 : styles.floatingBox
                         }
-                        label={<Text>Mã số thuế <Text style={{ color: '#ff001f' }}>*</Text></Text>}
+                        keyboardType="numeric"
+                        label={
+                            <Text>
+                                Mã số thuế{' '}
+                                <Text style={{ color: '#ff001f' }}>*</Text>
+                            </Text>
+                        }
                         value={companyTax}
                         onChangeText={(value) => setcompanyTax(value)}
                     />
@@ -244,6 +289,109 @@ const UserInfoCart = (props) => {
             );
         }
     };
+
+    const boxCallOther = (props, sex = 1) => {
+        const [sexOther, setSexOther] = useState([
+            {
+                id: 1,
+                value: true,
+                name: 'Anh',
+                selected: true
+            },
+            {
+                id: 2,
+                value: false,
+                name: 'Chị',
+                selected: false
+            }
+        ]);
+        const onRadioBtnClick = (item) => {
+            let updatedState = sexOther.map((setSexOther) =>
+            setSexOther.id == item.id
+                    ? { ...setSexOther, selected: true }
+                    : { ...setSexOther, selected: false }
+            );
+            setSexOther(updatedState);
+            setCartUserInfo({
+                ...cartUserInfo,
+                OthersGenderCall: updatedState
+            });
+        };
+        if (isSelectedCallOther) {
+            return (
+                <View style={styles.boxCallOther}>
+                    <View style={styles.radioButtonContainer}>
+                        {sexOther.map((item) => (
+                            <RadioButton
+                                onPress={() => onRadioBtnClick(item)}
+                                selected={item.selected}
+                                key={item.id}>
+                                {item.name}
+                            </RadioButton>
+                        ))}
+                    </View>
+                    <FloatingLabelInput
+                        customLabelStyles={{
+                            colorFocused: '#000',
+                            colorBlurred: '#000',
+                            topFocused: -15,
+                            fontSizeFocused: 11
+                        }}
+                        containerStyles={
+                            helper.isEmptyOrNull(phoneOtherErrMessage) == false
+                                ? styles.floatingBoxErrNoMargin
+                                : styles.floatingBoxNoMargin
+                        }
+                        keyboardType="numeric"
+                        label={<Text>Số điện thoại (bắt buộc)</Text>}
+                        value={cartUserInfo?.OthersPhone}
+                        onChangeText={(value) => {
+                            setCartUserInfo({
+                                ...cartUserInfo,
+                                OthersPhone: value
+                            });
+                            handleErrorPhoneOther(value);
+                        }}
+                    />
+                    {helper.isEmptyOrNull(phoneOtherErrMessage) == false && (
+                        <Text style={styles.textErr}>
+                            {phoneOtherErrMessage}
+                        </Text>
+                    )}
+                    <Text></Text>
+                    <FloatingLabelInput
+                        customLabelStyles={{
+                            colorFocused: '#000',
+                            colorBlurred: '#000',
+                            topFocused: -15,
+                            fontSizeFocused: 11
+                        }}
+                        containerStyles={
+                            helper.isEmptyOrNull(cusNameOtherErrMessage) ==
+                            false
+                                ? styles.floatingBoxErrNoMargin
+                                : styles.floatingBoxNoMargin
+                        }
+                        label={<Text>Họ và tên (bắt buộc)</Text>}
+                        value={cartUserInfo?.OthersName}
+                        onChangeText={(value) => {
+                            setCartUserInfo({
+                                ...cartUserInfo,
+                                OthersName: value
+                            });
+                            handleErrorCusNameOther(value);
+                        }}
+                    />
+                    {helper.isEmptyOrNull(cusNameOtherErrMessage) == false && (
+                        <Text style={styles.textErr}>
+                            {cusNameOtherErrMessage}
+                        </Text>
+                    )}
+                </View>
+            );
+        }
+    };
+
     const UserProvAndDis = (location) => {
         useEffect(() => {
             getLstProv();
@@ -313,9 +461,13 @@ const UserInfoCart = (props) => {
                             style={{ height: 50, width: 150 }}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
+
+                                // reset ward
                                 setLstWard(null);
                                 setwardSelected(false);
                                 setEnableWard(false);
+
+                                //reset district
                                 setEnableDis(false);
                                 getLstDis(itemValue);
                                 setdistrictSelected(false);
@@ -408,6 +560,60 @@ const UserInfoCart = (props) => {
         );
     };
 
+    const SexRadio = (props) => {
+        const [sex, setSex] = useState([
+            {
+                id: 1,
+                value: true,
+                name: 'Anh',
+                selected: props == -1 || props == 1 ? true : false
+            },
+            {
+                id: 2,
+                value: false,
+                name: 'Chị',
+                selected: props == 2 ? true : false
+            }
+        ]);
+        const onRadioBtnClick = (item) => {
+            let updatedState = sex.map((setSex) =>
+                setSex.id == item.id
+                    ? { ...setSex, selected: true }
+                    : { ...setSex, selected: false }
+            );
+            setSex(updatedState);
+            setCartUserInfo({
+                ...cartUserInfo,
+                CustomerGender: updatedState
+            });
+        };
+        return (
+            <View style={styles.radioButtonContainer}>
+                {sex.map((item) => (
+                    <RadioButton
+                        onPress={() => onRadioBtnClick(item)}
+                        selected={item.selected}
+                        key={item.id}>
+                        {item.name}
+                    </RadioButton>
+                ))}
+            </View>
+        );
+    };
+
+    const RadioButton = ({ onPress, selected, children }) => {
+        return (
+            <View style={styles.radioButtonContainer}>
+                <TouchableOpacity onPress={onPress} style={styles.radioButton}>
+                    {selected ? <View style={styles.radioButtonIcon} /> : null}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onPress}>
+                    <Text style={styles.radioButtonText}>{children}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
     return (
         <View>
             <Header />
@@ -441,66 +647,77 @@ const UserInfoCart = (props) => {
                 <View style={styles.sectionInputTop}>
                     <Text style={styles.stepTitle}>1. Thông tin nhận hàng</Text>
 
-                    <View style={styles.inputAndTit}>
-                        <Text style={styles.absTit}>
-                            Số điện thoại{' '}
-                            {<Text style={{ color: '#ff001f' }}>*</Text>}
-                        </Text>
-                        <TextInput
-                            style={[
-                                styles.inputBox,
-                                styles.noBorder,
-                                styles.hasAbsTit,
-                                phoneErrMessage !== '' ? styles.inputErr : ''
-                            ]}
-                            placeholder="Vui lòng nhập số điện thoại"
-                            keyboardType="phone-pad"
-                            value={cartUserInfo?.CustomerPhone}
-                            onChangeText={(value) => {
-                                setCartUserInfo({
-                                    ...cartUserInfo,
-                                    CustomerPhone: value
-                                });
-                                handleErrorPhone(value);
-                            }}
-                            onBlur={() => {}}
-                        />
-                    </View>
-                    {phoneErrMessage !== '' && (
+                    <FloatingLabelInput
+                        customLabelStyles={{
+                            colorFocused: '#000',
+                            colorBlurred: '#000',
+                            topFocused: -15,
+                            fontSizeFocused: 11
+                        }}
+                        containerStyles={
+                            helper.isEmptyOrNull(phoneErrMessage) == false
+                                ? styles.floatingBoxErrNoMargin
+                                : styles.floatingBoxNoMargin
+                        }
+                        keyboardType="numeric"
+                        label={
+                            <Text>
+                                Số điện thoại{' '}
+                                <Text style={{ color: '#ff001f' }}>*</Text>
+                            </Text>
+                        }
+                        value={cartUserInfo?.CustomerPhone}
+                        onChangeText={(value) => {
+                            setCartUserInfo({
+                                ...cartUserInfo,
+                                CustomerPhone: value
+                            });
+                            handleErrorPhone(value);
+                            console.log(cartUserInfo);
+                        }}
+                    />
+                    {helper.isEmptyOrNull(phoneErrMessage) == false && (
                         <Text style={styles.textErr}>{phoneErrMessage}</Text>
                     )}
-                    {SexRadio(cart?.CustomerGender)}
-                    <View style={styles.inputAndTit}>
-                        <Text style={styles.absTit}>
-                            Họ và tên
-                            {<Text style={{ color: '#ff001f' }}> *</Text>}
-                        </Text>
-                        <TextInput
-                            style={[
-                                styles.inputBox,
-                                styles.noBorder,
-                                styles.hasAbsTit
-                            ]}
-                            placeholder="Vui lòng nhập Họ và tên"
-                            keyboardType="default"
-                            value={cartUserInfo?.CustomerName}
-                            onChangeText={(value) => {
-                                setCartUserInfo({
-                                    ...cartUserInfo,
-                                    CustomerName: value
-                                });
-                                handleErrorCusName(value, 30);
-                            }}
-                            onBlur={() => {}}
-                        />
-                    </View>
-                    {cusNameErrMessage !== '' && (
+
+                    {SexRadio(
+                        cart?.CustomerGender > 0 ? cart?.CustomerGender : 1
+                    )}
+
+                    <FloatingLabelInput
+                        customLabelStyles={{
+                            colorFocused: '#000',
+                            colorBlurred: '#000',
+                            topFocused: -15,
+                            fontSizeFocused: 11
+                        }}
+                        containerStyles={
+                            helper.isEmptyOrNull(cusNameErrMessage) == false
+                                ? styles.floatingBoxErrNoMargin
+                                : styles.floatingBoxNoMargin
+                        }
+                        label={
+                            <Text>
+                                Họ và tên{' '}
+                                <Text style={{ color: '#ff001f' }}>*</Text>
+                            </Text>
+                        }
+                        value={cartUserInfo?.CustomerName}
+                        onChangeText={(value) => {
+                            setCartUserInfo({
+                                ...cartUserInfo,
+                                CustomerName: value
+                            });
+                            handleErrorCusName(value);
+                        }}
+                    />
+                    {helper.isEmptyOrNull(cusNameErrMessage) == false && (
                         <Text style={styles.textErr}>{cusNameErrMessage}</Text>
                     )}
                     {UserProvAndDis(props)}
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
-                        placeholder="Địa chỉ nhận"
+                        placeholder="Số nhà, tên đường"
                         value={
                             cart?.CustomerAddress !== '' &&
                             cart?.CustomerAddress !== undefined
@@ -522,13 +739,24 @@ const UserInfoCart = (props) => {
                         <View style={styles.checkboxContainer}>
                             <CheckBox
                                 value={isSelectedCallOther}
-                                onValueChange={setSelectedCallOther}
+                                onValueChange={
+                                    (value) => {
+                                        setSelectedCallOther(value);
+                                        if(isSelectedCallOther == false){
+                                            cartUserInfo.OthersPhone = '';
+                                            handleErrorPhoneOther('');
+                                            cartUserInfo.OthersName = '';
+                                            handleErrorCusNameOther('');
+                                        }
+                                    }
+                                }
                                 style={styles.checkbox}
                             />
                             <Text style={styles.label}>
                                 Gọi người khác nhận hàng (nếu có)
                             </Text>
                         </View>
+                        {boxCallOther()}
                     </View>
                 </View>
                 <View style={styles.sectionInput}>
@@ -613,74 +841,6 @@ const UserInfoCart = (props) => {
                 </View>
             </ScrollView>
         </View>
-    );
-};
-
-const SexRadio = (props) => {
-    const [sex, setSex] = useState([
-        {
-            id: 1,
-            value: true,
-            name: 'Anh',
-            selected: props == -1 || props == 1 ? true : false
-        },
-        {
-            id: 2,
-            value: false,
-            name: 'Chị',
-            selected: props == 2 ? true : false
-        }
-    ]);
-
-    const onRadioBtnClick = (item) => {
-        let updatedState = sex.map((setSex) =>
-            setSex.id == item.id
-                ? { ...setSex, selected: true }
-                : { ...setSex, selected: false }
-        );
-        setSex(updatedState);
-    };
-
-    const RadioButton = ({ onPress, selected, children }) => {
-        return (
-            <View style={styles.radioButtonContainer}>
-                <TouchableOpacity onPress={onPress} style={styles.radioButton}>
-                    {selected ? <View style={styles.radioButtonIcon} /> : null}
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onPress}>
-                    <Text style={styles.radioButtonText}>{children}</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    };
-    return (
-        <View style={styles.radioButtonContainer}>
-            {sex.map((item) => (
-                <RadioButton
-                    onPress={() => onRadioBtnClick(item)}
-                    selected={item.selected}
-                    key={item.id}>
-                    {item.name}
-                </RadioButton>
-            ))}
-        </View>
-    );
-};
-
-const InputPhone = (props) => {
-    const [value, setValue] = useState('');
-    const handleTextChange = (newText) => {
-        setValue(newText);
-    };
-    return (
-        <FloatingLabelInput
-            label="Số điện thoại"
-            value={value}
-            require={true}
-            onChangeText={(item) => {
-                handleTextChange(item);
-            }}
-        />
     );
 };
 
