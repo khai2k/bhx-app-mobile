@@ -26,6 +26,7 @@ export const BALI_HAI = '#8F9BB3';
 export const MERCURY = '#e9e8e8';
 export const EMPEROR = '#525252';
 export const DOVE_GRAY = '#666';
+export const PORCELAIN = '#ECF0F1';
 
 // WHITE
 export const WHITE = 'rgba(255,255,255,1)';
@@ -67,6 +68,8 @@ export const CORN_SILK = '#FEF8E1';
 export const MILAN = '#F5F896';
 export const ORANGE_1 = '#FFA803';
 export const TURBO = '#FFF101';
+export const GOLDEN_BELL = '#DA880D';
+export const KHAKI = '#F2DA90';
 
 // PURPLE
 export const JACKSONS_PURPLE = 'rgba(53,56,138,1)';

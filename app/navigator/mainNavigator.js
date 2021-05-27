@@ -13,6 +13,7 @@ import ProductDetail from '../container/productDetail';
 import Cart from '../container/cart';
 import UserInfo from '../container/userinfocart';
 import Group from '../container/group';
+import Search from '../container/search';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
 import NavMenu from '../components/NavMenu';
@@ -101,6 +102,15 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="UseVoucher"
                 component={UseVoucher}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="Search"
+                component={Search}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);

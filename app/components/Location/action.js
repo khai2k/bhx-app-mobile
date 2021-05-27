@@ -1,9 +1,11 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
 
 const LOCATION_GETCURRENT = 'LOCATION_GETCURRENT';
+const REMINDER_LOCATION = 'REMINDER_LOCATION';
 
 export const locationAction = {
-    LOCATION_GETCURRENT
+    LOCATION_GETCURRENT,
+    REMINDER_LOCATION
 };
 
 export const location_getCurrent = function (crrLat, crrLong) {
@@ -49,6 +51,15 @@ export const location_SaveChooseLocation = function (crrLocationRs) {
         dispatch({
             type: LOCATION_GETCURRENT,
             crrLocationRs
+        });
+    };
+};
+export const showReminderLocation = (status) => {
+    return (dispatch) => {
+        const showReminder = status;
+        dispatch({
+            type: REMINDER_LOCATION,
+            showReminder
         });
     };
 };
