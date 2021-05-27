@@ -8,10 +8,14 @@ export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
 // Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
+
+// Home
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
 export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
 export const GET_MORE_LINE = `${API_BASE}Home/LoadMoreHomeData`;
+export const GET_FRESH_PRODUCTS = `${API_BASE}Home/AjGetFreshProducts`;
+
 export const API_REQUEST_GET_ODER_SUCCESS = `${API_BASE}Order/OrderResult`;
 
 // Location
