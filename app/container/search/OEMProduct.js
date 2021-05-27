@@ -13,10 +13,9 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import Filter from './Filter';
-import OEMProduct from './OEMProduct';
 
-const Product = (props) => {
-    const { PageIndex, PageSize, TotalRecord } = props.info;
+const OEMProduct = (props) => {
+    // const { PageIndex, PageSize, TotalRecord } = props.info;
     const Products = props.products;
 
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
@@ -24,19 +23,19 @@ const Product = (props) => {
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
-    const [pageIndex, setPageIndex] = useState(PageIndex);
-    useEffect(() => {
-        console.log('reset pageindex');
-        if (
-            !helper.isEmptyOrNull(props.selectedBrand) ||
-            !helper.isEmptyOrNull(props.selectedProps) ||
-            !helper.isEmptyOrNull(props.selectedSort)
-        ) {
-            setPageIndex(1);
-        } else {
-            setPageIndex(0);
-        }
-    }, [Products]);
+    // const [pageIndex, setPageIndex] = useState(PageIndex);
+    // useEffect(() => {
+    //     console.log('reset pageindex');
+    //     if (
+    //         !helper.isEmptyOrNull(props.selectedBrand) ||
+    //         !helper.isEmptyOrNull(props.selectedProps) ||
+    //         !helper.isEmptyOrNull(props.selectedSort)
+    //     ) {
+    //         setPageIndex(1);
+    //     } else {
+    //         setPageIndex(0);
+    //     }
+    // }, [Products]);
 
     const loadMoreProducts = () => {
         // const bodyApi = {
@@ -70,82 +69,38 @@ const Product = (props) => {
         //         console.log(error);
         //     });
     };
-    const filter = (isTop) => {
-        return (
-            <Filter
-                brands={props.brands}
-                properties={props.properties}
-                sort={props.sort}
-                info={props.info}
-                selectedBrand={props.selectedBrand}
-                selectedProps={props.selectedProps}
-                selectedSort={props.selectedSort}
-                isTop={isTop}
-            />
-        );
-    };
-    const footer = () => {
-        return TotalRecord > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
-            <View>
-                <TouchableOpacity
-                    onPress={loadMoreProducts}
-                    className="loadMore"
-                    style={styles.loadMore}>
-                    <Text style={styles.loadMoreText}>
-                        Còn {TotalRecord - pageIndex * PageSize} sản phẩm
-                    </Text>
-                </TouchableOpacity>
-                {filter(false)}
-                <OEMProduct products={props.oemProducts} />
-            </View>
-        ) : (
-            <View>
-                {filter(false)}
-                <OEMProduct products={props.oemProducts} />
-            </View>
-        );
-    };
-    if (listProductLoadMore && listProductLoadMore.length > 0) {
-        // console.log(
-        //     `Render list product ${listProductLoadMore.length}, ${pageIndex}, ${TotalRecord}, ${Products.length}`
-        // );
-        return (
+    // const footer = () => {
+    //     return TotalRecord > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+    //         <View>
+    //             <TouchableOpacity
+    //                 onPress={loadMoreProducts}
+    //                 className="loadMore"
+    //                 style={styles.loadMore}>
+    //                 <Text style={styles.loadMoreText}>
+    //                     Còn {TotalRecord - pageIndex * PageSize} sản phẩm
+    //                 </Text>
+    //             </TouchableOpacity>
+    //         </View>
+    //     ) : null;
+    // };
+    return (
+        <View style={styles.oemContainer}>
+            <Text style={styles.oemContainerTitle}>
+                Tham khảo sản phẩm tương tự giá tốt
+            </Text>
             <FlatList
                 numColumns={3}
                 data={listProductLoadMore}
-                keyExtractor={(item) => `product_${item.Id}`}
+                keyExtractor={(item) => `oemProduct_${item.Id}`}
                 renderItem={({ item }) => <ProductBox bhxProduct={item} />}
-                ListHeaderComponent={() => filter(true)}
-                ListFooterComponent={footer}
+                // ListHeaderComponent={() => filter(true)}
+                // ListFooterComponent={footer}
             />
-        );
-    } else {
-        return (
-            <View style={styles.productList}>
-                <Text style={styles.emptyText}>
-                    Không có sản phẩm nào thoả {'\n'} tiêu chí đã chọn
-                </Text>
-            </View>
-        );
-    }
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
-    emptyText: {
-        color: Colors.DOVE_GRAY,
-        fontSize: 16,
-        paddingBottom: 86,
-        paddingLeft: 29,
-        paddingRight: 29,
-        paddingTop: 45,
-        textAlign: 'center',
-        textAlignVertical: 'center'
-    },
-    iconDown: {
-        height: 3,
-        marginLeft: 5,
-        width: 6
-    },
     loadMore: {
         alignItems: 'center',
         borderColor: Colors.TROPICAL_RAIN_FOREST,
@@ -173,9 +128,24 @@ const styles = StyleSheet.create({
         color: Colors.TROPICAL_RAIN_FOREST,
         fontWeight: 'bold'
     },
+    oemContainer: {
+        backgroundColor: Colors.KHAKI,
+        borderBottomColor: Colors.PORCELAIN,
+        borderBottomWidth: 10,
+        marginTop: 10,
+        paddingBottom: 5,
+        paddingTop: 5
+    },
+    oemContainerTitle: {
+        fontWeight: 'bold',
+        paddingBottom: 7,
+        paddingLeft: 5,
+        paddingRight: 5,
+        paddingTop: 7
+    },
     productList: {
         flex: 1
     }
 });
 
-export default React.memo(Product);
+export default React.memo(OEMProduct);

@@ -89,17 +89,19 @@ const PropertyFilter = (props) => {
                     )}
                 />
             </View>
-            <FilterPopup
-                visibleStatus={visiblePopup}
-                onTogglePopup={updateVisibleStatus}
-                brands={props.brands}
-                properties={props.properties}
-                sort={props.sort}
-                infoCate={props.infoCate}
-                selectedBrand={props.selectedBrand}
-                selectedProps={props.selectedProps}
-                selectedSort={props.selectedSort}
-            />
+            {props.isTop && (
+                <FilterPopup
+                    visibleStatus={visiblePopup}
+                    onTogglePopup={updateVisibleStatus}
+                    brands={props.brands}
+                    properties={props.properties}
+                    sort={props.sort}
+                    infoCate={props.infoCate}
+                    selectedBrand={props.selectedBrand}
+                    selectedProps={props.selectedProps}
+                    selectedSort={props.selectedSort}
+                />
+            )}
         </View>
     );
 };

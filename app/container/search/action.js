@@ -34,7 +34,8 @@ export const search_get = function (body) {
         });
     };
 };
-// export const category_filter = (
+// export const search_filter = (
+//     key,
 //     categoryId,
 //     selectedBrandId = 0,
 //     propertyIdList = '',
@@ -42,11 +43,10 @@ export const search_get = function (body) {
 //     pageIndex = 0,
 //     pageSize = 12,
 //     phone = 0,
-//     cateListFilter = '',
 //     provinceId = 3,
 //     storeId = 6463,
-//     isLoadVideo = 'false',
-//     isPromotion = 'false'
+//     phoneNumber = '',
+//     IsCheckPromo = 'false'
 // ) => {
 //     return (dispatch, getState) => {
 //         return new Promise((resolve, reject) => {

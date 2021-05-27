@@ -9,7 +9,7 @@ const Filter = (props) => {
     const htmlResult = `<span>Tìm thấy <b>${props.info.TotalRecord}</b> kết quả phù hợp với từ khoá <b>${props.info.Key}</b></span>`;
     return (
         <View>
-            {props.isShowResult && (
+            {props.isTop && (
                 <View style={styles.resultSearch}>
                     <HTML
                         style={styles.resultSearchText}
@@ -25,6 +25,7 @@ const Filter = (props) => {
                 selectedBrand={props.selectedBrand}
                 selectedProps={props.selectedProps}
                 selectedSort={props.selectedSort}
+                isTop={props.isTop}
             />
             <ManufactureFilter
                 brands={props.brands}
@@ -34,6 +35,7 @@ const Filter = (props) => {
                 selectedBrand={props.selectedBrand}
                 selectedProps={props.selectedProps}
                 selectedSort={props.selectedSort}
+                isTop={props.isTop}
             />
         </View>
     );

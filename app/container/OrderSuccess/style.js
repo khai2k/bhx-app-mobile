@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         position: 'absolute',
-        left: -35
+        left: 20
     },
     iconEdit: {
         resizeMode: 'contain',

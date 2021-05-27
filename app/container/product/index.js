@@ -55,7 +55,7 @@ class Product extends Component {
             .then((response) => {
                 self.setState({
                     homeData: response.Value,
-                    maxPageLine: response.OrtherData?.MaxPage,
+                    maxPageLine: response.OtherData?.MaxPage,
                     showLoading: false
                 });
             })
@@ -115,7 +115,7 @@ class Product extends Component {
                                     ...self.state.homeData,
                                     ...response.Value
                                 ],
-                                loadingLine: response.OrtherData?.IsNextGroup,
+                                loadingLine: response.OtherData?.IsNextGroup,
                                 pageIndexLine: self.state.pageIndexLine + 1,
                                 isLoading: true,
                                 showLoading: false

@@ -75,6 +75,27 @@ const ComboProductBox = (props) => {
             .then(async (res) => {
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
+                    // add sp tới max tồn
+                    const maxQuantity =
+                        res.Value.stock > 0 ? res.Value.stock : 50;
+                    actionCart
+                        .cart_add_item_product(
+                            productID,
+                            maxQuantity,
+                            quantity >= numberItems,
+                            expStoreId,
+                            true
+                        )
+                        .then(async (res2) => {
+                            if (res2.ResultCode > 0) {
+                                alertAPI(res2.Message);
+                            } else {
+                                await actionCart.cart_get_simple();
+                            }
+                        })
+                        .catch((error) => {
+                            alertAPI(error);
+                        });
                 } else {
                     await actionCart.cart_get_simple();
                 }
