@@ -8,9 +8,11 @@ import {
     Text,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import { helper } from '@app/common';
 // import * as orderSuccessCreator from './action';
 // import CancelOrderModal from './cancelOrderModal';
 import Header from '../../components/Header';
@@ -141,7 +143,8 @@ class OrderSuccess extends Component {
                     <View style={styles.dot} />
                     <Text>Tổng tiền: </Text>
                     <Text style={{ fontWeight: 'bold' }}>
-                        {this.state.totalPrice}đ
+                        {this.state.totalPrice &&
+                            helper.formatMoney(this.state.totalPrice)}
                     </Text>
                     <TouchableOpacity
                         onPress={() =>
@@ -187,30 +190,30 @@ class OrderSuccess extends Component {
             <View style={styles.buttonContainer}>
                 <Text>Thanh toán khi nhận hàng bằng cách:</Text>
                 <View style={styles.buttonRow}>
-                    <View style={styles.boxRow}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.setState({
-                                    doneIcon: true,
-                                    purchaseMethodText: 'tiền mặt'
-                                })
-                            }>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                doneIcon: true,
+                                purchaseMethodText: 'tiền mặt'
+                            })
+                        }>
+                        <View style={styles.boxRow}>
                             {this._renderDoneIcon1()}
                             <Text style={styles.textButton}>Tiền mặt</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.boxRow}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.setState({
-                                    doneIcon: false,
-                                    purchaseMethodText: 'cà thẻ'
-                                })
-                            }>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                doneIcon: false,
+                                purchaseMethodText: 'cà thẻ'
+                            })
+                        }>
+                        <View style={styles.boxRow}>
                             {this._renderDoneIcon2()}
                             <Text style={styles.textButton}>Cà thẻ</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </TouchableWithoutFeedback>
                 </View>
             </View>
         );

@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     voucherContainer: {
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginBottom: '40%'
     },
     voucherBox: {
         marginHorizontal: 8,
@@ -150,7 +151,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         height: 60,
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 10,
+        marginBottom: 10
     },
     voucherPriceBox: {
         left: -4,

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { helper } from '@app/common';
 import {
     View,
     Text,
@@ -8,14 +10,92 @@ import {
     TouchableOpacity
 } from 'react-native';
 import styles from './style';
-
-const test = 12345;
 class UseVoucher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChange: false
+            isChange: false,
+            voucherList: [],
+            voucherInfo: [],
+            cartInfo: {}
         };
+    }
+
+    componentDidMount() {
+        axios({
+            method: 'post',
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/GetListVoucherCoupon',
+            data: {
+                PhoneNumber: '0938727300',
+                ProvinceId: 3,
+                DistrictId: 2087,
+                WardId: 27125,
+                StoreId: 6463,
+                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+            }
+        })
+            .then((res) => {
+                const { data } = res;
+                this.setState({
+                    voucherList: data.Value
+                });
+            })
+            .catch((err) => console.log('err', err));
+    }
+
+    addVoucher() {
+        axios({
+            method: 'post',
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/ApplyVoucher',
+            data: {
+                Code: 'JC26GTRG',
+                PingCode: '',
+                PhoneNumber: '0938727300',
+                ProvinceId: 3,
+                DistrictId: 2087,
+                WardId: 27125,
+                StoreId: 6463,
+                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+            }
+        })
+            .then((res) => {
+                const { data } = res;
+                this.setState({
+                    cartInfo: data.OtherData.CartTotal,
+                    isChange: true
+                });
+                console.log(this.state.cartInfo);
+            })
+            .catch((err) => console.log('err', err));
+    }
+
+    deleteVoucher() {
+        axios({
+            method: 'post',
+            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/ClearVoucherCoupon',
+            data: {
+                token: '',
+                us: '',
+                provinceId: 3,
+                districtId: 2087,
+                wardId: 27125,
+                storeId: 6463,
+                data: {
+                    Code: 'JC26GTRG',
+                    GiftType: 1,
+                    CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+                },
+                IsMobile: true
+            }
+        })
+            .then((res) => {
+                const { data } = res;
+                this.setState({
+                    isChange: false
+                });
+                console.log(data);
+            })
+            .catch((err) => console.log('err', err));
     }
 
     _renderHeader() {
@@ -46,7 +126,9 @@ class UseVoucher extends Component {
                         keyboardType="numeric"
                     />
                     <TouchableOpacity
-                        onPress={() => this.setState({ isChange: true })}>
+                        onPress={() => {
+                            this.addVoucher();
+                        }}>
                         <View style={styles.submitPhone}>
                             <Text style={styles.textSubmitPhone}>Sử dụng</Text>
                         </View>
@@ -64,9 +146,9 @@ class UseVoucher extends Component {
         );
     }
 
-    _renderVoucherList() {
+    _renderVoucher() {
         return (
-            <ScrollView style={styles.voucherContainer}>
+            <View style={{ marginHorizontal: 10 }}>
                 <View style={styles.voucherBox}>
                     <View style={styles.voucherPriceBox}>
                         <Image
@@ -87,9 +169,9 @@ class UseVoucher extends Component {
                                 Hạn sử dụng đến: 31/12/2020
                             </Text>
                             <TouchableOpacity
-                                onPress={() =>
-                                    this.setState({ isChange: false })
-                                }>
+                                onPress={() => {
+                                    this.deleteVoucher();
+                                }}>
                                 <Text style={styles.voucherCancelText}>
                                     Hủy dùng
                                 </Text>
@@ -97,7 +179,70 @@ class UseVoucher extends Component {
                         </View>
                     </View>
                 </View>
+            </View>
+        );
+    }
+
+    _renderVoucherList() {
+        return (
+            <ScrollView style={styles.voucherContainer}>
+                {this.state.voucherList.length > 0 &&
+                    this.state.voucherList.map((itemVoucher) => {
+                        return (
+                            <View style={styles.voucherBox}>
+                                <View style={styles.voucherPriceBox}>
+                                    <Image
+                                        source={require('../../../assets/images/50K.png')}
+                                        style={styles.imageVoucher}
+                                    />
+                                </View>
+                                <View style={styles.voucherInfoBox}>
+                                    <Text style={styles.voucherLabel}>
+                                        Giảm 100.000đ trên hóa đơn 300.000đ
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between'
+                                        }}>
+                                        <Text style={styles.voucherDate}>
+                                            Hạn sử dụng đến: 31/12/2020
+                                        </Text>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                this.setState({
+                                                    isChange: false
+                                                })
+                                            }>
+                                            <Text
+                                                style={
+                                                    styles.voucherCancelText
+                                                }>
+                                                Hủy dùng
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        );
+                    })}
             </ScrollView>
+        );
+    }
+
+    _renderVoucherLine() {
+        return (
+            <View style={styles.calVoucher}>
+                <Text style={{ color: '#8F9BB3' }}>
+                    Phiếu mua hàng(...821):
+                </Text>
+                <Text style={{ right: -20 }}>×</Text>
+                <Text>
+                    -
+                    {this.state.cartInfo &&
+                        helper.formatMoney(this.state.cartInfo.VoucherDiscount)}
+                </Text>
+            </View>
         );
     }
 
@@ -105,19 +250,25 @@ class UseVoucher extends Component {
         if (this.state.isChange == true) {
             return (
                 <>
-                    <View style={styles.calVoucher}>
-                        <Text style={{ color: '#8F9BB3' }}>
-                            Phiếu mua hàng(...821):
-                        </Text>
-                        <Text style={{ right: -20 }}>×</Text>
-                        <Text>-100.000đ</Text>
-                    </View>
+                    {this._renderVoucherLine()}
                     <TouchableOpacity>
                         <View style={styles.submitButton}>
                             <Text style={styles.submitButtonText}>Áp dụng</Text>
                             <View style={styles.submitPrice}>
-                                <Text style={styles.oldPrice}>1.300.000đ</Text>
-                                <Text style={styles.newPrice}>1.200.000đ</Text>
+                                <Text style={styles.oldPrice}>
+                                    {this.state.cartInfo &&
+                                        helper.formatMoney(
+                                            this.state.cartInfo.Total
+                                        )}
+                                </Text>
+                                <Text style={styles.newPrice}>
+                                    {this.state.cartInfo &&
+                                        helper.formatMoney(
+                                            this.state.cartInfo.Total -
+                                                this.state.cartInfo
+                                                    .VoucherDiscount
+                                        )}
+                                </Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -161,7 +312,8 @@ class UseVoucher extends Component {
             <View style={styles.container}>
                 {this._renderHeader()}
                 {this._renderInputContainer()}
-                {this._renderVoucherList()}
+                {this._renderVoucher()}
+                {/* {this._renderVoucherList()} */}
                 {this._renderFooterContainer()}
             </View>
         );
