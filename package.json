@@ -13,7 +13,8 @@
         "prettier": "prettier --write ./app",
         "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
         "eslint": "node_modules/.bin/eslint \"./**/*.js\"",
-        "pod-install": "cd ios && pod install"
+        "pod-install": "cd ios && pod install",
+        "build-android-prod": "cd android && ./gradlew assembleRelease"
     },
     "lint-staged": {
         "app/**/*.{js,ts,tsx}": [

@@ -324,24 +324,20 @@ const ProductItemCart = (props) => {
     };
 
     const showTitleItemProduct = () => {
-        let textSub = '';
+        let textfull = props.productCart.Info.ShortName;
         if (
             props.productCart.TypeProduct === 6 &&
             props.productCart.Info.IsFreshExpired
         ) {
-            textSub = '(Hàng qua ngày)';
+            textfull = `${textfull}(Hàng qua ngày)`;
         } else if (
             props.productCart.TypeProduct === 6 &&
             !props.productCart.Info.IsFreshExpired
         ) {
-            textSub = '(Hàng xả kho)';
+            textfull = `${textfull}(Hàng xả kho)`;
         }
         if (props.TypeProduct === 3 || props.TypeProduct === 4) {
-            return (
-                <Text style={styles.title}>
-                    {props.productCart.Info.ShortName} {textSub}
-                </Text>
-            );
+            return <Text style={styles.title}>{textfull}</Text>;
         } else {
             return (
                 <TouchableOpacity
@@ -350,9 +346,7 @@ const ProductItemCart = (props) => {
                             productId: props.productCart.Info.Id
                         })
                     }>
-                    <Text style={styles.title}>
-                        {props.productCart.Info.ShortName} {textSub}
-                    </Text>
+                    <Text style={styles.title}>{textfull}</Text>
                 </TouchableOpacity>
             );
         }
