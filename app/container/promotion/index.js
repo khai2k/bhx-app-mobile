@@ -9,6 +9,8 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import { IconPromotion } from '../../images';
@@ -17,6 +19,7 @@ import * as promotionAction from './action';
 
 const Promotion = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const promotionData = useSelector(
         (state) => state.promotionReducer.Promotion
     );
@@ -79,9 +82,7 @@ const Promotion = () => {
                 size="large"
                 color="#00ff00"
             />
-            <ScrollView
-                nestedScrollEnabled
-                contentOffset={{ x: 0, y: getPosition() }}>
+            <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
                 <RenderListCategory
                     lstCategoryTop={listCategoryTop}
                     setGroupCateFilter={setGroupCateFilter}
@@ -93,6 +94,7 @@ const Promotion = () => {
                     lstGroupCateFilter={lstGroupCateFilter}
                     setListGroupCateFilter={setListGroupCateFilter}
                     groupCateFilter={groupCateFilter}
+                    navigation={navigation}
                 />
             </ScrollView>
         </View>
@@ -190,6 +192,19 @@ const RenderGroupCate = React.memo((props) => {
                     />
                 )}
                 <RenderProductEachCategory lstProducts={item.item.Products} />
+                {item.item.CategoryId !== 9998 && (
+                    <RenderListCategoryFilter
+                        categorys={item.item.Categorys}
+                        promotionCount={item.item.PromotionCount}
+                        groupCateId={item.item.CategoryId}
+                        lstGroupCateFilter={props.lstGroupCateFilter}
+                        setListGroupCateFilter={props.setListGroupCateFilter}
+                        dispatch={props.dispatch}
+                        query={item.item.Query}
+                        isBottom
+                        navigation={props.navigation}
+                    />
+                )}
                 {item.item.Query.PromotionCount > 0 && (
                     <RenderLoadMoreProduct
                         promotionCount={item.item.Query.PromotionCount}
@@ -244,32 +259,49 @@ const RenderCategoryFilter = React.memo((props) => {
                     {props.nameCategory}
                 </Text>
             </View>
-            <FlatList
-                horizontal
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                windowSize={60}
-                showsHorizontalScrollIndicator={false}
-                data={props.categorys}
-                keyExtractor={(item) => item.Id}
-                renderItem={(item) => {
-                    return (
-                        <RenderItemCateFilter
-                            item={item.item}
-                            index={item.index}
-                            promotionCount={props.promotionCount}
-                            groupCateId={props.groupCateId}
-                            lstGroupCateFilter={props.lstGroupCateFilter}
-                            setListGroupCateFilter={
-                                props.setListGroupCateFilter
-                            }
-                            dispatch={props.dispatch}
-                            query={props.query}
-                        />
-                    );
-                }}
+            <RenderListCategoryFilter
+                categorys={props.categorys}
+                promotionCount={props.promotionCount}
+                groupCateId={props.groupCateId}
+                lstGroupCateFilter={props.lstGroupCateFilter}
+                setListGroupCateFilter={props.setListGroupCateFilter}
+                dispatch={props.dispatch}
+                query={props.query}
+                isTop
+                isBottom={false}
             />
         </View>
+    );
+});
+
+const RenderListCategoryFilter = React.memo((props) => {
+    return (
+        <FlatList
+            horizontal
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={60}
+            showsHorizontalScrollIndicator={false}
+            data={props.categorys}
+            keyExtractor={(item) => item.Id}
+            renderItem={(item) => {
+                return (
+                    <RenderItemCateFilter
+                        item={item.item}
+                        index={item.index}
+                        promotionCount={props.promotionCount}
+                        groupCateId={props.groupCateId}
+                        lstGroupCateFilter={props.lstGroupCateFilter}
+                        setListGroupCateFilter={props.setListGroupCateFilter}
+                        dispatch={props.dispatch}
+                        query={props.query}
+                        isBottom={props.isBottom}
+                        isTop={props.isTop}
+                        navigation={props.navigation}
+                    />
+                );
+            }}
+        />
     );
 });
 
@@ -310,8 +342,12 @@ const RenderItemCateFilter = React.memo((props) => {
     }
 
     return (
-        <View style={styles.itemGroupCateFilter}>
-            {props.index === 0 && (
+        <View
+            style={[
+                styles.itemGroupCateFilter,
+                props.isBottom && styles.itemGroupCateFilterBottom
+            ]}>
+            {props.index === 0 && !props.isBottom && (
                 <View
                     style={[
                         styles.itemCateFilter,
@@ -331,24 +367,36 @@ const RenderItemCateFilter = React.memo((props) => {
                     </TouchableOpacity>
                 </View>
             )}
-            <View
-                style={[
-                    styles.itemCateFilter,
-                    displayActiveGroupCateFilter(props.item.Id, true)
-                ]}>
-                <TouchableOpacity
-                    onPress={() => {
-                        handleSelectCateFilter(props.item.Id);
-                    }}>
-                    <Text
-                        style={[
-                            styles.txtItemCateFilter,
-                            displayActiveGroupCateFilter(props.item.Id, false)
-                        ]}>
-                        {props.item.Name}
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            {((props.isBottom && props.query.PageIndex > 0) || props.isTop) && (
+                <View
+                    style={[
+                        styles.itemCateFilter,
+                        !props.isBottom &&
+                            displayActiveGroupCateFilter(props.item.Id, true)
+                    ]}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            props.isBottom
+                                ? props.navigation.navigate('Group', {
+                                      url: props.item.Url
+                                  })
+                                : handleSelectCateFilter(props.item.Id);
+                        }}>
+                        <Text
+                            style={[
+                                styles.txtItemCateFilter,
+                                props.isBottom && styles.txtItemCateFilterColor,
+                                !props.isBottom &&
+                                    displayActiveGroupCateFilter(
+                                        props.item.Id,
+                                        false
+                                    )
+                            ]}>
+                            {props.item.Name}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 });

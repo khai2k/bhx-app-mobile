@@ -40,6 +40,7 @@ export const promotionPage_get = function () {
             }
         )
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const LINE_COLOR = [
                     'orange-line',
                     'green-line',
@@ -49,6 +50,9 @@ export const promotionPage_get = function () {
                     'aqua-line',
                     'skyblue-line',
                     'purple-line',
+                    'red-line',
+                    'green-line',
+                    'blue-line',
                     'red-line'
                 ];
                 response.Value.GroupCate.map(
@@ -66,7 +70,6 @@ export const promotionPage_get = function () {
                     type: PROMOTIONPAGE_GET,
                     dataPromotionPage
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -128,6 +131,7 @@ export const loadMoreProductsGroup_post = (
             bodyApi
         )
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const dataLoadMoreProductsGroup = {
                     ...response,
                     CategoryId
@@ -136,7 +140,6 @@ export const loadMoreProductsGroup_post = (
                     type: LOAD_MORE_PRODUCTS_GROUP,
                     dataLoadMoreProductsGroup
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -166,6 +169,7 @@ export const productBySubCate_post = (
         };
         apiBase(API_CONST.API_POST_PRODUCT_BY_SUB_CATE, METHOD.POST, bodyApi)
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const dataProductBySubCate = {
                     ...response,
                     CategoryId,
@@ -175,7 +179,6 @@ export const productBySubCate_post = (
                     type: GET_PRODUCT_BY_SUB_CATE,
                     dataProductBySubCate
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
