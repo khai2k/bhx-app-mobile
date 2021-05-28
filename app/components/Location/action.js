@@ -1,4 +1,6 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
+import { Storage } from '@app/common';
+import { CONST_STORAGE } from '@app/constants';
 
 const LOCATION_GETCURRENT = 'LOCATION_GETCURRENT';
 
@@ -12,7 +14,7 @@ export const location_getCurrent = function (crrLat, crrLong) {
             data: {
                 Lng: crrLat,
                 Lat: crrLong,
-                IsLive: false
+                IsLive: true
             }
         };
         apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
@@ -32,6 +34,11 @@ export const location_getCurrent = function (crrLat, crrLong) {
                         _fullAddress += `${crrLocationRs.ProvinceFullName}`;
                     }
                     crrLocationRs.FullAddress = _fullAddress;
+
+                    Storage.setItem(
+                        CONST_STORAGE.SESSION_LOCATION_CURRENT,
+                        crrLocationRs
+                    );
                 }
                 dispatch({
                     type: LOCATION_GETCURRENT,
@@ -46,6 +53,7 @@ export const location_getCurrent = function (crrLat, crrLong) {
 
 export const location_SaveChooseLocation = function (crrLocationRs) {
     return (dispatch) => {
+        Storage.setItem(CONST_STORAGE.SESSION_LOCATION_CURRENT, crrLocationRs);
         dispatch({
             type: LOCATION_GETCURRENT,
             crrLocationRs
