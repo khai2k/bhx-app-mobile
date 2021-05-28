@@ -123,48 +123,56 @@ const Promotion = React.memo(() => {
 const RenderGroupCate = React.memo((props) => {
     function renderGroupCate(item) {
         return (
-            <View>
-                {item.item.CategoryId === 9998 && (
-                    <RenderLineExpired nameCategory={item.item.Text} />
-                )}
-                {item.item.CategoryId !== 9998 && (
-                    <RenderCategoryFilter
-                        categorys={item.item.Categorys}
-                        nameCategory={item.item.Text}
-                        lineColor={item.item.LineColor}
-                        promotionCount={item.item.PromotionCount}
-                        groupCateId={item.item.CategoryId}
-                        lstGroupCateFilter={props.lstGroupCateFilter}
-                        setListGroupCateFilter={props.setListGroupCateFilter}
-                        dispatch={props.dispatch}
-                        query={item.item.Query}
-                        currentLocation={props.currentLocation}
+            item.item.Products.length > 0 && (
+                <View>
+                    {item.item.CategoryId === 9998 && (
+                        <RenderLineExpired nameCategory={item.item.Text} />
+                    )}
+                    {item.item.CategoryId !== 9998 && (
+                        <RenderCategoryFilter
+                            categorys={item.item.Categorys}
+                            nameCategory={item.item.Text}
+                            lineColor={item.item.LineColor}
+                            promotionCount={item.item.PromotionCount}
+                            groupCateId={item.item.CategoryId}
+                            lstGroupCateFilter={props.lstGroupCateFilter}
+                            setListGroupCateFilter={
+                                props.setListGroupCateFilter
+                            }
+                            dispatch={props.dispatch}
+                            query={item.item.Query}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                    <RenderProductEachCategory
+                        lstProducts={item.item.Products}
                     />
-                )}
-                <RenderProductEachCategory lstProducts={item.item.Products} />
-                {item.item.CategoryId !== 9998 && (
-                    <ListCategoryFilter
-                        categorys={item.item.Categorys}
-                        promotionCount={item.item.PromotionCount}
-                        groupCateId={item.item.CategoryId}
-                        lstGroupCateFilter={props.lstGroupCateFilter}
-                        setListGroupCateFilter={props.setListGroupCateFilter}
-                        dispatch={props.dispatch}
-                        query={item.item.Query}
-                        isBottom
-                        navigation={props.navigation}
-                        currentLocation={props.currentLocation}
-                    />
-                )}
-                {item.item.Query.PromotionCount > 0 && (
-                    <LoadMoreProduct
-                        promotionCount={item.item.Query.PromotionCount}
-                        query={item.item.Query}
-                        dispatch={props.dispatch}
-                        currentLocation={props.currentLocation}
-                    />
-                )}
-            </View>
+                    {item.item.CategoryId !== 9998 && (
+                        <ListCategoryFilter
+                            categorys={item.item.Categorys}
+                            promotionCount={item.item.PromotionCount}
+                            groupCateId={item.item.CategoryId}
+                            lstGroupCateFilter={props.lstGroupCateFilter}
+                            setListGroupCateFilter={
+                                props.setListGroupCateFilter
+                            }
+                            dispatch={props.dispatch}
+                            query={item.item.Query}
+                            isBottom
+                            navigation={props.navigation}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                    {item.item.Query.PromotionCount > 0 && (
+                        <LoadMoreProduct
+                            promotionCount={item.item.Query.PromotionCount}
+                            query={item.item.Query}
+                            dispatch={props.dispatch}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                </View>
+            )
         );
     }
 
