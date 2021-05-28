@@ -15,11 +15,12 @@ class Location extends Component {
     }
 
     async componentDidMount() {
-        const _crrLocation = await Storage.getItem(
+        const _crrLocationString = await Storage.getItem(
             CONST_STORAGE.SESSION_LOCATION_CURRENT
         );
 
-        console.log(`_crrLocation: ${_crrLocation}`);
+        const _crrLocation =
+            _crrLocationString != '' ? JSON.parse(_crrLocationString) : null;
 
         if (_crrLocation === null) {
             const hasLocationPermission = await PermissionsAndroid.check(
@@ -76,4 +77,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 // make this component available to the app
-export default connect(mapStateToProps, mapDispatchToProps)(Location);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(React.memo(Location));

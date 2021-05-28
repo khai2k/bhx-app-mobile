@@ -16,7 +16,7 @@ export const location_getCurrent = function (crrLat, crrLong) {
             data: {
                 Lng: crrLat,
                 Lat: crrLong,
-                IsLive: true
+                IsLive: false
             }
         };
         apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
@@ -39,7 +39,7 @@ export const location_getCurrent = function (crrLat, crrLong) {
 
                     Storage.setItem(
                         CONST_STORAGE.SESSION_LOCATION_CURRENT,
-                        crrLocationRs
+                        JSON.stringify(crrLocationRs)
                     );
                 }
                 dispatch({
@@ -55,7 +55,14 @@ export const location_getCurrent = function (crrLat, crrLong) {
 
 export const location_SaveChooseLocation = function (crrLocationRs) {
     return (dispatch) => {
-        Storage.setItem(CONST_STORAGE.SESSION_LOCATION_CURRENT, crrLocationRs);
+        console.log(
+            `location_SaveChooseLocation crrLocationRs: ${crrLocationRs}`
+        );
+        Storage.setItem(
+            CONST_STORAGE.SESSION_LOCATION_CURRENT,
+            JSON.stringify(crrLocationRs)
+        );
+
         dispatch({
             type: LOCATION_GETCURRENT,
             crrLocationRs
