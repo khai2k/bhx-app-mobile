@@ -17,13 +17,11 @@ export const promotionAction = {
 };
 
 // Param để lấy danh sách cate
-const provinceId = 3;
-const storeId = 6463;
 const phone = 0;
 const clearcache = 'ok';
 
 // Get dữ liệu trang khuyến mãi
-export const promotionPage_get = function () {
+export const promotionPage_get = function (provinceId, storeId) {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
         apiBase(
@@ -78,7 +76,7 @@ export const promotionPage_get = function () {
 };
 
 // Get danh sách sách phẩm deal shock
-export const topDealPromotion_get = function () {
+export const topDealPromotion_get = function (provinceId, storeId) {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
         apiBase(
@@ -111,7 +109,9 @@ export const loadMoreProductsGroup_post = (
     PageSize,
     ExcludeProductIds,
     CategoryId,
-    StringCates
+    StringCates,
+    provinceId,
+    storeId
 ) => {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
@@ -153,7 +153,9 @@ export const productBySubCate_post = (
     PageSize,
     ExcludeProductIds,
     CategoryId,
-    StringCates
+    StringCates,
+    provinceId,
+    storeId
 ) => {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
