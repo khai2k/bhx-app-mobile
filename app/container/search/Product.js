@@ -4,9 +4,8 @@ import {
     Text,
     FlatList,
     StyleSheet,
-    ScrollView,
     TouchableOpacity,
-    Image
+    Alert
 } from 'react-native';
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -20,55 +19,55 @@ const Product = (props) => {
     const Products = props.products;
 
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
+    const [remainProducts, setRemainProducts] = useState(TotalRecord);
 
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
-    const [pageIndex, setPageIndex] = useState(PageIndex);
+    const [pageIndex, setPageIndex] = useState(1);
     useEffect(() => {
         console.log('reset pageindex');
-        if (
-            !helper.isEmptyOrNull(props.selectedBrand) ||
-            !helper.isEmptyOrNull(props.selectedProps) ||
-            !helper.isEmptyOrNull(props.selectedSort)
-        ) {
-            setPageIndex(1);
-        } else {
-            setPageIndex(0);
+        setPageIndex(1);
+        if (!helper.isEmptyOrNull(props.otherDataAjax.RestProduct)) {
+            setRemainProducts(props.otherDataAjax.RestProduct);
         }
     }, [Products]);
 
     const loadMoreProducts = () => {
-        // const bodyApi = {
-        //     provinceId: 3,
-        //     storeId: 6463,
-        //     data: {
-        //         categoryId: props.info.Id,
-        //         selectedBrandId: props.selectedBrand,
-        //         phone: 0,
-        //         cateListFilter: '',
-        //         propertyIdList: props.selectedProps,
-        //         pageIndex,
-        //         pageSize: PageSize,
-        //         isLoadVideo: false,
-        //         isPromotion: false,
-        //         sort: props.selectedSort
-        //     }
-        // };
-        // console.log('Start call api');
-        // apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
-        //     .then((response) => {
-        //         console.log(response);
-        //         setPageIndex(pageIndex + 1);
-        //         setListProductLoadMore([
-        //             ...listProductLoadMore,
-        //             ...response.Value.CurrentData.Products
-        //         ]);
-        //         console.log('End call api');
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+        const bodyApi = {
+            OriginalKey: props.info.OriginalKey,
+            Key: props.info.OriginalKey,
+            CategoryId: props.selectedProps,
+            ManufactureID: props.selectedBrand,
+            PageSize,
+            PageIndex: pageIndex,
+            TotalRecord: remainProducts,
+            QuerySort: props.selectedSort,
+            QueryFilter: filter,
+            provinceId: 3,
+            storeId: 6463,
+            IsCheckPromo: false
+        };
+        console.log('Start call api');
+        apiBase(API_CONST.API_SEARCH_AJAXPRODUCT, METHOD.POST, bodyApi)
+            .then((response) => {
+                console.log(response);
+                if (!helper.isEmptyOrNull(response)) {
+                    setPageIndex(pageIndex + 1);
+                    setListProductLoadMore([
+                        ...listProductLoadMore,
+                        ...response.Value
+                    ]);
+                    setRemainProducts(response.OtherData.RestProduct);
+                } else {
+                    Alert('Lỗi lấy dữ liệu');
+                }
+                console.log('End call api');
+            })
+            .catch((error) => {
+                Alert('Lỗi lấy dữ liệu');
+                console.log(error);
+            });
     };
     const filter = (isTop) => {
         return (
@@ -84,24 +83,34 @@ const Product = (props) => {
             />
         );
     };
+    const oemProductBox = () => {
+        return (
+            !helper.isEmptyOrNull(props.oemProducts) && (
+                <OEMProduct
+                    products={props.oemProducts}
+                    otherData={props.otherData}
+                />
+            )
+        );
+    };
     const footer = () => {
-        return TotalRecord > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+        return remainProducts > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
             <View>
                 <TouchableOpacity
                     onPress={loadMoreProducts}
                     className="loadMore"
                     style={styles.loadMore}>
                     <Text style={styles.loadMoreText}>
-                        Còn {TotalRecord - pageIndex * PageSize} sản phẩm
+                        Còn {remainProducts - PageSize} sản phẩm
                     </Text>
                 </TouchableOpacity>
                 {filter(false)}
-                <OEMProduct products={props.oemProducts} />
+                {oemProductBox()}
             </View>
         ) : (
             <View>
                 {filter(false)}
-                <OEMProduct products={props.oemProducts} />
+                {oemProductBox()}
             </View>
         );
     };
@@ -121,10 +130,14 @@ const Product = (props) => {
         );
     } else {
         return (
-            <View style={styles.productList}>
-                <Text style={styles.emptyText}>
-                    Không có sản phẩm nào thoả {'\n'} tiêu chí đã chọn
-                </Text>
+            <View style={{ flex: 1 }}>
+                {filter(true)}
+                <View style={styles.productList}>
+                    <Text style={styles.emptyText}>
+                        Không có sản phẩm nào thoả {'\n'} tiêu chí đã chọn
+                    </Text>
+                </View>
+                {oemProductBox()}
             </View>
         );
     }
@@ -173,9 +186,7 @@ const styles = StyleSheet.create({
         color: Colors.TROPICAL_RAIN_FOREST,
         fontWeight: 'bold'
     },
-    productList: {
-        flex: 1
-    }
+    productList: {}
 });
 
 export default React.memo(Product);

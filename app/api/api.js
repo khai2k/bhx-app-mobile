@@ -41,4 +41,6 @@ export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxP
 export const API_POST_PRODUCT_BY_SUB_CATE = `${API_BASE}PromotionPage/AjaxProductsBySubCate`;
 
 // Search
-export const API_GET_SEARCH = `${API_BASE}SearchPage/Get`;
+export const API_SEARCH_GET = `${API_BASE}SearchPage/Get`;
+export const API_SEARCH_AJAXPRODUCT = `${API_BASE}SearchPage/AjaxProducts`;
+export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`;

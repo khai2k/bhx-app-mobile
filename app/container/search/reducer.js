@@ -6,15 +6,17 @@ const searchReducer = function (state = _state.searchState, action) {
         case _action.searchAction.SEARCH_GET:
             return {
                 ...state,
-                Filter: action.searchInfo.Filter,
-                Products: action.searchInfo.Products,
-                OEMProducts: action.searchInfo.OEMProducts
+                Filter: action.searchInfo.Value.Filter,
+                Products: action.searchInfo.Value.Products,
+                OEMProducts: action.searchInfo.Value.OEMProducts,
+                OtherData: action.searchInfo.OtherData
             };
-        // case _action.categoryAction.CATEGORY_FILTER:
-        //     return {
-        //         ...state,
-        //         CurrentData: action.categoryInfo.CurrentData
-        //     };
+        case _action.searchAction.SEARCH_FILTER:
+            return {
+                ...state,
+                Products: action.searchInfo.Value,
+                OtherDataAjax: action.searchInfo.OtherData
+            };
         case _action.searchAction.SELECT_BRAND:
             return {
                 ...state,
