@@ -1,4 +1,6 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
+import { Storage } from '@app/common';
+import { CONST_STORAGE } from '@app/constants';
 
 const LOCATION_GETCURRENT = 'LOCATION_GETCURRENT';
 const REMINDER_LOCATION = 'REMINDER_LOCATION';
@@ -34,6 +36,11 @@ export const location_getCurrent = function (crrLat, crrLong) {
                         _fullAddress += `${crrLocationRs.ProvinceFullName}`;
                     }
                     crrLocationRs.FullAddress = _fullAddress;
+
+                    Storage.setItem(
+                        CONST_STORAGE.SESSION_LOCATION_CURRENT,
+                        JSON.stringify(crrLocationRs)
+                    );
                 }
                 dispatch({
                     type: LOCATION_GETCURRENT,
@@ -48,6 +55,14 @@ export const location_getCurrent = function (crrLat, crrLong) {
 
 export const location_SaveChooseLocation = function (crrLocationRs) {
     return (dispatch) => {
+        console.log(
+            `location_SaveChooseLocation crrLocationRs: ${crrLocationRs}`
+        );
+        Storage.setItem(
+            CONST_STORAGE.SESSION_LOCATION_CURRENT,
+            JSON.stringify(crrLocationRs)
+        );
+
         dispatch({
             type: LOCATION_GETCURRENT,
             crrLocationRs
