@@ -29,19 +29,27 @@ const ProductArticle = (props) => {
     ProductArticle = ProductArticle.split('data-src').join('src');
     const { ShortName } = bHXProduct;
     const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowMore, setIsShowMore] = useState(false);
     function renderModal() {
         return (
             <Modal animationType="slide" transparent visible={isShowModal}>
                 <View style={styles.modalView}>
                     <View style={styles.header}>
-                        <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                paddingHorizontal: 10,
+                                backgroundColor: 'white',
+                                paddingVertical: 10
+                            }}>
                             <Text>Mô tả sản phẩm </Text>
                         </View>
                         <TouchableOpacity onPress={() => setIsShowModal(false)}>
                             <View
                                 style={{
-                                    paddingHorizontal: 10,
-                                    borderLeftWidth: 1
+                                    backgroundColor: 'white',
+                                    padding: 10,
+                                    marginLeft: 2
                                 }}>
                                 <Text>✕</Text>
                             </View>
@@ -69,10 +77,23 @@ const ProductArticle = (props) => {
                                             Thông tin sản phẩm{' '}
                                         </Text>
                                     </View>
-                                    <HTML
-                                        source={{ html: FeatureSpecification }}
-                                        contentWidth={contentWidth}
-                                    />
+                                    <View
+                                        style={{
+                                            width: 100,
+                                            overflow: isShowMore
+                                                ? 'visible'
+                                                : 'hidden'
+                                        }}>
+                                        <HTML
+                                            source={{
+                                                html: FeatureSpecification
+                                            }}
+                                            contentWidth={contentWidth}
+                                        />
+                                    </View>
+                                    <Text onPress={() => setIsShowMore(true)}>
+                                        Xem thêm
+                                    </Text>
                                 </View>
                             )}
                         </View>
@@ -186,9 +207,8 @@ const styles = StyleSheet.create({
         zIndex: 1111
     },
     header: {
-        backgroundColor: COLOR.WHITE,
         flexDirection: 'row',
-        paddingVertical: 10
+        paddingBottom: 2
     },
     modalView: {
         backgroundColor: '#f5f8fd',

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
     Image: {
         height: 20,
-        margin: 5,
+        marginVertical: 5,
         width: 20
     },
     boxBuy: {

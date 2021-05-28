@@ -21,9 +21,9 @@ class ProductDetail extends Component {
         this.state = {
             comboProducts: true
         };
-        const { route } = props;
+        const { route, location } = props;
         const { productId } = route.params;
-        this.props.actionProductDetail.fetchAll(productId);
+        this.props.actionProductDetail.fetchAll(productId, location);
     }
 
     render() {
@@ -65,17 +65,6 @@ class ProductDetail extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
-    return {
-        Product_detail: state.productDetailReducer.Product_detail,
-        Product_relative: state.productDetailReducer.Product_relative,
-        Combo_detail: state.productDetailReducer.Combo_detail,
-        Box_banner: state.productDetailReducer.Box_banner,
-        isExchangeProduct: state.productDetailReducer.isExchangeProduct,
-        Gallery_product: state.productDetailReducer.Gallery_product,
-        Is_loading: state.productDetailReducer.Is_loading
-    };
-};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -88,6 +77,20 @@ const styles = StyleSheet.create({
         padding: 10
     }
 });
+
+const mapStateToProps = function (state) {
+    return {
+        Product_detail: state.productDetailReducer.Product_detail,
+        Product_relative: state.productDetailReducer.Product_relative,
+        Combo_detail: state.productDetailReducer.Combo_detail,
+        Box_banner: state.productDetailReducer.Box_banner,
+        isExchangeProduct: state.productDetailReducer.isExchangeProduct,
+        Gallery_product: state.productDetailReducer.Gallery_product,
+        Is_loading: state.productDetailReducer.Is_loading,
+        location: state.locationReducer.crrLocationRs
+    };
+};
+
 const mapDispatchToProps = function (dispatch) {
     return {
         actionProductDetail: bindActionCreators(productDetailCreator, dispatch)
