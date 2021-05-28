@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import { IconPromotion } from '../../images';
