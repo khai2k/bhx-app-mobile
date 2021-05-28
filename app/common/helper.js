@@ -78,7 +78,13 @@ export const isEmpty = (obj) => {
 
     return true;
 };
-
+export const isPhoneNumber = (obj) => {
+    const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    if (vnf_regex.test(obj)) {
+        return true;
+    }
+    return false;
+};
 export const IsEmptyObject = (obj) => {
     return isEmpty(obj);
 };

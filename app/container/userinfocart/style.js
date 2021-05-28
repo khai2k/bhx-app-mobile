@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 5
     },
+    boxCallOther: {
+        padding: 7
+    },
     boxbtn: {
         alignItems: 'center',
         flexDirection: 'row',
@@ -71,8 +74,40 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
+        marginBottom: 15,
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        position: 'relative'
+    },
+    floatingBox: {
+        borderColor: '#D6E0F5',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
+        marginBottom: 10,
+        padding: 10
+    },
+    floatingBoxErr: {
+        borderColor: '#d0021b',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
+        marginBottom: 10,
+        padding: 10
+    },
+    floatingBoxErrNoMargin: {
+        borderColor: '#d0021b',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
+        padding: 10
+    },
+    floatingBoxNoMargin: {
+        borderColor: '#D6E0F5',
+        borderRadius: 8,
+        borderWidth: 1,
+        fontSize: 14,
+        padding: 10
     },
     hasAbsTit: {
         paddingTop: 28
@@ -89,6 +124,9 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         padding: 10
+    },
+    inputErr: {
+        borderColor: '#ff001f'
     },
     inputNote: {
         borderColor: '#D6E0F5',
@@ -121,6 +159,9 @@ const styles = StyleSheet.create({
     noBorder: {
         borderWidth: 0
     },
+    noMarginBottom: {
+        marginBottom: 0
+    },
     provAndDic: {
         display: 'flex',
         flexDirection: 'row',
@@ -133,8 +174,10 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
+        marginBottom: 15,
         paddingLeft: 10,
-        paddingRight: 10
+        paddingRight: 10,
+        position: 'relative'
     },
     radioButton: {
         alignItems: 'center',
@@ -177,6 +220,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 15
     },
+    textErr: {
+        color: '#ff001f',
+        fontSize: 12,
+        fontStyle: 'italic',
+        marginLeft: 3,
+        marginTop: 5
+    },
+    textErrAbs: {
+        bottom: -19,
+        position: 'absolute'
+    },
     textHistoryAddress: {
         color: '#3B854E',
         fontWeight: '600',
@@ -202,6 +256,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         display: 'flex',
+        marginBottom: 15,
         marginTop: 10,
         paddingLeft: 10,
         paddingRight: 10,

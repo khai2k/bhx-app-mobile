@@ -30,7 +30,7 @@ export const cart_get = function () {
                 us: '',
                 provinceId: 3,
                 districtId: 2087,
-                wardId: 27116,
+                wardId: 27125,
                 storeId: 6463,
                 data: {
                     cartId
@@ -186,9 +186,7 @@ export const cart_remove = function () {
 export const cart_add_item_product = function (
     prodId,
     quantityNum,
-    increase,
-    expStoreId,
-    isUpdate = false
+    expStoreId
 ) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
@@ -210,19 +208,17 @@ export const cart_add_item_product = function (
                 storeId:
                     expStoreId > 0
                         ? expStoreId
-                        : !helper.isEmptyOrNull(location) &&
-                          !helper.isEmptyOrNull(location.crrLocationRs) &&
-                          !helper.isEmptyOrNull(location.crrLocationRs.StoreId)
+                        : !helper.isEmptyOrNull(location)
                         ? location.crrLocationRs.StoreId
                         : 6815,
                 data: {
                     cartId,
                     productId: prodId,
                     quantity: quantityNum,
-                    increase,
-                    isUpdate,
+                    increase: true,
+                    isUpdate: true,
                     promoCode: '',
-                    isInCartSite: false
+                    isInCartSite: true
                 }
             };
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)

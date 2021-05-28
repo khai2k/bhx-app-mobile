@@ -4,7 +4,8 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    Alert
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
@@ -22,6 +23,19 @@ const RenderLine = (props) => {
     const [totalProduct, setTotalProduct] = useState(
         props.lineItem.PromotionCount
     );
+    const [categoriesIdFresh, setCategoriesIdFresh] = useState([]);
+
+    if (
+        props.lineItem.CategoryId === 8686 &&
+        props.lineItem.Categorys !== null &&
+        categoriesIdFresh.length <= 0
+    ) {
+        const listId = [];
+        props.lineItem.Categorys?.map((item) => {
+            return listId.push(item.Id);
+        });
+        setCategoriesIdFresh(listId);
+    }
 
     function GenMoreProduct(currentPage, categoryIds) {
         // Chỉ lấy 9 productid mới nhất truyền vô excludeProductIds
@@ -55,9 +69,9 @@ const RenderLine = (props) => {
         apiBase(API_CONST.GET_MORE_LIST_PRODUCT, METHOD.POST, bodyApi)
             .then((response) => {
                 setProducts([...products, ...response.Value]);
-                if (response.OrtherData?.TotalRest > 0) {
+                if (response.OtherData?.TotalRest > 0) {
                     setPageIndex(pageIndex + 1);
-                    setTotalProduct(response.OrtherData.TotalRest);
+                    setTotalProduct(response.OtherData.TotalRest);
                 } else {
                     setPageIndex(1);
                     setTotalProduct(0);
@@ -68,13 +82,67 @@ const RenderLine = (props) => {
             });
     }
 
+    function GetProductFreshCate(category) {
+        const bodyApi = {
+            token: '',
+            us: '',
+            provinceId: 3,
+            districtId: 0,
+            wardId: 0,
+            storeId: 6463,
+            data: {
+                ListProducts: '',
+                PageIndex: 0,
+                PageSize: 9,
+                Phone: '',
+                CategoryIds: category.VirtualChildCateIds?.toString(),
+                ExcludeProductIds: '',
+                CategoryId: category.CategoryId,
+                ListCategoryIds: categoriesIdFresh?.toString()
+            },
+            IsMobile: true
+        };
+        apiBase(API_CONST.GET_FRESH_PRODUCTS, METHOD.POST, bodyApi)
+            .then((response) => {
+                console.log(response);
+                response !== null &&
+                response.Value !== null &&
+                response.Value?.length > 0
+                    ? Alert.alert('', 'lấy dữ liệu thành công')
+                    : Alert.alert('', 'không có dữ liệu');
+            })
+            .catch((error) => {
+                console.log('GET_MORE_LIST_PRODUCT Error:', error);
+            });
+    }
+
     return (
         <View>
             {/* Danh sách cate line fresh 8686 */}
-            <ShowMainCate
-                categories={props.lineItem.Categorys}
-                categoryId={props.lineItem.CategoryId}
-            />
+            <View style={styles.boxCategory}>
+                <FlatList
+                    horizontal
+                    data={props.lineItem.Categorys}
+                    keyExtractor={(item) => item.Id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            onPress={() => {
+                                GetProductFreshCate(item);
+                            }}>
+                            <View>
+                                <Text
+                                    style={[
+                                        styles.categoryItem,
+                                        styles.categoryItem_black
+                                    ]}>
+                                    {item.Name}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+
             {/* Render Product */}
             <SafeAreaView style={styles.productList}>
                 <FlatList
@@ -111,34 +179,6 @@ const RenderLine = (props) => {
                     )}
             </SafeAreaView>
         </View>
-    );
-};
-
-const ShowMainCate = (props) => {
-    const { categories, categoryId } = props;
-    return (
-        categoryId === 8686 && (
-            <View style={styles.boxCategory}>
-                <FlatList
-                    horizontal
-                    data={categories}
-                    keyExtractor={(item) => item.Id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity>
-                            <View>
-                                <Text
-                                    style={[
-                                        styles.categoryItem,
-                                        styles.categoryItem_black
-                                    ]}>
-                                    {item.Name}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
-        )
     );
 };
 

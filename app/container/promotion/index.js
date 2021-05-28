@@ -5,7 +5,8 @@ import {
     FlatList,
     TouchableOpacity,
     ScrollView,
-    Text
+    Text,
+    ActivityIndicator
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { styles } from './styles';
@@ -13,7 +14,6 @@ import Header from '../../components/Header';
 import { IconPromotion } from '../../images';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import * as promotionAction from './action';
-import Loading from '../../components/Loading';
 
 const Promotion = () => {
     const dispatch = useDispatch();
@@ -24,37 +24,77 @@ const Promotion = () => {
         (state) => state.promotionReducer.TopDealPromotion
     );
 
-    const [isLoading, setIsLoading] = useState(true);
+    const isLoading = useSelector((state) => state.promotionReducer.IsLoading);
+
     const listCategoryTop = promotionData?.Categorys;
     const listGroupCate = promotionData?.GroupCate;
 
+    const [lstGroupCateFilter, setListGroupCateFilter] = useState([]);
+
+    // Cate Filter Top
+    const [groupCateFilter, setGroupCateFilter] = useState([]);
+
     useEffect(() => {
-        if (promotionTopDealData && promotionData) {
-            setIsLoading(false);
+        if (promotionData && promotionTopDealData) {
+            const listIdGroupCate = listGroupCate?.map((element) => {
+                return {
+                    GroupCateId: element.CategoryId,
+                    GroupCateFilterId: element.GroupCateFilterId || 0
+                };
+            });
+
+            setListGroupCateFilter(listIdGroupCate);
         }
-    }, [promotionTopDealData, promotionData]);
+    }, [promotionData, promotionTopDealData]);
 
     useEffect(() => {
         dispatch(promotionAction.promotionPage_get());
         dispatch(promotionAction.topDealPromotion_get());
     }, []);
 
+    useEffect(() => {
+        getPosition();
+    }, [groupCateFilter]);
+
+    function getPosition() {
+        const positionFirstLine = 730;
+        const heightEachLine = 550;
+        const index = listGroupCate?.findIndex((ele) => {
+            return ele.CategoryId === groupCateFilter;
+        });
+
+        if (index >= 0) {
+            return positionFirstLine + (index - 2) * heightEachLine;
+        } else {
+            return 0;
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Header />
-            {isLoading && <Loading />}
-            {!isLoading && (
-                <ScrollView nestedScrollEnabled>
-                    <RenderListCategory lstCategoryTop={listCategoryTop} />
-                    <RenderLineDealShock
-                        lstProductTopDeal={promotionTopDealData}
-                    />
-                    <RenderGroupCate
-                        listGroupCate={listGroupCate}
-                        dispatch={dispatch}
-                    />
-                </ScrollView>
-            )}
+            <ActivityIndicator
+                style={[styles.loading, isLoading && styles.loadingActive]}
+                animating={isLoading}
+                size="large"
+                color="#00ff00"
+            />
+            <ScrollView
+                nestedScrollEnabled
+                contentOffset={{ x: 0, y: getPosition() }}>
+                <RenderListCategory
+                    lstCategoryTop={listCategoryTop}
+                    setGroupCateFilter={setGroupCateFilter}
+                />
+                <RenderLineDealShock lstProductTopDeal={promotionTopDealData} />
+                <RenderGroupCate
+                    listGroupCate={listGroupCate}
+                    dispatch={dispatch}
+                    lstGroupCateFilter={lstGroupCateFilter}
+                    setListGroupCateFilter={setListGroupCateFilter}
+                    groupCateFilter={groupCateFilter}
+                />
+            </ScrollView>
         </View>
     );
 };
@@ -72,7 +112,14 @@ const RenderListCategory = (props) => {
                 data={props.lstCategoryTop}
                 keyExtractor={(item) => item.Id}
                 renderItem={(item) => {
-                    return <RenderCategory item={item} />;
+                    return (
+                        item.item.Id !== 8686 && (
+                            <RenderCategory
+                                item={item}
+                                setGroupCateFilter={props.setGroupCateFilter}
+                            />
+                        )
+                    );
                 }}
             />
         </View>
@@ -82,8 +129,13 @@ const RenderListCategory = (props) => {
 // Render category
 const RenderCategory = React.memo((props) => {
     const { item } = props.item;
+    function handleSelectCateFilter() {
+        props.setGroupCateFilter(item.Id);
+    }
     return (
-        <TouchableOpacity style={styles.categoryItem}>
+        <TouchableOpacity
+            style={styles.categoryItem}
+            onPress={() => handleSelectCateFilter()}>
             <Image
                 style={styles.iconCategory}
                 source={{ uri: `https://${item.ImgUrl}` }}
@@ -130,6 +182,11 @@ const RenderGroupCate = React.memo((props) => {
                         nameCategory={item.item.Text}
                         lineColor={item.item.LineColor}
                         promotionCount={item.item.PromotionCount}
+                        groupCateId={item.item.CategoryId}
+                        lstGroupCateFilter={props.lstGroupCateFilter}
+                        setListGroupCateFilter={props.setListGroupCateFilter}
+                        dispatch={props.dispatch}
+                        query={item.item.Query}
                     />
                 )}
                 <RenderProductEachCategory lstProducts={item.item.Products} />
@@ -201,6 +258,13 @@ const RenderCategoryFilter = React.memo((props) => {
                             item={item.item}
                             index={item.index}
                             promotionCount={props.promotionCount}
+                            groupCateId={props.groupCateId}
+                            lstGroupCateFilter={props.lstGroupCateFilter}
+                            setListGroupCateFilter={
+                                props.setListGroupCateFilter
+                            }
+                            dispatch={props.dispatch}
+                            query={props.query}
                         />
                     );
                 }}
@@ -211,28 +275,76 @@ const RenderCategoryFilter = React.memo((props) => {
 
 // Render Item Cate filter
 const RenderItemCateFilter = React.memo((props) => {
+    function displayActiveGroupCateFilter(groupCateFilterId, itemActive) {
+        const result = props.lstGroupCateFilter.some((element) => {
+            return (
+                element.GroupCateId === props.groupCateId &&
+                element.GroupCateFilterId === groupCateFilterId
+            );
+        });
+        if (result) {
+            return itemActive
+                ? styles.itemCateFilterActive
+                : styles.txtItemCateFilterActive;
+        }
+    }
+
+    function handleSelectCateFilter(groupCateFilterId) {
+        const result = props.lstGroupCateFilter.map((element) => {
+            if (element.GroupCateId === props.groupCateId) {
+                return { ...element, GroupCateFilterId: groupCateFilterId };
+            } else {
+                return element;
+            }
+        });
+        props.setListGroupCateFilter(result);
+        props.dispatch(
+            promotionAction.productBySubCate_post(
+                props.query.PageIndex,
+                props.query.PageSize,
+                '',
+                props.groupCateId,
+                groupCateFilterId === 0 ? '' : groupCateFilterId
+            )
+        );
+    }
+
     return (
         <View style={styles.itemGroupCateFilter}>
             {props.index === 0 && (
                 <View
                     style={[
                         styles.itemCateFilter,
-                        styles.itemCateFilterActive
+                        displayActiveGroupCateFilter(0, true)
                     ]}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            handleSelectCateFilter(0);
+                        }}>
                         <Text
                             style={[
                                 styles.txtItemCateFilter,
-                                styles.txtItemCateFilterActive
+                                displayActiveGroupCateFilter(0, false)
                             ]}>
-                            {props.promotionCount} Khuyến mãi Hot
+                            {props.promotionCount + 7} Khuyến mãi Hot
                         </Text>
                     </TouchableOpacity>
                 </View>
             )}
-            <View style={styles.itemCateFilter}>
-                <TouchableOpacity>
-                    <Text style={styles.txtItemCateFilter}>
+            <View
+                style={[
+                    styles.itemCateFilter,
+                    displayActiveGroupCateFilter(props.item.Id, true)
+                ]}>
+                <TouchableOpacity
+                    onPress={() => {
+                        handleSelectCateFilter(props.item.Id);
+                    }}>
+                    <Text
+                        style={[
+                            styles.txtItemCateFilter,
+                            displayActiveGroupCateFilter(props.item.Id, false)
+                        ]}>
                         {props.item.Name}
                     </Text>
                 </TouchableOpacity>
@@ -264,7 +376,7 @@ const RenderLoadMoreProduct = React.memo((props) => {
     function loadMoreProduct() {
         props.dispatch(
             promotionAction.loadMoreProductsGroup_post(
-                props.query.PageIndex + 1,
+                props.query.PageIndex,
                 props.query.PageSize,
                 props.query.ExcludeProductIds,
                 props.query.CategoryId,
@@ -292,4 +404,4 @@ const RenderLineExpired = (props) => {
     );
 };
 
-export default Promotion;
+export default React.memo(Promotion);

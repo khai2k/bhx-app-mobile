@@ -9,5 +9,6 @@ export const locationState = {
         WardName: '',
         FullAddress: '',
         StoreId: 0
-    }
+    },
+    isReminderLocation: false
 };

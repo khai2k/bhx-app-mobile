@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { location_SaveChooseLocation } from './action';
+import TriggerLoadlocal from './index';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -180,188 +181,199 @@ const ModalLocation = (props) => {
     };
 
     return (
-        <Modal
-            visible={props.isModalVisible}
-            index
-            animationType="slide"
-            onRequestClose={() => {
-                checkbackorclose();
-            }}>
-            <SafeAreaView>
-                <Text style={styles.titleModal}>
-                    Khu vực đã chọn: {locationinfo?.crrLocationRs.FullAddress}
-                </Text>
-                <View style={styles.chooseProvince}>
-                    {step > 0 && (
-                        <TouchableOpacity
-                            style={{ paddingHorizontal: 10 }}
-                            onPress={() => {
-                                SliderGotTo(step - 1);
-                            }}>
-                            <Icon name="chevron-left" size={20} color="#fff" />
-                        </TouchableOpacity>
-                    )}
-                    <View style={styles.chooseProvince_Gr}>
-                        <Text style={styles.chooseProvince_Text}>
-                            {txtTitleChoose}
-                        </Text>
-                        {textAt !== '' && (
-                            <Text
-                                style={
-                                    styles.chooseProvince_Text
-                                }>{`Tại ${textAt}`}</Text>
+        <View>
+            <TriggerLoadlocal />
+            <Modal
+                visible={props.isModalVisible}
+                index
+                animationType="slide"
+                onRequestClose={() => {
+                    checkbackorclose();
+                }}>
+                <SafeAreaView>
+                    <Text style={styles.titleModal}>
+                        Khu vực đã chọn:{' '}
+                        {locationinfo?.crrLocationRs.FullAddress}
+                    </Text>
+                    <View style={styles.chooseProvince}>
+                        {step > 0 && (
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 10 }}
+                                onPress={() => {
+                                    SliderGotTo(step - 1);
+                                }}>
+                                <Icon
+                                    name="chevron-left"
+                                    size={20}
+                                    color="#fff"
+                                />
+                            </TouchableOpacity>
                         )}
+                        <View style={styles.chooseProvince_Gr}>
+                            <Text style={styles.chooseProvince_Text}>
+                                {txtTitleChoose}
+                            </Text>
+                            {textAt !== '' && (
+                                <Text
+                                    style={
+                                        styles.chooseProvince_Text
+                                    }>{`Tại ${textAt}`}</Text>
+                            )}
+                        </View>
+                        <TouchableOpacity
+                            style={styles.chooseProvince_Button}
+                            onPress={() => changeModalVisibleCallback(false)}>
+                            <Icon name="times" size={12} color="#fff" />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                        style={styles.chooseProvince_Button}
-                        onPress={() => changeModalVisibleCallback(false)}>
-                        <Icon name="times" size={12} color="#fff" />
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <ScrollView
-                        ref={refSlider}
-                        horizontal
-                        pagingEnabled
-                        style={{
-                            paddingBottom: 170
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                        scrollEnabled={false}
-                        nestedScrollEnabled={false}>
-                        <View style={{ width: windowWidth }}>
-                            {isLoadingProvince && (
-                                <ActivityIndicator
-                                    style={{ marginTop: 20 }}
-                                    size="large"
-                                    color={Colors.GREEN_KEY}
-                                />
-                            )}
-                            {!isLoadingProvince &&
-                                lstProvince !== null &&
-                                lstProvince.length && (
-                                    <FlatList
-                                        data={lstProvince}
-                                        keyExtractor={(item, index) =>
-                                            `prov_${index}`
-                                        }
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                style={
-                                                    styles.chooseProvince_Item
-                                                }
-                                                onPress={() => {
-                                                    setchooseProvinceId(
-                                                        item.ProvinceId
-                                                    );
-                                                    setchooseProvinceFullName(
-                                                        item.ProvinceFullName
-                                                    );
-                                                    setchooseProvinceShortName(
-                                                        item.ProvinceShortName
-                                                    );
-                                                    changeStep(1, {
-                                                        ProvinceId:
-                                                            item.ProvinceId,
-                                                        ProvinceShortName:
-                                                            item.ProvinceShortName,
-                                                        DistrictId: 0,
-                                                        WardId: 0
-                                                    });
-                                                }}>
-                                                <Text>
-                                                    {item.ProvinceFullName}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
+                    <View>
+                        <ScrollView
+                            ref={refSlider}
+                            horizontal
+                            pagingEnabled
+                            style={{
+                                paddingBottom: 170
+                            }}
+                            showsHorizontalScrollIndicator={false}
+                            scrollEnabled={false}
+                            nestedScrollEnabled={false}>
+                            <View style={{ width: windowWidth }}>
+                                {isLoadingProvince && (
+                                    <ActivityIndicator
+                                        style={{ marginTop: 20 }}
+                                        size="large"
+                                        color={Colors.GREEN_KEY}
                                     />
                                 )}
-                        </View>
-                        <View style={{ width: windowWidth }}>
-                            {isLoadingDic && (
-                                <ActivityIndicator
-                                    style={{ marginTop: 20 }}
-                                    size="large"
-                                    color={Colors.GREEN_KEY}
-                                />
-                            )}
-                            {!isLoadingDic &&
-                                lstDistrict !== null &&
-                                lstDistrict.length > 0 && (
-                                    <FlatList
-                                        data={lstDistrict}
-                                        keyExtractor={(item, index) =>
-                                            `dic_${index}`
-                                        }
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                style={
-                                                    styles.chooseProvince_Item
-                                                }
-                                                onPress={() => {
-                                                    setchooseDistrictId(
-                                                        item.Item1
-                                                    );
-                                                    setchooseDistrictName(
-                                                        item.Item2
-                                                    );
-                                                    changeStep(2, {
-                                                        ProvinceId: 0,
-                                                        DistrictId: item.Item1,
-                                                        DistrictName:
-                                                            item.Item2,
-                                                        WardId: 0
-                                                    });
-                                                }}>
-                                                <Text>{item.Item2}</Text>
-                                            </TouchableOpacity>
-                                        )}
+                                {!isLoadingProvince &&
+                                    lstProvince !== null &&
+                                    lstProvince.length && (
+                                        <FlatList
+                                            data={lstProvince}
+                                            keyExtractor={(item, index) =>
+                                                `prov_${index}`
+                                            }
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={
+                                                        styles.chooseProvince_Item
+                                                    }
+                                                    onPress={() => {
+                                                        setchooseProvinceId(
+                                                            item.ProvinceId
+                                                        );
+                                                        setchooseProvinceFullName(
+                                                            item.ProvinceFullName
+                                                        );
+                                                        setchooseProvinceShortName(
+                                                            item.ProvinceShortName
+                                                        );
+                                                        changeStep(1, {
+                                                            ProvinceId:
+                                                                item.ProvinceId,
+                                                            ProvinceShortName:
+                                                                item.ProvinceShortName,
+                                                            DistrictId: 0,
+                                                            WardId: 0
+                                                        });
+                                                    }}>
+                                                    <Text>
+                                                        {item.ProvinceFullName}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        />
+                                    )}
+                            </View>
+                            <View style={{ width: windowWidth }}>
+                                {isLoadingDic && (
+                                    <ActivityIndicator
+                                        style={{ marginTop: 20 }}
+                                        size="large"
+                                        color={Colors.GREEN_KEY}
                                     />
                                 )}
-                        </View>
-                        <View style={{ width: windowWidth }}>
-                            {isLoadingWard && (
-                                <ActivityIndicator
-                                    style={{ marginTop: 20 }}
-                                    size="large"
-                                    color={Colors.GREEN_KEY}
-                                />
-                            )}
-                            {!isLoadingWard &&
-                                lstWard !== null &&
-                                lstWard.length > 0 && (
-                                    <FlatList
-                                        data={lstWard}
-                                        keyExtractor={(item, index) =>
-                                            `ward_${index}`
-                                        }
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                style={
-                                                    styles.chooseProvince_Item
-                                                }
-                                                onPress={() => {
-                                                    setchooseWardId(item.Item1);
-                                                    setchooseWardName(
-                                                        item.Item2
-                                                    );
-                                                    changeStep(3, {
-                                                        ProvinceId: 0,
-                                                        DistrictId: 0,
-                                                        WardId: item.Item1,
-                                                        WardName: item.Item2
-                                                    });
-                                                }}>
-                                                <Text>{item.Item2}</Text>
-                                            </TouchableOpacity>
-                                        )}
+                                {!isLoadingDic &&
+                                    lstDistrict !== null &&
+                                    lstDistrict.length > 0 && (
+                                        <FlatList
+                                            data={lstDistrict}
+                                            keyExtractor={(item, index) =>
+                                                `dic_${index}`
+                                            }
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={
+                                                        styles.chooseProvince_Item
+                                                    }
+                                                    onPress={() => {
+                                                        setchooseDistrictId(
+                                                            item.Item1
+                                                        );
+                                                        setchooseDistrictName(
+                                                            item.Item2
+                                                        );
+                                                        changeStep(2, {
+                                                            ProvinceId: 0,
+                                                            DistrictId:
+                                                                item.Item1,
+                                                            DistrictName:
+                                                                item.Item2,
+                                                            WardId: 0
+                                                        });
+                                                    }}>
+                                                    <Text>{item.Item2}</Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        />
+                                    )}
+                            </View>
+                            <View style={{ width: windowWidth }}>
+                                {isLoadingWard && (
+                                    <ActivityIndicator
+                                        style={{ marginTop: 20 }}
+                                        size="large"
+                                        color={Colors.GREEN_KEY}
                                     />
                                 )}
-                        </View>
-                    </ScrollView>
-                </View>
-            </SafeAreaView>
-        </Modal>
+                                {!isLoadingWard &&
+                                    lstWard !== null &&
+                                    lstWard.length > 0 && (
+                                        <FlatList
+                                            data={lstWard}
+                                            keyExtractor={(item, index) =>
+                                                `ward_${index}`
+                                            }
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={
+                                                        styles.chooseProvince_Item
+                                                    }
+                                                    onPress={() => {
+                                                        setchooseWardId(
+                                                            item.Item1
+                                                        );
+                                                        setchooseWardName(
+                                                            item.Item2
+                                                        );
+                                                        changeStep(3, {
+                                                            ProvinceId: 0,
+                                                            DistrictId: 0,
+                                                            WardId: item.Item1,
+                                                            WardName: item.Item2
+                                                        });
+                                                    }}>
+                                                    <Text>{item.Item2}</Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        />
+                                    )}
+                            </View>
+                        </ScrollView>
+                    </View>
+                </SafeAreaView>
+            </Modal>
+        </View>
     );
 };
 

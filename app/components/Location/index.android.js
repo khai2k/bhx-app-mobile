@@ -33,12 +33,10 @@ class Location extends Component {
                         const crrLat = position.coords.latitude;
                         const crrLong = position.coords.longitude;
 
-                        if (crrLat > 0 && crrLong > 0) {
-                            this.props.locationAction.location_getCurrent(
-                                crrLat,
-                                crrLong
-                            );
-                        }
+                        this.props.locationAction.location_getCurrent(
+                            crrLat,
+                            crrLong
+                        );
                     },
                     (error) => {
                         console.log(error);
