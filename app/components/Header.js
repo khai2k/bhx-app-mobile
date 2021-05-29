@@ -16,12 +16,17 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import * as locationCreator from '@app/components/Location/action';
 import LoadLocationTrigger from './Location';
 import LocationModal from './Location/ModalLocation';
+import RemiderLocation from './Location/RemiderLocation';
 
 const Header = () => {
     const navigation = useNavigation();
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const dispatch = useDispatch();
+    const actionLocation = bindActionCreators(locationCreator, dispatch);
 
     const locationinfo = useSelector((state) => state.locationReducer);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
@@ -36,6 +41,18 @@ const Header = () => {
         });
         return unsubscribe;
     }, []);
+
+    const [isShowReminder, setIsShowReminder] = useState(
+        locationinfo?.isReminderLocation
+    );
+    useEffect(() => {
+        setIsShowReminder(locationinfo?.isReminderLocation);
+    }, [locationinfo?.isReminderLocation]);
+    const showModalLocationCallback = () => {
+        setIsModalVisible(true);
+        setIsShowReminder(false);
+        actionLocation.showReminderLocation(false);
+    };
 
     return (
         <SafeAreaView>
@@ -106,6 +123,10 @@ const Header = () => {
                 changeModalVisibleCallback={(isVisible) =>
                     setIsModalVisible(isVisible)
                 }
+            />
+            <RemiderLocation
+                isShowReminder={isShowReminder}
+                showModalLocationCallback={showModalLocationCallback}
             />
         </SafeAreaView>
     );

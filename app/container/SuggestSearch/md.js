@@ -83,7 +83,10 @@ const SuggestSearchModal = () => {
     const _renderListItem = (item) => {
         if (item.Type === 3) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('Group', { url: item.Url })
+                    }>
                     <HTML containerStyle={styles.searchItem} html={item.Name} />
                 </TouchableOpacity>
             );
@@ -91,7 +94,10 @@ const SuggestSearchModal = () => {
             return _renderProductItem(item.Product);
         } else if (item.Type === 5) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Search', { url: item.Url });
+                    }}>
                     <HTML
                         containerStyle={[
                             styles.searchItem,

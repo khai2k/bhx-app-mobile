@@ -8,6 +8,11 @@ const locationReducer = function (state = _state.locationState, action) {
                 ...state,
                 crrLocationRs: action.crrLocationRs
             };
+        case _action.locationAction.REMINDER_LOCATION:
+            return {
+                ...state,
+                isReminderLocation: action.showReminder
+            };
         default:
             return state;
     }

@@ -8,10 +8,14 @@ export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
 // Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
+
+// Home
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
 export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
 export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
 export const GET_MORE_LINE = `${API_BASE}Home/LoadMoreHomeData`;
+export const GET_FRESH_PRODUCTS = `${API_BASE}Home/AjGetFreshProducts`;
+
 export const API_REQUEST_GET_ODER_SUCCESS = `${API_BASE}Order/OrderResult`;
 
 // Location
@@ -39,6 +43,11 @@ export const API_GET_PROMOTIONPAGE_GETLISTCATEGORY = `${API_BASE}PromotionPage/G
 export const API_GET_TOPDEALPROMOTION = `${API_BASE}PromotionPage/TopDealPromotion`;
 export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxProductsGroup`;
 export const API_POST_PRODUCT_BY_SUB_CATE = `${API_BASE}PromotionPage/AjaxProductsBySubCate`;
+
+// Search
+export const API_SEARCH_GET = `${API_BASE}SearchPage/Get`;
+export const API_SEARCH_AJAXPRODUCT = `${API_BASE}SearchPage/AjaxProducts`;
+export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`;
 
 //  Notification
 export const API_NOTIFICATION_SUBSCRIBER = `${API_BASE}Notification/subscriber`;
