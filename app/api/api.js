@@ -48,3 +48,6 @@ export const API_POST_PRODUCT_BY_SUB_CATE = `${API_BASE}PromotionPage/AjaxProduc
 export const API_SEARCH_GET = `${API_BASE}SearchPage/Get`;
 export const API_SEARCH_AJAXPRODUCT = `${API_BASE}SearchPage/AjaxProducts`;
 export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`;
+
+//  Notification
+export const API_NOTIFICATION_SUBSCRIBER = `${API_BASE}Notification/subscriber`;
