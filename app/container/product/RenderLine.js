@@ -42,15 +42,18 @@ const RenderLine = (props) => {
         });
         setCategoriesIdFresh(listId);
     }
-    useEffect(() => {
-        console.log(
-            'useEffect has been called! isClickCateFresh',
-            isClickCateFresh
-        );
-        isClickCateFresh && GetProductFreshCate();
-        isClickViewmore && GenMoreProduct();
-    }, [isClickCateFresh, isClickViewmore]);
 
+    useEffect(() => {
+        console.log('GetProductFreshCate');
+        isClickCateFresh && GetProductFreshCate();
+    }, [isClickCateFresh]);
+
+    useEffect(() => {
+        console.log('GenMoreProduct');
+        isClickViewmore && GenMoreProduct();
+    }, [isClickViewmore]);
+
+    // Xem thêm sản phẩm của các line
     function GenMoreProduct() {
         // Chỉ lấy 9 productid mới nhất truyền vô excludeProductIds
         const excludeProductIds = [];
@@ -110,7 +113,11 @@ const RenderLine = (props) => {
                 PageIndex: 0,
                 PageSize: 9,
                 Phone: '',
-                CategoryIds: virtualChildCateIds?.toString(),
+                CategoryIds:
+                    virtualChildCateIds !== null &&
+                    virtualChildCateIds.length > 0
+                        ? virtualChildCateIds.toString()
+                        : categoryId.toString(),
                 ExcludeProductIds: '',
                 CategoryId: categoryId,
                 ListCategoryIds: categoriesIdFresh?.toString()
@@ -125,7 +132,7 @@ const RenderLine = (props) => {
                     response.Value !== null &&
                     response.Value.length > 0
                 ) {
-                    setIsClickCateFresh(true);
+                    setIsClickCateFresh(false);
                     setProducts(response.Value);
                     setTotalProduct(response.OtherData?.total);
                 } else {
