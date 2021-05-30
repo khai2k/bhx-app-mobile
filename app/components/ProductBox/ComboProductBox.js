@@ -4,7 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '@app/container/cart/action';
+// import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
+import * as locationCreator from '@app/components/Location/action';
+
 import FastImage from 'react-native-fast-image';
 import styles from './style';
 import BuyBox from './BuyBox';
@@ -13,6 +16,7 @@ const ComboProductBox = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
+    const actionLocation = bindActionCreators(locationCreator, dispatch);
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
@@ -42,86 +46,100 @@ const ComboProductBox = (props) => {
         checkFillButtonBuy();
     }, [cart.Total]);
 
-    const handleInputNumber = (number) => {
-        if (helper.isEmptyOrNull(number)) {
-            return;
+    // check đã chọn location chưa
+    const locationInfo = useSelector((state) => state.locationReducer);
+    const checkReminderLocation = () => {
+        if (
+            helper.isEmptyOrNull(locationInfo) ||
+            helper.isEmptyOrNull(locationInfo.crrLocationRs)
+        ) {
+            actionLocation.showReminderLocation(true);
+            return false;
         }
-        number = +number;
-        if (number <= 0) {
-            actionCart
-                .cart_remove_item_product(guildId)
-                .then((res) => {
-                    console.log('cart_remove_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setBuyButtonVisible(false);
-                        actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, number)
-                .then((res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        // setNumberItems(numberItems - 1);
-                        actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
+        return true;
     };
 
-    const addToCart = (
-        productID,
-        expStoreId = 0,
-        quantity = 1,
-        increase = true
-    ) => {
+    const handleInputNumber = (productID, expStoreId = 0, quantity = 1) => {
+        if (helper.isEmptyOrNull(quantity)) {
+            return;
+        }
+        quantity = +quantity;
         console.log(`Begin addToCart ${props.bhxProduct.Id}`);
         actionCart
-            .cart_add_item_product(productID, quantity, increase, expStoreId)
+            .cart_add_item_product(
+                productID,
+                quantity,
+                quantity >= numberItems,
+                expStoreId,
+                true
+            )
             .then(async (res) => {
-                console.log('cart_add_item_product');
-                console.log(res);
                 if (res.ResultCode > 0) {
                     alertAPI(res.Message);
+                    // add sp tới max tồn
+                    const maxQuantity =
+                        res.Value.stock > 0 ? res.Value.stock : 50;
+                    actionCart
+                        .cart_add_item_product(
+                            productID,
+                            maxQuantity,
+                            quantity >= numberItems,
+                            expStoreId,
+                            true
+                        )
+                        .then(async (res2) => {
+                            if (res2.ResultCode > 0) {
+                                alertAPI(res2.Message);
+                            } else {
+                                await actionCart.cart_get_simple();
+                            }
+                        })
+                        .catch((error) => {
+                            alertAPI(error);
+                        });
                 } else {
-                    console.log(`End addToCart ${props.bhxProduct.Id}`);
-
                     await actionCart.cart_get_simple();
-                    console.log(
-                        `End update addToCart cartSimple ${props.bhxProduct.Id}`
-                    );
                 }
             })
             .catch((error) => {
                 alertAPI(error);
             });
     };
+
+    const addToCart = async (
+        productID,
+        expStoreId = 0,
+        quantity = 1,
+        increase = true
+    ) => {
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
+        const checkLocation = await checkReminderLocation();
+        checkLocation &&
+            actionCart
+                .cart_add_item_product(
+                    productID,
+                    quantity,
+                    increase,
+                    expStoreId
+                )
+                .then(async (res) => {
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        console.log(`End addToCart ${props.bhxProduct.Id}`);
+
+                        await actionCart.cart_get_simple();
+                        console.log(
+                            `End update addToCart cartSimple ${props.bhxProduct.Id}`
+                        );
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+    };
     const alertAPI = (messages) => {
         Alert.alert('', messages);
-    };
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý'
-            }
-        ]);
     };
 
     const imageModal =

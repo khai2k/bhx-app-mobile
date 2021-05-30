@@ -21,8 +21,8 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -215,12 +215,16 @@ export const cart_add_item_product = function (
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_ADD_ITEM_PRODUCT,
-                        cartInfo
-                    });
-                    resolve(response);
+                    if (response.ResultCode > 0) {
+                        resolve(response);
+                    } else {
+                        const cartInfo = response.Value;
+                        dispatch({
+                            type: CART_ADD_ITEM_PRODUCT,
+                            cartInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -277,36 +281,3 @@ export const cart_get_simple = function () {
         });
     };
 };
-
-//  Thử loại async/await đều ngon lành
-// export const get_cart = function () {
-//     return async (dispatch, getSate) => {
-//         const bodyApi = {
-//             token: getSate().cartReducer.Cart.CartId,
-//             us: '',
-//             provinceId: 3,
-//             districtId: 0,
-//             wardId: 0,
-//             storeId: 6463,
-//             data: {
-//                 cartId: getSate().cartReducer.Cart.CartId
-//             }
-//         };
-//         const response = await apiBase(
-//             API_CONST.API_REQUEST_GET_CART,
-//             METHOD.POST,
-//             bodyApi,
-//             {
-//                 isCustomToken: false,
-//                 isOauthenToken: false,
-//                 isUpload: false
-//             }
-//         );
-//         const cartInfo = response.Value;
-//         console.log('response api Nhu test:', cartInfo);
-//         dispatch({
-//             type: GET_CART,
-//             cartInfo
-//         });
-//     };
-// };

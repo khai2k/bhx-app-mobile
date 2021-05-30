@@ -17,7 +17,8 @@ module.exports = {
                     '@app/constants': './app/constants',
                     '@app/translate': './app/translate',
                     '@app/styles': './app/styles',
-                    '@app/components': './app/components'
+                    '@app/components': './app/components',
+                    '@app/redux': './app/redux'
                 }
             }
         ]

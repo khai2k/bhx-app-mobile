@@ -151,15 +151,12 @@ const styles = StyleSheet.create({
     },
     manufacture: {
         backgroundColor: Colors.WHITE,
+        paddingLeft: 82,
         position: 'relative'
     },
     scrollList: {
         overflow: 'visible',
-        paddingLeft: 62,
         paddingRight: 7
-    },
-    scrollList80: {
-        paddingLeft: 82
     },
     showMore: {
         alignItems: 'center',

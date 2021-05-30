@@ -20,7 +20,8 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Colors } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HTML from 'react-native-render-html';
-import * as cartCreator from '@app/container/cart/action';
+//  import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import DelayInputCmp from '../../components/DelayInput';
 
 const SuggestSearchModal = () => {
@@ -83,7 +84,10 @@ const SuggestSearchModal = () => {
     const _renderListItem = (item) => {
         if (item.Type === 3) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('Group', { url: item.Url })
+                    }>
                     <HTML containerStyle={styles.searchItem} html={item.Name} />
                 </TouchableOpacity>
             );
@@ -91,7 +95,10 @@ const SuggestSearchModal = () => {
             return _renderProductItem(item.Product);
         } else if (item.Type === 5) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Search', { url: item.Url });
+                    }}>
                     <HTML
                         containerStyle={[
                             styles.searchItem,
@@ -110,7 +117,12 @@ const SuggestSearchModal = () => {
     const _renderProductItem = (product) => {
         return (
             <View style={[styles.searchItem, styles.searchItemProd]}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.push('ProductDetail', {
+                            productId: product.Id
+                        })
+                    }>
                     <Image
                         style={{ width: 50, height: 50, marginRight: 10 }}
                         source={{
@@ -119,7 +131,12 @@ const SuggestSearchModal = () => {
                     />
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.push('ProductDetail', {
+                                productId: product.Id
+                            })
+                        }>
                         <Text numberOfLines={1}>{product.FullName}</Text>
                     </TouchableOpacity>
                     <View
@@ -127,7 +144,13 @@ const SuggestSearchModal = () => {
                             flexDirection: 'row',
                             marginTop: 5
                         }}>
-                        <TouchableOpacity style={{ flex: 1 }}>
+                        <TouchableOpacity
+                            style={{ flex: 1 }}
+                            onPress={() =>
+                                navigation.push('ProductDetail', {
+                                    productId: product.Id
+                                })
+                            }>
                             <Text>{product.Price}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
