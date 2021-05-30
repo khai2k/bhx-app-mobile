@@ -8,10 +8,12 @@ import CartTotal from './CartInfo/CartTotal';
 import CartEmpty from './CartInfo/CartEmpty';
 import LoadingCart from './CartInfo/LoadingCart';
 import Loading from './Loading';
+import AlertCart from './CartInfo/AlertCart';
 
 export {
     MyText,
     Header,
+    AlertCart,
     ProductItemCart,
     ProductItemCartOff,
     LoadingCart,

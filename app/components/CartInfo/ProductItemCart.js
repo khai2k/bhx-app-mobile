@@ -82,7 +82,7 @@ const ProductItemCart = (props) => {
 
     const setQuantityMinus = () => {
         if (quantity <= 1) {
-            alertDeleteItemProduct();
+            props.alert();
         } else {
             setQuantity(quantity - 1);
             updateTempItemCart(quantity - 1);

@@ -21,5 +21,6 @@ export const cartState = {
         ListCartItemBuy: [],
         ListCartItemOff: []
     },
-    CartSimple: {}
+    CartSimple: {},
+    ListCategory: []
 };

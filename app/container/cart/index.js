@@ -9,6 +9,7 @@ import {
 import { bindActionCreators } from 'redux';
 import {
     Header,
+    AlertCart,
     CartTotal,
     CartEmpty,
     LoadingCart,
@@ -25,7 +26,10 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true
+            isLoading: true,
+            titleAlert: '',
+            visibleAlert: false,
+            guildId: ''
         };
     }
 
@@ -51,9 +55,26 @@ class Cart extends Component {
         });
     }
 
-    componentDidUpdate() {
-        console.log('componentDidUpdate');
-    }
+    alertDeleteItemProduct = (guildId) => {
+        this.setState({
+            titleAlert: 'Bạn muốn xóa sản phẩm này?',
+            visibleAlert: true,
+            guildId
+        });
+    };
+
+    actionRemoveItemProduct = () => {
+        this.props.actionCart
+            .cart_remove_item_product(this.state.guildId)
+            .then((res) => {
+                if (res.ResultCode < 0) {
+                    //  alertAPI(res.Message);
+                }
+            })
+            .catch((error) => {
+                //  alertAPI(error);
+            });
+    };
 
     render() {
         if (this.state.isLoading) {
@@ -73,7 +94,7 @@ class Cart extends Component {
             return (
                 <View style={styles.cartempty}>
                     <Header />
-                    <CartEmpty />
+                    <CartEmpty listCategory={listCategory} />
                 </View>
             );
         }
@@ -93,8 +114,14 @@ class Cart extends Component {
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
-                    {showListCartItemOff(this.props.cart.ListCartItemOff)}
-                    {showListCartItemBuy(this.props.cart.ListCartItemBuy)}
+                    {showListCartItemOff(
+                        this.props.cart.ListCartItemOff,
+                        this.alertDeleteItemProduct
+                    )}
+                    {showListCartItemBuy(
+                        this.props.cart.ListCartItemBuy,
+                        this.alertDeleteItemProduct
+                    )}
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <View style={styles.btn}>
@@ -131,12 +158,17 @@ class Cart extends Component {
                         </View>
                     </View>
                 </ScrollView>
+                <AlertCart
+                    visible={this.state.visibleAlert}
+                    titleAlert={this.state.titleAlert}
+                    onPressSubmit={this.actionRemoveItemProduct}
+                />
             </View>
         );
     }
 }
 
-const showListCartItemOff = (listCartItemOff) => {
+const showListCartItemOff = (listCartItemOff, alertDeleteItemProduct) => {
     if (listCartItemOff != null && !helper.IsEmptyArray(listCartItemOff)) {
         const list = listCartItemOff.filter((item) => item.TypeProduct !== 3);
         if (!helper.IsEmptyArray(list)) {
@@ -146,6 +178,7 @@ const showListCartItemOff = (listCartItemOff) => {
                         return (
                             <ProductItemCartOff
                                 productCart={itemCart}
+                                alert={alertDeleteItemProduct}
                                 key={itemCart.Info.GuildId}
                             />
                         );
@@ -157,7 +190,7 @@ const showListCartItemOff = (listCartItemOff) => {
     }
 };
 
-const showListCartItemBuy = (listCartItemBuy) => {
+const showListCartItemBuy = (listCartItemBuy, alertDeleteItemProduct) => {
     if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
         const list = listCartItemBuy.filter(
             (item) => item.TypeProduct !== 3 && item.TypeProduct !== 2
@@ -169,6 +202,7 @@ const showListCartItemBuy = (listCartItemBuy) => {
                         return (
                             <ProductItemCart
                                 productCart={itemCart}
+                                alert={alertDeleteItemProduct}
                                 key={itemCart.Info.GuildId}
                             />
                         );
@@ -182,7 +216,8 @@ const showListCartItemBuy = (listCartItemBuy) => {
 const mapStateToProps = (state) => {
     return {
         cart: state.cartReducer.Cart,
-        cartTotal: state.cartReducer.CartTotal
+        cartTotal: state.cartReducer.CartTotal,
+        listCategory: state.cartReducer.ListCategory
     };
 };
 
