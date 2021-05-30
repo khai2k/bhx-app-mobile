@@ -4,85 +4,71 @@ import {
     Text,
     FlatList,
     StyleSheet,
-    ScrollView,
     TouchableOpacity,
-    Image
+    Alert
 } from 'react-native';
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
 import ProductBox from '../../components/ProductBox/ProductBox';
-import Filter from './Filter';
 
 const OEMProduct = (props) => {
-    // const { PageIndex, PageSize, TotalRecord } = props.info;
     const Products = props.products;
+    const { StrOEMBrands, TotalOEM, Exclude } = props.otherData;
+
+    const [pageIndex, setPageIndex] = useState(0);
+    const pageSize = 6;
 
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
-
     useEffect(() => {
         setListProductLoadMore(Products);
     }, [Products]);
-    // const [pageIndex, setPageIndex] = useState(PageIndex);
-    // useEffect(() => {
-    //     console.log('reset pageindex');
-    //     if (
-    //         !helper.isEmptyOrNull(props.selectedBrand) ||
-    //         !helper.isEmptyOrNull(props.selectedProps) ||
-    //         !helper.isEmptyOrNull(props.selectedSort)
-    //     ) {
-    //         setPageIndex(1);
-    //     } else {
-    //         setPageIndex(0);
-    //     }
-    // }, [Products]);
+    const [remainProducts, setRemainProducts] = useState(TotalOEM);
 
     const loadMoreProducts = () => {
-        // const bodyApi = {
-        //     provinceId: 3,
-        //     storeId: 6463,
-        //     data: {
-        //         categoryId: props.info.Id,
-        //         selectedBrandId: props.selectedBrand,
-        //         phone: 0,
-        //         cateListFilter: '',
-        //         propertyIdList: props.selectedProps,
-        //         pageIndex,
-        //         pageSize: PageSize,
-        //         isLoadVideo: false,
-        //         isPromotion: false,
-        //         sort: props.selectedSort
-        //     }
-        // };
-        // console.log('Start call api');
-        // apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
-        //     .then((response) => {
-        //         console.log(response);
-        //         setPageIndex(pageIndex + 1);
-        //         setListProductLoadMore([
-        //             ...listProductLoadMore,
-        //             ...response.Value.CurrentData.Products
-        //         ]);
-        //         console.log('End call api');
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+        const bodyApi = {
+            strOEMBrands: StrOEMBrands,
+            pageSize,
+            pageIndex,
+            provinceId: 3,
+            storeId: 6463,
+            strExclude: Exclude
+        };
+        console.log('Start call api');
+        apiBase(API_CONST.API_SEARCH_AJAXPRODUCT_OEM, METHOD.POST, bodyApi)
+            .then((response) => {
+                console.log(response);
+                if (!helper.isEmptyOrNull(response)) {
+                    setPageIndex(pageIndex + 1);
+                    setListProductLoadMore([
+                        ...listProductLoadMore,
+                        ...response.Value
+                    ]);
+                    setRemainProducts(response.OtherData.RestProduct);
+                } else {
+                    Alert('Lỗi lấy dữ liệu');
+                }
+                console.log('End call api');
+            })
+            .catch((error) => {
+                Alert('Lỗi lấy dữ liệu');
+                console.log(error);
+            });
     };
-    // const footer = () => {
-    //     return TotalRecord > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
-    //         <View>
-    //             <TouchableOpacity
-    //                 onPress={loadMoreProducts}
-    //                 className="loadMore"
-    //                 style={styles.loadMore}>
-    //                 <Text style={styles.loadMoreText}>
-    //                     Còn {TotalRecord - pageIndex * PageSize} sản phẩm
-    //                 </Text>
-    //             </TouchableOpacity>
-    //         </View>
-    //     ) : null;
-    // };
+    const footer = () => {
+        return remainProducts > (pageIndex === 0 ? 1 : pageIndex) * pageSize ? (
+            <View>
+                <TouchableOpacity
+                    onPress={loadMoreProducts}
+                    className="loadMore"
+                    style={styles.loadMore}>
+                    <Text style={styles.loadMoreText}>
+                        Còn {remainProducts} sản phẩm
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        ) : null;
+    };
     return (
         <View style={styles.oemContainer}>
             <Text style={styles.oemContainerTitle}>
@@ -94,7 +80,7 @@ const OEMProduct = (props) => {
                 keyExtractor={(item) => `oemProduct_${item.Id}`}
                 renderItem={({ item }) => <ProductBox bhxProduct={item} />}
                 // ListHeaderComponent={() => filter(true)}
-                // ListFooterComponent={footer}
+                ListFooterComponent={footer}
             />
         </View>
     );
@@ -124,10 +110,6 @@ const styles = StyleSheet.create({
     loadMoreText: {
         color: Colors.TROPICAL_RAIN_FOREST
     },
-    loadMoreTextBold: {
-        color: Colors.TROPICAL_RAIN_FOREST,
-        fontWeight: 'bold'
-    },
     oemContainer: {
         backgroundColor: Colors.KHAKI,
         borderBottomColor: Colors.PORCELAIN,
@@ -142,9 +124,6 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
         paddingTop: 7
-    },
-    productList: {
-        flex: 1
     }
 });
 

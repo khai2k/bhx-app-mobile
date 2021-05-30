@@ -18,32 +18,57 @@ const PropertyFilter = (props) => {
     const dispatch = useDispatch();
     const actionSearch = bindActionCreators(searchCreator, dispatch);
     const [visiblePopup, setVisiblePopup] = useState(false);
+    const ListSort = [
+        {
+            ValueID: 2,
+            Name: 'Giá cao\n đến thấp'
+        },
+        {
+            ValueID: 1,
+            Name: 'Giá thấp\n đến cao'
+        },
+        {
+            ValueID: 13,
+            Name: 'Khuyến mãi\n nhiều hơn'
+        },
+        {
+            ValueID: 14,
+            Name: 'Sản phẩm\n bán chạy'
+        },
+        {
+            ValueID: 15,
+            Name: 'Sản phẩm\n mới về'
+        }
+    ];
 
     const updateVisibleStatus = (status) => {
         setVisiblePopup(status);
     };
 
-    const listAllProperties = [...props.properties, ...props.sort];
+    const listAllProperties = [...props.properties, ...ListSort];
     const selectProperty = (propertyId) => {
-        // const strSelectedProps = processSelectedProps(propertyId);
-        // actionCategory.category_filter(
-        //     props.infoCate.Id,
-        //     props.selectedBrand,
-        //     strSelectedProps
-        // );
-        // actionCategory.select_property(strSelectedProps);
+        const selectedProp =
+            propertyId === props.selectedProps ? 0 : propertyId;
+        actionSearch.search_filter(
+            props.infoCate.OriginalKey,
+            props.infoCate.TotalRecord,
+            props.selectedBrand,
+            selectedProp,
+            props.selectedSort
+        );
+        actionSearch.select_property(selectedProp);
     };
     const selectSort = (sortId) => {
-        // const selectedSort = sortId === props.selectedSort ? 0 : sortId;
-        // actionCategory.category_filter(
-        //     props.infoCate.Id,
-        //     props.selectedBrand,
-        //     props.selectedProps,
-        //     selectedSort
-        // );
-        // actionCategory.select_sort(selectedSort);
+        const selectedSort = sortId === props.selectedSort ? 0 : sortId;
+        actionSearch.search_filter(
+            props.infoCate.OriginalKey,
+            props.infoCate.TotalRecord,
+            props.selectedBrand,
+            props.selectedProps,
+            selectedSort
+        );
+        actionSearch.select_sort(selectedSort);
     };
-    const listPropSelected = props.selectedProps.split(',');
     const isExtendProps = listAllProperties.length > 10;
     const listProps = isExtendProps
         ? listAllProperties.slice(0, 11)
@@ -77,12 +102,21 @@ const PropertyFilter = (props) => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         helper.isEmptyOrNull(item.Id)
-                                            ? selectSort(item.Value)
+                                            ? selectSort(item.ValueID)
                                             : selectProperty(item.Id);
                                     }}>
                                     <Text style={styles.propertyItem}>
                                         {item.Name}
                                     </Text>
+                                    {(helper.isEmptyOrNull(item.Id) &&
+                                        props.selectedSort === item.ValueID) ||
+                                    (!helper.isEmptyOrNull(item.Id) &&
+                                        props.selectedProps === item.Id) ? (
+                                        <Image
+                                            style={styles.iconCheck}
+                                            source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                        />
+                                    ) : null}
                                 </TouchableOpacity>
                             )}
                         </View>

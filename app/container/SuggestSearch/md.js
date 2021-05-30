@@ -83,7 +83,10 @@ const SuggestSearchModal = () => {
     const _renderListItem = (item) => {
         if (item.Type === 3) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('Group', { url: item.Url })
+                    }>
                     <HTML containerStyle={styles.searchItem} html={item.Name} />
                 </TouchableOpacity>
             );

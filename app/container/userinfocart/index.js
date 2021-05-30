@@ -1,6 +1,8 @@
 import React, { Component, useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { Header, CartTotal, Cart } from '@app/components';
+import { CONST_STRINGERR } from '@app/constants';
+import HTML from 'react-native-render-html';
 
 import {
     Text,
@@ -52,27 +54,26 @@ const UserInfoCart = (props) => {
     const location = useSelector(
         (state) => state.locationReducer.crrLocationRs
     );
-
+    
     const [cartState, setCartState] = useState(cart);
-    const [cartUserInfo, setCartUserInfo] = useState([
-        {
-            CustomerName: '',
-            CustomerGender: 1,
-            CustomerPhone: '',
-            ShipProvince: 0,
-            ShipDistrict: 0,
-            ShipWard: 0,
-            IsCallOthers: false,
-            OthersGenderCall: '',
-            OthersPhone: '',
-            OthersName: '',
-            IsGetBill: false,
-            CompanyName: '',
-            CompanyAddress: '',
-            CompanyTaxNumber: '',
-            Note: ''
-        }
-    ]);
+    const [cartUserInfo, setCartUserInfo] = useState({
+        CustomerName: '',
+        CustomerGender: 1,
+        CustomerPhone: '',
+        ShipProvince: 0,
+        ShipDistrict: 0,
+        ShipWard: 0,
+        ShipAddress: '',
+        IsCallOthers: false,
+        OthersGenderCall: '',
+        OthersPhone: '',
+        OthersName: '',
+        IsGetBill: false,
+        CompanyName: '',
+        CompanyAddress: '',
+        CompanyTaxNumber: '',
+        Note: ''
+    });
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
@@ -89,16 +90,19 @@ const UserInfoCart = (props) => {
 
     // Validate Error
     const [phoneErrMessage, setphoneErrMessage] = useState(
-        'Số điện thoại không được để trống!'
+        CONST_STRINGERR.EMPTY_PHONE
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
-        'Số điện thoại không được để trống!'
+        CONST_STRINGERR.EMPTY_PHONE
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
-        'Họ và tên không được để trống!'
+        CONST_STRINGERR.EMPTY_CUSNAME
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
-        'Họ và tên không được để trống!'
+        CONST_STRINGERR.EMPTY_CUSNAME
+    );
+    const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
+        CONST_STRINGERR.EMPTY_SHIPADDRESS
     );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
@@ -111,31 +115,38 @@ const UserInfoCart = (props) => {
 
     const handleErrorPhone = (value) => {
         if (helper.isEmptyOrNull(value)) {
-            setphoneErrMessage('Số điện thoại không được để trống!');
+            setphoneErrMessage(CONST_STRINGERR.EMPTY_PHONE);
         } else if (helper.isPhoneNumber(value) == false) {
-            setphoneErrMessage('Số điện thoại không đúng định dạng!');
+            setphoneErrMessage(CONST_STRINGERR.INVALID_PHONE);
         } else setphoneErrMessage('');
     };
     const handleErrorPhoneOther = (value) => {
         if (helper.isEmptyOrNull(value)) {
-            setphoneOtherErrMessage('Số điện thoại không được để trống!');
+            setphoneOtherErrMessage(CONST_STRINGERR.EMPTY_PHONE);
         } else if (helper.isPhoneNumber(value) == false) {
-            setphoneOtherErrMessage('Số điện thoại không đúng định dạng!');
+            setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE);
         } else setphoneOtherErrMessage('');
     };
     const handleErrorCusName = (value, maxlength) => {
         if (helper.isEmptyOrNull(value)) {
-            setcusNameErrMessage('Họ và tên không được để trống!');
+            setcusNameErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
         } else if (value.length > maxlength) {
-            setcusNameErrMessage('Họ và tên quá dài, vui lòng nhập lại!');
+            setcusNameErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameErrMessage('');
     };
     const handleErrorCusNameOther = (value, maxlength) => {
         if (helper.isEmptyOrNull(value)) {
-            setcusNameOtherErrMessage('Họ và tên không được để trống!');
+            setcusNameOtherErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
         } else if (value.length > maxlength) {
-            setcusNameOtherErrMessage('Họ và tên quá dài, vui lòng nhập lại!');
+            setcusNameOtherErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameOtherErrMessage('');
+    };
+    const handleErrorCusAddress = (value, maxlength) => {
+        if (helper.isEmptyOrNull(value)) {
+            setcusAddressErrMessage(CONST_STRINGERR.EMPTY_SHIPADDRESS);
+        } else if (value.length > maxlength) {
+            setcusAddressErrMessage(CONST_STRINGERR.OUTOFRANGE_SHIPADDRESS);
+        } else setcusAddressErrMessage('');
     };
     const chosenDeliDate = () => {
         const isActive =
@@ -145,13 +156,14 @@ const UserInfoCart = (props) => {
         return (
             <View style={[styles.delichoose]}>
                 <Picker
-                    selectedValue={0}
+                    selectedValue={dateDeliID > 0 ? 0 : dateDeliID}
                     style={{
                         height: 50,
                         width: '100%',
                         color: isActive ? '#000' : '#C2C2C2'
                     }}
                     enabled={isActive}
+                    mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
                         if (itemValue > 0) {
                             setcurDateDeli(
@@ -162,13 +174,14 @@ const UserInfoCart = (props) => {
                             setcurDateDeli(null);
                         }
                     }}>
-                    <Picker.Item label="Chọn ngày nhận hàng" value="-1" />
+                    <Picker.Item label="Ngày nhận" value="-1" color="#C2C2C2" />
                     {isActive &&
                         shipdatetime[0]?.DateList.map((item) => {
                             return (
                                 <Picker.Item
                                     label={item.text}
                                     value={item.timeid}
+                                    key={item.timeid}
                                 />
                             );
                         })}
@@ -194,24 +207,30 @@ const UserInfoCart = (props) => {
                         color: isActive ? '#000' : '#C2C2C2'
                     }}
                     enabled={isActive}
-                    onValueChange={(itemValue, itemIndex) =>
-                        settimeDeliID(itemValue)
-                    }>
-                    {isActive ? (
+                    mode={'dropdown'}
+                    onValueChange={(itemValue, itemIndex) => {
+                        settimeDeliID(itemValue);
+                        setCartUserInfo(previousState => ({
+                            ...previousState,
+                            OthersGenderCall: itemValue
+                        }));
+                    }}>
+                    <Picker.Item
+                        label="Thời gian nhận"
+                        value="-1"
+                        color="#C2C2C2"
+                    />
+                    {isActive &&
                         datelist?.curDateDeli?.TimeList.map((item) => {
                             return (
                                 <Picker.Item
-                                    label={item.timetext}
+                                    label={item.text}
+                                    displayName={<HTML source={item.text} />}
                                     value={item.id}
+                                    key={item.id}
                                 />
                             );
-                        })
-                    ) : (
-                        <Picker.Item
-                            label="Chọn thời gian nhận hàng"
-                            value="-1"
-                        />
-                    )}
+                        })}
                 </Picker>
             </View>
         );
@@ -307,15 +326,15 @@ const UserInfoCart = (props) => {
         ]);
         const onRadioBtnClick = (item) => {
             let updatedState = sexOther.map((setSexOther) =>
-            setSexOther.id == item.id
+                setSexOther.id == item.id
                     ? { ...setSexOther, selected: true }
                     : { ...setSexOther, selected: false }
             );
             setSexOther(updatedState);
-            setCartUserInfo({
-                ...cartUserInfo,
+            setCartUserInfo(previousState => ({
+                ...previousState,
                 OthersGenderCall: updatedState
-            });
+            }));
         };
         if (isSelectedCallOther) {
             return (
@@ -346,10 +365,10 @@ const UserInfoCart = (props) => {
                         label={<Text>Số điện thoại (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersPhone}
                         onChangeText={(value) => {
-                            setCartUserInfo({
-                                ...cartUserInfo,
+                            setCartUserInfo(previousState => ({
+                                ...previousState,
                                 OthersPhone: value
-                            });
+                            }));
                             handleErrorPhoneOther(value);
                         }}
                     />
@@ -375,10 +394,10 @@ const UserInfoCart = (props) => {
                         label={<Text>Họ và tên (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersName}
                         onChangeText={(value) => {
-                            setCartUserInfo({
-                                ...cartUserInfo,
+                            setCartUserInfo(previousState => ({
+                                ...previousState,
                                 OthersName: value
-                            });
+                            }));
                             handleErrorCusNameOther(value);
                         }}
                     />
@@ -445,6 +464,7 @@ const UserInfoCart = (props) => {
                     setLstWard(response.Value);
                     setEnableWard(true);
                     if (location?.WardId > 0) {
+                        setwardSelected(location?.WardId);
                     }
                 })
                 .catch(() => {
@@ -472,7 +492,11 @@ const UserInfoCart = (props) => {
                                 getLstDis(itemValue);
                                 setdistrictSelected(false);
                             }}>
-                            <Picker.Item label="Tỉnh thành" value="-1" />
+                            <Picker.Item
+                                label="Tỉnh thành"
+                                value="-1"
+                                color="#C2C2C2"
+                            />
                             {lstProv !== null &&
                                 lstProv.length > 0 &&
                                 lstProv.map((prov) => {
@@ -487,7 +511,7 @@ const UserInfoCart = (props) => {
                         </Picker>
                         {provinceSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
-                                Vui lòng chọn tỉnh thành!
+                                {CONST_STRINGERR.ERR_PROVINCE}
                             </Text>
                         )}
                     </View>
@@ -504,7 +528,11 @@ const UserInfoCart = (props) => {
                                 getLstWard(provinceSelected, itemValue);
                                 setdistrictSelected(itemValue);
                             }}>
-                            <Picker.Item label="Quận, huyện" value="-1" />
+                            <Picker.Item
+                                label="Quận, huyện"
+                                value="-1"
+                                color="#C2C2C2"
+                            />
                             {lstDis !== null &&
                                 lstDis.length > 0 &&
                                 lstDis.map((dis) => {
@@ -520,7 +548,7 @@ const UserInfoCart = (props) => {
 
                         {districtSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
-                                Vui lòng chọn quận huyện!
+                                {CONST_STRINGERR.ERR_DISTRICT}
                             </Text>
                         )}
                     </View>
@@ -537,7 +565,11 @@ const UserInfoCart = (props) => {
                             width: '100%',
                             color: enableWard ? '#000' : '#C2C2C2'
                         }}>
-                        <Picker.Item label="Phường, Xã" value="-1" />
+                        <Picker.Item
+                            label="Phường, Xã"
+                            value="-1"
+                            color="#C2C2C2"
+                        />
                         {lstWard !== null &&
                             lstWard.length > 0 &&
                             lstWard.map((ward) => {
@@ -552,7 +584,7 @@ const UserInfoCart = (props) => {
                     </Picker>
                     {wardSelected <= 0 && (
                         <Text style={[styles.textErr, styles.textErrAbs]}>
-                            Vui lòng chọn phường, xã!
+                            {CONST_STRINGERR.ERR_WARD}
                         </Text>
                     )}
                 </View>
@@ -582,10 +614,10 @@ const UserInfoCart = (props) => {
                     : { ...setSex, selected: false }
             );
             setSex(updatedState);
-            setCartUserInfo({
-                ...cartUserInfo,
+            setCartUserInfo(previousState => ({
+                ...previousState,
                 CustomerGender: updatedState
-            });
+            }));
         };
         return (
             <View style={styles.radioButtonContainer}>
@@ -667,11 +699,11 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
-                        onChangeText={(value) => {
-                            setCartUserInfo({
-                                ...cartUserInfo,
+                        onChangeText={(value) => {                            
+                            setCartUserInfo(previousState => ({
+                                ...previousState,
                                 CustomerPhone: value
-                            });
+                            }));
                             handleErrorPhone(value);
                             console.log(cartUserInfo);
                         }}
@@ -704,27 +736,34 @@ const UserInfoCart = (props) => {
                         }
                         value={cartUserInfo?.CustomerName}
                         onChangeText={(value) => {
-                            setCartUserInfo({
-                                ...cartUserInfo,
+                            setCartUserInfo(previousState => ({
+                                ...previousState,
                                 CustomerName: value
-                            });
+                            }));
                             handleErrorCusName(value);
                         }}
                     />
                     {helper.isEmptyOrNull(cusNameErrMessage) == false && (
                         <Text style={styles.textErr}>{cusNameErrMessage}</Text>
                     )}
-                    {UserProvAndDis(props)}
+                    {UserProvAndDis(location)}
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
-                        value={
-                            cart?.CustomerAddress !== '' &&
-                            cart?.CustomerAddress !== undefined
-                                ? cart.CustomerAddress
-                                : ''
-                        }
+                        value={cartUserInfo?.ShipAddress}
+                        onChangeText={(value) => {
+                            setCartUserInfo(previousState => ({
+                                ...previousState,
+                                ShipAddress: value
+                            }));
+                            handleErrorCusAddress(value, 60);
+                        }}
                     />
+                    {helper.isEmptyOrNull(cusAddressErrMessage) == false && (
+                        <Text style={styles.textErr}>
+                            {cusAddressErrMessage}
+                        </Text>
+                    )}
                     <View style={{ marginBottom: 10, marginTop: 5 }}>
                         <View style={styles.checkboxContainer}>
                             <CheckBox
@@ -739,17 +778,15 @@ const UserInfoCart = (props) => {
                         <View style={styles.checkboxContainer}>
                             <CheckBox
                                 value={isSelectedCallOther}
-                                onValueChange={
-                                    (value) => {
-                                        setSelectedCallOther(value);
-                                        if(isSelectedCallOther == false){
-                                            cartUserInfo.OthersPhone = '';
-                                            handleErrorPhoneOther('');
-                                            cartUserInfo.OthersName = '';
-                                            handleErrorCusNameOther('');
-                                        }
+                                onValueChange={(value) => {
+                                    setSelectedCallOther(value);
+                                    if (isSelectedCallOther == false) {
+                                        cartUserInfo.OthersPhone = '';
+                                        handleErrorPhoneOther('');
+                                        cartUserInfo.OthersName = '';
+                                        handleErrorCusNameOther('');
                                     }
-                                }
+                                }}
                                 style={styles.checkbox}
                             />
                             <Text style={styles.label}>

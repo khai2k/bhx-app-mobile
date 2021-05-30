@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { MyText } from '@app/components';
 import { setI18nConfig } from '@app/translate';
@@ -8,6 +8,8 @@ import { CONST_STORAGE } from '@app/constants';
 import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
 import * as actionCartCreator from '@app/container/cart/action';
+import { getUniqueId } from 'react-native-device-info';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
@@ -27,7 +29,31 @@ class Splash extends Component {
         messaging()
             .getToken()
             .then((token) => {
-                console.log(token);
+                const deviceid = getUniqueId();
+                const deviceType = Platform.OS;
+                const bodyApi = {
+                    token: '',
+                    us: '',
+                    data: {
+                        deviceid,
+                        token,
+                        deviceType
+                    }
+                };
+                apiBase(
+                    API_CONST.API_NOTIFICATION_SUBSCRIBER,
+                    METHOD.POST,
+                    bodyApi
+                )
+                    .then((response) => {
+                        console.log(
+                            'API_NOTIFICATION_SUBSCRIBER Data:',
+                            response
+                        );
+                    })
+                    .catch((error) => {
+                        console.log('API_NOTIFICATION_SUBSCRIBER', error);
+                    });
                 return saveTokenToDatabase(token);
             });
 
