@@ -284,6 +284,7 @@ const BoxOption = (props) => {
                         : styles.productOutOfStock
                 }>
                 <TouchableOpacity
+                    disabled={webStatusId !== 3}
                     onPress={() => {
                         if (webStatusId === 3) {
                             addToCart(Info.Id);

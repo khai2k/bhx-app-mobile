@@ -10,6 +10,7 @@ import {
     useWindowDimensions,
     Image
 } from 'react-native';
+import { helper } from '@app/common';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
 import Box from './box';
@@ -24,10 +25,10 @@ const ProductArticle = (props) => {
         FeatureSpecification,
         bHXProduct
     } = product;
+    const { PromotionText, ShortName, Avatar } = bHXProduct;
     let { ProductArticle } = product;
     /// modify ProductArticle to display Image
     ProductArticle = ProductArticle.split('data-src').join('src');
-    const { ShortName } = bHXProduct;
     const [isShowModal, setIsShowModal] = useState(false);
     const [isShowMore, setIsShowMore] = useState(false);
     function renderModal() {
@@ -173,17 +174,14 @@ const ProductArticle = (props) => {
         return (
             <View style={{ padding: 5 }}>
                 <Text style={styles.textPromotionSmall}>
-                    {`* Khuyến mãi áp dụng khi mua ${bHXProduct.ShortName}`}
+                    {`* Khuyến mãi áp dụng khi mua ${ShortName}`}
                 </Text>
                 <View style={styles.promotionBox}>
                     <View style={{ padding: 5 }}>
-                        <Image
-                            style={styles.Image}
-                            source={{ uri: bHXProduct.Avatar }}
-                        />
+                        <Image style={styles.Image} source={{ uri: Avatar }} />
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <Text>{bHXProduct.PromotionText}</Text>
+                        <Text>{PromotionText}</Text>
                     </View>
                 </View>
             </View>
@@ -191,7 +189,7 @@ const ProductArticle = (props) => {
     }
     return (
         <View style={{ backgroundColor: COLOR.WHITE }}>
-            {bHXProduct.PromotionText !== '' && renderPromotion()}
+            {!helper.isEmptyOrNull(PromotionText) && renderPromotion()}
 
             <View style={{ flexDirection: 'row' }}>
                 {renderDescription()}

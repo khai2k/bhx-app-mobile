@@ -113,7 +113,12 @@ const SuggestSearchModal = () => {
     const _renderProductItem = (product) => {
         return (
             <View style={[styles.searchItem, styles.searchItemProd]}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.push('ProductDetail', {
+                            productId: product.Id
+                        })
+                    }>
                     <Image
                         style={{ width: 50, height: 50, marginRight: 10 }}
                         source={{
@@ -122,7 +127,12 @@ const SuggestSearchModal = () => {
                     />
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.push('ProductDetail', {
+                                productId: product.Id
+                            })
+                        }>
                         <Text numberOfLines={1}>{product.FullName}</Text>
                     </TouchableOpacity>
                     <View
@@ -130,7 +140,13 @@ const SuggestSearchModal = () => {
                             flexDirection: 'row',
                             marginTop: 5
                         }}>
-                        <TouchableOpacity style={{ flex: 1 }}>
+                        <TouchableOpacity
+                            style={{ flex: 1 }}
+                            onPress={() =>
+                                navigation.push('ProductDetail', {
+                                    productId: product.Id
+                                })
+                            }>
                             <Text>{product.Price}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
