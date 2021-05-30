@@ -1,16 +1,16 @@
 import { combineReducers } from 'redux';
 //  import { generalReducer } from '../redux/reducers/generalReducer';
-import { loginReducer } from '../container/login/reducer';
-import { authenReducer } from '../container/splash/reducer';
+import { loginReducer } from '@app/container/login/reducer';
+import { authenReducer } from '@app/container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
-import { cartReducer } from '../redux/reducers/cartReducer';
-import { categoryReducer } from '../container/group/reducer';
-import { locationReducer } from '../components/Location/reducer';
-import { homeReducer } from '../container/product/reducer';
-import { menuReducer } from '../components/NavMenu/reducer';
-import { productDetailReducer } from '../container/productDetail/reducer';
-import { promotionReducer } from '../container/promotion/reducer';
-import { searchReducer } from '../container/search/reducer';
+import { categoryReducer } from '@app/container/group/reducer';
+import { locationReducer } from '@app/components/Location/reducer';
+import { homeReducer } from '@app/container/product/reducer';
+import { menuReducer } from '@app/components/NavMenu/reducer';
+import { productDetailReducer } from '@app/container/productDetail/reducer';
+import { promotionReducer } from '@app/container/promotion/reducer';
+import { searchReducer } from '@app/container/search/reducer';
+import { cartReducer } from './cartReducer';
 
 const appReducer = combineReducers({
     loginReducer,
