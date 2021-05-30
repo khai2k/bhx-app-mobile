@@ -186,13 +186,14 @@ export const cart_remove = function () {
 export const cart_add_item_product = function (
     prodId,
     quantityNum,
-    expStoreId
+    increase,
+    expStoreId,
+    isUpdate = false
 ) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -208,28 +209,35 @@ export const cart_add_item_product = function (
                 storeId:
                     expStoreId > 0
                         ? expStoreId
-                        : !helper.isEmptyOrNull(location)
+                        : !helper.isEmptyOrNull(location) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs.StoreId)
                         ? location.crrLocationRs.StoreId
                         : 6815,
                 data: {
                     cartId,
                     productId: prodId,
                     quantity: quantityNum,
-                    increase: true,
-                    isUpdate: true,
+                    increase,
+                    isUpdate,
                     promoCode: '',
-                    isInCartSite: true
+                    isInCartSite: false
                 }
             };
+            console.log(bodyApi);
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_ADD_ITEM_PRODUCT,
-                        cartInfo
-                    });
-                    resolve(response);
+                    if (response.ResultCode > 0) {
+                        resolve(response);
+                    } else {
+                        const cartInfo = response.Value;
+                        dispatch({
+                            type: CART_ADD_ITEM_PRODUCT,
+                            cartInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
