@@ -1,5 +1,4 @@
 // import { apiBase, METHOD, API_CONST } from '@app/api';
-import { useDispatch } from 'react-redux';
 import { apiBase, METHOD, API_CONST } from '../../api';
 
 const GET_PRODUCT_DETAIL = 'GET_PRODUCT_DETAIL';
@@ -19,7 +18,7 @@ export const productDetailAction = {
 };
 
 export const get_gallery_product = function (productId, location) {
-    const { ProvinceId = 3, StoreId = 6463 } = location;
+    const { ProvinceId, StoreId } = location;
     console.log(ProvinceId, StoreId, '++++++++++++++++++++++++');
     return (dispatch) => {
         return new Promise((resolve, reject) => {
@@ -54,6 +53,7 @@ export const get_gallery_product = function (productId, location) {
     };
 };
 export const get_product_detail = function (productId, location) {
+    console.log('====', productId);
     const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
@@ -188,7 +188,6 @@ export const fetchAll = function (productId, location) {
     return async (dispatch) => {
         dispatch({ type: IS_LOADING, data: true });
         await Promise.all([
-            dispatch(get_gallery_product(productId, location)),
             dispatch(get_product_detail(productId, location)),
             dispatch(get_product_relative(productId, location)),
             dispatch(get_combo_detail(productId, location)),

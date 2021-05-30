@@ -3,12 +3,12 @@ export const locationState = {
         DistrictId: 0,
         DistrictName: '',
         ProvinceFullName: '',
-        ProvinceId: 0,
+        ProvinceId: 3,
         ProvinceShortName: '',
         WardId: 0,
         WardName: '',
         FullAddress: '',
-        StoreId: 0
+        StoreId: 6463
     },
     isReminderLocation: false
 };

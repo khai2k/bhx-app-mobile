@@ -32,7 +32,11 @@ const ProductArticle = (props) => {
     const [isShowMore, setIsShowMore] = useState(false);
     function renderModal() {
         return (
-            <Modal animationType="slide" transparent visible={isShowModal}>
+            <Modal
+                animationType="slide"
+                transparent
+                visible={isShowModal}
+                onRequestClose={() => setIsShowModal(false)}>
                 <View style={styles.modalView}>
                     <View style={styles.header}>
                         <View
@@ -77,43 +81,58 @@ const ProductArticle = (props) => {
                                             Thông tin sản phẩm{' '}
                                         </Text>
                                     </View>
-                                    <View
-                                        style={{
-                                            width: 100,
-                                            overflow: isShowMore
-                                                ? 'visible'
-                                                : 'hidden'
-                                        }}>
-                                        <HTML
-                                            source={{
-                                                html: FeatureSpecification
-                                            }}
-                                            contentWidth={contentWidth}
-                                        />
-                                    </View>
-                                    <Text onPress={() => setIsShowMore(true)}>
-                                        Xem thêm
-                                    </Text>
+
+                                    <HTML
+                                        source={{
+                                            html: FeatureSpecification
+                                        }}
+                                        contentWidth={contentWidth}
+                                    />
                                 </View>
                             )}
                         </View>
                         {ProductArticle !== '' && (
-                            <View
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: COLOR.WHITE
-                                }}>
-                                <Text
+                            <View>
+                                <View
                                     style={{
-                                        fontSize: 20,
-                                        fontWeight: 'bold'
+                                        padding: 10,
+                                        backgroundColor: COLOR.WHITE,
+                                        flex: 1
                                     }}>
-                                    Bài viết sản phẩm
-                                </Text>
-                                <HTML
-                                    source={{ html: ProductArticle }}
-                                    contentWidth={contentWidth}
-                                />
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: 'bold'
+                                        }}>
+                                        Bài viết sản phẩm
+                                    </Text>
+                                    <View
+                                        style={{
+                                            height: isShowMore ? 'auto' : 300
+                                        }}>
+                                        <HTML
+                                            source={{ html: ProductArticle }}
+                                            contentWidth={contentWidth}
+                                        />
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        backgroundColor: 'white',
+                                        padding: 10
+                                    }}>
+                                    {!isShowMore &&
+                                        ProductArticle.length > 1000 && (
+                                            <Text
+                                                style={{ color: 'green' }}
+                                                onPress={() =>
+                                                    setIsShowMore(true)
+                                                }>
+                                                Xem thêm ^
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         )}
                     </ScrollView>

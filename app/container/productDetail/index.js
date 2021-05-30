@@ -29,7 +29,6 @@ class ProductDetail extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Header navigation={this.props.navigation} />
                 <ScrollView>
                     {this.props.Is_loading === true ? (
                         <View style={[styles.container, styles.horizontal]}>
@@ -40,6 +39,7 @@ class ProductDetail extends Component {
                         </View>
                     ) : (
                         <View>
+                            <Header />
                             <ProductGallery
                                 Gallery_product={this.props.Gallery_product}
                             />
