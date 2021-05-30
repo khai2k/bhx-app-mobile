@@ -3,7 +3,6 @@ import { Storage, helper } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
 
 const CART_GET = 'CART_GET';
-const CART_GET_FULL = 'CART_GET_FULL';
 const CART_GET_SIMPLE = 'CART_GET_SIMPLE';
 const CART_REMOVE_ITEM_PRODUCT = 'CART_REMOVE_ITEM_PRODUCT';
 const CART_UPDATE_ITEM_PRODUCT = 'CART_UPDATE_ITEM_PRODUCT';
@@ -13,7 +12,6 @@ const CART_SUBMIT = 'CART_SUBMIT';
 
 export const cartAction = {
     CART_GET,
-    CART_GET_FULL,
     CART_GET_SIMPLE,
     CART_REMOVE_ITEM_PRODUCT,
     CART_ADD_ITEM_PRODUCT,
@@ -68,53 +66,6 @@ export const cart_get = function () {
         });
     };
 };
-export const cart_get_full = function () {
-    return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            // consoleconst cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            const cartId =
-                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
-            const location = getState().locationReducer;
-            const bodyApi = {
-                token: cartId,
-                us: '',
-                provinceId: 3,
-                districtId: 2087,
-                wardId: 27125,
-                storeId: 6463,
-                data: {
-                    cartId
-                }
-            };
-            // const bodyApi = {
-            //     token: cartId,
-            //     us: '',
-            //     provinceId: location.crrLocationRs.ProvinceId,
-            //     districtId: location.crrLocationRs.DistrictId,
-            //     wardId: location.crrLocationRs.WardId,
-            //     storeId: location.crrLocationRs.StoreId,
-            //     data: {
-            //         cartId
-            //     }
-            // };
-            apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
-                .then((response) => {
-                    debugger;
-                    console.log('CART_GET_FULLLL Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_GET_FULL,
-                        cartInfo
-                    });
-                    resolve(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
-    };
-};
 export const cart_submit = function (Cart) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
@@ -129,9 +80,7 @@ export const cart_submit = function (Cart) {
                 districtId: 2087,
                 wardId: 27125,
                 storeId: 6463,
-                data: {
-                    Cart
-                }
+                data: Cart
             };
             apiBase(API_CONST.API_REQUEST_SUBMIT_CART, METHOD.POST, bodyApi)
                 .then((response) => {

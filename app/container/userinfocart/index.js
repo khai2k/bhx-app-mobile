@@ -13,8 +13,11 @@ import {
     Image,
     ScrollView,
     Alert,
-    Dimensions
+    Dimensions,
+    ActivityIndicator,
+    Modal
 } from 'react-native';
+import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -28,19 +31,28 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 
-const { width: WIDTH } = Dimensions.get('window');
-
 const UserInfoCart = (props) => {
-    useEffect(() => {        
-        actionCart.cart_get();
-        setCartModel(actionCart.cart_get_full())
-        console.log(cartmodel);
+    useEffect(() => {
+        actionCart.cart_get().then((res) => {
+            setisLoading(false);
+            debugger;
+            setCartModel(res.Value);
+        });
         console.log(shipdatetime);
     }, []);
 
     useEffect(() => {
+        console.log(isLoading);
+    }, isLoading);
+
+    useEffect(() => {
         console.log(curDateDeli);
     }, curDateDeli);
+
+    const windowWidth = Math.round(Dimensions.get('window').width);
+    const windowHeight = Math.round(Dimensions.get('window').height);
+
+    const [isLoading, setisLoading] = useState(true);
 
     const dispatch = useDispatch();
 
@@ -56,7 +68,8 @@ const UserInfoCart = (props) => {
     const location = useSelector(
         (state) => state.locationReducer.crrLocationRs
     );
-    
+
+    const [cartState, setCartState] = useState(cart);
     const [cartUserInfo, setCartUserInfo] = useState({
         CustomerName: '',
         CustomerGender: 1,
@@ -113,7 +126,10 @@ const UserInfoCart = (props) => {
     const onSubmitForm = () => {
         const isValidForm = () => {};
         debugger;
-        actionCart.cart_submit(cartmodel);
+        actionCart.cart_submit(cartmodel).then((res) => {
+            debugger;
+            Alert.alert(res.Message);
+        });
     };
 
     const handleErrorPhone = (value) => {
@@ -214,7 +230,12 @@ const UserInfoCart = (props) => {
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
                         settimeSelected(itemValue);
-                        console.log('timeSelected ' + timeSelected + 'dateSelected ' + dateSelected)
+                        console.log(
+                            'timeSelected ' +
+                                timeSelected +
+                                'dateSelected ' +
+                                dateSelected
+                        );
                     }}>
                     <Picker.Item
                         label="Thời gian nhận"
@@ -332,7 +353,7 @@ const UserInfoCart = (props) => {
                     : { ...setSexOther, selected: false }
             );
             setSexOther(updatedState);
-            setCartUserInfo(previousState => ({
+            setCartUserInfo((previousState) => ({
                 ...previousState,
                 OthersGenderCall: updatedState
             }));
@@ -366,7 +387,7 @@ const UserInfoCart = (props) => {
                         label={<Text>Số điện thoại (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersPhone}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 OthersPhone: value
                             }));
@@ -395,7 +416,7 @@ const UserInfoCart = (props) => {
                         label={<Text>Họ và tên (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersName}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 OthersName: value
                             }));
@@ -615,7 +636,7 @@ const UserInfoCart = (props) => {
                     : { ...setSex, selected: false }
             );
             setSex(updatedState);
-            setCartUserInfo(previousState => ({
+            setCartUserInfo((previousState) => ({
                 ...previousState,
                 CustomerGender: updatedState
             }));
@@ -650,8 +671,35 @@ const UserInfoCart = (props) => {
     return (
         <View>
             <Header />
+            <Modal
+                visible={isLoading}
+                transparent={true}
+                index
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                animationType="fade"
+                onRequestClose={() => {}}>
+                <ActivityIndicator
+                    style={{ marginTop: 150 }}
+                    size="large"
+                    color={Colors.GREEN_KEY}
+                />
+            </Modal>
             <ScrollView
-                style={[styles.container]}
+                style={
+                    ([styles.container],
+                    isLoading
+                        ? {
+                              width: windowWidth,
+                              height: windowHeight,
+                              backgroundColor: '#999',
+                              opacity: 0.2
+                          }
+                        : '')
+                }
                 contentContainerStyle={{
                     paddingBottom: 60
                 }}>
@@ -700,9 +748,9 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
-                        onBlur={() =>{}}
-                        onChangeText={(value) => {                            
-                            setCartUserInfo(previousState => ({
+                        onBlur={() => {}}
+                        onChangeText={(value) => {
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 CustomerPhone: value
                             }));
@@ -738,7 +786,7 @@ const UserInfoCart = (props) => {
                         }
                         value={cartUserInfo?.CustomerName}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 CustomerName: value
                             }));
@@ -754,7 +802,7 @@ const UserInfoCart = (props) => {
                         placeholder="Số nhà, tên đường"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 ShipAddress: value
                             }));
@@ -863,9 +911,9 @@ const UserInfoCart = (props) => {
                     </View>
                     <View style={styles.btnbuy}>
                         <TouchableOpacity
-                            onPress={() =>
-                               {onSubmitForm()} 
-                            }>
+                            onPress={() => {
+                                onSubmitForm();
+                            }}>
                             <View>
                                 <Text style={styles.textbtnbuy}>
                                     Hoàn tất mua
