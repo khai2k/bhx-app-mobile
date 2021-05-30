@@ -28,7 +28,6 @@ class Location extends Component {
             );
 
             if (hasLocationPermission) {
-                console.log(`granted`);
                 Geolocation.getCurrentPosition(
                     (position) => {
                         const crrLat = position.coords.latitude;
@@ -49,11 +48,7 @@ class Location extends Component {
                     }
                 );
             } else {
-                this.props.locationAction.location_getCurrent(
-                    10.8516,
-                    106.7975
-                );
-                console.log('Denied');
+                this.props.locationAction.location_getCurrent(0, 0);
             }
         } else {
             this.props.locationAction.location_SaveChooseLocation(_crrLocation);

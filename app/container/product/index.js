@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, ScrollView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Header } from '@app/components';

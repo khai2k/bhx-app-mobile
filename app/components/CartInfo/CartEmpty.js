@@ -4,7 +4,7 @@ import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Colors, Typography } from '@app/styles';
 
 // create a component
-const CartEmpty = () => {
+const CartEmpty = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.cartemph} />

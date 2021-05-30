@@ -1,7 +1,7 @@
-import * as _state from './state';
-import * as _action from './action';
+import * as _store from '../store/cartStore';
+import * as _action from '../actions/cartAction';
 
-const cartReducer = function (state = _state.cartState, action) {
+const cartReducer = function (state = _store.cartState, action) {
     switch (action.type) {
         case _action.cartAction.CART_GET:
             return {
@@ -10,10 +10,6 @@ const cartReducer = function (state = _state.cartState, action) {
                 CartTotal: action.cartInfo.CartTotal,
                 ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
                 //  ListCategory: action.cartInfo.ListCategory
-            };
-        case _action.cartAction.CART_GET_FULL:
-            return {
-                state
             };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {

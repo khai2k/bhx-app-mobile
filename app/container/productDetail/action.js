@@ -1,5 +1,4 @@
 // import { apiBase, METHOD, API_CONST } from '@app/api';
-import { useDispatch } from 'react-redux';
 import { apiBase, METHOD, API_CONST } from '../../api';
 
 const GET_PRODUCT_DETAIL = 'GET_PRODUCT_DETAIL';
@@ -18,15 +17,15 @@ export const productDetailAction = {
     IS_LOADING
 };
 
-export const get_gallery_product = function (productId) {
-    console.log('get_gallery_product++++++++++++++++');
-    console.log(productId);
+export const get_gallery_product = function (productId, location) {
+    const { ProvinceId, StoreId } = location;
+    console.log(ProvinceId, StoreId, '++++++++++++++++++++++++');
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productId,
-                provinceId: 3,
-                storeId: 6463,
+                provinceId: ProvinceId,
+                storeId: StoreId,
                 phone: '0328131471',
                 isMobile: true,
                 clearcache: ''
@@ -53,13 +52,15 @@ export const get_gallery_product = function (productId) {
         });
     };
 };
-export const get_product_detail = function (productId) {
+export const get_product_detail = function (productId, location) {
+    console.log('====', productId);
+    const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productId,
-                provinceId: 3,
-                storeId: 6463,
+                provinceId: ProvinceId,
+                storeId: StoreId,
                 isMobile: true,
                 clearcache: ''
             };
@@ -84,13 +85,14 @@ export const get_product_detail = function (productId) {
         });
     };
 };
-export const get_product_relative = function (productId) {
+export const get_product_relative = function (productId, location) {
+    const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productId,
-                provinceId: 3,
-                storeId: 6463,
+                provinceId: ProvinceId,
+                storeId: StoreId,
                 totalSize: 6,
                 clearcache: ''
             };
@@ -116,14 +118,15 @@ export const get_product_relative = function (productId) {
     };
 };
 
-export const get_combo_detail = function (productId) {
+export const get_combo_detail = function (productId, location) {
+    const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productCode: '79387,85959',
                 quantityPromotionId: 2,
-                storeId: 6463,
-                provinceId: 3,
+                provinceId: ProvinceId,
+                storeId: StoreId,
                 clearcache: ''
             };
             apiBase(
@@ -147,13 +150,14 @@ export const get_combo_detail = function (productId) {
     };
 };
 
-export const get_box_banner = function (productId) {
+export const get_box_banner = function (productId, location) {
+    const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productId,
-                provinceId: 3,
-                storeId: 6463,
+                provinceId: ProvinceId,
+                storeId: StoreId,
                 isMobile: true,
                 clearcache: ''
             };
@@ -180,15 +184,14 @@ export const get_box_banner = function (productId) {
     };
 };
 
-export const fetchAll = function (productId) {
+export const fetchAll = function (productId, location) {
     return async (dispatch) => {
         dispatch({ type: IS_LOADING, data: true });
         await Promise.all([
-            dispatch(get_gallery_product(productId)),
-            dispatch(get_product_detail(productId)),
-            dispatch(get_product_relative(productId)),
-            dispatch(get_combo_detail(productId)),
-            dispatch(get_box_banner(productId))
+            dispatch(get_product_detail(productId, location)),
+            dispatch(get_product_relative(productId, location)),
+            dispatch(get_combo_detail(productId, location)),
+            dispatch(get_box_banner(productId, location))
         ]);
         dispatch({ type: IS_LOADING, data: false });
     };

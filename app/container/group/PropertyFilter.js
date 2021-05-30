@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     },
     property: {
         backgroundColor: Colors.WHITE,
+        paddingLeft: 82,
         position: 'relative'
     },
     propertyItem: {
@@ -230,11 +231,7 @@ const styles = StyleSheet.create({
     },
     scrollList: {
         overflow: 'visible',
-        paddingLeft: 62,
         paddingRight: 7
-    },
-    scrollList80: {
-        paddingLeft: 82
     },
     showMore: {
         alignItems: 'center',

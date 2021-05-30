@@ -47,6 +47,8 @@ class Search extends Component {
                     sort={this.props.searchInfo.Filter.FilterSorts}
                     products={this.props.searchInfo.Products}
                     info={this.props.searchInfo.Filter.Query}
+                    otherData={this.props.searchInfo.OtherData}
+                    otherDataAjax={this.props.searchInfo.OtherDataAjax}
                     selectedBrand={this.props.searchInfo.SelectedBrand}
                     selectedProps={this.props.searchInfo.SelectedProps}
                     selectedSort={this.props.searchInfo.SelectedSort}

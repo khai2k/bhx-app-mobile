@@ -21,20 +21,6 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            // const cartId =
-            //     '6E941396616C945AEB5A8EB061E900330076C10B8EA2896F953ACFD4336FFDDD';
-            // const location = getState().locationReducer;
-            // const bodyApi = {
-            //     token: cartId,
-            //     us: '',
-            //     provinceId: 3,
-            //     districtId: 2087,
-            //     wardId: 27125,
-            //     storeId: 6463,
-            //     data: {
-            //         cartId
-            //     }
-            // };
             const location = getState().locationReducer;
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const bodyApi = {
@@ -295,36 +281,3 @@ export const cart_get_simple = function () {
         });
     };
 };
-
-//  Thử loại async/await đều ngon lành
-// export const get_cart = function () {
-//     return async (dispatch, getSate) => {
-//         const bodyApi = {
-//             token: getSate().cartReducer.Cart.CartId,
-//             us: '',
-//             provinceId: 3,
-//             districtId: 0,
-//             wardId: 0,
-//             storeId: 6463,
-//             data: {
-//                 cartId: getSate().cartReducer.Cart.CartId
-//             }
-//         };
-//         const response = await apiBase(
-//             API_CONST.API_REQUEST_GET_CART,
-//             METHOD.POST,
-//             bodyApi,
-//             {
-//                 isCustomToken: false,
-//                 isOauthenToken: false,
-//                 isUpload: false
-//             }
-//         );
-//         const cartInfo = response.Value;
-//         console.log('response api Nhu test:', cartInfo);
-//         dispatch({
-//             type: GET_CART,
-//             cartInfo
-//         });
-//     };
-// };

@@ -58,7 +58,7 @@ export default class ProductGallery extends Component {
         const data = this.props.Gallery_product;
         const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.ImageMobile }));
+        const images = data.map((s) => ({ url: s.ImageThumb }));
 
         return (
             <View

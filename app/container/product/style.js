@@ -11,6 +11,15 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         paddingRight: 5
     },
+    boxLine: {
+        width: '33.33%'
+    },
+    boxLines: {
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start' // if you want to fill rows left to right
+    },
     boxTitle: {
         alignItems: 'center',
         bottom: 10,
@@ -37,6 +46,11 @@ const styles = StyleSheet.create({
     categoryItem_black: {
         borderColor: Colors.ZAMBEZI,
         color: Colors.BLACK
+    },
+    freshActive: {
+        borderColor: Colors.TROPICAL_RAIN_FOREST,
+        color: Colors.TROPICAL_RAIN_FOREST,
+        fontWeight: 'bold'
     },
     imgTitle: {
         borderRadius: 50,

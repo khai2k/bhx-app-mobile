@@ -41,6 +41,7 @@ export const getItem = (key) => {
             });
     });
 };
+
 export const setItem = (key, value) => {
     return new Promise((resolve, reject) => {
         AsyncStorage.setItem(key, value, (error, result) => {

@@ -4,7 +4,8 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '@app/container/cart/action';
+//  import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import styles from './style';
 
 const Box = (props) => {
@@ -271,6 +272,7 @@ const Box = (props) => {
                         : styles.productOutOfStock
                 }>
                 <TouchableOpacity
+                    disabled={webStatusId !== 3}
                     onPress={() => {
                         if (webStatusId === 3) {
                             addToCart(bHXProduct.Id);

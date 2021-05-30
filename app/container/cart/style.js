@@ -17,6 +17,13 @@ const styles = StyleSheet.create({
         padding: 5,
         width: '30%'
     },
+    btnAlert: {
+        backgroundColor: Colors.GREEN_KEY,
+        color: Colors.WHITE
+    },
+    btnAlertClose: {
+        color: Colors.GRAY_ALERT_CLOSE
+    },
     btnbuy: {
         backgroundColor: Colors.BG_BUTTON_BUY,
         borderColor: Colors.CART_BORDER_BTN,
