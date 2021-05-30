@@ -31,9 +31,10 @@ import { FloatingLabelInput } from 'react-native-floating-label-input';
 const { width: WIDTH } = Dimensions.get('window');
 
 const UserInfoCart = (props) => {
-    useEffect(() => {
+    useEffect(() => {        
         actionCart.cart_get();
-        console.log(cartState);
+        setCartModel(actionCart.cart_get_full())
+        console.log(cartmodel);
         console.log(shipdatetime);
     }, []);
 
@@ -46,6 +47,7 @@ const UserInfoCart = (props) => {
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const actionLocation = bindActionCreators(locationCreator, dispatch);
 
+    const [cartmodel, setCartModel] = useState(null);
     const cart = useSelector((state) => state.cartReducer.Cart);
     const cartTotal = useSelector((state) => state.cartReducer.CartTotal);
     const shipdatetime = useSelector(
@@ -55,7 +57,6 @@ const UserInfoCart = (props) => {
         (state) => state.locationReducer.crrLocationRs
     );
     
-    const [cartState, setCartState] = useState(cart);
     const [cartUserInfo, setCartUserInfo] = useState({
         CustomerName: '',
         CustomerGender: 1,
@@ -79,8 +80,8 @@ const UserInfoCart = (props) => {
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
     const [curDateDeli, setcurDateDeli] = useState(null);
 
-    const [dateDeliID, setdateDeliID] = useState('');
-    const [timeDeliID, settimeDeliID] = useState('');
+    const [dateSelected, setdateSelected] = useState('');
+    const [timeSelected, settimeSelected] = useState('');
 
     // Xuất Hóa Đơn
     const [isSelectedXHD, setSelectedXHD] = useState(false);
@@ -111,6 +112,8 @@ const UserInfoCart = (props) => {
 
     const onSubmitForm = () => {
         const isValidForm = () => {};
+        debugger;
+        actionCart.cart_submit(cartmodel);
     };
 
     const handleErrorPhone = (value) => {
@@ -156,7 +159,7 @@ const UserInfoCart = (props) => {
         return (
             <View style={[styles.delichoose]}>
                 <Picker
-                    selectedValue={dateDeliID > 0 ? 0 : dateDeliID}
+                    selectedValue={dateSelected > 0 ? 0 : dateSelected}
                     style={{
                         height: 50,
                         width: '100%',
@@ -169,10 +172,11 @@ const UserInfoCart = (props) => {
                             setcurDateDeli(
                                 shipdatetime[0]?.DateList[itemIndex]
                             );
-                            setdateDeliID(itemValue);
+                            setdateSelected(itemValue);
                         } else {
                             setcurDateDeli(null);
                         }
+                        settimeSelected(null);
                     }}>
                     <Picker.Item label="Ngày nhận" value="-1" color="#C2C2C2" />
                     {isActive &&
@@ -209,11 +213,8 @@ const UserInfoCart = (props) => {
                     enabled={isActive}
                     mode={'dropdown'}
                     onValueChange={(itemValue, itemIndex) => {
-                        settimeDeliID(itemValue);
-                        setCartUserInfo(previousState => ({
-                            ...previousState,
-                            OthersGenderCall: itemValue
-                        }));
+                        settimeSelected(itemValue);
+                        console.log('timeSelected ' + timeSelected + 'dateSelected ' + dateSelected)
                     }}>
                     <Picker.Item
                         label="Thời gian nhận"
@@ -699,6 +700,7 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
+                        onBlur={() =>{}}
                         onChangeText={(value) => {                            
                             setCartUserInfo(previousState => ({
                                 ...previousState,
@@ -862,7 +864,7 @@ const UserInfoCart = (props) => {
                     <View style={styles.btnbuy}>
                         <TouchableOpacity
                             onPress={() =>
-                                props.navigation.navigate('UserInfo')
+                               {onSubmitForm()} 
                             }>
                             <View>
                                 <Text style={styles.textbtnbuy}>

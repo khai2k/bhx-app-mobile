@@ -10,6 +10,10 @@ const cartReducer = function (state = _state.cartState, action) {
                 CartTotal: action.cartInfo.CartTotal,
                 ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
             };
+        case _action.cartAction.CART_GET_FULL:
+            return {
+                state
+            };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {
                 ...state,
