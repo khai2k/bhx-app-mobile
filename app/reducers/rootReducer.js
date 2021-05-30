@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
+//  import { generalReducer } from '../redux/reducers/generalReducer';
 import { loginReducer } from '../container/login/reducer';
 import { authenReducer } from '../container/splash/reducer';
 // import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
-import { cartReducer } from '../container/cart/reducer';
+import { cartReducer } from '../redux/reducers/cartReducer';
 import { categoryReducer } from '../container/group/reducer';
 import { locationReducer } from '../components/Location/reducer';
 import { homeReducer } from '../container/product/reducer';
@@ -22,6 +23,7 @@ const appReducer = combineReducers({
     productDetailReducer,
     promotionReducer,
     searchReducer
+    //  generalReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {

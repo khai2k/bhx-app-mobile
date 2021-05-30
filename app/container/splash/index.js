@@ -7,9 +7,10 @@ import { setI18nConfig } from '@app/translate';
 import { CONST_STORAGE } from '@app/constants';
 import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
-import * as actionCartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import { getUniqueId } from 'react-native-device-info';
 import { apiBase, METHOD, API_CONST } from '@app/api';
+//  import * as actionMenuCreator from '@app/redux/actions/generalAction';
 import styles from './style';
 import * as actionAuthenCreator from './action';
 import * as actionMenuCreator from '../../components/NavMenu/action';
@@ -88,7 +89,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
         actionGetMenu: bindActionCreators(actionMenuCreator, dispatch),
-        actionCart: bindActionCreators(actionCartCreator, dispatch)
+        actionCart: bindActionCreators(cartCreator, dispatch)
     };
 };
 

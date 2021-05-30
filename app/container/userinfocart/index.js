@@ -19,7 +19,8 @@ import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { helper } from '@app/common';
-import * as cartCreator from '@app/container/cart/action';
+//  import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import styles from './style';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 

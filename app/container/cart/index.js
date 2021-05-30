@@ -18,7 +18,7 @@ import {
 } from '@app/components';
 import { connect } from 'react-redux';
 import { helper } from '@app/common';
-import * as cartCreator from './action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import styles from './style';
 
 // create a component

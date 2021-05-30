@@ -20,7 +20,8 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Colors } from '@app/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import HTML from 'react-native-render-html';
-import * as cartCreator from '@app/container/cart/action';
+//  import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import DelayInputCmp from '../../components/DelayInput';
 
 const SuggestSearchModal = () => {
