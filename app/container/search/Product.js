@@ -94,7 +94,7 @@ const Product = (props) => {
         );
     };
     const footer = () => {
-        return remainProducts > (pageIndex === 0 ? 1 : pageIndex) * PageSize ? (
+        return remainProducts > 0 ? (
             <View>
                 <TouchableOpacity
                     onPress={loadMoreProducts}

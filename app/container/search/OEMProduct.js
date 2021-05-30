@@ -56,7 +56,7 @@ const OEMProduct = (props) => {
             });
     };
     const footer = () => {
-        return remainProducts > (pageIndex === 0 ? 1 : pageIndex) * pageSize ? (
+        return remainProducts > 0 ? (
             <View>
                 <TouchableOpacity
                     onPress={loadMoreProducts}

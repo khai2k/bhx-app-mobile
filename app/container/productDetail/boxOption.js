@@ -34,7 +34,7 @@ const BoxOption = (props) => {
 
     const getShortName = () => {
         if (Unit !== BaseUnit) {
-            return `1 ${Unit} ${ExchangeQuantity} ${BaseUnit}`;
+            return `${Unit} ${ExchangeQuantity} ${BaseUnit}`;
         }
         return `1 ${Unit} ${BaseValue}`;
     };
@@ -190,7 +190,14 @@ const BoxOption = (props) => {
                             `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
                     </Text>
                 ) : (
-                    <View style={[styles.center, { flexDirection: 'row' }]}>
+                    <View
+                        style={[
+                            {
+                                alignItems: 'center',
+                                flex: 1
+                            },
+                            { flexDirection: 'row' }
+                        ]}>
                         <Image style={styles.Image} source={{ uri: Avatar }} />
                         <View style={{ justifyContent: 'center' }}>
                             <Text>{ShortName}</Text>
@@ -277,6 +284,7 @@ const BoxOption = (props) => {
                         : styles.productOutOfStock
                 }>
                 <TouchableOpacity
+                    disabled={webStatusId !== 3}
                     onPress={() => {
                         if (webStatusId === 3) {
                             addToCart(Info.Id);

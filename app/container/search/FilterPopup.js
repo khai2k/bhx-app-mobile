@@ -96,6 +96,7 @@ const FilterPopup = (props) => {
                 <ScrollView className="popupFilter" style={styles.popupFilter}>
                     <TouchableOpacity
                         onPress={() => {
+                            submitFilter();
                             props.onTogglePopup(false);
                         }}
                         className="closeFilter"
