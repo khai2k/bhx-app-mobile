@@ -154,6 +154,7 @@ const RenderLine = (props) => {
             {props.lineItem.CategoryId === 8686 && (
                 <View style={styles.boxCategory}>
                     <FlatList
+                        showsHorizontalScrollIndicator={false}
                         horizontal
                         data={props.lineItem.Categorys}
                         keyExtractor={(item) => item.Id}

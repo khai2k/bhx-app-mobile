@@ -19,6 +19,7 @@ const ListCategories = (props) => {
         return (
             <SafeAreaView style={styles.boxCategory}>
                 <FlatList
+                    showsHorizontalScrollIndicator={false}
                     horizontal
                     data={props.listCate}
                     keyExtractor={(item) => item.Id}
