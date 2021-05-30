@@ -9,6 +9,7 @@ import { homeReducer } from '../container/product/reducer';
 import { menuReducer } from '../components/NavMenu/reducer';
 import { productDetailReducer } from '../container/productDetail/reducer';
 import { promotionReducer } from '../container/promotion/reducer';
+import { voucherReducer } from '../container/useVoucher/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
@@ -19,7 +20,8 @@ const appReducer = combineReducers({
     homeReducer,
     menuReducer,
     productDetailReducer,
-    promotionReducer
+    promotionReducer,
+    voucherReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {

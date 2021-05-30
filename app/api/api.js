@@ -6,6 +6,7 @@ export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_ITEM_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
+
 // Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
@@ -39,3 +40,9 @@ export const API_GET_PROMOTIONPAGE_GETLISTCATEGORY = `${API_BASE}PromotionPage/G
 export const API_GET_TOPDEALPROMOTION = `${API_BASE}PromotionPage/TopDealPromotion`;
 export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxProductsGroup`;
 export const API_POST_PRODUCT_BY_SUB_CATE = `${API_BASE}PromotionPage/AjaxProductsBySubCate`;
+
+// Voucher
+
+export const API_REQUEST_GET_VOUCHER = `${API_BASE}/VoucherCoupon/GetVoucherCouponIncart`;
+export const API_REQUEST_ADD_VOUCHER = `${API_BASE}/VoucherCoupon/ApplyVoucher`;
+export const API_REQUEST_DELETE_VOUCHER = `${API_BASE}/VoucherCoupon/ClearVoucherCoupon`;
