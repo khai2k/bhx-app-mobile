@@ -68,7 +68,7 @@ const RenderItemCateFilter = React.memo((props) => {
                 props.groupCateId,
                 groupCateFilterId === 0 ? '' : groupCateFilterId,
                 props.currentLocation.ProvinceId,
-                props.currentLocation.StoreId || 0
+                props.currentLocation.StoreId || 6463
             )
         );
     }

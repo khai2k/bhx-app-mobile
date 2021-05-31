@@ -60,13 +60,13 @@ const Promotion = React.memo(() => {
         dispatch(
             promotionAction.promotionPage_get(
                 currentLocation.ProvinceId,
-                currentLocation.StoreId || 0
+                currentLocation.StoreId || 6463
             )
         );
         dispatch(
             promotionAction.topDealPromotion_get(
                 currentLocation.ProvinceId,
-                currentLocation.StoreId || 0
+                currentLocation.StoreId || 6463
             )
         );
     }, [currentLocation.StoreId]);
@@ -95,7 +95,7 @@ const Promotion = React.memo(() => {
             <Header />
             <ActivityIndicator
                 style={[styles.loading, isLoading && styles.loadingActive]}
-                animating={this.state.isLoading}
+                animating={isLoading}
                 size="large"
                 color="#00ff00"
             />

@@ -14,7 +14,7 @@ const LoadMoreProduct = React.memo((props) => {
                 props.query.CategoryId,
                 props.query.StringCates,
                 props.currentLocation.ProvinceId,
-                props.currentLocation.StoreId || 0
+                props.currentLocation.StoreId || 6463
             )
         );
     }
