@@ -18,7 +18,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { location_SaveChooseLocation } from './action';
-import TriggerLoadlocal from './index';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -182,7 +181,6 @@ const ModalLocation = (props) => {
 
     return (
         <View>
-            <TriggerLoadlocal />
             <Modal
                 visible={props.isModalVisible}
                 index
