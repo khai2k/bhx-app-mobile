@@ -10,6 +10,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import * as COLOR from '@app/styles/colors';
+import { helper } from '@app/common';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
@@ -29,7 +30,6 @@ class ProductDetail extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Header />
                 <ScrollView>
                     {this.props.Is_loading === true ? (
                         <View style={[styles.container, styles.horizontal]}>
@@ -40,23 +40,26 @@ class ProductDetail extends Component {
                         </View>
                     ) : (
                         <View>
+                            <Header />
                             <ProductGallery
                                 Gallery_product={this.props.Gallery_product}
                             />
-
                             <ProductArticle
                                 product={this.props.Product_detail}
                                 isExchangeProduct={this.props.isExchangeProduct}
                             />
-
                             <ProductRelative
                                 relativeProducts={this.props.Product_relative}
                             />
-                            <Image
-                                style={{ width: '100%', height: 80 }}
-                                resizeMode="cover"
-                                source={{ uri: this.props.Box_banner.Image }}
-                            />
+                            {!helper.isEmptyOrNull(this.props.Box_banner) && (
+                                <Image
+                                    style={{ width: '100%', height: 80 }}
+                                    resizeMode="cover"
+                                    source={{
+                                        uri: this.props.Box_banner.Image
+                                    }}
+                                />
+                            )}
                         </View>
                     )}
                 </ScrollView>
