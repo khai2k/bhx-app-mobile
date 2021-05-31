@@ -58,3 +58,4 @@ export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`
 
 //  Notification
 export const API_NOTIFICATION_SUBSCRIBER = `${API_BASE}Notification/subscriber`;
+export const API_NOTIFICATION_GET_LIST = `${API_BASE}Notification/getlist`;
