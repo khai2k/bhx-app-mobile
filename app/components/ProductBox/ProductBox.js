@@ -47,12 +47,11 @@ const ProductBox = (props) => {
     }, [cart.Total]);
 
     // check đã chọn location chưa
-    const locationInfo = useSelector((state) => state.locationReducer);
+    const locationInfo = useSelector(
+        (state) => state.generalReducer.Location.LocationInfo
+    );
     const checkReminderLocation = () => {
-        if (
-            helper.isEmptyOrNull(locationInfo) ||
-            helper.isEmptyOrNull(locationInfo.crrLocationRs)
-        ) {
+        if (helper.IsEmptyObject(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }

@@ -14,51 +14,56 @@ export const generalAction = {
 
 export const location_getCurrent = function (crrLat, crrLong) {
     return (dispatch) => {
-        const bodyApi = {
-            data: {
-                Lng: crrLat,
-                Lat: crrLong,
-                IsLive: false
-            }
-        };
-        apiBase(API_CONST.API_LOCATION_GETBYCOORDINATES, METHOD.POST, bodyApi)
-            .then((response) => {
-                const tmpData = response.OtherData;
-                const crrLocationRs = { ...tmpData, FullAddress: '' };
-                if (response.ResultCode === 0) {
-                    let _fullAddress = '';
-                    if (crrLocationRs.WardName !== '') {
-                        _fullAddress += `${crrLocationRs.WardName}, `;
-                    }
-                    if (crrLocationRs.DistrictName !== '') {
-                        _fullAddress += `${crrLocationRs.DistrictName}, `;
-                    }
-                    if (crrLocationRs.ProvinceFullName !== '') {
-                        _fullAddress += `${crrLocationRs.ProvinceFullName}`;
-                    }
-                    crrLocationRs.FullAddress = _fullAddress;
-
-                    Storage.setItem(
-                        CONST_STORAGE.SESSION_LOCATION_CURRENT,
-                        JSON.stringify(crrLocationRs)
-                    );
+        return new Promise((resolve, reject) => {
+            const bodyApi = {
+                data: {
+                    Lng: crrLat,
+                    Lat: crrLong,
+                    IsLive: false
                 }
-                dispatch({
-                    type: GENERAL_LOCATION_GETCURRENT,
-                    crrLocationRs
+            };
+            apiBase(
+                API_CONST.API_LOCATION_GETBYCOORDINATES,
+                METHOD.POST,
+                bodyApi
+            )
+                .then((response) => {
+                    const tmpData = response.OtherData;
+                    const crrLocationRs = { ...tmpData, FullAddress: '' };
+                    if (response.ResultCode === 0) {
+                        let _fullAddress = '';
+                        if (crrLocationRs.WardName !== '') {
+                            _fullAddress += `${crrLocationRs.WardName}, `;
+                        }
+                        if (crrLocationRs.DistrictName !== '') {
+                            _fullAddress += `${crrLocationRs.DistrictName}, `;
+                        }
+                        if (crrLocationRs.ProvinceFullName !== '') {
+                            _fullAddress += `${crrLocationRs.ProvinceFullName}`;
+                        }
+                        crrLocationRs.FullAddress = _fullAddress;
+
+                        Storage.setItem(
+                            CONST_STORAGE.SESSION_LOCATION_CURRENT,
+                            JSON.stringify(crrLocationRs)
+                        );
+                    }
+                    resolve(response);
+                    dispatch({
+                        type: GENERAL_LOCATION_GETCURRENT,
+                        crrLocationRs
+                    });
+                })
+                .catch((error) => {
+                    reject(error);
+                    console.log(error);
                 });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        });
     };
 };
 
-export const location_SaveChooseLocation = function (crrLocationRs) {
+export const location_SaveChooseLocation = (crrLocationRs) => {
     return (dispatch) => {
-        console.log(
-            `location_SaveChooseLocation crrLocationRs: ${crrLocationRs}`
-        );
         Storage.setItem(
             CONST_STORAGE.SESSION_LOCATION_CURRENT,
             JSON.stringify(crrLocationRs)
@@ -71,6 +76,7 @@ export const location_SaveChooseLocation = function (crrLocationRs) {
     };
 };
 export const showReminderLocation = (status) => {
+    console.log('showReminderLocation', status);
     return (dispatch) => {
         const showReminder = status;
         dispatch({

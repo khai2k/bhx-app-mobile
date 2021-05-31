@@ -3,9 +3,9 @@ import { View, PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as locationCreator from './action';
 import { Storage } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
+import * as locationCreator from '@app/redux/actions/generalAction';
 
 // create a component
 class Location extends Component {
@@ -20,7 +20,7 @@ class Location extends Component {
         );
 
         const _crrLocation =
-            _crrLocationString != '' ? JSON.parse(_crrLocationString) : null;
+            _crrLocationString !== '' ? JSON.parse(_crrLocationString) : null;
 
         if (_crrLocation === null) {
             const hasLocationPermission = await PermissionsAndroid.check(
@@ -62,7 +62,7 @@ class Location extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        crrLocationRs: state.locationReducer
+        crrLocationRs: state.generalReducer.Location.LocationInfo
     };
 };
 

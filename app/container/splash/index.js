@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Platform } from 'react-native';
+import { View, Platform, PermissionsAndroid } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import { bindActionCreators } from 'redux';
 import { MyText } from '@app/components';
 import { setI18nConfig } from '@app/translate';
@@ -8,6 +9,7 @@ import { CONST_STORAGE } from '@app/constants';
 import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
 import * as cartCreator from '@app/redux/actions/cartAction';
+import * as generalCreator from '@app/redux/actions/generalAction';
 import { getUniqueId } from 'react-native-device-info';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 //  import * as actionMenuCreator from '@app/redux/actions/generalAction';
@@ -19,14 +21,58 @@ class Splash extends Component {
     constructor(props) {
         super(props);
         setI18nConfig();
-        this.state = {};
+        this.state = {
+            IsLoadLocation: false
+        };
     }
 
-    componentDidMount() {
-        // Lấy dữ liệu menu
-        this.props.actionGetMenu.menu_get();
-        this.props.actionCart.cart_get_simple();
-        const { isShowSplash } = this.props;
+    getCurrentLocation = async () => {
+        const _crrLocationString = await Storage.getItem(
+            CONST_STORAGE.SESSION_LOCATION_CURRENT
+        );
+
+        const _crrLocation =
+            _crrLocationString !== '' ? JSON.parse(_crrLocationString) : null;
+
+        if (_crrLocation === null) {
+            const hasLocationPermission = await PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+            );
+
+            if (hasLocationPermission) {
+                Geolocation.getCurrentPosition(
+                    (position) => {
+                        const crrLat = position.coords.latitude;
+                        const crrLong = position.coords.longitude;
+                        this.props.actionGeneral
+                            .location_getCurrent(crrLat, crrLong)
+                            .then((res) => {
+                                this.setState({ IsLoadLocation: true });
+                            });
+                    },
+                    (error) => {
+                        console.log(error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 10000
+                    }
+                );
+            } else {
+                this.props.actionGeneral
+                    .location_getCurrent(0, 0)
+                    .then((res) => {
+                        this.setState({ IsLoadLocation: true });
+                    });
+            }
+        } else {
+            this.props.actionGeneral.location_SaveChooseLocation(_crrLocation);
+            this.setState({ IsLoadLocation: true });
+        }
+    };
+
+    notificationSubscriber = () => {
         messaging()
             .getToken()
             .then((token) => {
@@ -55,11 +101,27 @@ class Splash extends Component {
                     .catch((error) => {
                         console.log('API_NOTIFICATION_SUBSCRIBER', error);
                     });
-                return saveTokenToDatabase(token);
-            });
 
+                Storage.setItem(
+                    CONST_STORAGE.SESSION_TOKEN_NOTIFICATION,
+                    token
+                );
+            });
+    };
+
+    componentDidUpdate() {
+        if (this.state.IsLoadLocation) {
+            this.props.actionGetMenu.menu_get();
+            this.props.actionCart.cart_get_simple();
+        }
+    }
+
+    componentDidMount() {
+        this.getCurrentLocation();
+        this.notificationSubscriber();
+        const { isShowSplash } = this.props;
         if (isShowSplash) {
-            const delay = 1000 * 5;
+            const delay = 1000 * 6;
             setTimeout(() => {
                 this.props.actionAuthen.show_splash(false);
             }, delay);
@@ -75,10 +137,6 @@ class Splash extends Component {
     }
 }
 
-const saveTokenToDatabase = (token) => {
-    Storage.setItem(CONST_STORAGE.SESSION_TOKEN_NOTIFICATION, token);
-};
-
 const mapStateToProps = (state) => {
     return {
         isShowSplash: state.authenReducer.isShowSplash
@@ -89,7 +147,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
         actionGetMenu: bindActionCreators(actionMenuCreator, dispatch),
-        actionCart: bindActionCreators(cartCreator, dispatch)
+        actionCart: bindActionCreators(cartCreator, dispatch),
+        actionGeneral: bindActionCreators(generalCreator, dispatch)
     };
 };
 
