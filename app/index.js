@@ -6,6 +6,7 @@ import { CodePushUpdate } from '@app/components';
 import { Colors } from '@app/styles';
 import { store } from './store';
 import AppContainer from './navigator/appNavigator';
+import FlashMessage from 'react-native-flash-message';
 
 const styles = StyleSheet.create({
     container: {
@@ -28,6 +29,7 @@ class App extends Component {
                     </Provider>
                 </View>
                 <CodePushUpdate />
+                <FlashMessage position="center" />
             </SafeAreaProvider>
         );
     }

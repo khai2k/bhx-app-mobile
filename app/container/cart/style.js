@@ -18,11 +18,13 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     btnAlert: {
-        backgroundColor: Colors.GREEN_KEY,
-        color: Colors.WHITE
+        backgroundColor: Colors.GREEN_KEY
     },
     btnAlertClose: {
         color: Colors.GRAY_ALERT_CLOSE
+    },
+    btnAlertText: {
+        color: Colors.WHITE
     },
     btnbuy: {
         backgroundColor: Colors.BG_BUTTON_BUY,

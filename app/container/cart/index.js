@@ -9,13 +9,19 @@ import {
 import { bindActionCreators } from 'redux';
 import {
     Header,
-    AlertCart,
     CartTotal,
     CartEmpty,
     LoadingCart,
     ProductItemCart,
     ProductItemCartOff
 } from '@app/components';
+
+import Dialog, {
+    DialogTitle,
+    DialogFooter,
+    DialogButton
+} from 'react-native-popup-dialog';
+
 import { connect } from 'react-redux';
 import { helper } from '@app/common';
 import * as cartCreator from '@app/redux/actions/cartAction';
@@ -64,6 +70,7 @@ class Cart extends Component {
     };
 
     actionRemoveItemProduct = () => {
+        this.setState({ visibleAlert: false });
         this.props.actionCart
             .cart_remove_item_product(this.state.guildId)
             .then((res) => {
@@ -158,10 +165,32 @@ class Cart extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <AlertCart
+                <Dialog
                     visible={this.state.visibleAlert}
-                    titleAlert={this.state.titleAlert}
-                    onPressSubmit={this.actionRemoveItemProduct}
+                    onHardwareBackPress={() => {
+                        return true;
+                    }}
+                    onTouchOutside={() => {
+                        this.setState({ visibleAlert: false });
+                    }}
+                    dialogTitle={<DialogTitle title={this.state.titleAlert} />}
+                    footer={
+                        <DialogFooter>
+                            <DialogButton
+                                textStyle={styles.btnAlertClose}
+                                text="Không xóa"
+                                onPress={() => {
+                                    this.setState({ visibleAlert: false });
+                                }}
+                            />
+                            <DialogButton
+                                style={styles.btnAlert}
+                                textStyle={styles.btnAlertText}
+                                text="Đồng ý"
+                                onPress={this.actionRemoveItemProduct}
+                            />
+                        </DialogFooter>
+                    }
                 />
             </View>
         );

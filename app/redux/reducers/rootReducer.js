@@ -11,6 +11,7 @@ import { productDetailReducer } from '@app/container/productDetail/reducer';
 import { promotionReducer } from '@app/container/promotion/reducer';
 import { searchReducer } from '@app/container/search/reducer';
 import { cartReducer } from './cartReducer';
+import { voucherReducer } from '../../container/useVoucher/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
@@ -22,7 +23,8 @@ const appReducer = combineReducers({
     menuReducer,
     productDetailReducer,
     promotionReducer,
-    searchReducer
+    searchReducer,
+    voucherReducer
     //  generalReducer
     // orderSuccessReducer
 });
