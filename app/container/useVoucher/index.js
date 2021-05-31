@@ -56,11 +56,12 @@ class UseVoucher extends Component {
             )
             .then((res) => {
                 this.setState({ isPinCodeInput: res.HttpCode });
-                console.log(this.state.isPinCodeInput);
                 this.fetchVoucher();
                 showMessage({
                     message: 'Áp dụng phiếu mua hàng thành công!',
-                    type: 'success'
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'success'
                 });
             })
             .catch((err) => {
@@ -74,8 +75,10 @@ class UseVoucher extends Component {
             .then((res) => {
                 this.fetchVoucher();
                 showMessage({
-                    message: 'Xóa phiếu mua hàng thành công!',
-                    type: 'success'
+                    message: res.Message,
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'success'
                 });
             })
             .catch((err) => console.log('err', err));

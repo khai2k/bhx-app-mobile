@@ -65,6 +65,7 @@ export const voucher_get = function () {
             };
             apiBase(API_CONST.API_REQUEST_GET_VOUCHER, METHOD.POST, bodyApi)
                 .then((response) => {
+                    console.log('voucher_get data:', response);
                     const vouchersInfo = response;
                     dispatch({
                         type: VOUCHER_GET,
