@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@app/styles';
 
 const styles = StyleSheet.create({
     container: {
         flex: 1
     },
     infoContainer: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.WHITE,
         height: '35%',
         marginTop: 10
     },
     purchaseContainer: {
-        backgroundColor: 'white',
+        backgroundColor: Colors.WHITE,
         height: '35%',
         marginTop: 10
     },
@@ -20,20 +21,23 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     PMHbox: {
+        justifyContent: 'center',
+        padding: 2,
         borderRadius: 5,
-        borderColor: 'green',
+        borderColor: Colors.GREEN_PRIMARY,
         borderWidth: 1,
         marginLeft: 10
     },
     PHMText: {
+        bottom: 0.5,
         fontSize: 12,
-        color: 'green'
+        color: Colors.GREEN_PRIMARY
     },
     dot: {
         width: 5,
         height: 5,
         borderRadius: 50,
-        backgroundColor: 'black',
+        backgroundColor: Colors.BLACK,
         marginTop: 8,
         marginRight: 5
     },
@@ -41,7 +45,7 @@ const styles = StyleSheet.create({
         width: 5,
         height: 5,
         borderRadius: 50,
-        backgroundColor: 'green'
+        backgroundColor: Colors.GREEN_PRIMARY
     },
     viewTitle: {
         flexDirection: 'row',
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     },
     textTitle: {
         fontSize: 17,
-        color: 'green',
+        color: Colors.GREEN_PRIMARY,
         fontWeight: 'bold',
         marginBottom: 10
     },
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
     box: {
         width: '50%',
         height: 50,
-        borderColor: 'green',
+        borderColor: Colors.GREEN_PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     boxRow: {
         width: '50%',
         height: 50,
-        borderColor: 'green',
+        borderColor: Colors.GREEN_PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
@@ -109,12 +113,12 @@ const styles = StyleSheet.create({
     },
     textButton: {
         textAlign: 'center',
-        color: 'green',
+        color: Colors.GREEN_PRIMARY,
         fontWeight: 'bold'
     },
     editTextButton: {
         textAlign: 'center',
-        color: 'green'
+        color: Colors.GREEN_PRIMARY
     },
     doneIcon: {
         resizeMode: 'contain',
@@ -125,7 +129,7 @@ const styles = StyleSheet.create({
     },
     backToHomeText: {
         textAlign: 'center',
-        color: 'green',
+        color: Colors.GREEN_PRIMARY,
         marginTop: 5
     },
     imageDone: {
@@ -139,8 +143,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 20,
         height: 20,
-        marginRight: 3,
-        color: 'green'
+        marginRight: 3
     },
     editText: {
         textAlign: 'center',
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     },
     textInternetbanking: {
         textAlign: 'center',
-        color: 'green',
+        color: Colors.GREEN_PRIMARY,
         fontSize: 13
     },
     centeredView: {
@@ -159,11 +162,11 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 10,
-        backgroundColor: 'white',
+        backgroundColor: Colors.WHITE,
         borderRadius: 5,
         padding: 20,
         borderWidth: 3,
-        borderColor: 'green'
+        borderColor: Colors.GREEN_PRIMARY
     },
     textInput: {
         width: '100%',
@@ -190,14 +193,14 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     confirmButton: {
-        backgroundColor: 'green',
+        backgroundColor: Colors.GREEN_PRIMARY,
         padding: 7,
         borderRadius: 5,
         width: '47%',
         justifyContent: 'center'
     },
     confirmText: {
-        color: 'white',
+        color: Colors.WHITE,
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center'

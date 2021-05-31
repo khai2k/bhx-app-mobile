@@ -357,7 +357,8 @@ class UseVoucher extends Component {
     _renderCloseContainer() {
         if (!this.state.voucherList) {
             return (
-                <TouchableOpacity onPress={() => console.log('test')}>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
                     <View style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>Đóng</Text>
                     </View>
