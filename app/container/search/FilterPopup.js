@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
-import * as searchCreator from '@app/container/search/action';
+import * as searchCreator from '@app/redux/actions/searchAction';
 
 const { width, height } = Dimensions.get('window');
 

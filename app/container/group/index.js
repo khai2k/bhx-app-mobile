@@ -4,9 +4,10 @@ import { SafeAreaView, ActivityIndicator, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
+import * as categoryCreator from '@app/redux/actions/groupAction';
+import { helper } from '@app/common';
 import Filter from './Filter';
 import Product from './Product';
-import * as categoryCreator from './action';
 
 class Group extends Component {
     constructor(props) {
@@ -21,8 +22,16 @@ class Group extends Component {
         const option = {
             params: {
                 categoryUrl: this.props.route.params.url,
-                provinceId: 3,
-                storeId: 6463,
+                provinceId:
+                    !helper.isEmptyOrNull(this.locationInfo) &&
+                    !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
+                        ? this.locationInfo.crrLocationRs.ProvinceId
+                        : 3,
+                storeId:
+                    !helper.isEmptyOrNull(this.locationInfo) &&
+                    !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
+                        ? this.locationInfo.crrLocationRs.StoreId
+                        : 6463,
                 phone: 0,
                 isMobile: 'true',
                 clearcache: ''
@@ -93,7 +102,8 @@ class Group extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        categoryInfo: state.categoryReducer
+        categoryInfo: state.categoryReducer,
+        locationInfo: state.locationReducer
     };
 };
 

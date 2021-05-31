@@ -4,9 +4,9 @@ import { SafeAreaView, ActivityIndicator, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
-import Filter from './Filter';
+import * as searchCreator from '@app/redux/actions/searchAction';
+import { helper } from '@app/common';
 import Product from './Product';
-import * as searchCreator from './action';
 
 class Search extends Component {
     constructor(props) {
@@ -19,8 +19,16 @@ class Search extends Component {
     async componentDidMount() {
         const option = {
             key: this.props.route.params.url,
-            provinceId: 3,
-            storeId: 6463,
+            provinceId:
+                !helper.isEmptyOrNull(this.locationInfo) &&
+                !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
+                    ? this.locationInfo.crrLocationRs.ProvinceId
+                    : 3,
+            storeId:
+                !helper.isEmptyOrNull(this.locationInfo) &&
+                !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
+                    ? this.locationInfo.crrLocationRs.StoreId
+                    : 6463,
             phone: '',
             checkpromotion: true
         };
@@ -61,7 +69,8 @@ class Search extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        searchInfo: state.searchReducer
+        searchInfo: state.searchReducer,
+        locationInfo: state.locationReducer
     };
 };
 
