@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         width: 20,
         height: 20,
-        marginRight: 3
+        marginRight: 3,
+        color: 'green'
     },
     editText: {
         textAlign: 'center',

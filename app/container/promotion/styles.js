@@ -57,6 +57,10 @@ export const styles = StyleSheet.create({
     itemGroupCateFilter: {
         flexDirection: 'row'
     },
+    itemGroupCateFilterBottom: {
+        marginBottom: 10,
+        marginLeft: 5
+    },
     lineExpired: {
         alignItems: 'center',
         backgroundColor: Colors.ORANGE_ff7500,
@@ -139,6 +143,9 @@ export const styles = StyleSheet.create({
     },
     txtItemCateFilterActive: {
         color: Colors.TURBO
+    },
+    txtItemCateFilterColor: {
+        color: Colors.GRAY_222B45
     },
     txtTitleExpired: {
         color: Colors.WHITE_FFF,

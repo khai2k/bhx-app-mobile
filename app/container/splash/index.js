@@ -22,8 +22,7 @@ class Splash extends Component {
         super(props);
         setI18nConfig();
         this.state = {
-            IsLoadLocation: false,
-            IsSuccess: false
+            IsLoadLocation: false
         };
     }
 
@@ -45,10 +44,11 @@ class Splash extends Component {
                     (position) => {
                         const crrLat = position.coords.latitude;
                         const crrLong = position.coords.longitude;
-                        this.props.actionGeneral.location_getCurrent(
-                            crrLat,
-                            crrLong
-                        );
+                        this.props.actionGeneral
+                            .location_getCurrent(crrLat, crrLong)
+                            .then((res) => {
+                                this.setState({ IsLoadLocation: true });
+                            });
                     },
                     (error) => {
                         console.log(error);
@@ -60,10 +60,15 @@ class Splash extends Component {
                     }
                 );
             } else {
-                this.props.actionGeneral.location_getCurrent(0, 0);
+                this.props.actionGeneral
+                    .location_getCurrent(0, 0)
+                    .then((res) => {
+                        this.setState({ IsLoadLocation: true });
+                    });
             }
         } else {
             this.props.actionGeneral.location_SaveChooseLocation(_crrLocation);
+            this.setState({ IsLoadLocation: true });
         }
     };
 
