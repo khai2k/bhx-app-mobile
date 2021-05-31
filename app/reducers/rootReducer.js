@@ -9,7 +9,7 @@ import { homeReducer } from '../container/product/reducer';
 import { menuReducer } from '../components/NavMenu/reducer';
 import { productDetailReducer } from '../container/productDetail/reducer';
 import { promotionReducer } from '../container/promotion/reducer';
-import { searchReducer } from '../container/search/reducer';
+import { voucherReducer } from '../container/useVoucher/reducer';
 
 const appReducer = combineReducers({
     loginReducer,
@@ -21,7 +21,7 @@ const appReducer = combineReducers({
     menuReducer,
     productDetailReducer,
     promotionReducer,
-    searchReducer
+    voucherReducer
     // orderSuccessReducer
 });
 const rootReducer = (state, action) => {

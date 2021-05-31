@@ -11,7 +11,7 @@ import {
     Alert
 } from 'react-native';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 
 const ProductItemCartOff = (props) => {
     const dispatch = useDispatch();

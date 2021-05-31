@@ -17,10 +17,10 @@ export const searchAction = {
 export const search_get = function (body) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            apiBase(API_CONST.API_GET_SEARCH, METHOD.POST, body)
+            apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, body)
                 .then((response) => {
                     console.log('SEARCH_GET Data:', response);
-                    const searchInfo = response.Value;
+                    const searchInfo = response;
                     dispatch({
                         type: SEARCH_GET,
                         searchInfo
@@ -34,55 +34,53 @@ export const search_get = function (body) {
         });
     };
 };
-// export const search_filter = (
-//     key,
-//     categoryId,
-//     selectedBrandId = 0,
-//     propertyIdList = '',
-//     sort = 0,
-//     pageIndex = 0,
-//     pageSize = 12,
-//     phone = 0,
-//     provinceId = 3,
-//     storeId = 6463,
-//     phoneNumber = '',
-//     IsCheckPromo = 'false'
-// ) => {
-//     return (dispatch, getState) => {
-//         return new Promise((resolve, reject) => {
-//             const bodyApi = {
-//                 provinceId,
-//                 storeId,
-//                 data: {
-//                     categoryId,
-//                     selectedBrandId,
-//                     phone,
-//                     cateListFilter,
-//                     propertyIdList,
-//                     pageIndex,
-//                     pageSize,
-//                     isLoadVideo,
-//                     isPromotion,
-//                     sort
-//                 }
-//             };
-//             apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
-//                 .then((response) => {
-//                     console.log('API_CATEGORY_AJAX_PRODUCT Data:', response);
-//                     const categoryInfo = response.Value;
-//                     dispatch({
-//                         type: CATEGORY_FILTER,
-//                         categoryInfo
-//                     });
-//                     resolve(response);
-//                 })
-//                 .catch((error) => {
-//                     console.log(error);
-//                     reject(error);
-//                 });
-//         });
-//     };
-// };
+export const search_filter = (
+    key,
+    totalRecord,
+    selectedBrandId = 0,
+    propertyId = 0,
+    sort = 0,
+    filter = 0,
+    pageIndex = 0,
+    pageSize = 12,
+    provinceId = 3,
+    storeId = 6463,
+    IsCheckPromo = 'false'
+) => {
+    return (dispatch, getState) => {
+        return new Promise((resolve, reject) => {
+            const bodyApi = {
+                OriginalKey: key,
+                Key: key,
+                CategoryId: propertyId,
+                ManufactureID: selectedBrandId,
+                PageSize: pageSize,
+                PageIndex: pageIndex,
+                TotalRecord: totalRecord,
+                QuerySort: sort,
+                QueryFilter: filter,
+                provinceId,
+                storeId,
+                IsCheckPromo
+            };
+            apiBase(API_CONST.API_SEARCH_AJAXPRODUCT, METHOD.POST, bodyApi)
+                .then((response) => {
+                    console.log('API_SEARCH_AJAXPRODUCT Data:', response);
+                    const searchInfo = response;
+                    dispatch({
+                        type: SEARCH_FILTER,
+                        searchInfo
+                    });
+                    resolve(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
+        });
+    };
+};
+
 export const select_brand = (selectedBrandId) => {
     return (dispatch, getState) => {
         dispatch({

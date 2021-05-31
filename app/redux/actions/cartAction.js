@@ -21,32 +21,19 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            // consoleconst cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            const cartId =
-                '6E941396616C945AEB5A8EB061E900330076C10B8EA2896F953ACFD4336FFDDD';
             const location = getState().locationReducer;
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: 3,
-                districtId: 2087,
-                wardId: 27125,
-                storeId: 6463,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId
                 }
             };
-            // const bodyApi = {
-            //     token: cartId,
-            //     us: '',
-            //     provinceId: location.crrLocationRs.ProvinceId,
-            //     districtId: location.crrLocationRs.DistrictId,
-            //     wardId: location.crrLocationRs.WardId,
-            //     storeId: location.crrLocationRs.StoreId,
-            //     data: {
-            //         cartId
-            //     }
-            // };
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_GET Data:', response);
@@ -186,13 +173,14 @@ export const cart_remove = function () {
 export const cart_add_item_product = function (
     prodId,
     quantityNum,
-    expStoreId
+    increase,
+    expStoreId,
+    isUpdate = false
 ) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const location = getState().locationReducer;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -208,28 +196,35 @@ export const cart_add_item_product = function (
                 storeId:
                     expStoreId > 0
                         ? expStoreId
-                        : !helper.isEmptyOrNull(location)
+                        : !helper.isEmptyOrNull(location) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs.StoreId)
                         ? location.crrLocationRs.StoreId
                         : 6815,
                 data: {
                     cartId,
                     productId: prodId,
                     quantity: quantityNum,
-                    increase: true,
-                    isUpdate: true,
+                    increase,
+                    isUpdate,
                     promoCode: '',
-                    isInCartSite: true
+                    isInCartSite: false
                 }
             };
+            console.log(bodyApi);
             apiBase(API_CONST.API_REQUEST_ADD_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_ADD_ITEM_PRODUCT Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_ADD_ITEM_PRODUCT,
-                        cartInfo
-                    });
-                    resolve(response);
+                    if (response.ResultCode > 0) {
+                        resolve(response);
+                    } else {
+                        const cartInfo = response.Value;
+                        dispatch({
+                            type: CART_ADD_ITEM_PRODUCT,
+                            cartInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -286,36 +281,3 @@ export const cart_get_simple = function () {
         });
     };
 };
-
-//  Thử loại async/await đều ngon lành
-// export const get_cart = function () {
-//     return async (dispatch, getSate) => {
-//         const bodyApi = {
-//             token: getSate().cartReducer.Cart.CartId,
-//             us: '',
-//             provinceId: 3,
-//             districtId: 0,
-//             wardId: 0,
-//             storeId: 6463,
-//             data: {
-//                 cartId: getSate().cartReducer.Cart.CartId
-//             }
-//         };
-//         const response = await apiBase(
-//             API_CONST.API_REQUEST_GET_CART,
-//             METHOD.POST,
-//             bodyApi,
-//             {
-//                 isCustomToken: false,
-//                 isOauthenToken: false,
-//                 isUpload: false
-//             }
-//         );
-//         const cartInfo = response.Value;
-//         console.log('response api Nhu test:', cartInfo);
-//         dispatch({
-//             type: GET_CART,
-//             cartInfo
-//         });
-//     };
-// };

@@ -71,21 +71,15 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     footer: {
+        borderWidth: 2,
+        backgroundColor: 'white',
         width: '100%',
         position: 'absolute',
         bottom: 0,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderColor: '#f5ebeb',
-        padding: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: -10
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 20,
-        elevation: 1.2
+        padding: 10
     },
     note: {
         padding: 8,
@@ -140,13 +134,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     voucherContainer: {
+        marginTop: -10,
         paddingHorizontal: 10,
         marginBottom: '40%'
     },
     voucherBox: {
         marginHorizontal: 8,
         flexDirection: 'row',
-        justifyContent: 'space-around',
         borderColor: 'green',
         borderWidth: 1,
         height: 60,
@@ -155,10 +149,10 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     voucherPriceBox: {
-        left: -4,
+        left: 10,
         backgroundColor: 'green',
         width: 52,
-        height: 35,
+        height: 40,
         justifyContent: 'center',
         borderRadius: 5
     },
@@ -166,12 +160,13 @@ const styles = StyleSheet.create({
         marginBottom: 7
     },
     voucherInfoBox: {
-        right: -4
+        left: 45
     },
-    imageVoucher: {
-        width: 35,
-        height: 18,
-        alignSelf: 'center'
+    labelPriceVoucher: {
+        color: 'white',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 17
     },
     voucherDate: {
         color: '#8F9BB3',
@@ -185,7 +180,17 @@ const styles = StyleSheet.create({
     calVoucher: {
         marginVertical: 3,
         flexDirection: 'row',
-        justifyContent: 'space-around'
+        width: '100%'
+    },
+    loading: {
+        height: '100%',
+        position: 'absolute',
+        width: '100%'
+    },
+    loadingActive: {
+        backgroundColor: 'black',
+        opacity: 0.3,
+        zIndex: 1
     }
 });
 

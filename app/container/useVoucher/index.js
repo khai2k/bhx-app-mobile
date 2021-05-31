@@ -1,101 +1,99 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { helper } from '@app/common';
+import { bindActionCreators } from 'redux';
 import {
     View,
     Text,
     Image,
     TextInput,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 import styles from './style';
+import { connect } from 'react-redux';
+import * as voucherCreator from './action';
+import { showMessage, hideMessage } from 'react-native-flash-message';
 class UseVoucher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isChange: false,
+            code: '',
+            giftType: 0,
+            isPinCodeInput: 0,
             voucherList: [],
-            voucherInfo: [],
-            cartInfo: {}
+            voucherCart: {},
+            phoneInput: '0938727300',
+            voucherCodeInput: '',
+            pinCodeInput: ''
         };
     }
 
     componentDidMount() {
-        axios({
-            method: 'post',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/GetListVoucherCoupon',
-            data: {
-                PhoneNumber: '0938727300',
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
-            }
-        })
+        this.fetchVoucher();
+    }
+
+    fetchVoucher() {
+        this.props.actionVoucher
+            .voucher_get()
             .then((res) => {
-                const { data } = res;
                 this.setState({
-                    voucherList: data.Value
+                    voucherCart: res.OtherData,
+                    voucherList: res.Value
                 });
             })
-            .catch((err) => console.log('err', err));
+            .catch((err) => {
+                console.log('err', err);
+            });
     }
 
     addVoucher() {
-        axios({
-            method: 'post',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/ApplyVoucher',
-            data: {
-                Code: 'JC26GTRG',
-                PingCode: '',
-                PhoneNumber: '0938727300',
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
-            }
-        })
+        this.props.actionVoucher
+            .voucher_add(
+                this.state.phoneInput,
+                this.state.voucherCodeInput,
+                this.state.pinCodeInput
+            )
             .then((res) => {
-                const { data } = res;
-                this.setState({
-                    cartInfo: data.OtherData.CartTotal,
-                    isChange: true
+                this.setState({ isPinCodeInput: res.HttpCode });
+                this.fetchVoucher();
+                showMessage({
+                    message: 'Áp dụng phiếu mua hàng thành công!',
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'success'
                 });
-                console.log(this.state.cartInfo);
+            })
+            .catch((err) => {
+                console.log('err', err);
+            });
+    }
+
+    deleteVoucher() {
+        this.props.actionVoucher
+            .voucher_delete(this.state.code, this.state.giftType)
+            .then((res) => {
+                this.fetchVoucher();
+                showMessage({
+                    message: res.Message,
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'success'
+                });
             })
             .catch((err) => console.log('err', err));
     }
 
-    deleteVoucher() {
-        axios({
-            method: 'post',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/VoucherCoupon/ClearVoucherCoupon',
-            data: {
-                token: '',
-                us: '',
-                provinceId: 3,
-                districtId: 2087,
-                wardId: 27125,
-                storeId: 6463,
-                data: {
-                    Code: 'JC26GTRG',
-                    GiftType: 1,
-                    CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
-                },
-                IsMobile: true
-            }
-        })
-            .then((res) => {
-                const { data } = res;
-                this.setState({
-                    isChange: false
-                });
-                console.log(data);
-            })
-            .catch((err) => console.log('err', err));
+    handleDeleteVoucher(item) {
+        if (item.Type == 1) {
+            this.setState({ code: item.CouponCode });
+        }
+        if (item.Type == 4) {
+            this.setState({ code: item.VoucherCode });
+        }
+        this.setState({ giftType: item.Type }, () => {
+            this.deleteVoucher();
+        });
     }
 
     _renderHeader() {
@@ -118,12 +116,21 @@ class UseVoucher extends Component {
         return (
             <View style={{ padding: 10 }}>
                 <View style={styles.voucherInput}>
-                    <TextInput placeholder="Nhập mã phiếu mua hàng" />
+                    <TextInput
+                        placeholder="Nhập mã phiếu mua hàng"
+                        onChangeText={(voucherCodeInput) =>
+                            this.setState({ voucherCodeInput })
+                        }
+                    />
                 </View>
                 <View style={styles.phoneInput}>
                     <TextInput
+                        value={this.state.phoneInput}
                         placeholder="Nhập số điện thoại"
                         keyboardType="numeric"
+                        onChangeText={(phoneInput) =>
+                            this.setState({ phoneInput })
+                        }
                     />
                     <TouchableOpacity
                         onPress={() => {
@@ -134,6 +141,7 @@ class UseVoucher extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                {this.state.isPinCodeInput == 100 && this._renderPincodeInput()}
             </View>
         );
     }
@@ -141,44 +149,14 @@ class UseVoucher extends Component {
     _renderPincodeInput() {
         return (
             <View style={styles.pinCode}>
-                <TextInput placeholder="Nhập Pincode" keyboardType="numeric" />
-            </View>
-        );
-    }
-
-    _renderVoucher() {
-        return (
-            <View style={{ marginHorizontal: 10 }}>
-                <View style={styles.voucherBox}>
-                    <View style={styles.voucherPriceBox}>
-                        <Image
-                            source={require('../../../assets/images/50K.png')}
-                            style={styles.imageVoucher}
-                        />
-                    </View>
-                    <View style={styles.voucherInfoBox}>
-                        <Text style={styles.voucherLabel}>
-                            Giảm 100.000đ trên hóa đơn 300.000đ
-                        </Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between'
-                            }}>
-                            <Text style={styles.voucherDate}>
-                                Hạn sử dụng đến: 31/12/2020
-                            </Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.deleteVoucher();
-                                }}>
-                                <Text style={styles.voucherCancelText}>
-                                    Hủy dùng
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+                <TextInput
+                    value={this.state.pinCodeInput}
+                    placeholder="Nhập Pincode"
+                    keyboardType="numeric"
+                    onChangeText={(pinCodeInput) =>
+                        this.setState({ pinCodeInput })
+                    }
+                />
             </View>
         );
     }
@@ -186,34 +164,54 @@ class UseVoucher extends Component {
     _renderVoucherList() {
         return (
             <ScrollView style={styles.voucherContainer}>
-                {this.state.voucherList.length > 0 &&
+                {this.state.voucherList &&
                     this.state.voucherList.map((itemVoucher) => {
                         return (
                             <View style={styles.voucherBox}>
                                 <View style={styles.voucherPriceBox}>
-                                    <Image
-                                        source={require('../../../assets/images/50K.png')}
-                                        style={styles.imageVoucher}
-                                    />
+                                    <Text style={styles.labelPriceVoucher}>
+                                        {itemVoucher.VoucherAmount / 1000}K
+                                    </Text>
                                 </View>
                                 <View style={styles.voucherInfoBox}>
-                                    <Text style={styles.voucherLabel}>
-                                        Giảm 100.000đ trên hóa đơn 300.000đ
-                                    </Text>
+                                    {itemVoucher.MinOrderAmount > 0 ? (
+                                        <Text style={styles.voucherLabel}>
+                                            Giảm{' '}
+                                            {helper.formatMoney(
+                                                itemVoucher.VoucherAmount
+                                            )}{' '}
+                                            trên hóa đơn{' '}
+                                            {helper.formatMoney(
+                                                itemVoucher.MinOrderAmount
+                                            )}
+                                        </Text>
+                                    ) : (
+                                        <Text style={styles.voucherLabel}>
+                                            Giảm{' '}
+                                            {helper.formatMoney(
+                                                itemVoucher.VoucherAmount
+                                            )}
+                                        </Text>
+                                    )}
+
                                     <View
                                         style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between'
+                                            flexDirection: 'row'
                                         }}>
                                         <Text style={styles.voucherDate}>
-                                            Hạn sử dụng đến: 31/12/2020
+                                            Hạn sử dụng đến:{' '}
+                                            {itemVoucher.VoucherExpiredDate.substr(
+                                                0,
+                                                10
+                                            )}
                                         </Text>
                                         <TouchableOpacity
                                             onPress={() =>
-                                                this.setState({
-                                                    isChange: false
-                                                })
-                                            }>
+                                                this.handleDeleteVoucher(
+                                                    itemVoucher
+                                                )
+                                            }
+                                            style={{ left: 40 }}>
                                             <Text
                                                 style={
                                                     styles.voucherCancelText
@@ -232,22 +230,53 @@ class UseVoucher extends Component {
 
     _renderVoucherLine() {
         return (
-            <View style={styles.calVoucher}>
-                <Text style={{ color: '#8F9BB3' }}>
-                    Phiếu mua hàng(...821):
-                </Text>
-                <Text style={{ right: -20 }}>×</Text>
-                <Text>
-                    -
-                    {this.state.cartInfo &&
-                        helper.formatMoney(this.state.cartInfo.VoucherDiscount)}
-                </Text>
-            </View>
+            <>
+                {this.state.voucherList &&
+                    this.state.voucherList.map((itemVoucher) => {
+                        return (
+                            <View style={styles.calVoucher}>
+                                <View style={{ width: '60%' }}>
+                                    <Text
+                                        style={{ color: '#8F9BB3', left: 20 }}>
+                                        Phiếu mua hàng(...
+                                        {itemVoucher.CouponCode
+                                            ? itemVoucher.CouponCode.slice(-3)
+                                            : itemVoucher.VoucherCode.slice(-3)}
+                                        ):
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        width: '35%'
+                                    }}>
+                                    <TouchableOpacity
+                                        style={{ left: 25 }}
+                                        onPress={() => {
+                                            this.handleDeleteVoucher(
+                                                itemVoucher
+                                            );
+                                        }}>
+                                        <Text>×</Text>
+                                    </TouchableOpacity>
+                                    <Text style={{ color: '#8F9BB3' }}>
+                                        -
+                                        {itemVoucher.VoucherAmount &&
+                                            helper.formatMoney(
+                                                itemVoucher.VoucherAmount
+                                            )}
+                                    </Text>
+                                </View>
+                            </View>
+                        );
+                    })}
+            </>
         );
     }
 
     _renderSubmitContainer() {
-        if (this.state.isChange == true) {
+        if (this.state.voucherList) {
             return (
                 <>
                     {this._renderVoucherLine()}
@@ -256,16 +285,18 @@ class UseVoucher extends Component {
                             <Text style={styles.submitButtonText}>Áp dụng</Text>
                             <View style={styles.submitPrice}>
                                 <Text style={styles.oldPrice}>
-                                    {this.state.cartInfo &&
+                                    {this.state.voucherCart.Total &&
                                         helper.formatMoney(
-                                            this.state.cartInfo.Total
+                                            this.state.voucherCart.Total
                                         )}
                                 </Text>
                                 <Text style={styles.newPrice}>
-                                    {this.state.cartInfo &&
+                                    {this.state.voucherCart.Total &&
                                         helper.formatMoney(
-                                            this.state.cartInfo.Total -
-                                                this.state.cartInfo
+                                            this.state.voucherCart.Total -
+                                                this.state.voucherCart
+                                                    .CouponDiscount -
+                                                this.state.voucherCart
                                                     .VoucherDiscount
                                         )}
                                 </Text>
@@ -275,11 +306,10 @@ class UseVoucher extends Component {
                 </>
             );
         }
-        return null;
     }
 
     _renderCloseContainer() {
-        if (this.state.isChange == false) {
+        if (!this.state.voucherList) {
             return (
                 <TouchableOpacity onPress={() => console.log('test')}>
                     <View style={styles.closeButton}>
@@ -310,14 +340,35 @@ class UseVoucher extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <ActivityIndicator
+                    style={[
+                        styles.loading,
+                        this.props.isLoading && styles.loadingActive
+                    ]}
+                    animating={this.props.isLoading}
+                    size="large"
+                    color="green"
+                />
                 {this._renderHeader()}
                 {this._renderInputContainer()}
-                {this._renderVoucher()}
-                {/* {this._renderVoucherList()} */}
+                {this._renderVoucherList()}
                 {this._renderFooterContainer()}
             </View>
         );
     }
 }
 
-export default UseVoucher;
+const mapStateToProps = (state) => {
+    return {
+        voucherInfo: state.voucherReducer.VoucherInfo,
+        isLoading: state.voucherReducer.IsLoading
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        actionVoucher: bindActionCreators(voucherCreator, dispatch)
+    };
+};
+// make this component available to the app
+export default connect(mapStateToProps, mapDispatchToProps)(UseVoucher);

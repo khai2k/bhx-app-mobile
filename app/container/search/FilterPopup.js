@@ -20,17 +20,40 @@ const { width, height } = Dimensions.get('window');
 const FilterPopup = (props) => {
     const dispatch = useDispatch();
     const actionSearch = bindActionCreators(searchCreator, dispatch);
+    const ListSort = [
+        {
+            ValueID: 2,
+            Name: 'Giá cao\n đến thấp'
+        },
+        {
+            ValueID: 1,
+            Name: 'Giá thấp\n đến cao'
+        },
+        {
+            ValueID: 13,
+            Name: 'Khuyến mãi\n nhiều hơn'
+        },
+        {
+            ValueID: 14,
+            Name: 'Sản phẩm\n bán chạy'
+        },
+        {
+            ValueID: 15,
+            Name: 'Sản phẩm\n mới về'
+        }
+    ];
     const submitFilter = () => {
-        // actionCategory.category_filter(
-        //     props.infoCate.Id,
-        //     popupSelectedBrand,
-        //     popupSelectedProps,
-        //     popupSelectedSort
-        // );
-        // actionCategory.select_brand(popupSelectedBrand);
-        // actionCategory.select_property(popupSelectedProps);
-        // actionCategory.select_sort(popupSelectedSort);
-        // props.onTogglePopup(false);
+        actionSearch.search_filter(
+            props.infoCate.OriginalKey,
+            props.infoCate.TotalRecord,
+            popupSelectedBrand,
+            popupSelectedProps,
+            popupSelectedSort
+        );
+        actionSearch.select_brand(popupSelectedBrand);
+        actionSearch.select_property(popupSelectedProps);
+        actionSearch.select_sort(popupSelectedSort);
+        props.onTogglePopup(false);
     };
 
     const [popupSelectedBrand, setPopupSelectedBrand] = useState(
@@ -55,13 +78,12 @@ const FilterPopup = (props) => {
     }, [props.selectedSort]);
 
     const selectProperty = (propertyId) => {
-        // const strSelectedProps = processSelectedProps(propertyId);
-        // setPopupSelectedProps(strSelectedProps);
+        setPopupSelectedProps(propertyId);
     };
 
     const resetFilter = () => {
         setPopupSelectedBrand(0);
-        setPopupSelectedProps('');
+        setPopupSelectedProps(0);
         setPopupSelectedSort(0);
     };
 
@@ -74,6 +96,7 @@ const FilterPopup = (props) => {
                 <ScrollView className="popupFilter" style={styles.popupFilter}>
                     <TouchableOpacity
                         onPress={() => {
+                            submitFilter();
                             props.onTogglePopup(false);
                         }}
                         className="closeFilter"
@@ -87,22 +110,29 @@ const FilterPopup = (props) => {
                     <View className="boxSort">
                         <Text style={styles.filterTitle}>Sắp xếp sản phẩm</Text>
                         <View style={styles.listFilter}>
-                            {props.sort.map((filter) => {
+                            {ListSort.map((filter) => {
                                 return (
                                     <TouchableOpacity
-                                        key={`popup_sort_${filter.Value}`}
+                                        key={`popup_sort_${filter.ValueID}`}
                                         onPress={() => {
-                                            // setPopupSelectedSort(
-                                            //     popupSelectedSort ===
-                                            //         filter.ValueID
-                                            //         ? 0
-                                            //         : filter.ValueID
-                                            // );
+                                            setPopupSelectedSort(
+                                                popupSelectedSort ===
+                                                    filter.ValueID
+                                                    ? 0
+                                                    : filter.ValueID
+                                            );
                                         }}
                                         style={styles.it}>
                                         <Text style={styles.filterName}>
                                             {filter.Name}
                                         </Text>
+                                        {popupSelectedSort ===
+                                        filter.ValueID ? (
+                                            <Image
+                                                style={styles.iconCheck}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            />
+                                        ) : null}
                                     </TouchableOpacity>
                                 );
                             })}
@@ -118,12 +148,23 @@ const FilterPopup = (props) => {
                                     <TouchableOpacity
                                         key={`popup_prop_${propValue.Id}`}
                                         onPress={() => {
-                                            selectProperty(propValue.Id);
+                                            selectProperty(
+                                                popupSelectedProps ===
+                                                    propValue.Id
+                                                    ? 0
+                                                    : propValue.Id
+                                            );
                                         }}
                                         style={styles.it}>
                                         <Text style={styles.filterName}>
                                             {propValue.Name}
                                         </Text>
+                                        {popupSelectedProps === propValue.Id ? (
+                                            <Image
+                                                style={styles.iconCheck}
+                                                source={require('../../../assets/images/Icon/Shared/NavMenu/IconCheck.png')}
+                                            />
+                                        ) : null}
                                     </TouchableOpacity>
                                 );
                             })}

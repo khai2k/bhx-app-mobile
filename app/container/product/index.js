@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, ScrollView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { apiBase, METHOD, API_CONST } from '@app/api';
-import { Header } from '@app/components';
+import { Header, LoadingCart } from '@app/components';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from './action';
 import ListCategories from './ListCategories';
 import SliderTitle from './SliderTitle';
@@ -35,7 +36,8 @@ class Product extends Component {
             homeData: [],
             listCategories: [],
             isLoading: true, // Check xem đang đợi gọi api hay ko, tránh bị loop,
-            showLoading: true
+            showLoading: true,
+            firstLoading: true
         };
     }
 
@@ -56,7 +58,8 @@ class Product extends Component {
                 self.setState({
                     homeData: response.Value,
                     maxPageLine: response.OtherData?.MaxPage,
-                    showLoading: false
+                    showLoading: false,
+                    firstLoading: false
                 });
             })
             .catch((error) => {
@@ -78,7 +81,9 @@ class Product extends Component {
         )
             .then((response) => {
                 console.log('GET_LIST_CATEGORIES Data:', response);
-                self.setState({ listCategories: response.Value });
+                self.setState({
+                    listCategories: response.Value
+                });
             })
             .catch((error) => {
                 console.log(error);
@@ -129,27 +134,45 @@ class Product extends Component {
     };
 
     render() {
-        return (
-            <ScrollView style={styles.body} onScroll={this.handleScroll}>
-                <Header navigation={this.props.navigation} />
+        if (this.state.firstLoading) {
+            return (
+                <View
+                    style={{
+                        backgroundColor: Colors.WHITE
+                    }}>
+                    <Header navigation={this.props.navigation} />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                    <LoadingCart />
+                </View>
+            );
+        } else {
+            return (
+                <ScrollView style={styles.body} onScroll={this.handleScroll}>
+                    <Header navigation={this.props.navigation} />
 
-                <ListCategories listCate={this.state.listCategories} />
+                    <ListCategories listCate={this.state.listCategories} />
 
-                <SliderTitle listTitle={this.listTitle} />
+                    <SliderTitle listTitle={this.listTitle} />
 
-                {/* Render line */}
-                {this.state.homeData?.map((lineItem) => {
-                    return (
-                        <RenderLine lineItem={lineItem} action={this.props} />
-                    );
-                })}
-                <ActivityIndicator
-                    animating={this.state.showLoading}
-                    size="large"
-                    color="#008848"
-                />
-            </ScrollView>
-        );
+                    {/* Render line */}
+                    {this.state.homeData?.map((lineItem) => {
+                        return (
+                            <RenderLine
+                                lineItem={lineItem}
+                                action={this.props}
+                            />
+                        );
+                    })}
+                    <ActivityIndicator
+                        animating={this.state.showLoading}
+                        size="large"
+                        color="#008848"
+                    />
+                </ScrollView>
+            );
+        }
     }
 }
 

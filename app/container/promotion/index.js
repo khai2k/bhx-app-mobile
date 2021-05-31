@@ -95,7 +95,7 @@ const Promotion = React.memo(() => {
             <Header />
             <ActivityIndicator
                 style={[styles.loading, isLoading && styles.loadingActive]}
-                animating={isLoading}
+                animating={this.state.isLoading}
                 size="large"
                 color="#00ff00"
             />

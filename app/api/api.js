@@ -6,6 +6,7 @@ export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_ITEM_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
+
 // Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 
@@ -44,5 +45,15 @@ export const API_GET_TOPDEALPROMOTION = `${API_BASE}PromotionPage/TopDealPromoti
 export const API_POST_LOAD_MORE_PRODUCTS_GROUP = `${API_BASE}PromotionPage/AjaxProductsGroup`;
 export const API_POST_PRODUCT_BY_SUB_CATE = `${API_BASE}PromotionPage/AjaxProductsBySubCate`;
 
+// Voucher
+
+export const API_REQUEST_GET_VOUCHER = `${API_BASE}/VoucherCoupon/GetVoucherCouponIncart`;
+export const API_REQUEST_ADD_VOUCHER = `${API_BASE}/VoucherCoupon/ApplyVoucher`;
+export const API_REQUEST_DELETE_VOUCHER = `${API_BASE}/VoucherCoupon/ClearVoucherCoupon`;
 // Search
-export const API_GET_SEARCH = `${API_BASE}SearchPage/Get`;
+export const API_SEARCH_GET = `${API_BASE}SearchPage/Get`;
+export const API_SEARCH_AJAXPRODUCT = `${API_BASE}SearchPage/AjaxProducts`;
+export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`;
+
+//  Notification
+export const API_NOTIFICATION_SUBSCRIBER = `${API_BASE}Notification/subscriber`;

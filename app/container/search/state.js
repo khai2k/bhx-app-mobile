@@ -5,5 +5,8 @@ export const searchState = {
     SelectedBrand: 0,
     SelectedProps: '',
     SelectedSort: 0,
-    PageIndex: 0
+    PageIndex: 0,
+    OtherData: {},
+    OtherDataAjax: {},
+    OtherDataOEM: {}
 };

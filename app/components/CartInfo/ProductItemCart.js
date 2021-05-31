@@ -15,7 +15,7 @@ import {
     Alert
 } from 'react-native';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 
 const ProductItemCart = (props) => {
     const listCartItem = useSelector((state) =>
@@ -82,7 +82,7 @@ const ProductItemCart = (props) => {
 
     const setQuantityMinus = () => {
         if (quantity <= 1) {
-            alertDeleteItemProduct();
+            props.alert(guildId);
         } else {
             setQuantity(quantity - 1);
             updateTempItemCart(quantity - 1);

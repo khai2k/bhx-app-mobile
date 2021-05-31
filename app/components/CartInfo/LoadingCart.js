@@ -12,7 +12,7 @@ const LoadingCart = () => {
             width={400}
             height={120}
             viewBox="0 0 400 120"
-            backgroundColor="#f3f3f3"
+            backgroundColor="#f2f2f2"
             foregroundColor="#ecebeb">
             <Circle cx="-53" cy="140" r="15" />
             <Rect x="11" y="12" rx="2" ry="2" width="113" height="103" />

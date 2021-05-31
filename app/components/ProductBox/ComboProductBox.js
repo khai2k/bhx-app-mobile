@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as cartCreator from '@app/container/cart/action';
+// import * as cartCreator from '@app/container/cart/action';
+import * as cartCreator from '@app/redux/actions/cartAction';
 import * as locationCreator from '@app/components/Location/action';
 
 import FastImage from 'react-native-fast-image';

@@ -142,6 +142,7 @@ export const BG_COMBO = '#f5f8fd';
 // GRAY
 export const GRAY_F8FBFF = '#F8FBFF';
 export const GRAY_c5cee0 = '#c5cee0';
+export const GRAY_ALERT_CLOSE = '#8f9bb3';
 
 // Color line promotion
 export const BLUE_8ed1d6 = '#8ed1d6';

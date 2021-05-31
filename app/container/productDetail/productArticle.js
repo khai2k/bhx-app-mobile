@@ -10,6 +10,7 @@ import {
     useWindowDimensions,
     Image
 } from 'react-native';
+import { helper } from '@app/common';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
 import Box from './box';
@@ -24,24 +25,36 @@ const ProductArticle = (props) => {
         FeatureSpecification,
         bHXProduct
     } = product;
+    const { PromotionText, ShortName, Avatar } = bHXProduct;
     let { ProductArticle } = product;
     /// modify ProductArticle to display Image
     ProductArticle = ProductArticle.split('data-src').join('src');
-    const { ShortName } = bHXProduct;
     const [isShowModal, setIsShowModal] = useState(false);
+    const [isShowMore, setIsShowMore] = useState(false);
     function renderModal() {
         return (
-            <Modal animationType="slide" transparent visible={isShowModal}>
+            <Modal
+                animationType="slide"
+                transparent
+                visible={isShowModal}
+                onRequestClose={() => setIsShowModal(false)}>
                 <View style={styles.modalView}>
                     <View style={styles.header}>
-                        <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                paddingHorizontal: 10,
+                                backgroundColor: 'white',
+                                paddingVertical: 10
+                            }}>
                             <Text>Mô tả sản phẩm </Text>
                         </View>
                         <TouchableOpacity onPress={() => setIsShowModal(false)}>
                             <View
                                 style={{
-                                    paddingHorizontal: 10,
-                                    borderLeftWidth: 1
+                                    backgroundColor: 'white',
+                                    padding: 10,
+                                    marginLeft: 2
                                 }}>
                                 <Text>✕</Text>
                             </View>
@@ -69,30 +82,58 @@ const ProductArticle = (props) => {
                                             Thông tin sản phẩm{' '}
                                         </Text>
                                     </View>
+
                                     <HTML
-                                        source={{ html: FeatureSpecification }}
+                                        source={{
+                                            html: FeatureSpecification
+                                        }}
                                         contentWidth={contentWidth}
                                     />
                                 </View>
                             )}
                         </View>
                         {ProductArticle !== '' && (
-                            <View
-                                style={{
-                                    padding: 10,
-                                    backgroundColor: COLOR.WHITE
-                                }}>
-                                <Text
+                            <View>
+                                <View
                                     style={{
-                                        fontSize: 20,
-                                        fontWeight: 'bold'
+                                        padding: 10,
+                                        backgroundColor: COLOR.WHITE,
+                                        flex: 1
                                     }}>
-                                    Bài viết sản phẩm
-                                </Text>
-                                <HTML
-                                    source={{ html: ProductArticle }}
-                                    contentWidth={contentWidth}
-                                />
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: 'bold'
+                                        }}>
+                                        Bài viết sản phẩm
+                                    </Text>
+                                    <View
+                                        style={{
+                                            height: isShowMore ? 'auto' : 300
+                                        }}>
+                                        <HTML
+                                            source={{ html: ProductArticle }}
+                                            contentWidth={contentWidth}
+                                        />
+                                    </View>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        backgroundColor: 'white',
+                                        padding: 10
+                                    }}>
+                                    {!isShowMore &&
+                                        ProductArticle.length > 1000 && (
+                                            <Text
+                                                style={{ color: 'green' }}
+                                                onPress={() =>
+                                                    setIsShowMore(true)
+                                                }>
+                                                Xem thêm ^
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         )}
                     </ScrollView>
@@ -133,17 +174,14 @@ const ProductArticle = (props) => {
         return (
             <View style={{ padding: 5 }}>
                 <Text style={styles.textPromotionSmall}>
-                    {`* Khuyến mãi áp dụng khi mua ${bHXProduct.ShortName}`}
+                    {`* Khuyến mãi áp dụng khi mua ${ShortName}`}
                 </Text>
                 <View style={styles.promotionBox}>
                     <View style={{ padding: 5 }}>
-                        <Image
-                            style={styles.Image}
-                            source={{ uri: bHXProduct.Avatar }}
-                        />
+                        <Image style={styles.Image} source={{ uri: Avatar }} />
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <Text>{bHXProduct.PromotionText}</Text>
+                        <Text>{PromotionText}</Text>
                     </View>
                 </View>
             </View>
@@ -151,7 +189,7 @@ const ProductArticle = (props) => {
     }
     return (
         <View style={{ backgroundColor: COLOR.WHITE }}>
-            {bHXProduct.PromotionText !== '' && renderPromotion()}
+            {!helper.isEmptyOrNull(PromotionText) && renderPromotion()}
 
             <View style={{ flexDirection: 'row' }}>
                 {renderDescription()}
@@ -186,9 +224,8 @@ const styles = StyleSheet.create({
         zIndex: 1111
     },
     header: {
-        backgroundColor: COLOR.WHITE,
         flexDirection: 'row',
-        paddingVertical: 10
+        paddingBottom: 2
     },
     modalView: {
         backgroundColor: '#f5f8fd',

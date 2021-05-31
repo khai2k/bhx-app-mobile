@@ -23,13 +23,14 @@ const ManufactureFilter = (props) => {
     };
 
     const selectBrand = (brandId) => {
-        // const selectedBrand = brandId === props.selectedBrand ? 0 : brandId;
-        // actionCategory.category_filter(
-        //     props.infoCate.Id,
-        //     selectedBrand,
-        //     props.selectedProps
-        // );
-        // actionCategory.select_brand(selectedBrand);
+        const selectedBrand = brandId === props.selectedBrand ? 0 : brandId;
+        actionSearch.search_filter(
+            props.infoCate.OriginalKey,
+            props.infoCate.TotalRecord,
+            selectedBrand,
+            props.selectedProps
+        );
+        actionSearch.select_brand(selectedBrand);
     };
 
     const isExtendBrands = props.brands && props.brands.length > 10;
