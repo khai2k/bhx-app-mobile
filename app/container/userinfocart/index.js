@@ -31,12 +31,12 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
+import DropDownPicker from 'react-native-custom-dropdown';
 
 const UserInfoCart = (props) => {
     useEffect(() => {
         actionCart.cart_get().then((res) => {
             setisLoading(false);
-            debugger;
             setCartModel(res.Value);
         });
         console.log(shipdatetime);
@@ -125,7 +125,6 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const onSubmitForm = () => {
-        
         const isValidForm = () => {};
 
         actionCart.cart_submit(cartmodel).then((res) => {
@@ -174,7 +173,7 @@ const UserInfoCart = (props) => {
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
         return (
-            <View style={[styles.delichoose]}>
+            <View style={[styles.delichoose]}>           
                 <Picker
                     selectedValue={dateSelected > 0 ? 0 : dateSelected}
                     style={{
@@ -468,7 +467,7 @@ const UserInfoCart = (props) => {
                 .then((response) => {
                     setLstDis(response.Value);
                     setprovinceSelected(provinceId);
-                    setEnableDis(true);
+                    setEnableDis(provinceId > 0);
                     if (provinceId > 0 && location?.DistrictId > 0) {
                         setdistrictSelected(location.DistrictId);
                         getLstWard(provinceId, location.DistrictId);
@@ -490,9 +489,7 @@ const UserInfoCart = (props) => {
                         setwardSelected(location?.WardId);
                     }
                 })
-                .catch(() => {
-                    setIsLoadingWard(false);
-                });
+                .catch(() => {});
         };
 
         return (
@@ -501,7 +498,7 @@ const UserInfoCart = (props) => {
                     <View style={[styles.provBox]}>
                         <Picker
                             selectedValue={provinceSelected}
-                            style={{ height: 50, width: 150 }}
+                            style={{ height: 50, width: 150, color: '#000' }}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -728,7 +725,6 @@ const UserInfoCart = (props) => {
                 </TouchableOpacity> */}
                 <View style={styles.sectionInputTop}>
                     <Text style={styles.stepTitle}>1. Thông tin nhận hàng</Text>
-
                     <FloatingLabelInput
                         customLabelStyles={{
                             colorFocused: '#000',
@@ -932,5 +928,6 @@ const UserInfoCart = (props) => {
         </View>
     );
 };
+
 
 export default UserInfoCart;
