@@ -1,27 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Image,
     View,
     FlatList,
-    TouchableOpacity,
     ScrollView,
     Text,
-    ActivityIndicator
+    ActivityIndicator,
+    SafeAreaView
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import ListCategoryTop from './ListCategoryTop';
 import { styles } from './styles';
 import Header from '../../components/Header';
-import { IconPromotion } from '../../images';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import * as promotionAction from './action';
+import LineDealShock from './LineDealShock';
+import ListCategoryFilter from './ListCategoryFilter';
+import LoadMoreProduct from './LoadMoreProduct';
 
-const Promotion = () => {
+const Promotion = React.memo(() => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const promotionData = useSelector(
         (state) => state.promotionReducer.Promotion
     );
     const promotionTopDealData = useSelector(
         (state) => state.promotionReducer.TopDealPromotion
+    );
+
+    const currentLocation = useSelector(
+        (state) => state.locationReducer?.crrLocationRs
     );
 
     const isLoading = useSelector((state) => state.promotionReducer.IsLoading);
@@ -47,15 +55,27 @@ const Promotion = () => {
         }
     }, [promotionData, promotionTopDealData]);
 
+    // Khi Store thay đổi thì lấy lại dữ liệu
     useEffect(() => {
-        dispatch(promotionAction.promotionPage_get());
-        dispatch(promotionAction.topDealPromotion_get());
-    }, []);
+        dispatch(
+            promotionAction.promotionPage_get(
+                currentLocation.ProvinceId,
+                currentLocation.StoreId || 6463
+            )
+        );
+        dispatch(
+            promotionAction.topDealPromotion_get(
+                currentLocation.ProvinceId,
+                currentLocation.StoreId || 6463
+            )
+        );
+    }, [currentLocation.StoreId]);
 
     useEffect(() => {
         getPosition();
     }, [groupCateFilter]);
 
+    // Lấy vị trí các group cate để scroll
     function getPosition() {
         const positionFirstLine = 730;
         const heightEachLine = 550;
@@ -71,7 +91,7 @@ const Promotion = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Header />
             <ActivityIndicator
                 style={[styles.loading, isLoading && styles.loadingActive]}
@@ -79,125 +99,80 @@ const Promotion = () => {
                 size="large"
                 color="#00ff00"
             />
-            <ScrollView
-                nestedScrollEnabled
-                contentOffset={{ x: 0, y: getPosition() }}>
-                <RenderListCategory
+            <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
+                <ListCategoryTop
                     lstCategoryTop={listCategoryTop}
                     setGroupCateFilter={setGroupCateFilter}
                 />
-                <RenderLineDealShock lstProductTopDeal={promotionTopDealData} />
+                <LineDealShock lstProductTopDeal={promotionTopDealData} />
                 <RenderGroupCate
                     listGroupCate={listGroupCate}
                     dispatch={dispatch}
                     lstGroupCateFilter={lstGroupCateFilter}
                     setListGroupCateFilter={setListGroupCateFilter}
                     groupCateFilter={groupCateFilter}
+                    navigation={navigation}
+                    currentLocation={currentLocation}
                 />
             </ScrollView>
-        </View>
-    );
-};
-
-// Render danh sách category
-const RenderListCategory = (props) => {
-    return (
-        <View style={styles.listCategory}>
-            <FlatList
-                horizontal
-                initialNumToRender={5}
-                maxToRenderPerBatch={5}
-                windowSize={60}
-                showsHorizontalScrollIndicator={false}
-                data={props.lstCategoryTop}
-                keyExtractor={(item) => item.Id}
-                renderItem={(item) => {
-                    return (
-                        item.item.Id !== 8686 && (
-                            <RenderCategory
-                                item={item}
-                                setGroupCateFilter={props.setGroupCateFilter}
-                            />
-                        )
-                    );
-                }}
-            />
-        </View>
-    );
-};
-
-// Render category
-const RenderCategory = React.memo((props) => {
-    const { item } = props.item;
-    function handleSelectCateFilter() {
-        props.setGroupCateFilter(item.Id);
-    }
-    return (
-        <TouchableOpacity
-            style={styles.categoryItem}
-            onPress={() => handleSelectCateFilter()}>
-            <Image
-                style={styles.iconCategory}
-                source={{ uri: `https://${item.ImgUrl}` }}
-            />
-            <Text style={styles.nameCategory}>{item.Name} </Text>
-        </TouchableOpacity>
+        </SafeAreaView>
     );
 });
-
-// Render tab deal sốc mỗi ngày
-const RenderLineDealShock = (props) => {
-    return (
-        <View style={styles.tabDealShock}>
-            <View style={styles.imgIconDealShock}>
-                <Image
-                    style={styles.iconDealShock}
-                    source={IconPromotion.iconDealSoc}
-                />
-            </View>
-            <FlatList
-                style={styles.listProductDeal}
-                numColumns="3"
-                data={props.lstProductTopDeal}
-                keyExtractor={(item) => item.Id}
-                renderItem={(item) => {
-                    return <ProductBox bhxProduct={item.item} />;
-                }}
-            />
-        </View>
-    );
-};
 
 // Render từng line sản phẩm
 const RenderGroupCate = React.memo((props) => {
     function renderGroupCate(item) {
         return (
-            <View>
-                {item.item.CategoryId === 9998 && (
-                    <RenderLineExpired nameCategory={item.item.Text} />
-                )}
-                {item.item.CategoryId !== 9998 && (
-                    <RenderCategoryFilter
-                        categorys={item.item.Categorys}
-                        nameCategory={item.item.Text}
-                        lineColor={item.item.LineColor}
-                        promotionCount={item.item.PromotionCount}
-                        groupCateId={item.item.CategoryId}
-                        lstGroupCateFilter={props.lstGroupCateFilter}
-                        setListGroupCateFilter={props.setListGroupCateFilter}
-                        dispatch={props.dispatch}
-                        query={item.item.Query}
+            item.item.Products.length > 0 && (
+                <View>
+                    {item.item.CategoryId === 9998 && (
+                        <RenderLineExpired nameCategory={item.item.Text} />
+                    )}
+                    {item.item.CategoryId !== 9998 && (
+                        <RenderCategoryFilter
+                            categorys={item.item.Categorys}
+                            nameCategory={item.item.Text}
+                            lineColor={item.item.LineColor}
+                            promotionCount={item.item.PromotionCount}
+                            groupCateId={item.item.CategoryId}
+                            lstGroupCateFilter={props.lstGroupCateFilter}
+                            setListGroupCateFilter={
+                                props.setListGroupCateFilter
+                            }
+                            dispatch={props.dispatch}
+                            query={item.item.Query}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                    <RenderProductEachCategory
+                        lstProducts={item.item.Products}
                     />
-                )}
-                <RenderProductEachCategory lstProducts={item.item.Products} />
-                {item.item.Query.PromotionCount > 0 && (
-                    <RenderLoadMoreProduct
-                        promotionCount={item.item.Query.PromotionCount}
-                        query={item.item.Query}
-                        dispatch={props.dispatch}
-                    />
-                )}
-            </View>
+                    {item.item.CategoryId !== 9998 && (
+                        <ListCategoryFilter
+                            categorys={item.item.Categorys}
+                            promotionCount={item.item.PromotionCount}
+                            groupCateId={item.item.CategoryId}
+                            lstGroupCateFilter={props.lstGroupCateFilter}
+                            setListGroupCateFilter={
+                                props.setListGroupCateFilter
+                            }
+                            dispatch={props.dispatch}
+                            query={item.item.Query}
+                            isBottom
+                            navigation={props.navigation}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                    {item.item.Query.PromotionCount > 0 && (
+                        <LoadMoreProduct
+                            promotionCount={item.item.Query.PromotionCount}
+                            query={item.item.Query}
+                            dispatch={props.dispatch}
+                            currentLocation={props.currentLocation}
+                        />
+                    )}
+                </View>
+            )
         );
     }
 
@@ -244,111 +219,18 @@ const RenderCategoryFilter = React.memo((props) => {
                     {props.nameCategory}
                 </Text>
             </View>
-            <FlatList
-                horizontal
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                windowSize={60}
-                showsHorizontalScrollIndicator={false}
-                data={props.categorys}
-                keyExtractor={(item) => item.Id}
-                renderItem={(item) => {
-                    return (
-                        <RenderItemCateFilter
-                            item={item.item}
-                            index={item.index}
-                            promotionCount={props.promotionCount}
-                            groupCateId={props.groupCateId}
-                            lstGroupCateFilter={props.lstGroupCateFilter}
-                            setListGroupCateFilter={
-                                props.setListGroupCateFilter
-                            }
-                            dispatch={props.dispatch}
-                            query={props.query}
-                        />
-                    );
-                }}
+            <ListCategoryFilter
+                categorys={props.categorys}
+                promotionCount={props.promotionCount}
+                groupCateId={props.groupCateId}
+                lstGroupCateFilter={props.lstGroupCateFilter}
+                setListGroupCateFilter={props.setListGroupCateFilter}
+                dispatch={props.dispatch}
+                query={props.query}
+                isTop
+                isBottom={false}
+                currentLocation={props.currentLocation}
             />
-        </View>
-    );
-});
-
-// Render Item Cate filter
-const RenderItemCateFilter = React.memo((props) => {
-    function displayActiveGroupCateFilter(groupCateFilterId, itemActive) {
-        const result = props.lstGroupCateFilter.some((element) => {
-            return (
-                element.GroupCateId === props.groupCateId &&
-                element.GroupCateFilterId === groupCateFilterId
-            );
-        });
-        if (result) {
-            return itemActive
-                ? styles.itemCateFilterActive
-                : styles.txtItemCateFilterActive;
-        }
-    }
-
-    function handleSelectCateFilter(groupCateFilterId) {
-        const result = props.lstGroupCateFilter.map((element) => {
-            if (element.GroupCateId === props.groupCateId) {
-                return { ...element, GroupCateFilterId: groupCateFilterId };
-            } else {
-                return element;
-            }
-        });
-        props.setListGroupCateFilter(result);
-        props.dispatch(
-            promotionAction.productBySubCate_post(
-                props.query.PageIndex,
-                props.query.PageSize,
-                '',
-                props.groupCateId,
-                groupCateFilterId === 0 ? '' : groupCateFilterId
-            )
-        );
-    }
-
-    return (
-        <View style={styles.itemGroupCateFilter}>
-            {props.index === 0 && (
-                <View
-                    style={[
-                        styles.itemCateFilter,
-                        displayActiveGroupCateFilter(0, true)
-                    ]}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            handleSelectCateFilter(0);
-                        }}>
-                        <Text
-                            style={[
-                                styles.txtItemCateFilter,
-                                displayActiveGroupCateFilter(0, false)
-                            ]}>
-                            {props.promotionCount + 7} Khuyến mãi Hot
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-            <View
-                style={[
-                    styles.itemCateFilter,
-                    displayActiveGroupCateFilter(props.item.Id, true)
-                ]}>
-                <TouchableOpacity
-                    onPress={() => {
-                        handleSelectCateFilter(props.item.Id);
-                    }}>
-                    <Text
-                        style={[
-                            styles.txtItemCateFilter,
-                            displayActiveGroupCateFilter(props.item.Id, false)
-                        ]}>
-                        {props.item.Name}
-                    </Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 });
@@ -371,30 +253,6 @@ const RenderProductEachCategory = React.memo((props) => {
     );
 });
 
-// Render Load more product
-const RenderLoadMoreProduct = React.memo((props) => {
-    function loadMoreProduct() {
-        props.dispatch(
-            promotionAction.loadMoreProductsGroup_post(
-                props.query.PageIndex,
-                props.query.PageSize,
-                props.query.ExcludeProductIds,
-                props.query.CategoryId,
-                props.query.StringCates
-            )
-        );
-    }
-    return (
-        <View>
-            <TouchableOpacity onPress={() => loadMoreProduct()}>
-                <Text style={styles.loadMoreProduct}>
-                    Xem thêm {props.promotionCount} sản phẩm
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-});
-
 // RenderLine Xả kho giá sốc
 const RenderLineExpired = (props) => {
     return (
@@ -404,4 +262,4 @@ const RenderLineExpired = (props) => {
     );
 };
 
-export default React.memo(Promotion);
+export default Promotion;

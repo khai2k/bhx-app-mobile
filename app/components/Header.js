@@ -11,7 +11,6 @@ import {
     View,
     StyleSheet,
     Image,
-    TextInput,
     Alert,
     TouchableOpacity
 } from 'react-native';

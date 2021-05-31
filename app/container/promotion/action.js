@@ -17,13 +17,11 @@ export const promotionAction = {
 };
 
 // Param để lấy danh sách cate
-const provinceId = 3;
-const storeId = 6463;
 const phone = 0;
 const clearcache = 'ok';
 
 // Get dữ liệu trang khuyến mãi
-export const promotionPage_get = function () {
+export const promotionPage_get = function (provinceId, storeId) {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
         apiBase(
@@ -40,6 +38,7 @@ export const promotionPage_get = function () {
             }
         )
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const LINE_COLOR = [
                     'orange-line',
                     'green-line',
@@ -49,6 +48,9 @@ export const promotionPage_get = function () {
                     'aqua-line',
                     'skyblue-line',
                     'purple-line',
+                    'red-line',
+                    'green-line',
+                    'blue-line',
                     'red-line'
                 ];
                 response.Value.GroupCate.map(
@@ -66,7 +68,6 @@ export const promotionPage_get = function () {
                     type: PROMOTIONPAGE_GET,
                     dataPromotionPage
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -75,7 +76,7 @@ export const promotionPage_get = function () {
 };
 
 // Get danh sách sách phẩm deal shock
-export const topDealPromotion_get = function () {
+export const topDealPromotion_get = function (provinceId, storeId) {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
         apiBase(
@@ -108,7 +109,9 @@ export const loadMoreProductsGroup_post = (
     PageSize,
     ExcludeProductIds,
     CategoryId,
-    StringCates
+    StringCates,
+    provinceId,
+    storeId
 ) => {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
@@ -128,6 +131,7 @@ export const loadMoreProductsGroup_post = (
             bodyApi
         )
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const dataLoadMoreProductsGroup = {
                     ...response,
                     CategoryId
@@ -136,7 +140,6 @@ export const loadMoreProductsGroup_post = (
                     type: LOAD_MORE_PRODUCTS_GROUP,
                     dataLoadMoreProductsGroup
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);
@@ -150,7 +153,9 @@ export const productBySubCate_post = (
     PageSize,
     ExcludeProductIds,
     CategoryId,
-    StringCates
+    StringCates,
+    provinceId,
+    storeId
 ) => {
     return (dispatch) => {
         dispatch({ type: DATA_LOADING });
@@ -166,6 +171,7 @@ export const productBySubCate_post = (
         };
         apiBase(API_CONST.API_POST_PRODUCT_BY_SUB_CATE, METHOD.POST, bodyApi)
             .then((response) => {
+                dispatch({ type: DATA_LOADED });
                 const dataProductBySubCate = {
                     ...response,
                     CategoryId,
@@ -175,7 +181,6 @@ export const productBySubCate_post = (
                     type: GET_PRODUCT_BY_SUB_CATE,
                     dataProductBySubCate
                 });
-                dispatch({ type: DATA_LOADED });
             })
             .catch((error) => {
                 console.log(error);

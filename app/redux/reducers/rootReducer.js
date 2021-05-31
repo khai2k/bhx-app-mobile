@@ -12,6 +12,7 @@ import { promotionReducer } from '@app/container/promotion/reducer';
 import { searchReducer } from '@app/container/search/reducer';
 import { cartReducer } from './cartReducer';
 import { voucherReducer } from '../../container/useVoucher/reducer';
+import { notificationReducer } from './notificationReducer';
 
 const appReducer = combineReducers({
     loginReducer,
@@ -24,7 +25,8 @@ const appReducer = combineReducers({
     productDetailReducer,
     promotionReducer,
     searchReducer,
-    voucherReducer
+    voucherReducer,
+    notificationReducer
     //  generalReducer
     // orderSuccessReducer
 });
