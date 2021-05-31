@@ -71,8 +71,13 @@ const promotionReducer = function (state = initialState, action) {
                                 action.dataProductBySubCate.OtherData
                                     .ExcludeProductIds,
                             PromotionCount:
-                                action.dataProductBySubCate.OtherData.Total,
-                            StringCates: action.dataProductBySubCate.StringCates
+                                action.dataProductBySubCate.OtherData.Total > 6
+                                    ? action.dataProductBySubCate.OtherData
+                                          .Total - 6
+                                    : 0,
+                            StringCates:
+                                action.dataProductBySubCate.StringCates,
+                            PageIndex: 0
                         },
                         GroupCateFilterId:
                             action.dataProductBySubCate.StringCates
