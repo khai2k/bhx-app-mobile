@@ -75,7 +75,7 @@ const Promotion = () => {
             <Header />
             <ActivityIndicator
                 style={[styles.loading, isLoading && styles.loadingActive]}
-                animating={this.state.isLoading}
+                animating={isLoading}
                 size="large"
                 color="#00ff00"
             />
