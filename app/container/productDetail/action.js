@@ -188,6 +188,7 @@ export const fetchAll = function (productId, location) {
     return async (dispatch) => {
         dispatch({ type: IS_LOADING, data: true });
         await Promise.all([
+            dispatch(get_gallery_product(productId, location)),
             dispatch(get_product_detail(productId, location)),
             dispatch(get_product_relative(productId, location)),
             dispatch(get_combo_detail(productId, location)),
