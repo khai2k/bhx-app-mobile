@@ -101,7 +101,7 @@ class Cart extends Component {
             return (
                 <View style={styles.cartempty}>
                     <Header />
-                    <CartEmpty listCategory={listCategory} />
+                    <CartEmpty listCategory={this.props.listCategory} />
                 </View>
             );
         }

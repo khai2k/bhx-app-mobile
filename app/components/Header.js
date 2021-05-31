@@ -15,7 +15,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import * as locationCreator from '@app/components/Location/action';
+import * as locationCreator from '@app/redux/actions/generalAction';
 import LoadLocationTrigger from './Location';
 import LocationModal from './Location/ModalLocation';
 import RemiderLocation from './Location/RemiderLocation';
@@ -27,7 +27,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const actionLocation = bindActionCreators(locationCreator, dispatch);
 
-    const locationinfo = useSelector((state) => state.locationReducer);
+    const locationinfo = useSelector((state) => state.generalReducer.Location);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
     useEffect(() => {
@@ -42,11 +42,12 @@ const Header = () => {
     }, []);
 
     const [isShowReminder, setIsShowReminder] = useState(
-        locationinfo?.isReminderLocation
+        locationinfo?.IsReminderLocation
     );
     useEffect(() => {
-        setIsShowReminder(locationinfo?.isReminderLocation);
-    }, [locationinfo?.isReminderLocation]);
+        setIsShowReminder(locationinfo?.IsReminderLocation);
+    }, [locationinfo?.IsReminderLocation]);
+
     const showModalLocationCallback = () => {
         setIsModalVisible(true);
         setIsShowReminder(false);
@@ -85,7 +86,7 @@ const Header = () => {
                             {translate('Header_DeliveryAddress')}
                         </Text>
                         <Text style={styles.textcolor} numberOfLines={1}>
-                            {locationinfo?.crrLocationRs.FullAddress}
+                            {locationinfo?.LocationInfo.FullAddress}
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.boxhistory}>

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 //  import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
-import * as locationCreator from '@app/components/Location/action';
+import * as locationCreator from '@app/redux/actions/generalAction';
 import FastImage from 'react-native-fast-image';
 import BuyBox from './BuyBox';
 import styles from './style';
@@ -46,12 +46,11 @@ const ProductBox = (props) => {
     }, [cart.Total]);
 
     // check đã chọn location chưa
-    const locationInfo = useSelector((state) => state.locationReducer);
+    const locationInfo = useSelector(
+        (state) => state.generalReducer.Location.LocationInfo
+    );
     const checkReminderLocation = () => {
-        if (
-            helper.isEmptyOrNull(locationInfo) ||
-            helper.isEmptyOrNull(locationInfo.crrLocationRs)
-        ) {
+        if (helper.IsEmptyObject(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }

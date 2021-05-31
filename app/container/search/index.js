@@ -70,7 +70,7 @@ class Search extends Component {
 const mapStateToProps = (state) => {
     return {
         searchInfo: state.searchReducer,
-        locationInfo: state.locationReducer
+        locationInfo: state.generalReducer.Location.LocationInfo
     };
 };
 

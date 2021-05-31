@@ -103,7 +103,7 @@ class Group extends Component {
 const mapStateToProps = (state) => {
     return {
         categoryInfo: state.categoryReducer,
-        locationInfo: state.locationReducer
+        locationInfo: state.generalReducer.Location.LocationInfo
     };
 };
 
