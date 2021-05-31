@@ -11,10 +11,6 @@ const cartReducer = function (state = _state.cartState, action) {
                 ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
                 //  ListCategory: action.cartInfo.ListCategory
             };
-        case _action.cartAction.CART_GET_FULL:
-            return {
-                state
-            };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {
                 ...state,

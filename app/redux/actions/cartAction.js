@@ -1,9 +1,11 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Storage, helper } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
+import MD5 from 'md5';
 
 const CART_GET = 'CART_GET';
 const CART_GET_SIMPLE = 'CART_GET_SIMPLE';
+const CART_SUBMIT = 'CART_SUBMIT';
 const CART_REMOVE_ITEM_PRODUCT = 'CART_REMOVE_ITEM_PRODUCT';
 const CART_UPDATE_ITEM_PRODUCT = 'CART_UPDATE_ITEM_PRODUCT';
 const CART_ADD_ITEM_PRODUCT = 'CART_ADD_ITEM_PRODUCT';
@@ -12,6 +14,7 @@ const CART_REMOVE = 'CART_REMOVE';
 export const cartAction = {
     CART_GET,
     CART_GET_SIMPLE,
+    CART_SUBMIT,
     CART_REMOVE_ITEM_PRODUCT,
     CART_ADD_ITEM_PRODUCT,
     CART_UPDATE_ITEM_PRODUCT,
@@ -22,7 +25,9 @@ export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer;
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -40,6 +45,43 @@ export const cart_get = function () {
                     const cartInfo = response.Value;
                     dispatch({
                         type: CART_GET,
+                        cartInfo
+                    });
+                    resolve(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
+        });
+    };
+};
+
+export const cart_submit = function (Cart) {
+    return (dispatch, getState) => {
+        return new Promise(async (resolve, reject) => {
+            const location = getState().locationReducer;
+            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+
+            const bodyApi = {
+                ValidateToken: MD5(`${cartId}bhx@123`),
+                token: cartId,
+                us: '',
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
+                data: Cart
+            };
+
+            apiBase(API_CONST.API_REQUEST_SUBMIT_CART, METHOD.POST, bodyApi)
+                .then((response) => {
+                    console.log('CART_SUBMIT Data:', response);
+                    const cartInfo = response.Value;
+                    dispatch({
+                        type: CART_SUBMIT,
                         cartInfo
                     });
                     resolve(response);

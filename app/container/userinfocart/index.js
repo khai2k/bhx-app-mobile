@@ -125,10 +125,10 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const onSubmitForm = () => {
+        
         const isValidForm = () => {};
-        debugger;
+
         actionCart.cart_submit(cartmodel).then((res) => {
-            debugger;
             Alert.alert(res.Message);
         });
     };
@@ -913,6 +913,7 @@ const UserInfoCart = (props) => {
                     <View style={styles.btnbuy}>
                         <TouchableOpacity
                             onPress={() => {
+                                debugger;
                                 onSubmitForm();
                             }}>
                             <View>

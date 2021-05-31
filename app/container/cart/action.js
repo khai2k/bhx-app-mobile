@@ -36,7 +36,10 @@ export const cart_get = function () {
             //     }
             // };
             const location = getState().locationReducer;
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -48,6 +51,7 @@ export const cart_get = function () {
                     cartId
                 }
             };
+
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_GET Data:', response);
@@ -65,7 +69,6 @@ export const cart_get = function () {
         });
     };
 };
-
 export const cart_update_item_product = function (guildId, iQuantity) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
