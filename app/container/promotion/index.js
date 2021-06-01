@@ -13,7 +13,7 @@ import ListCategoryTop from './ListCategoryTop';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import ProductBox from '../../components/ProductBox/ProductBox';
-import * as promotionAction from './action';
+import * as promotionAction from '../../redux/actions/promotionAction';
 import LineDealShock from './LineDealShock';
 import ListCategoryFilter from './ListCategoryFilter';
 import LoadMoreProduct from './LoadMoreProduct';
@@ -29,7 +29,7 @@ const Promotion = React.memo(() => {
     );
 
     const currentLocation = useSelector(
-        (state) => state.locationReducer?.crrLocationRs
+        (state) => state.locationReducer?.Location.LocationInfo
     );
 
     const isLoading = useSelector((state) => state.promotionReducer.IsLoading);

@@ -7,6 +7,7 @@ export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
 export const API_REQUEST_REMOVE_ITEM_CART = `${API_BASE}/Order/remove`;
 export const API_REQUEST_REMOVE_CART = `${API_BASE}/Order/removeall`;
 export const API_REQUEST_UPDATE_CART = `${API_BASE}/Order/update`;
+export const API_REQUEST_SUBMIT_CART = `${API_BASE}/Order/Submit`;
 
 // Menu
 export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
@@ -26,6 +27,7 @@ export const API_LOCATION_GETALLPROVINCE = `${API_BASE}/shared/GetAllProvince`;
 export const API_LOCATION_GETDICTRICTBYPROVINCE = `${API_BASE}/shared/GetDistrictsByProvince`;
 export const API_LOCATION_GETWARDBYDICANDPROVINCE = `${API_BASE}/shared/GetWard`;
 export const API_LOCATION_SEARCHLOCATION = `${API_BASE}/shared/ProvinceSearchAutocomplete`;
+export const API_LOCATION_GETSTORE = `${API_BASE}/shared/GetStore`;
 
 export const API_SEARCH_SUGGESTMODAL = `${API_BASE}/shared/SearchAutocomplete`;
 

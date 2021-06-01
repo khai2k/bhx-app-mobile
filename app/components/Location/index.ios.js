@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as locationCreator from '@app/redux/actions/generalAction';
+import * as locationCreator from '@app/redux/actions/locationAction';
 
 // create a component
 class Location extends Component {
@@ -39,7 +39,7 @@ class Location extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        crrLocationRs: state.generalReducer.Location.LocationInfo
+        crrLocationRs: state.locationReducer.Location.LocationInfo
     };
 };
 
