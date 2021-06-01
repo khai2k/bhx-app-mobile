@@ -172,93 +172,93 @@ const UserInfoCart = (props) => {
             shipdatetime !== undefined &&
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
-        const listDeliDate = [
-            { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
-        ];
-        shipdatetime[0]?.DateList.forEach((element) => {
-            var temp =
-                '{"label":"' +
-                element.text +
-                '","value": "' +
-                element.timeid +
-                '"}';
-            listDeliDate.push(JSON.parse(temp));
-        });
+            const listDeliDate = [
+                { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
+            ];
+        if(isActive)
+            shipdatetime[0]?.DateList.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.text +
+                    '","value": "' +
+                    element.timeid +
+                    '"}';
+                listDeliDate.push(JSON.parse(temp));
+            });
+
         console.log(listDeliDate);
         return (
-                <DropDownPicker
-                    items={listDeliDate}
-                    zIndex={20}
-                    defaultValue={'-1'}
-                    containerStyle={{ height: 40 }}
-                    style={{ backgroundColor: '#fafafa'}}
-                    dropDownMaxHeight={200}
-                    itemStyle={{
-                        justifyContent: 'flex-start'
-                    }}
-                    dropDownStyle={{ backgroundColor: '#fff' }}
-                    onChangeItem={(itemValue, itemIndex) => {
-                        debugger;
-                        if (itemValue > 0) {
-                            setcurDateDeli(
-                                shipdatetime[0]?.DateList[itemIndex]
-                            );
-                            setdateSelected(itemValue);
-                        } else {
-                            setcurDateDeli(null); 
-                        }
-                        settimeSelected(null);
-                    }}
-                />
-
+            <DropDownPicker
+                items={listDeliDate}
+                placeholder={'Ngày nhận'}
+                zIndex={20}
+                defaultValue={'-1'}
+                containerStyle={{ height: 40 }}
+                style={{ backgroundColor: '#fafafa' }}
+                dropDownMaxHeight={200}
+                itemStyle={{
+                    justifyContent: 'flex-start'
+                }}
+                dropDownStyle={{ backgroundColor: '#fff' }}
+                onChangeItem={(itemValue, itemIndex) => {
+                    if (itemValue.value > 0) {
+                        setcurDateDeli(shipdatetime[0]?.DateList[itemIndex]);
+                        setdateSelected(itemValue.value);
+                    } else {
+                        setcurDateDeli(null);
+                    }
+                    settimeSelected(null);
+                }}
+            />
         );
     };
     const chosenDeliTime = (datelist) => {
         const isActive =
             datelist?.curDateDeli?.TimeList !== null &&
             datelist?.curDateDeli?.TimeList?.length > 0;
+        const listDeliTime = [
+            { label: 'Thời gian nhận', value: '-1', selected: true, disabled: true }
+        ];
+        // if(isActive)
+        //     datelist?.curDateDeli?.TimeList.forEach((element) => {
+        //         var temp =
+        //             '{"label":"' +
+        //             element.text +
+        //             '{"icon":"' +
+        //             () => {} +
+        //             '","value": "' +
+        //             element.id +
+        //             '"}';
+        //         listDeliTime.push(JSON.parse(temp));
+        //     });
         return (
-            <View
-                style={[
-                    styles.delichoose,
-                    { marginTop: 10, marginBottom: 10 }
-                ]}>
-                <Picker
-                    selectedValue={0}
-                    style={{
-                        height: 50,
-                        width: '100%',
-                        color: isActive ? '#000' : '#C2C2C2'
-                    }}
-                    enabled={isActive}
-                    mode={'dropdown'}
-                    onValueChange={(itemValue, itemIndex) => {
-                        settimeSelected(itemValue);
-                        console.log(
-                            'timeSelected ' +
-                                timeSelected +
-                                'dateSelected ' +
-                                dateSelected
-                        );
-                    }}>
-                    <Picker.Item
-                        label="Thời gian nhận"
-                        value="-1"
-                        color="#C2C2C2"
-                    />
-                    {isActive &&
-                        datelist?.curDateDeli?.TimeList.map((item) => {
-                            return (
-                                <Picker.Item
-                                    label={item.text}
-                                    displayName={<HTML source={item.text} />}
-                                    value={item.id}
-                                    key={item.id}
-                                />
-                            );
-                        })}
-                </Picker>
-            </View>
+            <DropDownPicker
+                items={[
+                    datelist?.curDateDeli?.TimeList.forEach((element) => {
+                        JSON.parse({label: element.text,
+                            value: element.id});
+                    })
+                ]}
+                zIndex={20}
+                disabled={isActive == false}
+                defaultValue={'-1'}
+                containerStyle={{ height: 40 }}
+                style={{ backgroundColor: '#fafafa' }}
+                dropDownMaxHeight={200}
+                itemStyle={{
+                    justifyContent: 'flex-start'
+                }}
+                dropDownStyle={{ backgroundColor: '#fff' }}
+                onChangeItem={(itemValue, itemIndex) => {
+                    settimeSelected(itemValue.value);
+                    console.log(
+                        'timeSelected ' +
+                            timeSelected +
+                            'dateSelected ' +
+                            dateSelected
+                    );
+                }}
+            />
         );
     };
 
@@ -691,8 +691,8 @@ const UserInfoCart = (props) => {
                 />
             </Modal>
             <ScrollView
-                style={
-                    ([styles.container,
+                style={[
+                    styles.container,
                     { zIndex: 10 },
                     isLoading
                         ? {
@@ -701,8 +701,8 @@ const UserInfoCart = (props) => {
                               backgroundColor: '#999',
                               opacity: 0.2
                           }
-                        : ''])
-                }
+                        : ''
+                ]}
                 nestedScrollEnabled={false}
                 contentContainerStyle={{
                     paddingBottom: 60
@@ -849,7 +849,7 @@ const UserInfoCart = (props) => {
                         {boxCallOther()}
                     </View>
                 </View>
-                <View style={[styles.sectionInput, {zIndex: 10}]}>
+                <View style={[styles.sectionInput, { zIndex: 10 }]}>
                     <Text style={styles.stepTitle}>
                         2. Chọn thời gian nhận hàng
                     </Text>
