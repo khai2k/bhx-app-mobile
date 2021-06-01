@@ -172,41 +172,45 @@ const UserInfoCart = (props) => {
             shipdatetime !== undefined &&
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
+        const listDeliDate = [
+            { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
+        ];
+        shipdatetime[0]?.DateList.forEach((element) => {
+            var temp =
+                '{"label":"' +
+                element.text +
+                '","value": "' +
+                element.timeid +
+                '"}';
+            listDeliDate.push(JSON.parse(temp));
+        });
+        console.log(listDeliDate);
         return (
-            <View style={[styles.delichoose]}>           
-                <Picker
-                    selectedValue={dateSelected > 0 ? 0 : dateSelected}
-                    style={{
-                        height: 50,
-                        width: '100%',
-                        color: isActive ? '#000' : '#C2C2C2'
+                <DropDownPicker
+                    items={listDeliDate}
+                    zIndex={20}
+                    defaultValue={'-1'}
+                    containerStyle={{ height: 40 }}
+                    style={{ backgroundColor: '#fafafa'}}
+                    dropDownMaxHeight={200}
+                    itemStyle={{
+                        justifyContent: 'flex-start'
                     }}
-                    enabled={isActive}
-                    mode={'dropdown'}
-                    onValueChange={(itemValue, itemIndex) => {
+                    dropDownStyle={{ backgroundColor: '#fff' }}
+                    onChangeItem={(itemValue, itemIndex) => {
+                        debugger;
                         if (itemValue > 0) {
                             setcurDateDeli(
                                 shipdatetime[0]?.DateList[itemIndex]
                             );
                             setdateSelected(itemValue);
                         } else {
-                            setcurDateDeli(null);
+                            setcurDateDeli(null); 
                         }
                         settimeSelected(null);
-                    }}>
-                    <Picker.Item label="Ngày nhận" value="-1" color="#C2C2C2" />
-                    {isActive &&
-                        shipdatetime[0]?.DateList.map((item) => {
-                            return (
-                                <Picker.Item
-                                    label={item.text}
-                                    value={item.timeid}
-                                    key={item.timeid}
-                                />
-                            );
-                        })}
-                </Picker>
-            </View>
+                    }}
+                />
+
         );
     };
     const chosenDeliTime = (datelist) => {
@@ -688,7 +692,8 @@ const UserInfoCart = (props) => {
             </Modal>
             <ScrollView
                 style={
-                    ([styles.container],
+                    ([styles.container,
+                    { zIndex: 10 },
                     isLoading
                         ? {
                               width: windowWidth,
@@ -696,8 +701,9 @@ const UserInfoCart = (props) => {
                               backgroundColor: '#999',
                               opacity: 0.2
                           }
-                        : '')
+                        : ''])
                 }
+                nestedScrollEnabled={false}
                 contentContainerStyle={{
                     paddingBottom: 60
                 }}>
@@ -843,7 +849,7 @@ const UserInfoCart = (props) => {
                         {boxCallOther()}
                     </View>
                 </View>
-                <View style={styles.sectionInput}>
+                <View style={[styles.sectionInput, {zIndex: 10}]}>
                     <Text style={styles.stepTitle}>
                         2. Chọn thời gian nhận hàng
                     </Text>
@@ -928,6 +934,5 @@ const UserInfoCart = (props) => {
         </View>
     );
 };
-
 
 export default UserInfoCart;

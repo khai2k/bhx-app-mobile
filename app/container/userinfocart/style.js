@@ -66,8 +66,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
-        display: 'flex',
-        width: '100%'
+        display: 'flex'
     },
     disBox: {
         borderColor: '#D6E0F5',

@@ -58,15 +58,14 @@ export const cart_get = function () {
 };
 
 export const cart_submit = function (Cart) {
+    Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer;
             // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const cartId =
                 'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
-
             const bodyApi = {
-                ValidateToken: MD5(`${cartId}bhx@123`),
                 token: cartId,
                 us: '',
                 provinceId: location.crrLocationRs.ProvinceId,
