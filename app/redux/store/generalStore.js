@@ -1,4 +1,5 @@
 export const generalState = {
+    CartId: '',
     CartInfo: {},
     Location: {
         LocationInfo: {

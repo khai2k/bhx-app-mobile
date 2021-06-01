@@ -1,136 +1,131 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
-//  import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
+import * as locationCreator from '@app/components/Location/action';
 import styles from './style';
+import BuyBox from '../../components/ProductBox/BuyBox';
 
 const Box = (props) => {
     const { bHXProduct } = props;
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const cart = useSelector((state) => state.cartReducer.CartSimple);
+    const actionLocation = bindActionCreators(locationCreator, dispatch);
     const [guildId, setGuildId] = useState('');
+    const alertAPI = (messages) => {
+        Alert.alert('', messages);
+    };
 
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
-    const handleInputNumber = (number) => {
-        setNumberItems(+number);
+
+    const handleInputNumber = (productID, expStoreId = 0, quantity = 1) => {
+        if (helper.isEmptyOrNull(quantity)) {
+            return;
+        }
+        quantity = +quantity;
+        console.log(`Begin addToCart ${props.bhxProduct.Id}`);
+        actionCart
+            .cart_add_item_product(
+                productID,
+                quantity,
+                quantity >= numberItems,
+                expStoreId,
+                true
+            )
+            .then(async (res) => {
+                if (res.ResultCode > 0) {
+                    alertAPI(res.Message);
+                    // add sp tới max tồn
+                    const maxQuantity =
+                        res.Value.stock > 0 ? res.Value.stock : 50;
+                    actionCart
+                        .cart_add_item_product(
+                            productID,
+                            maxQuantity,
+                            quantity >= numberItems,
+                            expStoreId,
+                            true
+                        )
+                        .then(async (res2) => {
+                            if (res2.ResultCode > 0) {
+                                alertAPI(res2.Message);
+                            } else {
+                                await actionCart.cart_get_simple();
+                            }
+                        })
+                        .catch((error) => {
+                            alertAPI(error);
+                        });
+                } else {
+                    await actionCart.cart_get_simple();
+                }
+            })
+            .catch((error) => {
+                alertAPI(error);
+            });
     };
+    const locationInfo = useSelector((state) => state.locationReducer);
+    const checkReminderLocation = () => {
+        if (
+            helper.isEmptyOrNull(locationInfo) ||
+            helper.isEmptyOrNull(locationInfo.crrLocationRs)
+        ) {
+            actionLocation.showReminderLocation(true);
+            return false;
+        }
+        return true;
+    };
+
     const checkFillButtonBuy = () => {
         const idProduct = bHXProduct.Id;
         if (
             !helper.isEmptyOrNull(cart) &&
-            !helper.isEmptyOrNull(cart.ProInCart)
+            !helper.isEmptyOrNull(cart.ProInCart) &&
+            !helper.isEmptyOrNull(cart.ProInCart[idProduct])
         ) {
-            if (!helper.isEmptyOrNull(cart.ProInCart[idProduct])) {
-                setGuildId(cart.ProInCart[idProduct][0]);
-                setNumberItems(+cart.ProInCart[idProduct][1]);
-                setBuyButtonVisible(true);
-            }
+            setGuildId(cart.ProInCart[idProduct][0]);
+            setNumberItems(+cart.ProInCart[idProduct][1]);
+            setBuyButtonVisible(true);
         } else {
             setNumberItems(1);
             setBuyButtonVisible(false);
         }
     };
     useEffect(() => {
-        // console.log(`Fill button ${props.bHXProduct.Id}`);
         checkFillButtonBuy();
     }, [cart.Total]);
-    const alertAPI = (messages) => {
-        Alert.alert('', messages);
-    };
-    const alertMaxQuantityItemProduct = () => {
-        Alert.alert('', 'Chưa có thông tin?', [
-            {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý'
-            }
-        ]);
-    };
-    const setQuantityMinus = () => {
-        if (numberItems <= 1) {
-            actionCart
-                .cart_remove_item_product(guildId)
-                .then((res) => {
-                    console.log(res);
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        } else {
-            actionCart
-                .cart_update_item_product(guildId, numberItems - 1)
-                .then((res) => {
-                    if (res.ResultCode > 0) {
-                        alertAPI(res.Message);
-                    } else {
-                        actionCart.cart_get_simple();
-                    }
-                })
-                .catch((error) => {
-                    alertAPI(error);
-                });
-        }
-    };
 
-    const setQuantityPlus = () => {
-        if (numberItems > 50) {
-            alertMaxQuantityItemProduct();
-        } else {
+    const addToCart = async (
+        productID,
+        expStoreId = 0,
+        quantity = 1,
+        increase = true
+    ) => {
+        const checkLocation = await checkReminderLocation();
+        checkLocation &&
             actionCart
-                .cart_update_item_product(guildId, numberItems + 1)
+                .cart_add_item_product(
+                    productID,
+                    quantity,
+                    increase,
+                    expStoreId
+                )
                 .then(async (res) => {
-                    console.log('cart_update_item_product');
-                    console.log(res);
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        // setNumberItems(numberItems + 1);
-
                         await actionCart.cart_get_simple();
+                        console.log();
                     }
                 })
                 .catch((error) => {
                     alertAPI(error);
                 });
-        }
-    };
-    const addToCart = (productID) => {
-        console.log(`Begin addToCart ${props.bHXProduct.Id}`);
-
-        setNumberItems(1);
-        setBuyButtonVisible(true);
-        actionCart
-            .cart_add_item_product(productID, 1)
-            .then(async (res) => {
-                console.log('cart_add_item_product');
-                console.log(res);
-                if (res.ResultCode > 0) {
-                    alertAPI(res.Message);
-                } else {
-                    console.log(`End addToCart ${props.bHXProduct.Id}`);
-
-                    await actionCart.cart_get_simple();
-                    console.log(
-                        `End update addToCart cartSimple ${props.bHXProduct.Id}`
-                    );
-                }
-            })
-            .catch((error) => {
-                alertAPI(error);
-            });
     };
     const checkWebStatusId = (Price, StockQuantityNew) => {
         if (Price > 0) {
@@ -150,46 +145,19 @@ const Box = (props) => {
     const { StockQuantityNew, Price, Sales } = bHXProduct;
     const webStatusId = checkWebStatusId(Price, StockQuantityNew);
     const isSaleOnly = checkIsSaleOnly(webStatusId, Sales);
-    function renderBoxBuy() {
-        return (
-            <View className="boxBuy" style={styles.boxBuy}>
-                <View className="upDown" style={styles.upDownShow}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setNumberItems(
-                                numberItems > 0 ? numberItems - 1 : 0
-                            );
-                            setBuyButtonVisible(numberItems !== 1);
-                        }}
-                        className="down"
-                        style={styles.down}>
-                        <Text style={styles.downIcon} />
-                    </TouchableOpacity>
-                    <TextInput
-                        style={styles.inputBuy}
-                        onChangeText={handleInputNumber}
-                        value={numberItems.toString()}
-                        keyboardType="numeric"
-                    />
-                    <TouchableOpacity
-                        onPress={() => {
-                            setNumberItems(numberItems + 1);
-                        }}
-                        className="up"
-                        style={styles.up}>
-                        <Text style={styles.upIcon1} />
-                        <Text style={styles.upIcon2} />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    }
 
     function renderBottomBox() {
         return (
             <View>
                 {buyButtonVisible ? (
-                    renderBoxBuy()
+                    <BuyBox
+                        bhxProduct={bHXProduct}
+                        isPageExpired={false}
+                        selectedBuy
+                        numberItems={numberItems}
+                        addToCart={addToCart}
+                        handleInputNumber={handleInputNumber}
+                    />
                 ) : (
                     <View>
                         {isSaleOnly ? (
@@ -250,17 +218,26 @@ const Box = (props) => {
     }
     function renderSale() {
         return (
-            <View style={styles.productNearDate}>
-                <Text>
-                    {Sales && `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
-                </Text>
-                <Text style={styles.ExpiredText}>
-                    {' '}
-                    {Sales['6613'].ExpiredText === ''
-                        ? Sales['6613'].LabelText
-                        : Sales['6613'].ExpiredText}
-                </Text>
-            </View>
+            <TouchableOpacity
+                onPress={() => {
+                    addToCart(
+                        bHXProduct.Sales[bHXProduct.ExpStoreId].ProductId,
+                        bHXProduct.ExpStoreId
+                    );
+                }}>
+                <View style={styles.productNearDate}>
+                    <Text>
+                        {Sales &&
+                            `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
+                    </Text>
+                    <Text style={styles.ExpiredText}>
+                        {' '}
+                        {Sales['6613'].ExpiredText === ''
+                            ? Sales['6613'].LabelText
+                            : Sales['6613'].ExpiredText}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         );
     }
     return (
@@ -275,6 +252,8 @@ const Box = (props) => {
                     disabled={webStatusId !== 3}
                     onPress={() => {
                         if (webStatusId === 3) {
+                            setNumberItems(1);
+                            setBuyButtonVisible(true);
                             addToCart(bHXProduct.Id);
                         }
                     }}>
