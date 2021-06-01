@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.GRAY_EAEEF7,
         flexDirection: 'row',
-        flex: 1,
         paddingTop: 60
     },
     iconCateChild: {

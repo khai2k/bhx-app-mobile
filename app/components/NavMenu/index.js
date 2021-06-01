@@ -17,6 +17,9 @@ const NavMenu = () => {
 
     // Get data Menu từ redux
     const menuData = useSelector((state) => state.menuReducer.Menu);
+    const categoryIdActive = useSelector(
+        (state) => state.categoryReducer.Info.Id
+    );
 
     // Danh sách cate
     const [listCate, setListCate] = useState(menuData);
@@ -26,6 +29,10 @@ const NavMenu = () => {
 
     const [cateFilter, setCateFilter] = useState('8686');
     const [selectedCateChild, setSelectedCateChild] = useState('');
+
+    useEffect(() => {
+        setSelectedCateChild(categoryIdActive?.toString());
+    }, [categoryIdActive]);
 
     return (
         <View style={styles.container}>
@@ -81,13 +88,9 @@ const RenderCateItem = (props) => {
             onPress={() => {
                 handleSelectCateParent(item.ReferenceId);
             }}>
-            {item.ReferenceId === '-1' && (
-                <Image
-                    style={styles.iconPromotion}
-                    source={ImageNavMenu.imgIconPromotion}
-                />
+            {item.ReferenceId !== '-1' && (
+                <Text style={styles.txtCate}>{item.Text}</Text>
             )}
-            <Text style={styles.txtCate}>{item.Text}</Text>
         </TouchableOpacity>
     );
 };
@@ -110,7 +113,7 @@ const RenderButtonHome = (props) => {
     return (
         <TouchableOpacity
             style={styles.btnHome}
-            onPress={() => props.navigation.navigate('Main')}>
+            onPress={() => props.navigation.navigate('Product')}>
             <Image source={ImageNavMenu.imgIconHome} style={styles.iconHome} />
         </TouchableOpacity>
     );

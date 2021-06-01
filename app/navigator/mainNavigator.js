@@ -36,7 +36,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
-            <MainStack.Screen
+            <Drawer.Screen
                 name="ProductDetail"
                 component={ProductDetail}
                 options={({ route }) => {
@@ -45,6 +45,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
+
             <MainStack.Screen
                 name="Cart"
                 component={Cart}
@@ -57,15 +58,6 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="UserInfo"
                 component={UserInfo}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-                    console.log('route:', routeName);
-                    return { headerShown: false };
-                }}
-            />
-            <MainStack.Screen
-                name="NavMenu"
-                component={NavMenu}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
@@ -121,6 +113,15 @@ const MainNavigator = () => {
                 name="UnderConstruction"
                 component={UnderConstruction}
                 options={() => {
+                    return { headerShown: false };
+                }}
+            />
+            <Drawer.Screen
+                name="NavMenu"
+                component={NavMenu}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
                     return { headerShown: false };
                 }}
             />
