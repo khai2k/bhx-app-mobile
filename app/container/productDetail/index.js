@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-    ActivityIndicator,
-    Image,
-    ScrollView,
-    StyleSheet,
-    View
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { bindActionCreators } from 'redux';
-import { Header } from '@app/components';
-import * as COLOR from '@app/styles/colors';
+import { Header, LoadingCart } from '@app/components';
 import { helper } from '@app/common';
 import * as productDetailCreator from './action';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
@@ -32,11 +25,11 @@ class ProductDetail extends Component {
             <View style={{ flex: 1 }}>
                 <ScrollView>
                     {this.props.Is_loading === true ? (
-                        <View style={[styles.container, styles.horizontal]}>
-                            <ActivityIndicator
-                                size="large"
-                                color={COLOR.GREEN_KEY}
-                            />
+                        <View style={{ flex: 1 }}>
+                            <LoadingCart />
+                            <LoadingCart />
+                            <LoadingCart />
+                            <LoadingCart />
                         </View>
                     ) : (
                         <View>

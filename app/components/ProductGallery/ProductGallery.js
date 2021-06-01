@@ -14,8 +14,9 @@ import {
     FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ImageViewer from 'react-native-image-zoom-viewer';
+// import ImageViewer from 'react-native-image-zoom-viewer';
 import * as COLOR from '@app/styles/colors';
+import ImageViewer from './ImageViewer';
 
 const THUMB_SIZE = 50;
 const { width } = Dimensions.get('window');
@@ -58,7 +59,9 @@ export default class ProductGallery extends Component {
         const data = this.props.Gallery_product;
         const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.ImageThumb }));
+        const images = data.map((s) => ({
+            url: s.ImageLarge
+        }));
 
         return (
             <View
@@ -95,7 +98,7 @@ export default class ProductGallery extends Component {
                                             width,
                                             height: IMG_HEIGHT
                                         }}
-                                        resizeMode="contain"
+                                        resizeMode="cover"
                                         source={{ uri: item.ImageThumb }}
                                     />
                                 </TouchableOpacity>
