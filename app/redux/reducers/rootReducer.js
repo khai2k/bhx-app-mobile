@@ -12,6 +12,7 @@ import { categoryReducer } from './groupReducer';
 import { cartReducer } from './cartReducer';
 import { voucherReducer } from '../../container/useVoucher/reducer';
 import { notificationReducer } from './notificationReducer';
+import { locationReducer } from './locationReducer';
 
 const appReducer = combineReducers({
     loginReducer,

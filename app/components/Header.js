@@ -28,6 +28,7 @@ const Header = () => {
     const actionLocation = bindActionCreators(locationCreator, dispatch);
 
     const locationinfo = useSelector((state) => state.generalReducer.Location);
+    const general = useSelector((state) => state.generalReducer);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
     useEffect(() => {
@@ -52,6 +53,10 @@ const Header = () => {
         setIsModalVisible(true);
         setIsShowReminder(false);
         actionLocation.showReminderLocation(false);
+    };
+
+    const showDataTest = () => {
+        Alert.alert('Data dùng cho test', JSON.stringify(general));
     };
 
     return (
@@ -90,9 +95,11 @@ const Header = () => {
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.boxhistory}>
-                        <Text style={styles.historyorder}>
-                            {translate('Header_HistoryAccount')}
-                        </Text>
+                        <TouchableOpacity onPress={() => showDataTest()}>
+                            <Text style={styles.historyorder}>
+                                {translate('Header_HistoryAccount')}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         style={styles.boxcart}
