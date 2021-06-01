@@ -25,11 +25,9 @@ export const cartAction = {
 
 export const cart_get = function () {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const location = getState().generalReducer.Location.LocationInfo;
-            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            const cartId =
-                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -107,8 +105,8 @@ export const cart_submit = function (Cart) {
 
 export const cart_update_item_product = function (guildId, iQuantity) {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+        return new Promise((resolve, reject) => {
+            const cartId = getState().generalReducer.CartId;
             const location = getState().generalReducer.Location.LocationInfo;
             console.log(location);
             const bodyApi = {
@@ -147,8 +145,8 @@ export const cart_update_item_product = function (guildId, iQuantity) {
 
 export const cart_remove_item_product = function (guildId) {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+        return new Promise((resolve, reject) => {
+            const cartId = getState().generalReducer.CartId;
             const location = getState().generalReducer.Location.LocationInfo;
 
             const bodyApi = {
@@ -189,8 +187,8 @@ export const cart_remove_item_product = function (guildId) {
 
 export const cart_remove = function () {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+        return new Promise((resolve, reject) => {
+            const cartId = getState().generalReducer.CartId;
             const location = getState().generalReducer.Location.LocationInfo;
             const bodyApi = {
                 token: cartId,
@@ -201,18 +199,22 @@ export const cart_remove = function () {
                 storeId: location.StoreId,
                 data: {
                     cartId,
-                    isClearAllCoolProduct: true
+                    isClearAllCoolProduct: false
                 }
             };
             apiBase(API_CONST.API_REQUEST_REMOVE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
-                    console.log('CART_REMOVE Data:', response);
-                    const rmCartId = response.Value;
-                    Storage.setItem(CONST_STORAGE.CARTID, rmCartId);
+                    const cartInfo = response.Value;
+                    Storage.setItem(CONST_STORAGE.CARTID, cartInfo.Cart.CartId);
+                    dispatch({
+                        type: 'GENERAL_SET_CARTID',
+                        cartId: cartInfo.Cart.CartId
+                    });
                     dispatch({
                         type: CART_REMOVE,
-                        rmCartId
+                        cartInfo
                     });
+                    cart_get_simple();
                     resolve(response);
                 })
                 .catch((error) => {
@@ -231,8 +233,8 @@ export const cart_add_item_product = function (
     isUpdate = false
 ) {
     return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+        return new Promise((resolve, reject) => {
+            const cartId = getState().generalReducer.CartId;
             const location = getState().generalReducer.Location.LocationInfo;
             const bodyApi = {
                 token: cartId,
@@ -289,7 +291,10 @@ export const cart_get_simple = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             // get cart simple from storage
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            let cartId = getState().generalReducer.CartId;
+            if (helper.isEmptyOrNull(cartId)) {
+                cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            }
             const location = getState().generalReducer.Location.LocationInfo;
 
             const bodyApi = {
@@ -313,14 +318,17 @@ export const cart_get_simple = function () {
                 .then((response) => {
                     console.log('API_REQUEST_GET_SIMPLE_CART Data:', response);
                     const cartInfo = response.Value;
+                    if (!helper.isEmptyOrNull(cartInfo.CartId)) {
+                        Storage.setItem(CONST_STORAGE.CARTID, cartInfo.CartId);
+                    dispatch({
+                            type: 'GENERAL_SET_CARTID',
+                            cartId: cartInfo.CartId
+                        });
+                    }
                     dispatch({
                         type: CART_GET_SIMPLE,
                         cartInfo
                     });
-                    if (cartInfo.CartId !== '') {
-                        Storage.setItem(CONST_STORAGE.CARTID, cartInfo.CartId);
-                    }
-
                     resolve(response);
                 })
                 .catch((error) => {
