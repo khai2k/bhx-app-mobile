@@ -27,9 +27,9 @@ export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-            // const cartId = getState().generalReducer.CartId;
-            const cartId =
-                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            const cartId = getState().generalReducer.CartId;
+            // const cartId =
+            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -74,9 +74,9 @@ export const cart_submit = function (Cart) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            const cartId =
-                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            // const cartId =
+            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
