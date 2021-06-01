@@ -32,6 +32,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import { ERR_PROVINCE } from '../../constants/stringError';
 
 const UserInfoCart = (props) => {
     useEffect(() => {
@@ -70,7 +71,6 @@ const UserInfoCart = (props) => {
         (state) => state.generalReducer.Location.LocationInfo
     );
 
-    const [cartState, setCartState] = useState(cart);
     const [cartUserInfo, setCartUserInfo] = useState({
         CustomerName: '',
         CustomerGender: 1,
@@ -125,13 +125,56 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const onSubmitForm = () => {
-        const isValidForm = () => {};
-
-        actionCart.cart_submit(cartmodel).then((res) => {
-            Alert.alert(res.Message);
-        });
+        const formError = validateForm();
+        if (formError === '') {
+            debugger;
+            actionCart.cart_submit(cartmodel).then((res) => {
+                Alert.alert(res.Message);
+            });
+            return;
+        } else Alert.alert(formError);
     };
 
+    const validateForm = () => {
+        if (helper.isEmptyOrNull(cartmodel)) {
+            return 'Data không chính xác!';
+        }
+        debugger;
+        cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
+        if (helper.isEmptyOrNull(phoneErrMessage) == false) {
+            return phoneErrMessage;
+        }
+        cartmodel.Cart.CustomerPhone = cartUserInfo.CustomerPhone;
+        if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
+            return phoneErrMessage;
+        }
+        cartmodel.Cart.CustomerName = cartUserInfo.CustomerName;
+        if (provinceSelected <= 0) {
+            return CONST_STRINGERR.ERR_PROVINCE;
+        }
+        cartmodel.Cart.ShipProvince = cartUserInfo.ShipProvince;
+        if (districtSelected <= 0) {
+            return CONST_STRINGERR.ERR_DISTRICT;
+        }
+        cartmodel.Cart.ShipDistrict = cartUserInfo.ShipDistrict;
+        if (wardSelected <= 0) {
+            return CONST_STRINGERR.ERR_WARD;
+        }
+        cartmodel.Cart.ShipWard = cartUserInfo.ShipWard;
+        if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
+            return cusAddressErrMessage;
+        }
+        cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
+        if (dateSelected == '' || dateSelected == null) {
+            return 'Vui lòng chọn ngày nhận hàng';
+        }
+        cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
+        if (timeSelected == '' || timeSelected == null) {
+            return 'Vui lòng chọn thời gian nhận hàng';
+        }
+        cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
+        return '';
+    };
     const handleErrorPhone = (value) => {
         if (helper.isEmptyOrNull(value)) {
             setphoneErrMessage(CONST_STRINGERR.EMPTY_PHONE);
@@ -167,15 +210,19 @@ const UserInfoCart = (props) => {
             setcusAddressErrMessage(CONST_STRINGERR.OUTOFRANGE_SHIPADDRESS);
         } else setcusAddressErrMessage('');
     };
+
+    const [isVisibleDatePicker, setisVisibleDatePicker] = useState(false);
+    const [isVisibleTimePicker, setisVisibleTimePicker] = useState(false);
+
     const chosenDeliDate = () => {
         const isActive =
             shipdatetime !== undefined &&
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
-            const listDeliDate = [
-                { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
-            ];
-        if(isActive)
+        const listDeliDate = [
+            { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
+        ];
+        if (isActive)
             shipdatetime[0]?.DateList.forEach((element) => {
                 var temp =
                     '{"label":"' +
@@ -193,21 +240,27 @@ const UserInfoCart = (props) => {
                 placeholder={'Ngày nhận'}
                 zIndex={20}
                 defaultValue={'-1'}
-                containerStyle={{ height: 40 }}
-                style={{ backgroundColor: '#fafafa' }}
+                containerStyle={{ height: 40, marginHorizontal: 10 }}
+                style={{ backgroundColor: '#fff' }}
                 dropDownMaxHeight={200}
                 itemStyle={{
                     justifyContent: 'flex-start'
                 }}
                 dropDownStyle={{ backgroundColor: '#fff' }}
+                isVisible={isVisibleDatePicker}
+                onOpen={() => {
+                    setisVisibleTimePicker(false);
+                }}
                 onChangeItem={(itemValue, itemIndex) => {
                     if (itemValue.value > 0) {
                         setcurDateDeli(shipdatetime[0]?.DateList[itemIndex]);
-                        setdateSelected(itemValue.value);
+                        setdateSelected(
+                            shipdatetime[0]?.DateList[itemIndex]?.id
+                        );
                     } else {
                         setcurDateDeli(null);
                     }
-                    settimeSelected(null);
+                    settimeSelected('-1');
                 }}
             />
         );
@@ -217,38 +270,48 @@ const UserInfoCart = (props) => {
             datelist?.curDateDeli?.TimeList !== null &&
             datelist?.curDateDeli?.TimeList?.length > 0;
         const listDeliTime = [
-            { label: 'Thời gian nhận', value: '-1', selected: true, disabled: true }
+            {
+                label: 'Thời gian nhận',
+                value: '-1',
+                selected: true,
+                disabled: true
+            }
         ];
-        // if(isActive)
-        //     datelist?.curDateDeli?.TimeList.forEach((element) => {
-        //         var temp =
-        //             '{"label":"' +
-        //             element.text +
-        //             '{"icon":"' +
-        //             () => {} +
-        //             '","value": "' +
-        //             element.id +
-        //             '"}';
-        //         listDeliTime.push(JSON.parse(temp));
-        //     });
+        if (isActive)
+            datelist?.curDateDeli?.TimeList.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.timetext +
+                    ' - Phí: ' +
+                    helper.formatMoney(element.shippingcost) +
+                    '","value": "' +
+                    element.id +
+                    // '","disabled": "' +
+                    // element.disabled +
+                    '"}';
+                listDeliTime.push(JSON.parse(temp));
+            });
         return (
             <DropDownPicker
-                items={[
-                    datelist?.curDateDeli?.TimeList.forEach((element) => {
-                        JSON.parse({label: element.text,
-                            value: element.id});
-                    })
-                ]}
+                items={listDeliTime}
                 zIndex={20}
                 disabled={isActive == false}
                 defaultValue={'-1'}
-                containerStyle={{ height: 40 }}
+                containerStyle={{
+                    height: 40,
+                    marginHorizontal: 10,
+                    marginTop: 10
+                }}
                 style={{ backgroundColor: '#fafafa' }}
                 dropDownMaxHeight={200}
                 itemStyle={{
                     justifyContent: 'flex-start'
                 }}
                 dropDownStyle={{ backgroundColor: '#fff' }}
+                isVisible={false}
+                onOpen={() => {
+                    setisVisibleDatePicker(false);
+                }}
                 onChangeItem={(itemValue, itemIndex) => {
                     settimeSelected(itemValue.value);
                     console.log(
@@ -344,7 +407,7 @@ const UserInfoCart = (props) => {
                 selected: true
             },
             {
-                id: 2,
+                id: 0,
                 value: false,
                 name: 'Chị',
                 selected: false
@@ -359,7 +422,7 @@ const UserInfoCart = (props) => {
             setSexOther(updatedState);
             setCartUserInfo((previousState) => ({
                 ...previousState,
-                OthersGenderCall: updatedState
+                OthersGenderCall: item.id
             }));
         };
         if (isSelectedCallOther) {
@@ -456,6 +519,10 @@ const UserInfoCart = (props) => {
                     if (location !== null && location.ProvinceId > 0) {
                         setprovinceSelected(location.ProvinceId);
                         getLstDis(location.ProvinceId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipProvince: location.ProvinceId
+                        }));
                     }
                 })
                 .catch((err) => {});
@@ -475,6 +542,10 @@ const UserInfoCart = (props) => {
                     if (provinceId > 0 && location?.DistrictId > 0) {
                         setdistrictSelected(location.DistrictId);
                         getLstWard(provinceId, location.DistrictId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipDistrict: location.DistrictId
+                        }));
                     } else setEnableWard(false);
                 })
                 .catch(() => {});
@@ -491,6 +562,10 @@ const UserInfoCart = (props) => {
                     setEnableWard(true);
                     if (location?.WardId > 0) {
                         setwardSelected(location?.WardId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipWard: location.WardId
+                        }));
                     }
                 })
                 .catch(() => {});
@@ -515,6 +590,10 @@ const UserInfoCart = (props) => {
                                 setEnableDis(false);
                                 getLstDis(itemValue);
                                 setdistrictSelected(false);
+                                setCartUserInfo((previousState) => ({
+                                    ...previousState,
+                                    ShipProvince: itemValue > 0 ? itemValue : 0
+                                }));
                             }}>
                             <Picker.Item
                                 label="Tỉnh thành"
@@ -551,6 +630,10 @@ const UserInfoCart = (props) => {
                             onValueChange={(itemValue, itemIndex) => {
                                 getLstWard(provinceSelected, itemValue);
                                 setdistrictSelected(itemValue);
+                                setCartUserInfo((previousState) => ({
+                                    ...previousState,
+                                    ShipDistrict: itemValue > 0 ? itemValue : 0
+                                }));
                             }}>
                             <Picker.Item
                                 label="Quận, huyện"
@@ -583,6 +666,10 @@ const UserInfoCart = (props) => {
                         enabled={enableWard}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
+                            setCartUserInfo((previousState) => ({
+                                ...previousState,
+                                ShipWard: itemValue > 0 ? itemValue : 0
+                            }));
                         }}
                         style={{
                             height: 50,
@@ -625,7 +712,7 @@ const UserInfoCart = (props) => {
                 selected: props == -1 || props == 1 ? true : false
             },
             {
-                id: 2,
+                id: 0,
                 value: false,
                 name: 'Chị',
                 selected: props == 2 ? true : false
@@ -640,7 +727,7 @@ const UserInfoCart = (props) => {
             setSex(updatedState);
             setCartUserInfo((previousState) => ({
                 ...previousState,
-                CustomerGender: updatedState
+                CustomerGender: item.id
             }));
         };
         return (
@@ -765,9 +852,7 @@ const UserInfoCart = (props) => {
                         <Text style={styles.textErr}>{phoneErrMessage}</Text>
                     )}
 
-                    {SexRadio(
-                        cart?.CustomerGender > 0 ? cart?.CustomerGender : 1
-                    )}
+                    {SexRadio(1)}
 
                     <FloatingLabelInput
                         customLabelStyles={{
@@ -849,29 +934,29 @@ const UserInfoCart = (props) => {
                         {boxCallOther()}
                     </View>
                 </View>
-                <View style={[styles.sectionInput, { zIndex: 10 }]}>
+                <View style={styles.sectionInput}>
                     <Text style={styles.stepTitle}>
                         2. Chọn thời gian nhận hàng
                     </Text>
-                    {chosenDeliDate()}
+                </View>
 
-                    {chosenDeliTime({ curDateDeli })}
+                {chosenDeliDate()}
 
-                    <View>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
-                            Mua thêm để miễn phí giao với đơn trên 100.000đ (còn
-                            5 lần)
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 'normal',
-                                    color: '#8F9BB3'
-                                }}>
-                                &nbsp;không tính hàng nặng, to: Bia, Nước các
-                                loại
-                            </Text>
+                {chosenDeliTime({ curDateDeli })}
+
+                <View style={{ padding: 10 }}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+                        Mua thêm để miễn phí giao với đơn trên 100.000đ (còn 5
+                        lần)
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                fontWeight: 'normal',
+                                color: '#8F9BB3'
+                            }}>
+                            &nbsp;không tính hàng nặng, to: Bia, Nước các loại
                         </Text>
-                    </View>
+                    </Text>
                 </View>
                 <View style={styles.sectionInput}>
                     <View style={styles.checkboxContainer}>
