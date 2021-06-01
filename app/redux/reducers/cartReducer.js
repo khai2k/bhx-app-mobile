@@ -24,8 +24,8 @@ const cartReducer = function (state = _store.cartState, action) {
         case _action.cartAction.CART_REMOVE:
             return {
                 ...state,
-                Cart: {},
-                CartTotal: {}
+                Cart: action.cartInfo.Cart,
+                CartTotal: action.cartInfo.CartTotal
             };
         case _action.cartAction.CART_UPDATE_ITEM_PRODUCT:
             return {
