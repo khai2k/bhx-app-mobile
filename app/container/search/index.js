@@ -19,16 +19,12 @@ class Search extends Component {
     async componentDidMount() {
         const option = {
             key: this.props.route.params.url,
-            provinceId:
-                !helper.isEmptyOrNull(this.locationInfo) &&
-                !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
-                    ? this.locationInfo.crrLocationRs.ProvinceId
-                    : 3,
-            storeId:
-                !helper.isEmptyOrNull(this.locationInfo) &&
-                !helper.isEmptyOrNull(this.locationInfo.crrLocationRs)
-                    ? this.locationInfo.crrLocationRs.StoreId
-                    : 6463,
+            provinceId: !helper.isEmptyOrNull(this.locationInfo)
+                ? this.locationInfo.ProvinceId
+                : 3,
+            storeId: !helper.isEmptyOrNull(this.locationInfo)
+                ? this.locationInfo.StoreId
+                : 6463,
             phone: '',
             checkpromotion: true
         };
@@ -70,7 +66,7 @@ class Search extends Component {
 const mapStateToProps = (state) => {
     return {
         searchInfo: state.searchReducer,
-        locationInfo: state.generalReducer.Location.LocationInfo
+        locationInfo: state.locationReducer.Location.LocationInfo
     };
 };
 

@@ -15,7 +15,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import * as locationCreator from '@app/redux/actions/generalAction';
+import * as locationCreator from '@app/redux/actions/locationAction';
 // eslint-disable-next-line import/default
 import locationAction from './Location/index.android';
 import LocationModal from './Location/ModalLocation';
@@ -29,7 +29,8 @@ const Header = () => {
     const dispatch = useDispatch();
     const actionLocation = bindActionCreators(locationCreator, dispatch);
 
-    const locationinfo = useSelector((state) => state.generalReducer.Location);
+    const locationinfo = useSelector((state) => state.locationReducer.Location);
+    const general = useSelector((state) => state.locationReducer);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
     useEffect(async () => {
@@ -54,6 +55,10 @@ const Header = () => {
         setIsModalVisible(true);
         setIsShowReminder(false);
         actionLocation.showReminderLocation(false);
+    };
+
+    const showDataTest = () => {
+        Alert.alert('Data dùng cho test', JSON.stringify(general));
     };
 
     return (
@@ -91,9 +96,11 @@ const Header = () => {
                         </Text>
                     </TouchableOpacity>
                     <View style={styles.boxhistory}>
-                        <Text style={styles.historyorder}>
-                            {translate('Header_HistoryAccount')}
-                        </Text>
+                        <TouchableOpacity onPress={() => showDataTest()}>
+                            <Text style={styles.historyorder}>
+                                {translate('Header_HistoryAccount')}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity
                         style={styles.boxcart}

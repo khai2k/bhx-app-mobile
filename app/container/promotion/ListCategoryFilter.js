@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, View, TouchableOpacity, Text } from 'react-native';
 import { styles } from './styles';
-import * as promotionAction from './action';
+import * as promotionAction from '../../redux/actions/promotionAction';
 
 const ListCategoryFilter = React.memo((props) => {
     return (
