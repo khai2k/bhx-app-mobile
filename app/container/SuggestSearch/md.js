@@ -22,6 +22,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import HTML from 'react-native-render-html';
 //  import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
+import { helper } from '@app/common';
 import DelayInputCmp from '../../components/DelayInput';
 
 const SuggestSearchModal = () => {
@@ -153,7 +154,7 @@ const SuggestSearchModal = () => {
                                     productId: product.Id
                                 })
                             }>
-                            <Text>{product.Price}</Text>
+                            <Text>{helper.formatMoney(product.Price)}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => addToCart(product.Id)}
