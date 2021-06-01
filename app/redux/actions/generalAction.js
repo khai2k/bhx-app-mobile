@@ -91,7 +91,7 @@ export const showReminderLocation = (status) => {
 
 export const menu_get = function () {
     return (dispatch, getState) => {
-        const locationInfo = getState().generalState.Location.LocationInfo;
+        const locationInfo = getState().generalReducer.Location.LocationInfo;
         apiBase(
             API_CONST.API_GET_CATEGORY_NAVIGATION,
             METHOD.GET,
@@ -109,6 +109,7 @@ export const menu_get = function () {
         )
             .then((response) => {
                 // Parse dữ liệu để dùng cho sectionList
+                console.log(response);
                 const menu = response.Value.reduce(
                     (accum, item) => [
                         ...accum,

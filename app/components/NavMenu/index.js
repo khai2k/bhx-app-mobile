@@ -16,7 +16,8 @@ const NavMenu = () => {
     const navigation = useNavigation();
 
     // Get data Menu từ redux
-    const menuData = useSelector((state) => state.manuReducer.Menu);
+    const menuData = useSelector((state) => state.generalReducer.Menu);
+    console.log('menuData');
 
     // Danh sách cate
     const [listCate, setListCate] = useState(menuData);

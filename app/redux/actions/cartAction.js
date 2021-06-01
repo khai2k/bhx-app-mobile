@@ -175,6 +175,7 @@ export const cart_remove = function () {
                         type: CART_REMOVE,
                         cartInfo
                     });
+                    cart_get_simple();
                     resolve(response);
                 })
                 .catch((error) => {
@@ -249,9 +250,12 @@ export const cart_add_item_product = function (
 
 export const cart_get_simple = function () {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             // get cart simple from storage
-            const cartId = getState().generalReducer.CartId;
+            let cartId = getState().generalReducer.CartId;
+            if (helper.isEmptyOrNull(cartId)) {
+                cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            }
             const location = getState().generalReducer.Location.LocationInfo;
 
             const bodyApi = {

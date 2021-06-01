@@ -184,7 +184,7 @@ const ModalLocation = (props) => {
 
     return (
         <View>
-            {/* <TriggerLoadlocal /> */}
+            <TriggerLoadlocal />
             <Modal
                 visible={props.isModalVisible}
                 index
