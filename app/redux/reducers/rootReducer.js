@@ -24,7 +24,6 @@ const appReducer = combineReducers({
     productDetailReducer,
     promotionReducer,
     searchReducer,
-    //  generalReducer
     notificationReducer,
     voucherReducer,
     generalReducer

@@ -13,7 +13,6 @@ const generalReducer = function (state = _store.generalState, action) {
                 }
             };
         case _action.generalAction.GENERAL_LOCATION_REMINDER:
-            console.log('GENERAL_LOCATION_REMINDER', state, action);
             return {
                 ...state,
                 Location: {
@@ -25,6 +24,11 @@ const generalReducer = function (state = _store.generalState, action) {
             return {
                 ...state,
                 Menu: action.menu
+            };
+        case _action.generalAction.GENERAL_SET_CARTID:
+            return {
+                ...state,
+                CartId: action.cartId
             };
         default:
             return state;

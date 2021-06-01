@@ -16,11 +16,13 @@ import {
 } from 'react-native';
 
 import * as locationCreator from '@app/redux/actions/generalAction';
-import LoadLocationTrigger from './Location';
+// eslint-disable-next-line import/default
+import locationAction from './Location/index.android';
 import LocationModal from './Location/ModalLocation';
 import RemiderLocation from './Location/RemiderLocation';
 
 const Header = () => {
+    locationAction.loadLocation();
     const navigation = useNavigation();
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -30,7 +32,7 @@ const Header = () => {
     const locationinfo = useSelector((state) => state.generalReducer.Location);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
-    useEffect(() => {
+    useEffect(async () => {
         const unsubscribe = messaging().onMessage(async (remoteMessage) => {
             console.log(remoteMessage);
             Alert.alert(
@@ -56,7 +58,6 @@ const Header = () => {
 
     return (
         <SafeAreaView>
-            <LoadLocationTrigger />
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.boxlogo}

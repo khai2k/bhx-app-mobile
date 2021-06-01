@@ -16,7 +16,7 @@ const NavMenu = () => {
     const navigation = useNavigation();
 
     // Get data Menu từ redux
-    const menuData = useSelector((state) => state.menuReducer.Menu);
+    const menuData = useSelector((state) => state.generalReducer.Menu);
     const categoryIdActive = useSelector(
         (state) => state.categoryReducer.Info.Id
     );
