@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Colors } from '@app/styles';
+import { Colors, Typography } from '@app/styles';
 import * as searchCreator from '@app/redux/actions/searchAction';
 import { helper } from '@app/common';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import FilterPopup from './FilterPopup';
 
 const PropertyFilter = (props) => {
@@ -90,9 +91,10 @@ const PropertyFilter = (props) => {
                                         updateVisibleStatus(true);
                                     }}
                                     style={styles.showMore}>
-                                    <Image
-                                        style={styles.iconSearch}
-                                        source={require('../../../assets/images/searchFilterCate.png')}
+                                    <Icon
+                                        name="chevron-circle-right"
+                                        size={Typography.FONT_SIZE_14}
+                                        color={Colors.GREEN_KEY}
                                     />
                                     <Text style={styles.textShowMore}>
                                         Xem thêm
