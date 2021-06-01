@@ -112,6 +112,7 @@ class Splash extends Component {
     componentDidUpdate() {
         if (this.state.IsLoadLocation) {
             this.props.actionGetMenu.menu_get();
+            //  this.props.actionGeneral.menu_get();
             this.props.actionCart.cart_get_simple();
         }
     }
@@ -119,6 +120,9 @@ class Splash extends Component {
     componentDidMount() {
         this.getCurrentLocation();
         this.notificationSubscriber();
+        Storage.getItem(CONST_STORAGE.CARTID).then((res) => {
+            this.props.actionGeneral.setCartId(res);
+        });
         const { isShowSplash } = this.props;
         if (isShowSplash) {
             const delay = 1000 * 6;
