@@ -1,7 +1,7 @@
 import * as _store from '../store/locationStore';
 import * as _action from '../actions/locationAction';
 
-const generalReducer = function (state = _store.locationState, action) {
+const locationReducer = function (state = _store.locationState, action) {
     switch (action.type) {
         case _action.generalAction.GENERAL_LOCATION_GETCURRENT:
             return {
@@ -24,4 +24,4 @@ const generalReducer = function (state = _store.locationState, action) {
     }
 };
 
-export { generalReducer };
+export { locationReducer };

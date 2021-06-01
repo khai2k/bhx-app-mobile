@@ -17,8 +17,8 @@ import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { location_SaveChooseLocation } from '@app/redux/actions/generalAction';
-import TriggerLoadlocal from './index';
+import { location_SaveChooseLocation } from '@app/redux/actions/locationAction';
+//  import TriggerLoadlocal from './index';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -35,7 +35,7 @@ const ModalLocation = (props) => {
 
     // Redux
     const locationinfo = useSelector(
-        (state) => state.generalReducer.Location.LocationInfo
+        (state) => state.locationReducer.Location.LocationInfo
     );
 
     // State
@@ -149,21 +149,41 @@ const ModalLocation = (props) => {
                 objLocation.DistrictId
             );
         } else if (_step === 3) {
-            const tmpMdLocal = {
-                ProvinceId: chooseProvinceId,
-                ProvinceFullName: chooseProvinceFullName,
-                ProvinceShortName: chooseProvinceShortName,
+            apiBase(
+                API_CONST.API_LOCATION_GETSTORE,
+                METHOD.GET,
+                {},
+                {
+                    params: {
+                        ProvinceId: chooseProvinceId,
+                        DistrictId: chooseDistrictId,
+                        WardId: objLocation.WardId
+                    }
+                }
+            )
+                .then((response) => {
+                    const tmpData = response.Value;
+                    const tmpMdLocal = {
+                        ProvinceId: chooseProvinceId,
+                        ProvinceFullName: chooseProvinceFullName,
+                        ProvinceShortName: chooseProvinceShortName,
 
-                DistrictId: chooseDistrictId,
-                DistrictName: chooseDistrictName,
+                        DistrictId: chooseDistrictId,
+                        DistrictName: chooseDistrictName,
 
-                WardId: objLocation.WardId,
-                WardName: objLocation.WardName,
+                        WardId: objLocation.WardId,
+                        WardName: objLocation.WardName,
 
-                FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
-            };
-            dispatchlocation_SaveChooseLocation(tmpMdLocal);
-            changeModalVisibleCallback(false);
+                        StoreId: tmpData,
+
+                        FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
+                    };
+                    dispatchlocation_SaveChooseLocation(tmpMdLocal);
+                    changeModalVisibleCallback(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     };
 
@@ -184,7 +204,6 @@ const ModalLocation = (props) => {
 
     return (
         <View>
-            <TriggerLoadlocal />
             <Modal
                 visible={props.isModalVisible}
                 index

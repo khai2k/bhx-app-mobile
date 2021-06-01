@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
-import * as promotionAction from './action';
+import * as promotionAction from '../../redux/actions/promotionAction';
 import { styles } from './styles';
 
 // Render Load more product

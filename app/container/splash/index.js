@@ -10,12 +10,11 @@ import messaging from '@react-native-firebase/messaging';
 import { Storage } from '@app/common';
 import * as cartCreator from '@app/redux/actions/cartAction';
 import * as generalCreator from '@app/redux/actions/generalAction';
+import * as locationCreator from '@app/redux/actions/locationAction';
 import { getUniqueId } from 'react-native-device-info';
 import { apiBase, METHOD, API_CONST } from '@app/api';
-//  import * as actionMenuCreator from '@app/redux/actions/generalAction';
 import styles from './style';
 import * as actionAuthenCreator from './action';
-//  import * as actionMenuCreator from '../../components/NavMenu/action';
 
 class Splash extends Component {
     constructor(props) {
@@ -44,7 +43,7 @@ class Splash extends Component {
                     (position) => {
                         const crrLat = position.coords.latitude;
                         const crrLong = position.coords.longitude;
-                        this.props.actionGeneral
+                        this.props.actionLocation
                             .location_getCurrent(crrLat, crrLong)
                             .then((res) => {
                                 this.setState({ IsLoadLocation: true });
@@ -60,14 +59,14 @@ class Splash extends Component {
                     }
                 );
             } else {
-                this.props.actionGeneral
+                this.props.actionLocation
                     .location_getCurrent(0, 0)
                     .then((res) => {
                         this.setState({ IsLoadLocation: true });
                     });
             }
         } else {
-            this.props.actionGeneral.location_SaveChooseLocation(_crrLocation);
+            this.props.actionLocation.location_SaveChooseLocation(_crrLocation);
             this.setState({ IsLoadLocation: true });
         }
     };
@@ -151,7 +150,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         actionAuthen: bindActionCreators(actionAuthenCreator, dispatch),
         actionCart: bindActionCreators(cartCreator, dispatch),
-        actionGeneral: bindActionCreators(generalCreator, dispatch)
+        actionGeneral: bindActionCreators(generalCreator, dispatch),
+        actionLocation: bindActionCreators(locationCreator, dispatch)
     };
 };
 

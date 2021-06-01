@@ -23,7 +23,7 @@ export const cartAction = {
 export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 token: cartId,
@@ -68,7 +68,7 @@ export const cart_update_item_product = function (guildId, iQuantity) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const cartId = getState().generalReducer.CartId;
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             console.log(location);
             const bodyApi = {
                 token: cartId,
@@ -88,12 +88,12 @@ export const cart_update_item_product = function (guildId, iQuantity) {
             };
             apiBase(API_CONST.API_REQUEST_UPDATE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
-                    console.log('CART_UPDATE_ITEM_PRODUCT Data:', response);
                     const cartInfo = { ...response.Value };
                     dispatch({
                         type: CART_UPDATE_ITEM_PRODUCT,
                         cartInfo
                     });
+                    cart_get_simple();
                     resolve(response);
                 })
                 .catch((error) => {
@@ -108,7 +108,7 @@ export const cart_remove_item_product = function (guildId) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const cartId = getState().generalReducer.CartId;
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
 
             const bodyApi = {
                 token: cartId,
@@ -150,7 +150,7 @@ export const cart_remove = function () {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const cartId = getState().generalReducer.CartId;
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -175,7 +175,6 @@ export const cart_remove = function () {
                         type: CART_REMOVE,
                         cartInfo
                     });
-                    cart_get_simple();
                     resolve(response);
                 })
                 .catch((error) => {
@@ -196,7 +195,7 @@ export const cart_add_item_product = function (
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const cartId = getState().generalReducer.CartId;
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -256,21 +255,15 @@ export const cart_get_simple = function () {
             if (helper.isEmptyOrNull(cartId)) {
                 cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             }
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
 
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: !helper.isEmptyOrNull(location)
-                    ? location.ProvinceId
-                    : 3,
-                districtId: !helper.isEmptyOrNull(location)
-                    ? location.DistrictId
-                    : 0,
-                wardId: !helper.isEmptyOrNull(location) ? location.WardId : 0,
-                storeId: !helper.isEmptyOrNull(location)
-                    ? location.StoreId
-                    : 6815,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
+                storeId: location.StoreId,
                 data: {
                     cartId
                 }

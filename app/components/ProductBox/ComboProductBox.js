@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 // import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
-import * as locationCreator from '@app/redux/actions/generalAction';
+import * as locationCreator from '@app/redux/actions/locationAction';
 
 import FastImage from 'react-native-fast-image';
 import styles from './style';
@@ -48,7 +48,7 @@ const ComboProductBox = (props) => {
 
     // check đã chọn location chưa
     const locationInfo = useSelector(
-        (state) => state.generalReducer.Location.LocationInfo
+        (state) => state.locationReducer.Location.LocationInfo
     );
     const checkReminderLocation = () => {
         if (helper.IsEmptyObject(locationInfo)) {

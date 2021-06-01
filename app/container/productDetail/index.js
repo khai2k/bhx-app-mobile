@@ -90,7 +90,7 @@ const mapStateToProps = function (state) {
         isExchangeProduct: state.productDetailReducer.isExchangeProduct,
         Gallery_product: state.productDetailReducer.Gallery_product,
         Is_loading: state.productDetailReducer.Is_loading,
-        location: state.generalReducer.Location.LocationInfo
+        location: state.locationReducer.Location.LocationInfo
     };
 };
 

@@ -5,7 +5,7 @@ import { authenReducer } from '@app/container/splash/reducer';
 import { homeReducer } from '@app/container/product/reducer';
 import { menuReducer } from '@app/components/NavMenu/reducer';
 import { productDetailReducer } from '@app/container/productDetail/reducer';
-import { promotionReducer } from '@app/container/promotion/reducer';
+import { promotionReducer } from './promotionReducer';
 import { searchReducer } from './searchReducer';
 import { generalReducer } from './generalReducer';
 import { categoryReducer } from './groupReducer';
@@ -18,7 +18,7 @@ const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
-    //  locationReducer,
+    locationReducer,
     categoryReducer,
     homeReducer,
     menuReducer,
