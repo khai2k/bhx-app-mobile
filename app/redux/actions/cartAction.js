@@ -27,7 +27,9 @@ export const cart_get = function () {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-            const cartId = getState().generalReducer.CartId;
+            // const cartId = getState().generalReducer.CartId;
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
@@ -71,7 +73,7 @@ export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             const cartId =
                 'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
@@ -313,7 +315,7 @@ export const cart_get_simple = function () {
                     const cartInfo = response.Value;
                     if (!helper.isEmptyOrNull(cartInfo.CartId)) {
                         Storage.setItem(CONST_STORAGE.CARTID, cartInfo.CartId);
-                    dispatch({
+                        dispatch({
                             type: 'GENERAL_SET_CARTID',
                             cartId: cartInfo.CartId
                         });

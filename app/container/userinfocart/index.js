@@ -32,7 +32,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
-import { ERR_PROVINCE } from '../../constants/stringError';
 
 const UserInfoCart = (props) => {
     useEffect(() => {
@@ -240,11 +239,11 @@ const UserInfoCart = (props) => {
                 placeholder={'Ngày nhận'}
                 zIndex={20}
                 defaultValue={'-1'}
-                containerStyle={{ height: 40, marginHorizontal: 10 }}
-                style={{ backgroundColor: '#fff' }}
+                containerStyle={{ height: 50, marginHorizontal: 10 }}
+                style={[styles.borderRadius, { backgroundColor: '#fff', borderColor:  dateSelected == '' || dateSelected == null ? '#ff001f' : '#8F9BB3' }]}
                 dropDownMaxHeight={200}
                 itemStyle={{
-                    justifyContent: 'flex-start'
+                    justifyContent: 'flex-start'                   
                 }}
                 dropDownStyle={{ backgroundColor: '#fff' }}
                 isVisible={isVisibleDatePicker}
@@ -253,12 +252,13 @@ const UserInfoCart = (props) => {
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     if (itemValue.value > 0) {
-                        setcurDateDeli(shipdatetime[0]?.DateList[itemIndex]);
+                        setcurDateDeli(shipdatetime[0]?.DateList[itemIndex - 1]);
                         setdateSelected(
-                            shipdatetime[0]?.DateList[itemIndex]?.id
+                            shipdatetime[0]?.DateList[itemIndex - 1]?.id
                         );
                     } else {
                         setcurDateDeli(null);
+                        setdateSelected('');
                     }
                     settimeSelected('-1');
                 }}
@@ -298,11 +298,11 @@ const UserInfoCart = (props) => {
                 disabled={isActive == false}
                 defaultValue={'-1'}
                 containerStyle={{
-                    height: 40,
+                    height: 50,
                     marginHorizontal: 10,
                     marginTop: 10
                 }}
-                style={{ backgroundColor: '#fafafa' }}
+                style={[styles.borderRadius, { backgroundColor: '#fff', borderColor:  dateSelected == '' || dateSelected == null ? '#ff001f' : '#8F9BB3' }]}
                 dropDownMaxHeight={200}
                 itemStyle={{
                     justifyContent: 'flex-start'
@@ -528,7 +528,7 @@ const UserInfoCart = (props) => {
                 .catch((err) => {});
         };
 
-        const getLstDis = (provinceId) => {
+        const getLstDis = (provinceId, onManualSelect = false) => {
             apiBase(
                 API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
                 METHOD.GET,
@@ -539,7 +539,7 @@ const UserInfoCart = (props) => {
                     setLstDis(response.Value);
                     setprovinceSelected(provinceId);
                     setEnableDis(provinceId > 0);
-                    if (provinceId > 0 && location?.DistrictId > 0) {
+                    if (provinceId > 0 && location?.DistrictId > 0 && !onManualSelect) {
                         setdistrictSelected(location.DistrictId);
                         getLstWard(provinceId, location.DistrictId);
                         setCartUserInfo((previousState) => ({
@@ -550,7 +550,7 @@ const UserInfoCart = (props) => {
                 })
                 .catch(() => {});
         };
-        const getLstWard = (ProvinceId, DistrictId) => {
+        const getLstWard = (ProvinceId, DistrictId, onManualSelect = false) => {
             apiBase(
                 API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
                 METHOD.GET,
@@ -560,7 +560,8 @@ const UserInfoCart = (props) => {
                 .then((response) => {
                     setLstWard(response.Value);
                     setEnableWard(true);
-                    if (location?.WardId > 0) {
+                    setwardSelected(-1);
+                    if (location?.WardId > 0 && !onManualSelect) {
                         setwardSelected(location?.WardId);
                         setCartUserInfo((previousState) => ({
                             ...previousState,
@@ -574,7 +575,7 @@ const UserInfoCart = (props) => {
         return (
             <View>
                 <View style={styles.provAndDic}>
-                    <View style={[styles.provBox]}>
+                    <View style={[styles.provBox,{borderColor:  provinceSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                         <Picker
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
@@ -588,7 +589,7 @@ const UserInfoCart = (props) => {
 
                                 //reset district
                                 setEnableDis(false);
-                                getLstDis(itemValue);
+                                getLstDis(itemValue, true);
                                 setdistrictSelected(false);
                                 setCartUserInfo((previousState) => ({
                                     ...previousState,
@@ -612,13 +613,13 @@ const UserInfoCart = (props) => {
                                     );
                                 })}
                         </Picker>
-                        {provinceSelected <= 0 && (
+                        {/* {provinceSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
                                 {CONST_STRINGERR.ERR_PROVINCE}
                             </Text>
-                        )}
+                        )} */}
                     </View>
-                    <View style={styles.disBox}>
+                    <View style={[styles.disBox,{borderColor:  districtSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
@@ -628,7 +629,7 @@ const UserInfoCart = (props) => {
                                 color: enableDis ? '#000' : '#C2C2C2'
                             }}
                             onValueChange={(itemValue, itemIndex) => {
-                                getLstWard(provinceSelected, itemValue);
+                                getLstWard(provinceSelected, itemValue, true);
                                 setdistrictSelected(itemValue);
                                 setCartUserInfo((previousState) => ({
                                     ...previousState,
@@ -653,14 +654,14 @@ const UserInfoCart = (props) => {
                                 })}
                         </Picker>
 
-                        {districtSelected <= 0 && (
+                        {/* {districtSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
                                 {CONST_STRINGERR.ERR_DISTRICT}
                             </Text>
-                        )}
+                        )} */}
                     </View>
                 </View>
-                <View style={styles.wardBox}>
+                <View style={[styles.wardBox,{borderColor:  wardSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
@@ -693,11 +694,11 @@ const UserInfoCart = (props) => {
                                 );
                             })}
                     </Picker>
-                    {wardSelected <= 0 && (
+                    {/* {wardSelected <= 0 && (
                         <Text style={[styles.textErr, styles.textErrAbs]}>
                             {CONST_STRINGERR.ERR_WARD}
                         </Text>
-                    )}
+                    )} */}
                 </View>
             </View>
         );
@@ -802,7 +803,7 @@ const UserInfoCart = (props) => {
                         source={require('../../../assets/images/icon-back.png')}
                     />
                     <Text onclick={() => {}} style={styles.backTop}>
-                        Xem lại giỏ hàng
+                        {' '}Xem lại giỏ hàng
                     </Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity>
