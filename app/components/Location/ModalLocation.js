@@ -148,21 +148,41 @@ const ModalLocation = (props) => {
                 objLocation.DistrictId
             );
         } else if (_step === 3) {
-            const tmpMdLocal = {
-                ProvinceId: chooseProvinceId,
-                ProvinceFullName: chooseProvinceFullName,
-                ProvinceShortName: chooseProvinceShortName,
+            apiBase(
+                API_CONST.API_LOCATION_GETSTORE,
+                METHOD.GET,
+                {},
+                {
+                    params: {
+                        ProvinceId: chooseProvinceId,
+                        DistrictId: chooseDistrictId,
+                        WardId: objLocation.WardId
+                    }
+                }
+            )
+                .then((response) => {
+                    const tmpData = response.Value;
+                    const tmpMdLocal = {
+                        ProvinceId: chooseProvinceId,
+                        ProvinceFullName: chooseProvinceFullName,
+                        ProvinceShortName: chooseProvinceShortName,
 
-                DistrictId: chooseDistrictId,
-                DistrictName: chooseDistrictName,
+                        DistrictId: chooseDistrictId,
+                        DistrictName: chooseDistrictName,
 
-                WardId: objLocation.WardId,
-                WardName: objLocation.WardName,
+                        WardId: objLocation.WardId,
+                        WardName: objLocation.WardName,
 
-                FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
-            };
-            dispatchlocation_SaveChooseLocation(tmpMdLocal);
-            changeModalVisibleCallback(false);
+                        StoreId: tmpData,
+
+                        FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
+                    };
+                    dispatchlocation_SaveChooseLocation(tmpMdLocal);
+                    changeModalVisibleCallback(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
     };
 
