@@ -34,7 +34,7 @@ class UseVoucher extends Component {
     }
 
     handleAlert(res) {
-        if (res.HttpCode == 400) {
+        if (res.HttpCode == 400 || res.HttpCode == 404) {
             showMessage({
                 message: res.Message,
                 type: 'default',
