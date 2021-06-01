@@ -9,7 +9,11 @@ const cartReducer = function (state = _store.cartState, action) {
                 Cart: action.cartInfo.Cart,
                 CartTotal: action.cartInfo.CartTotal,
                 ShiptimeGroupList: action.cartInfo.ShiptimeGroupList
-                //  ListCategory: action.cartInfo.ListCategory
+            };
+        case _action.cartAction.CART_LISTCATE_TOP:
+            return {
+                ...state,
+                ListCategory: action.ListCategory
             };
         case _action.cartAction.CART_REMOVE_ITEM_PRODUCT:
             return {
@@ -20,8 +24,8 @@ const cartReducer = function (state = _store.cartState, action) {
         case _action.cartAction.CART_REMOVE:
             return {
                 ...state,
-                Cart: {},
-                CartTotal: {}
+                Cart: action.cartInfo.Cart,
+                CartTotal: action.cartInfo.CartTotal
             };
         case _action.cartAction.CART_UPDATE_ITEM_PRODUCT:
             return {

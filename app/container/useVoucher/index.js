@@ -10,10 +10,11 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
-import styles from './style';
 import { connect } from 'react-redux';
-import * as voucherCreator from './action';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import styles from './style';
+import * as voucherCreator from './action';
+
 class UseVoucher extends Component {
     constructor(props) {
         super(props);
@@ -31,6 +32,45 @@ class UseVoucher extends Component {
 
     componentDidMount() {
         this.fetchVoucher();
+    }
+
+    handleAlert(res) {
+        if (res.HttpCode == 400) {
+            showMessage({
+                message: res.Message,
+                type: 'default',
+                backgroundColor: 'purple',
+                icon: 'danger'
+            });
+        }
+        if (res.HttpCode == 200) {
+            showMessage({
+                message: 'Áp dụng phiếu mua hàng thành công!',
+                type: 'default',
+                backgroundColor: 'purple',
+                icon: 'success'
+            });
+        }
+        if (res.HttpCode == 100) {
+            showMessage({
+                message: res.Message,
+                type: 'default',
+                backgroundColor: 'purple',
+                icon: 'warning'
+            });
+        }
+    }
+
+    handleDeleteVoucher(item) {
+        if (item.Type == 1) {
+            this.setState({ code: item.CouponCode });
+        }
+        if (item.Type == 4) {
+            this.setState({ code: item.VoucherCode });
+        }
+        this.setState({ giftType: item.Type }, () => {
+            this.deleteVoucher();
+        });
     }
 
     fetchVoucher() {
@@ -57,15 +97,15 @@ class UseVoucher extends Component {
             .then((res) => {
                 this.setState({ isPinCodeInput: res.HttpCode });
                 this.fetchVoucher();
-                showMessage({
-                    message: 'Áp dụng phiếu mua hàng thành công!',
-                    type: 'default',
-                    backgroundColor: 'purple',
-                    icon: 'success'
-                });
+                this.handleAlert(res);
             })
             .catch((err) => {
-                console.log('err', err);
+                showMessage({
+                    message: err.Message,
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'danger'
+                });
             });
     }
 
@@ -81,19 +121,14 @@ class UseVoucher extends Component {
                     icon: 'success'
                 });
             })
-            .catch((err) => console.log('err', err));
-    }
-
-    handleDeleteVoucher(item) {
-        if (item.Type == 1) {
-            this.setState({ code: item.CouponCode });
-        }
-        if (item.Type == 4) {
-            this.setState({ code: item.VoucherCode });
-        }
-        this.setState({ giftType: item.Type }, () => {
-            this.deleteVoucher();
-        });
+            .catch((err) => {
+                showMessage({
+                    message: err.Message,
+                    type: 'default',
+                    backgroundColor: 'purple',
+                    icon: 'danger'
+                });
+            });
     }
 
     _renderHeader() {
@@ -105,7 +140,8 @@ class UseVoucher extends Component {
                         onPress={() => this.props.navigation.goBack()}>
                         <Image
                             style={styles.closeImage}
-                            source={require('../../../assets/images/close.png')}></Image>
+                            source={require('../../../assets/images/close.png')}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -170,16 +206,22 @@ class UseVoucher extends Component {
                             <View style={styles.voucherBox}>
                                 <View style={styles.voucherPriceBox}>
                                     <Text style={styles.labelPriceVoucher}>
-                                        {itemVoucher.VoucherAmount / 1000}K
+                                        {itemVoucher.VoucherCode
+                                            ? itemVoucher.VoucherAmount / 1000 +
+                                              'K'
+                                            : itemVoucher.VoucherAmount + '%'}
                                     </Text>
                                 </View>
                                 <View style={styles.voucherInfoBox}>
                                     {itemVoucher.MinOrderAmount > 0 ? (
                                         <Text style={styles.voucherLabel}>
                                             Giảm{' '}
-                                            {helper.formatMoney(
-                                                itemVoucher.VoucherAmount
-                                            )}{' '}
+                                            {itemVoucher.VoucherCode
+                                                ? helper.formatMoney(
+                                                      itemVoucher.VoucherAmount
+                                                  )
+                                                : itemVoucher.VoucherAmount +
+                                                  '%'}{' '}
                                             trên hóa đơn{' '}
                                             {helper.formatMoney(
                                                 itemVoucher.MinOrderAmount
@@ -262,7 +304,13 @@ class UseVoucher extends Component {
                                     </TouchableOpacity>
                                     <Text style={{ color: '#8F9BB3' }}>
                                         -
-                                        {itemVoucher.VoucherAmount &&
+                                        {itemVoucher.Type == 1 &&
+                                            helper.formatMoney(
+                                                this.state.voucherCart
+                                                    .CouponDiscount
+                                            )}
+                                        {itemVoucher.Type == 4 &&
+                                            itemVoucher.VoucherAmount &&
                                             helper.formatMoney(
                                                 itemVoucher.VoucherAmount
                                             )}
@@ -311,7 +359,8 @@ class UseVoucher extends Component {
     _renderCloseContainer() {
         if (!this.state.voucherList) {
             return (
-                <TouchableOpacity onPress={() => console.log('test')}>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
                     <View style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>Đóng</Text>
                     </View>

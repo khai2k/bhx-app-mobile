@@ -70,13 +70,7 @@ export function isInstanced(obj) {
 }
 
 export const isEmpty = (obj) => {
-    Object.key(obj).forEach((key) => {
-        if (hasProperty(obj, key)) {
-            return false;
-        }
-    });
-
-    return true;
+    return !Object.keys(obj).every((key) => hasProperty(obj, key));
 };
 export const isPhoneNumber = (obj) => {
     const vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
@@ -104,7 +98,7 @@ export function IsValidateObject(object) {
 export const hasProperty = (object, property) => {
     return (
         IsValidateObject(object) &&
-        Object.prototype.hasOwnProperty.call(object, 'property') &&
+        Object.prototype.hasOwnProperty.call(object, property) &&
         IsValidateObject(object[property])
     );
 };

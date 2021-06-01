@@ -128,6 +128,7 @@ export const HEADER_CART = '#FFF87C';
 export const GREEN_3B854E = '#3B854E';
 
 // GREEN
+export const GREEN_PRIMARY = '#008848';
 export const GREEN_00AC5B = '#00AC5B';
 export const GRAY_8F9BB3 = '#8F9BB3';
 export const CART_STOPSALES = '#f30600';

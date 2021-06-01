@@ -1,5 +1,5 @@
-import * as _state from './state';
-import * as _action from './action';
+import * as _state from '../store/searchStore';
+import * as _action from '../actions/searchAction';
 
 const searchReducer = function (state = _state.searchState, action) {
     switch (action.type) {
