@@ -16,11 +16,10 @@ import Group from '../container/group';
 import Search from '../container/search';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 import SuggestSearch from '../container/SuggestSearch/md';
 import UseVoucher from '../container/useVoucher';
-import UnderConstruction from '../components/UnderConstruction';
+import { UnderConstruction, NavMenu } from '../components';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();

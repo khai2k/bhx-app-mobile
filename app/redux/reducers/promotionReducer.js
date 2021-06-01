@@ -1,4 +1,4 @@
-import * as _action from './action';
+import * as _action from '../actions/promotionAction';
 
 const initialState = [];
 

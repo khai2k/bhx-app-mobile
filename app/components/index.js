@@ -9,6 +9,7 @@ import CartEmpty from './CartInfo/CartEmpty';
 import LoadingCart from './CartInfo/LoadingCart';
 import Loading from './Loading';
 import AlertCart from './CartInfo/AlertCart';
+import UnderConstruction from './UnderConstruction';
 
 export {
     MyText,
@@ -21,5 +22,6 @@ export {
     CartEmpty,
     CartTotal,
     CodePushUpdate,
-    NavMenu
+    NavMenu,
+    UnderConstruction
 };
