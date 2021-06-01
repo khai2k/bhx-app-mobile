@@ -46,7 +46,9 @@ const SuggestSearchModal = () => {
     const [lstSuggest, setlstSuggest] = useState(null);
 
     // Redux
-    const locationinfo = useSelector((state) => state.locationReducer);
+    const locationinfo = useSelector(
+        (state) => state.generalReducer.Location.LocationInfo
+    );
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
 

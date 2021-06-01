@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
-import * as categoryCreator from '@app/container/group/action';
+import * as categoryCreator from '@app/redux/actions/groupAction';
 import { helper } from '@app/common';
 import { ImageNavMenu } from '../../images';
 

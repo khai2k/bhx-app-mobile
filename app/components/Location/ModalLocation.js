@@ -17,7 +17,7 @@ import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { location_SaveChooseLocation } from './action';
+import { location_SaveChooseLocation } from '@app/redux/actions/generalAction';
 import TriggerLoadlocal from './index';
 
 const ModalLocation = (props) => {
@@ -34,7 +34,9 @@ const ModalLocation = (props) => {
     const windowWidth = Math.round(Dimensions.get('window').width);
 
     // Redux
-    const locationinfo = useSelector((state) => state.locationReducer);
+    const locationinfo = useSelector(
+        (state) => state.generalReducer.Location.LocationInfo
+    );
 
     // State
     const [txtTitleChoose, settxtTitleChoose] = useState(
@@ -182,7 +184,7 @@ const ModalLocation = (props) => {
 
     return (
         <View>
-            <TriggerLoadlocal />
+            {/* <TriggerLoadlocal /> */}
             <Modal
                 visible={props.isModalVisible}
                 index
@@ -192,8 +194,7 @@ const ModalLocation = (props) => {
                 }}>
                 <SafeAreaView>
                     <Text style={styles.titleModal}>
-                        Khu vực đã chọn:{' '}
-                        {locationinfo?.crrLocationRs.FullAddress}
+                        Khu vực đã chọn: {locationinfo?.FullAddress}
                     </Text>
                     <View style={styles.chooseProvince}>
                         {step > 0 && (

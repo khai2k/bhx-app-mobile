@@ -1,5 +1,6 @@
 //  export const API_BASE = 'https://beta.bachhoaxanh.com/apiapp/api/';
 export const API_BASE = 'https://staging.bachhoaxanh.com/apiapp/api/';
+//  export const API_BASE = 'https://www.bachhoaxanh.com/apiapp/api/';
 export const API_REQUEST_GET_CART = `${API_BASE}Order/get`;
 export const API_REQUEST_GET_SIMPLE_CART = `${API_BASE}Order/getsimple`;
 export const API_REQUEST_ADD_CART = `${API_BASE}/Order/add`;
@@ -58,3 +59,4 @@ export const API_SEARCH_AJAXPRODUCT_OEM = `${API_BASE}SearchPage/AjaxOEMProduct`
 
 //  Notification
 export const API_NOTIFICATION_SUBSCRIBER = `${API_BASE}Notification/subscriber`;
+export const API_NOTIFICATION_GET_LIST = `${API_BASE}Notification/getlist`;

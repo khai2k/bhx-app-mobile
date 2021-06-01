@@ -18,24 +18,15 @@ const CartEmpty = (props) => {
                     Vẫn còn 10.000+ sản phẩm đang chờ anh
                 </Text>
                 <View style={styles.boxkey}>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Sữa</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Kem đánh răng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Kem đánh răng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Kem đánh răng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Kem đánh răng</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.itembox}>
-                        <Text style={styles.textcolor}>Kem đánh răng</Text>
-                    </TouchableOpacity>
+                    {props.listCategory.map((item) => {
+                        return (
+                            <TouchableOpacity style={styles.itembox}>
+                                <Text style={styles.textcolor}>
+                                    {item.Name}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
             </View>
         </View>
@@ -56,7 +47,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cartemph: {
-        height: '30%'
+        height: '15%'
     },
     cartimg: {
         resizeMode: 'contain',

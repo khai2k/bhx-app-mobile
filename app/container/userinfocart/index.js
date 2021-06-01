@@ -67,7 +67,7 @@ const UserInfoCart = (props) => {
         (state) => state.cartReducer.ShiptimeGroupList
     );
     const location = useSelector(
-        (state) => state.locationReducer.crrLocationRs
+        (state) => state.generalReducer.Location.LocationInfo
     );
 
     const [cartState, setCartState] = useState(cart);
