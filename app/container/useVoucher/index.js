@@ -10,10 +10,11 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
-import styles from './style';
 import { connect } from 'react-redux';
-import * as voucherCreator from './action';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import styles from './style';
+import * as voucherCreator from './action';
+
 class UseVoucher extends Component {
     constructor(props) {
         super(props);
@@ -139,7 +140,8 @@ class UseVoucher extends Component {
                         onPress={() => this.props.navigation.goBack()}>
                         <Image
                             style={styles.closeImage}
-                            source={require('../../../assets/images/close.png')}></Image>
+                            source={require('../../../assets/images/close.png')}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -357,7 +359,8 @@ class UseVoucher extends Component {
     _renderCloseContainer() {
         if (!this.state.voucherList) {
             return (
-                <TouchableOpacity onPress={() => console.log('test')}>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
                     <View style={styles.closeButton}>
                         <Text style={styles.closeButtonText}>Đóng</Text>
                     </View>

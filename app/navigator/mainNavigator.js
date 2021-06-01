@@ -6,7 +6,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { translate } from '@app/translate';
-import { Header } from '@app/components';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
@@ -21,6 +20,7 @@ import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 import SuggestSearch from '../container/SuggestSearch/md';
 import UseVoucher from '../container/useVoucher';
+import UnderConstruction from '../components/UnderConstruction';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -115,6 +115,13 @@ const MainNavigator = () => {
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="UnderConstruction"
+                component={UnderConstruction}
+                options={() => {
                     return { headerShown: false };
                 }}
             />

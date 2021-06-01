@@ -86,8 +86,8 @@ class OrderSuccess extends Component {
                 <View style={styles.dot} />
                 <Text>
                     Giao tại: {this.state.infoOrder.Address} {'  '}
-                    <View style={styles.dotActive} />
-                    <Text> Sửa</Text>
+                    {/* <View style={styles.dotActive} />
+                    <Text> Sửa</Text> */}
                 </Text>
             </View>
         );
@@ -103,8 +103,8 @@ class OrderSuccess extends Component {
                         {this.state.deliveryTime}
                     </Text>{' '}
                     {'  '}
-                    <View style={styles.dotActive} />
-                    <Text> Sửa</Text>
+                    {/* <View style={styles.dotActive} />
+                    <Text> Sửa</Text> */}
                 </Text>
             </View>
         );
@@ -254,18 +254,19 @@ class OrderSuccess extends Component {
         return (
             <View style={styles.buttonContainer}>
                 <View style={styles.buttonRow}>
-                    <View style={styles.editBox}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.setState({
-                                    modalVisible: !this.state.modalVisible
-                                })
-                            }>
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            this.setState({
+                                modalVisible: !this.state.modalVisible
+                            })
+                        }>
+                        <View style={styles.editBox}>
                             <Text style={styles.editTextButton}>
                                 × Hủy đơn hàng
                             </Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+
                     <View style={styles.editBox}>
                         <TouchableOpacity>
                             <View
