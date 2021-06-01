@@ -141,7 +141,7 @@ class Cart extends Component {
                         <View style={styles.btn}>
                             <TouchableOpacity
                                 onPress={() =>
-                                    this.props.navigation.navigate('Cart')
+                                    this.props.navigation.navigate('UseVoucher')
                                 }>
                                 <View>
                                     <Text style={styles.textbtn}>
