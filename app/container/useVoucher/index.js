@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import styles from './style';
 import * as voucherCreator from './action';
+import { TouchableWithoutFeedback } from 'react-native';
 
 class UseVoucher extends Component {
     constructor(props) {
@@ -21,7 +22,10 @@ class UseVoucher extends Component {
         this.state = {
             phoneInput: '',
             voucherCodeInput: '',
-            pinCodeInput: ''
+            pinCodeInput: '',
+            isFocusVoucherInput: false,
+            isFocusPhoneInput: false,
+            isFocusPinCodeInput: false
         };
     }
 
@@ -32,7 +36,6 @@ class UseVoucher extends Component {
     handleAlert(res) {
         if (res.HttpCode == 400 || res.HttpCode == 404) {
             showMessage({
-                position: 'center',
                 message: res.Message,
                 type: 'default',
                 backgroundColor: '#222B45',
@@ -41,7 +44,6 @@ class UseVoucher extends Component {
         }
         if (res.HttpCode == 200) {
             showMessage({
-                position: 'center',
                 message: 'Áp dụng phiếu mua hàng thành công!',
                 type: 'default',
                 backgroundColor: '#222B45',
@@ -50,7 +52,6 @@ class UseVoucher extends Component {
         }
         if (res.HttpCode == 100) {
             showMessage({
-                position: 'center',
                 message: res.Message,
                 type: 'default',
                 backgroundColor: '#222B45',
@@ -75,6 +76,7 @@ class UseVoucher extends Component {
         this.props.actionVoucher
             .voucher_get()
             .then((res) => {
+                console.log('get', res);
                 this.setState({
                     voucherCart: res.OtherData,
                     voucherList: res.Value
@@ -93,13 +95,14 @@ class UseVoucher extends Component {
                 this.state.pinCodeInput
             )
             .then((res) => {
+                console.log('add', res);
                 this.setState({ isPinCodeInput: res.HttpCode });
+                this.setState({ message: res.Message });
                 this.fetchVoucher();
                 this.handleAlert(res);
             })
             .catch((err) => {
                 showMessage({
-                    position: 'center',
                     message: err.Message,
                     type: 'default',
                     backgroundColor: '#222B45',
@@ -114,7 +117,6 @@ class UseVoucher extends Component {
             .then((res) => {
                 this.fetchVoucher();
                 showMessage({
-                    position: 'center',
                     message: res.Message,
                     type: 'default',
                     backgroundColor: '#222B45',
@@ -123,13 +125,21 @@ class UseVoucher extends Component {
             })
             .catch((err) => {
                 showMessage({
-                    position: 'center',
                     message: err.Message,
                     type: 'default',
                     backgroundColor: '#222B45',
                     icon: 'danger'
                 });
             });
+    }
+
+    handlePinCodeInput() {
+        if (
+            this.state.isPinCodeInput == 100 ||
+            this.state.message == 'Mã PINCode không đúng. Vui lòng kiểm tra lại'
+        ) {
+            return this._renderPincodeInput();
+        }
     }
 
     _renderHeader() {
@@ -153,22 +163,78 @@ class UseVoucher extends Component {
         return (
             <View style={{ padding: 10 }}>
                 <View style={styles.voucherInput}>
+                    <Text
+                        style={
+                            this.state.isFocusVoucherInput == true
+                                ? styles.onfocusLabel
+                                : styles.onBlurLabel
+                        }>
+                        Mã phiếu mua hàng:
+                    </Text>
                     <TextInput
-                        placeholder="Nhập mã phiếu mua hàng"
+                        style={
+                            this.state.isFocusVoucherInput == true
+                                ? styles.onfocusInput
+                                : styles.onBlurInput
+                        }
+                        placeholder={
+                            this.state.isFocusVoucherInput == true
+                                ? ''
+                                : 'Nhập mã phiếu mua hàng'
+                        }
                         onChangeText={(voucherCodeInput) =>
                             this.setState({ voucherCodeInput })
+                        }
+                        onFocus={() =>
+                            this.setState({ isFocusVoucherInput: true })
+                        }
+                        onBlur={() =>
+                            this.state.voucherCodeInput
+                                ? this.setState({ isFocusVoucherInput: true })
+                                : this.setState({
+                                      isFocusVoucherInput: false
+                                  })
                         }
                     />
                 </View>
                 <View style={styles.phoneInput}>
-                    <TextInput
-                        value={this.state.phoneInput}
-                        placeholder="Nhập số điện thoại"
-                        keyboardType="numeric"
-                        onChangeText={(phoneInput) =>
-                            this.setState({ phoneInput })
-                        }
-                    />
+                    <View style={{ width: '70%' }}>
+                        <Text
+                            style={
+                                this.state.isFocusPhoneInput == true
+                                    ? styles.onfocusPhoneLabel
+                                    : styles.onBlurLabel
+                            }>
+                            Số điện thoại:
+                        </Text>
+                        <TextInput
+                            value={this.state.phoneInput}
+                            placeholder={
+                                this.state.isFocusPhoneInput == true
+                                    ? ''
+                                    : 'Nhập số điện thoại'
+                            }
+                            keyboardType="numeric"
+                            style={
+                                this.state.isFocusPhoneInput == true
+                                    ? styles.onfocusPhoneInput
+                                    : styles.onBlurInput
+                            }
+                            onChangeText={(phoneInput) =>
+                                this.setState({ phoneInput })
+                            }
+                            onFocus={() =>
+                                this.setState({ isFocusPhoneInput: true })
+                            }
+                            onBlur={() =>
+                                this.state.phoneInput
+                                    ? this.setState({ isFocusPhoneInput: true })
+                                    : this.setState({
+                                          isFocusPhoneInput: false
+                                      })
+                            }
+                        />
+                    </View>
                     <TouchableOpacity
                         onPress={() => {
                             this.addVoucher();
@@ -178,7 +244,7 @@ class UseVoucher extends Component {
                         </View>
                     </TouchableOpacity>
                 </View>
-                {this.state.isPinCodeInput == 100 && this._renderPincodeInput()}
+                {this.handlePinCodeInput()}
             </View>
         );
     }
@@ -186,12 +252,35 @@ class UseVoucher extends Component {
     _renderPincodeInput() {
         return (
             <View style={styles.pinCode}>
+                <Text
+                    style={
+                        this.state.isFocusPinCodeInput == true
+                            ? styles.onfocusLabel
+                            : styles.onBlurLabel
+                    }>
+                    Nhập Pincode:
+                </Text>
                 <TextInput
-                    value={this.state.pinCodeInput}
-                    placeholder="Nhập Pincode"
-                    keyboardType="numeric"
+                    style={
+                        this.state.isFocusPinCodeInput == true
+                            ? styles.onfocusInput
+                            : styles.onBlurInput
+                    }
+                    placeholder={
+                        this.state.isFocusPinCodeInput == true
+                            ? ''
+                            : 'Nhập mã Pincode'
+                    }
                     onChangeText={(pinCodeInput) =>
                         this.setState({ pinCodeInput })
+                    }
+                    onFocus={() => this.setState({ isFocusPinCodeInput: true })}
+                    onBlur={() =>
+                        this.state.pinCodeInput
+                            ? this.setState({ isFocusPinCodeInput: true })
+                            : this.setState({
+                                  isFocusPinCodeInput: false
+                              })
                     }
                 />
             </View>
@@ -204,67 +293,67 @@ class UseVoucher extends Component {
                 {this.state.voucherList &&
                     this.state.voucherList.map((itemVoucher) => {
                         return (
-                            <View style={styles.voucherBox}>
-                                <View style={styles.voucherPriceBox}>
-                                    <Text style={styles.labelPriceVoucher}>
-                                        {itemVoucher.VoucherCode
-                                            ? itemVoucher.VoucherAmount / 1000 +
-                                              'K'
-                                            : itemVoucher.VoucherAmount + '%'}
-                                    </Text>
-                                </View>
-                                <View style={styles.voucherInfoBox}>
-                                    {itemVoucher.MinOrderAmount > 0 ? (
-                                        <Text style={styles.voucherLabel}>
-                                            Giảm{' '}
+                            <TouchableWithoutFeedback
+                                onPress={() =>
+                                    this.handleDeleteVoucher(itemVoucher)
+                                }>
+                                <View style={styles.voucherBox}>
+                                    <View style={styles.voucherPriceBox}>
+                                        <Text style={styles.labelPriceVoucher}>
                                             {itemVoucher.VoucherCode
-                                                ? helper.formatMoney(
-                                                      itemVoucher.VoucherAmount
-                                                  )
+                                                ? itemVoucher.VoucherAmount /
+                                                      1000 +
+                                                  'K'
                                                 : itemVoucher.VoucherAmount +
-                                                  '%'}{' '}
-                                            trên hóa đơn{' '}
-                                            {helper.formatMoney(
-                                                itemVoucher.MinOrderAmount
-                                            )}
+                                                  '%'}
                                         </Text>
-                                    ) : (
-                                        <Text style={styles.voucherLabel}>
-                                            Giảm{' '}
-                                            {helper.formatMoney(
-                                                itemVoucher.VoucherAmount
-                                            )}
-                                        </Text>
-                                    )}
+                                    </View>
+                                    <View style={styles.voucherInfoBox}>
+                                        {itemVoucher.MinOrderAmount > 0 ? (
+                                            <Text style={styles.voucherLabel}>
+                                                Giảm{' '}
+                                                {itemVoucher.VoucherCode
+                                                    ? helper.formatMoney(
+                                                          itemVoucher.VoucherAmount
+                                                      )
+                                                    : itemVoucher.VoucherAmount +
+                                                      '%'}{' '}
+                                                trên hóa đơn{' '}
+                                                {helper.formatMoney(
+                                                    itemVoucher.MinOrderAmount
+                                                )}
+                                            </Text>
+                                        ) : (
+                                            <Text style={styles.voucherLabel}>
+                                                Giảm{' '}
+                                                {helper.formatMoney(
+                                                    itemVoucher.VoucherAmount
+                                                )}
+                                            </Text>
+                                        )}
 
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between'
-                                        }}>
-                                        <Text style={styles.voucherDate}>
-                                            Hạn sử dụng đến:{' '}
-                                            {itemVoucher.VoucherExpiredDate.substr(
-                                                0,
-                                                10
-                                            )}
-                                        </Text>
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                                this.handleDeleteVoucher(
-                                                    itemVoucher
-                                                )
-                                            }>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between'
+                                            }}>
+                                            <Text style={styles.voucherDate}>
+                                                Hạn sử dụng đến:{' '}
+                                                {itemVoucher.VoucherExpiredDate.substr(
+                                                    0,
+                                                    10
+                                                )}
+                                            </Text>
                                             <Text
                                                 style={
                                                     styles.voucherCancelText
                                                 }>
                                                 Hủy dùng
                                             </Text>
-                                        </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
+                            </TouchableWithoutFeedback>
                         );
                     })}
             </ScrollView>
