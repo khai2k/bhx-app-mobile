@@ -5,18 +5,20 @@ const orderSuccessReducer = function (
     state = _state.orderSuccessState,
     action
 ) {
-    console.log('orderSuccessReducer');
-    console.log(state);
-    console.log(action);
     switch (action.type) {
         case _action.orderSuccessAction.ORDER_SUCCESS_GET:
             return {
                 ...state,
-                orderSucces: action.orderSuccessInfo.OrderSuccess
+                OrderInfo: action.orderInfo
+            };
+        case _action.orderSuccessAction.ORDER_SUCCESS_DELETE:
+            return {
+                ...state,
+                OrderInfo: action.orderInfo
             };
         default:
             return state;
     }
 };
 
-export { orderSuccesstReducer };
+export { orderSuccessReducer };

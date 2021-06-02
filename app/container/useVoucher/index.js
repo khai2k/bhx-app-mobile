@@ -19,12 +19,7 @@ class UseVoucher extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: '',
-            giftType: 0,
-            isPinCodeInput: 0,
-            voucherList: [],
-            voucherCart: {},
-            phoneInput: '0938727300',
+            phoneInput: '',
             voucherCodeInput: '',
             pinCodeInput: ''
         };
@@ -37,6 +32,7 @@ class UseVoucher extends Component {
     handleAlert(res) {
         if (res.HttpCode == 400 || res.HttpCode == 404) {
             showMessage({
+                position: 'center',
                 message: res.Message,
                 type: 'default',
                 backgroundColor: 'purple',
@@ -45,6 +41,7 @@ class UseVoucher extends Component {
         }
         if (res.HttpCode == 200) {
             showMessage({
+                position: 'center',
                 message: 'Áp dụng phiếu mua hàng thành công!',
                 type: 'default',
                 backgroundColor: 'purple',
@@ -53,6 +50,7 @@ class UseVoucher extends Component {
         }
         if (res.HttpCode == 100) {
             showMessage({
+                position: 'center',
                 message: res.Message,
                 type: 'default',
                 backgroundColor: 'purple',
@@ -101,6 +99,7 @@ class UseVoucher extends Component {
             })
             .catch((err) => {
                 showMessage({
+                    position: 'center',
                     message: err.Message,
                     type: 'default',
                     backgroundColor: 'purple',
@@ -115,6 +114,7 @@ class UseVoucher extends Component {
             .then((res) => {
                 this.fetchVoucher();
                 showMessage({
+                    position: 'center',
                     message: res.Message,
                     type: 'default',
                     backgroundColor: 'purple',
@@ -123,6 +123,7 @@ class UseVoucher extends Component {
             })
             .catch((err) => {
                 showMessage({
+                    position: 'center',
                     message: err.Message,
                     type: 'default',
                     backgroundColor: 'purple',
@@ -323,6 +324,19 @@ class UseVoucher extends Component {
         );
     }
 
+    _renderCloseContainer() {
+        if (!this.state.voucherList) {
+            return (
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.goBack()}>
+                    <View style={styles.closeButton}>
+                        <Text style={styles.closeButtonText}>Đóng</Text>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+    }
+
     _renderSubmitContainer() {
         if (this.state.voucherList) {
             return (
@@ -354,20 +368,6 @@ class UseVoucher extends Component {
                 </>
             );
         }
-    }
-
-    _renderCloseContainer() {
-        if (!this.state.voucherList) {
-            return (
-                <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}>
-                    <View style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>Đóng</Text>
-                    </View>
-                </TouchableOpacity>
-            );
-        }
-        return null;
     }
 
     _renderFooterContainer() {
@@ -419,5 +419,5 @@ const mapDispatchToProps = (dispatch) => {
         actionVoucher: bindActionCreators(voucherCreator, dispatch)
     };
 };
-// make this component available to the app
+
 export default connect(mapStateToProps, mapDispatchToProps)(UseVoucher);

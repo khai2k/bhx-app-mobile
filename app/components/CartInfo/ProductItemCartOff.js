@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Colors, Typography, Mixins } from '@app/styles';
+import { Colors, Typography, Mixins, StyleGeneral } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
 import {
@@ -22,6 +22,7 @@ import * as cartCreator from '@app/redux/actions/cartAction';
 const ProductItemCartOff = (props) => {
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
+    // eslint-disable-next-line no-unused-vars
     const [guildId, setguildId] = useState(props.productCart.GuildId);
 
     const actionRemoveItemProduct = () => {
@@ -47,15 +48,15 @@ const ProductItemCartOff = (props) => {
                 <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
                 <ModalFooter>
                     <ModalButton
-                        textStyle={styles.btnAlertClose}
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
                         text="Không xóa"
                         onPress={() => {
                             ModalPortal.dismiss(modalPortalId);
                         }}
                     />
                     <ModalButton
-                        style={styles.btnAlert}
-                        textStyle={styles.btnAlertText}
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
                         text="Đồng ý"
                         onPress={() => {
                             actionRemoveItemProduct();
@@ -118,15 +119,6 @@ const styles = StyleSheet.create({
     boxprice: {
         flexDirection: 'column',
         width: 100
-    },
-    btnAlert: {
-        backgroundColor: Colors.GREEN_KEY
-    },
-    btnAlertClose: {
-        color: Colors.GRAY_ALERT_CLOSE
-    },
-    btnAlertText: {
-        color: Colors.WHITE
     },
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,

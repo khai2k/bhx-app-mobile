@@ -22,7 +22,7 @@ export const voucher_add = function (
     return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 Code: voucherCodeInput,
@@ -48,6 +48,7 @@ export const voucher_add = function (
                 .catch((error) => {
                     console.log(error);
                     reject(error);
+                    dispatch({ type: DATA_LOADED });
                 });
         });
     };
@@ -57,7 +58,7 @@ export const voucher_get = function () {
     return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 PhoneNumber: '',
@@ -82,6 +83,7 @@ export const voucher_get = function () {
                 .catch((error) => {
                     console.log(error);
                     reject(error);
+                    dispatch({ type: DATA_LOADED });
                 });
         });
     };
@@ -92,7 +94,7 @@ export const voucher_delete = function (code, giftType) {
     return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
-            const location = getState().generalReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 token: '',
@@ -122,6 +124,7 @@ export const voucher_delete = function (code, giftType) {
                 .catch((error) => {
                     console.log(error);
                     reject(error);
+                    dispatch({ type: DATA_LOADED });
                 });
         });
     };
