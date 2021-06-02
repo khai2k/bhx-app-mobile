@@ -25,6 +25,8 @@ import { helper } from '@app/common';
 //  import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
 import styles from './style';
+import { StyleGeneral } from '@app/styles';
+
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -32,6 +34,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import {
+    ModalPortal,
+    ModalFooter,
+    ModalTitle,
+    ModalButton
+} from 'react-native-modals';
 
 const UserInfoCart = (props) => {
     useEffect(() => {
@@ -106,33 +114,65 @@ const UserInfoCart = (props) => {
 
     // Validate Error
     const [phoneErrMessage, setphoneErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_PHONE
+        // CONST_STRINGERR.EMPTY_PHONE
+        ""
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_PHONE
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_CUSNAME
+        // CONST_STRINGERR.EMPTY_CUSNAME
+        ""
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_CUSNAME
     );
     const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_SHIPADDRESS
+        // CONST_STRINGERR.EMPTY_SHIPADDRESS
+        ""
     );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
     const [districtSelected, setdistrictSelected] = useState(-1);
     const [wardSelected, setwardSelected] = useState(-1);
 
+    const alert = (message) => {
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalTitle title={message} />
+                <ModalFooter>
+                    <ModalButton
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
+            {
+                animationDuration: 0,
+                onHardwareBackPress: () => {
+                    return true;
+                }
+            }
+        );
+    };
+
     const onSubmitForm = () => {
         const formError = validateForm();
         if (formError === '') {
+            setisLoading(true);
+            debugger;
             actionCart.cart_submit(cartmodel).then((res) => {
-                Alert.alert(res.Message);
+                setisLoading(false);
+                if (res.HttpCode == 200) {
+                    this.props.navigation.navigate('OrderSuccess');
+                } else alert(res.Message);
             });
             return;
-        } else Alert.alert(formError);
+        } else alert(formError);
     };
 
     const validateForm = () => {
@@ -140,12 +180,23 @@ const UserInfoCart = (props) => {
             return 'Data không chính xác!';
         }
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
+        cartmodel.Cart.Note = cartUserInfo.Note;
+
         if (helper.isEmptyOrNull(phoneErrMessage) == false) {
             return phoneErrMessage;
         }
+        if(helper.isEmptyOrNull(cartUserInfo.CustomerPhone)){
+            handleErrorPhone(cartUserInfo.CustomerPhone);
+            return CONST_STRINGERR.EMPTY_PHONE;
+        }
         cartmodel.Cart.CustomerPhone = cartUserInfo.CustomerPhone;
+
         if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
             return cusNameErrMessage;
+        }
+        if(helper.isEmptyOrNull(cartUserInfo.CustomerName)){
+            handleErrorCusName(cartUserInfo.CustomerName);
+            return CONST_STRINGERR.EMPTY_CUSNAME;
         }
         cartmodel.Cart.CustomerName = cartUserInfo.CustomerName;
         if (provinceSelected <= 0) {
@@ -163,17 +214,74 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
             return cusAddressErrMessage;
         }
+        if(helper.isEmptyOrNull(cartUserInfo.ShipAddress)){
+            handleErrorCusAddress(cartUserInfo.ShipAddress);
+            return CONST_STRINGERR.EMPTY_SHIPADDRESS;
+        }
         cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
         if (dateSelected == '' || dateSelected == null) {
             return 'Vui lòng chọn ngày nhận hàng';
         }
         cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
+        cartmodel.SelectedShipTimeList[0].IsDateSelectedByCus = true;
         if (timeSelected == '' || timeSelected == null) {
             return 'Vui lòng chọn thời gian nhận hàng';
         }
-        cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
+        //cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
+        let errSelectTime = SelectTime(0, timeSelected);
+        if (errSelectTime !== '') {
+            return errSelectTime;
+        }
         return '';
     };
+
+    const DeliveryType = {
+        NORMAL_4_HOURS: 141,
+        NORMAL: -1,
+        FAST_2_HOURS: 261,
+        ONLINE_FIVE_BILLION: 301
+    };
+
+    const SelectTime = (index, timevalue) => {
+        debugger;
+        if (
+            cartmodel == null ||
+            cartmodel.ProfileItems.Count == 0 ||
+            cartmodel.Cart === null
+        )
+            return 'Giỏ hàng của bạn đã hết thời gian hiệu lực, mời bạn chọn lại sản phẩm';
+        if (
+            index >= cartmodel.SelectedShipTimeList.length ||
+            helper.isEmptyOrNull(timevalue)
+        ) {
+            return 'Không thể cập nhật giờ giao hàng, vui lòng thử lại';
+        }
+
+        var deliveryTypeId = DeliveryType.NORMAL_4_HOURS;
+        var timeselect = '';
+        var isApartment = 1;
+        //kiểm tra nếu value có gắn delivery thì xử lý
+        if (timevalue.length > 3) {
+            deliveryTypeId = parseInt(timevalue.substr(0, 3));
+            if (deliveryTypeId <= 0)
+                deliveryTypeId = parseInt(DeliveryType.NORMAL_4_HOURS);
+            timeselect = timevalue.substr(3, 2);
+            if (timevalue.Length > 5) {
+                isApartment = parseInt(timevalue.substr(5, 1));
+            }
+        }
+
+        cartmodel.Cart.DeliveryTypeId = deliveryTypeId;
+        cartmodel.SelectedShipTimeList[index].TimeSelected = timeselect;
+        cartmodel.SelectedShipTimeList[index].DeliveryTypeSelected =
+            deliveryTypeId;
+        cartmodel.SelectedShipTimeList[index].IsApartmentSelected = isApartment;
+        if (isApartment == 0 && cartmodel.Cart.IsApartment) {
+            return 'Rất tiếc, khung giờ giao hiện tại, không đảm bảo cho việc giao chung cư. Quý khách vui lòng Bỏ chọn giao chung cư hoặc Chọn lại khung giờ khác';
+        }
+        return '';
+    };
+
     const handleErrorPhone = (value) => {
         if (helper.isEmptyOrNull(value)) {
             setphoneErrMessage(CONST_STRINGERR.EMPTY_PHONE);
@@ -212,14 +320,25 @@ const UserInfoCart = (props) => {
 
     const [isVisibleDatePicker, setisVisibleDatePicker] = useState(false);
     const [isVisibleTimePicker, setisVisibleTimePicker] = useState(false);
+    useEffect(() => {}, isVisibleDatePicker);
+    useEffect(() => {}, isVisibleTimePicker);
 
     const chosenDeliDate = () => {
         const isActive =
-            shipdatetime !== undefined && shipdatetime !== null &&
+            shipdatetime !== undefined &&
+            shipdatetime !== null &&
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
         const listDeliDate = [
-            { label: 'Ngày nhận', value: '-1', selected: dateSelected === null || dateSelected === null ||  dateSelected == '-1', disabled: true }
+            {
+                label: 'Ngày nhận',
+                value: '-1',
+                selected:
+                    dateSelected === null ||
+                    dateSelected === null ||
+                    dateSelected == '-1',
+                disabled: true
+            }
         ];
         if (isActive)
             shipdatetime[0]?.DateList.forEach((element) => {
@@ -265,7 +384,12 @@ const UserInfoCart = (props) => {
                 dropDownStyle={{ backgroundColor: '#fff' }}
                 isVisible={isVisibleDatePicker}
                 onOpen={() => {
+                    setisVisibleDatePicker(true);
                     setisVisibleTimePicker(false);
+                }}
+                onClose={() => {
+                    setisVisibleDatePicker(false);
+                    setisVisibleTimePicker(true);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     if (itemValue.value > 0) {
@@ -292,7 +416,10 @@ const UserInfoCart = (props) => {
             {
                 label: 'Thời gian nhận',
                 value: '-1',
-                selected: timeSelected == '' || timeSelected == null || timeSelected == '-1',
+                selected:
+                    timeSelected == '' ||
+                    timeSelected == null ||
+                    timeSelected == '-1',
                 disabled: true
             }
         ];
@@ -305,11 +432,11 @@ const UserInfoCart = (props) => {
                     helper.formatMoney(element.shippingcost) +
                     '","value": "' +
                     element.id +
-                    // '","disabled": "' +
-                    // element.disabled +
-                    '","selected": "' +
+                    '","disabled": ' +
+                    element.disabled +
+                    ',"selected": ' +
                     (element.id == timeSelected) +
-                    '"}';
+                    '}';
                 listDeliTime.push(JSON.parse(temp));
             });
         return (
@@ -321,7 +448,6 @@ const UserInfoCart = (props) => {
                 activeLabelStyle={{
                     color: '#39739d'
                 }}
-                
                 labelStyle={{
                     fontSize: 14,
                     textAlign: 'left',
@@ -332,12 +458,15 @@ const UserInfoCart = (props) => {
                     marginHorizontal: 10,
                     marginTop: 10
                 }}
+                activeValue={timeSelected}
                 style={[
                     styles.borderRadius,
                     {
                         backgroundColor: '#fff',
                         borderColor:
-                            timeSelected == '' || timeSelected == null || timeSelected == '-1'
+                            timeSelected == '' ||
+                            timeSelected == null ||
+                            timeSelected == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
@@ -348,12 +477,22 @@ const UserInfoCart = (props) => {
                     color: '#000'
                 }}
                 dropDownStyle={{ backgroundColor: '#fff' }}
-                isVisible={false}
+                isVisible={isVisibleTimePicker}
                 onOpen={() => {
+                    setisVisibleTimePicker(true);
+                    setisVisibleDatePicker(false);
+                }}
+                onClose={() => {
+                    setisVisibleTimePicker(false);
                     setisVisibleDatePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
-                    settimeSelected(itemValue.value);
+                    debugger;
+                    if(itemValue.disabled == true){
+                        settimeSelected('-1');
+                        setisVisibleTimePicker(true);
+                    }else
+                        settimeSelected(itemValue.value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -739,7 +878,11 @@ const UserInfoCart = (props) => {
                                 ...previousState,
                                 ShipWard: itemValue > 0 ? itemValue : 0
                             }));
-                            getCart(provinceSelected,districtSelected, wardSelected);
+                            getCart(
+                                provinceSelected,
+                                districtSelected,
+                                wardSelected
+                            );
                         }}
                         style={{
                             height: 50,
@@ -850,7 +993,6 @@ const UserInfoCart = (props) => {
             <ScrollView
                 style={[
                     styles.container,
-                    { zIndex: 10 },
                     isLoading
                         ? {
                               width: windowWidth,
@@ -1005,6 +1147,7 @@ const UserInfoCart = (props) => {
                         {boxCallOther()}
                     </View>
                 </View>
+                <View style={styles.blockPadding}></View>
                 <View style={styles.sectionInput}>
                     <Text style={styles.stepTitle}>
                         2. Chọn thời gian nhận hàng
@@ -1029,6 +1172,7 @@ const UserInfoCart = (props) => {
                         </Text>
                     </Text>
                 </View>
+                <View style={styles.blockPadding}></View>
                 <View style={styles.sectionInput}>
                     <View style={styles.checkboxContainer}>
                         <CheckBox
@@ -1047,6 +1191,12 @@ const UserInfoCart = (props) => {
                         multiline
                         editable
                         maxLength={150}
+                        onChangeText={(value) => {
+                            setCartUserInfo((previousState) => ({
+                                ...previousState,
+                                Note: value
+                            }));
+                        }}
                     />
                 </View>
                 <CartTotal cartInfo={cartTotal} />

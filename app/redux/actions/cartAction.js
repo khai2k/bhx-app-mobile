@@ -73,7 +73,6 @@ export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
     Cart.IsAdding = false;
     Cart.IsEditing = false;
-    Cart.FirstEdit = false;
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
@@ -83,9 +82,9 @@ export const cart_submit = function (Cart) {
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: Cart.ShipProvince,
-                districtId: Cart.ShipDistrict,
-                wardId: Cart.ShipWard,
+                provinceId: Cart.Cart.ShipProvince,
+                districtId: Cart.Cart.ShipDistrict,
+                wardId: Cart.Cart.ShipWard,
                 storeId: location.StoreId,
                 data: Cart
             };
