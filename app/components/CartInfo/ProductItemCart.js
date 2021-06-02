@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Colors, Typography, Mixins } from '@app/styles';
+import { Colors, Typography, Mixins, StyleGeneral } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
@@ -172,15 +172,15 @@ const ProductItemCart = (props) => {
                 <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
                 <ModalFooter>
                     <ModalButton
-                        textStyle={styles.btnAlertClose}
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
                         text="Không xóa"
                         onPress={() => {
                             ModalPortal.dismiss(modalPortalId);
                         }}
                     />
                     <ModalButton
-                        style={styles.btnAlert}
-                        textStyle={styles.btnAlertText}
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
                         text="Đồng ý"
                         onPress={() => {
                             actionRemoveItemProduct();
@@ -462,15 +462,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginRight: 8,
         width: 100
-    },
-    btnAlert: {
-        backgroundColor: Colors.GREEN_KEY
-    },
-    btnAlertClose: {
-        color: Colors.GRAY_ALERT_CLOSE
-    },
-    btnAlertText: {
-        color: Colors.WHITE
     },
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
