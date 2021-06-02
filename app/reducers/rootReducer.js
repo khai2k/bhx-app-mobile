@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { loginReducer } from '../container/login/reducer';
 import { authenReducer } from '../container/splash/reducer';
-// import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
+import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
 // import { cartReducer } from '../container/cart/reducer';
 // import { categoryReducer } from '../container/group/reducer';
 import { locationReducer } from '../components/Location/reducer';
@@ -21,8 +21,8 @@ const appReducer = combineReducers({
     menuReducer,
     productDetailReducer,
     promotionReducer,
-    voucherReducer
-    // orderSuccessReducer
+    voucherReducer,
+    orderSuccessReducer
 });
 const rootReducer = (state, action) => {
     // when a logout action is dispatched it will reset redux state
