@@ -29,7 +29,7 @@ class App extends Component {
                     </Provider>
                 </View>
                 <CodePushUpdate />
-                <FlashMessage position="center" />
+                <FlashMessage />
             </SafeAreaProvider>
         );
     }
