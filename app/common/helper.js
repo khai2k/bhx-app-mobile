@@ -89,6 +89,15 @@ export function isEmptyOrNull(obj) {
     return obj === undefined || obj === null || obj === '';
 }
 
+export function isEmptyObjectOrNull(obj) {
+    if (obj === null) {
+        return true;
+    }
+    const keys = Object.keys(obj);
+    console.log(keys.length);
+    return keys.length === 0 || obj === null;
+}
+
 // Return Boolean
 export function IsValidateObject(object) {
     return object !== undefined && object !== null;

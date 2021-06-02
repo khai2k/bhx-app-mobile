@@ -4,7 +4,7 @@ import { authenReducer } from '@app/container/splash/reducer';
 import { orderSuccessReducer } from '../../container/OrderSuccess/reducer';
 import { homeReducer } from '@app/container/product/reducer';
 import { menuReducer } from '@app/components/NavMenu/reducer';
-import { productDetailReducer } from '@app/container/productDetail/reducer';
+import { productDetailReducer } from './productDetailReducer';
 import { promotionReducer } from './promotionReducer';
 import { searchReducer } from './searchReducer';
 import { generalReducer } from './generalReducer';
