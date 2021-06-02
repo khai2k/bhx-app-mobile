@@ -172,7 +172,7 @@ const BoxOption = (props) => {
                 ) : (
                     <View>
                         {isSaleOnly ? (
-                            <View style={styles.boxBuy}>
+                            <View style={[styles.boxBuy, styles.boxBuyBorder]}>
                                 <Text style={styles.ExpiredText}>
                                     {' '}
                                     {Sales['6613'].ExpiredText === ''
@@ -181,7 +181,9 @@ const BoxOption = (props) => {
                                 </Text>
                             </View>
                         ) : (
-                            <View className="boxBuy" style={styles.boxBuy}>
+                            <View
+                                className="boxBuy"
+                                style={[styles.boxBuy, styles.boxBuyBorder]}>
                                 {webStatusId === 3 ? (
                                     <View
                                         className="priceInfo"

@@ -12,9 +12,12 @@ import {
     View,
     TouchableWithoutFeedback
 } from 'react-native';
-import YoutubePlayer from 'react-native-youtube-iframe';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import * as COLOR from '@app/styles/colors';
 import ImageZoom from 'react-native-image-pan-zoom';
-import Slide from './Slide';
+import ZoomButton from './ZoomButton';
+
+import PlayerYoutube from './PlayerYoutube';
 import styles from './image-viewer.style';
 import defaultProps from './defaultProps';
 
@@ -72,7 +75,7 @@ class ImageViewer extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.index !== this.props.index) {
             this.loadImage(this.props.index || 0);
-            console.log('componentDidUpdate');
+
             this.jumpToCurrentImage();
 
             Animated.timing(this.fadeAnim, {
@@ -105,10 +108,8 @@ class ImageViewer extends React.Component {
                 imageSizes
             },
             () => {
-                console.log(nextProps, 'nextPropsnextPropsnextProps');
                 this.loadImage(nextProps.index || 0);
 
-                console.log('init');
                 this.jumpToCurrentImage();
 
                 Animated.timing(this.fadeAnim, {
@@ -134,14 +135,12 @@ class ImageViewer extends React.Component {
     };
 
     jumpToCurrentImage() {
-        console.log('jump----', this.state.currentShowIndex);
         this.positionXNumber =
             this.width *
             (this.state.currentShowIndex || 0) *
             (I18nManager.isRTL ? 1 : -1);
         this.standardPositionX = this.positionXNumber;
         this.positionX.setValue(this.positionXNumber);
-        console.log(this.standardPositionX);
     }
 
     loadImage(index) {
@@ -412,27 +411,235 @@ class ImageViewer extends React.Component {
         const screenHeight = this.height;
 
         const ImageElements = this.props.imageUrls.map((image, index) => {
-            return (
-                <Slide
-                    {...this.props}
-                    imageRefs={this.imageRefs}
-                    index={index}
-                    state={this.state}
-                    image={image}
-                    styles={styles}
-                    screenWidth={screenWidth}
-                    screenHeight={screenHeight}
-                    handleResponderRelease={this.handleResponderRelease}
-                    handleHorizontalOuterRangeOffset={
+            const handleScaleX = (isZooming) => {
+                if (!isZooming) {
+                    this.imageRefs[this.state.currentShowIndex] &&
+                        this.imageRefs[this.state.currentShowIndex].reset();
+                } else {
+                    this.imageRefs[this.state.currentShowIndex] &&
+                        this.imageRefs[this.state.currentShowIndex].centerOn({
+                            x: 0,
+                            y: 0,
+                            scale: 2
+                        });
+                }
+            };
+            if (
+                (this.state.currentShowIndex || 0) > index + 1 ||
+                (this.state.currentShowIndex || 0) < index - 1
+            ) {
+                return (
+                    <View
+                        key={index}
+                        style={{ width: screenWidth, height: screenHeight }}
+                    />
+                );
+            }
+
+            if (!this.handleLongPressWithIndex.has(index)) {
+                this.handleLongPressWithIndex.set(
+                    index,
+                    this.handleLongPress.bind(this, image)
+                );
+            }
+
+            let width =
+                this.state.imageSizes[index] &&
+                this.state.imageSizes[index].width;
+            let height =
+                this.state.imageSizes[index] &&
+                this.state.imageSizes[index].height;
+            const imageInfo = this.state.imageSizes[index];
+
+            if (!imageInfo || !imageInfo.status) {
+                return (
+                    <View
+                        key={index}
+                        style={{ width: screenWidth, height: screenHeight }}
+                    />
+                );
+            }
+
+            // 如果宽大于屏幕宽度,整体缩放到宽度是屏幕宽度
+            if (width > screenWidth) {
+                const widthPixel = screenWidth / width;
+                width *= widthPixel;
+                height *= widthPixel;
+            }
+
+            // 如果此时高度还大于屏幕高度,整体缩放到高度是屏幕高度
+            if (height > screenHeight) {
+                const HeightPixel = screenHeight / height;
+                width *= HeightPixel;
+                height *= HeightPixel;
+            }
+
+            const Wrapper = ({ children, ...others }) => (
+                <ImageZoom
+                    cropWidth={this.width}
+                    cropHeight={this.height}
+                    maxOverflow={this.props.maxOverflow}
+                    horizontalOuterRangeOffset={
                         this.handleHorizontalOuterRangeOffset
                     }
-                    handleLongPress={this.handleLongPress}
-                    handleLongPressWithIndex={this.handleLongPressWithIndex}
-                    handleClick={this.handleClick}
-                    handleDoubleClick={this.handleDoubleClick}
-                    handleSwipeDown={this.handleSwipeDown}
-                />
+                    responderRelease={this.handleResponderRelease}
+                    onMove={this.props.onMove}
+                    onLongPress={this.handleLongPressWithIndex.get(index)}
+                    onClick={this.handleClick}
+                    onDoubleClick={this.handleDoubleClick}
+                    enableSwipeDown={this.props.enableSwipeDown}
+                    swipeDownThreshold={this.props.swipeDownThreshold}
+                    onSwipeDown={this.handleSwipeDown}
+                    pinchToZoom={this.props.enableImageZoom}
+                    enableDoubleClickZoom={this.props.enableImageZoom}
+                    doubleClickInterval={this.props.doubleClickInterval}
+                    {...others}>
+                    {children}
+                </ImageZoom>
             );
+            switch (imageInfo.status) {
+                case 'loading':
+                    return (
+                        <Wrapper
+                            key={index}
+                            style={{
+                                ...this.styles.modalContainer,
+                                ...this.styles.loadingContainer
+                            }}
+                            imageWidth={screenWidth}
+                            imageHeight={screenHeight}>
+                            <View style={this.styles.loadingContainer}>
+                                {this.props.loadingRender()}
+                            </View>
+                        </Wrapper>
+                    );
+                case 'success':
+                    if (!image.props) {
+                        image.props = {};
+                    }
+
+                    if (!image.props.style) {
+                        image.props.style = {};
+                    }
+                    image.props.style = {
+                        ...this.styles.imageStyle, // User config can override above.
+                        ...image.props.style,
+                        width,
+                        height
+                    };
+
+                    if (typeof image.props.source === 'number') {
+                        // source = require(..), doing nothing
+                    } else {
+                        if (!image.props.source) {
+                            image.props.source = {};
+                        }
+                        image.props.source = {
+                            uri: image.url,
+                            ...image.props.source
+                        };
+                    }
+                    if (this.props.enablePreload) {
+                        this.preloadImage(this.state.currentShowIndex || 0);
+                    }
+                    const onStateChange = () => {
+                        if (state === 'ended') {
+                            setPlaying(false);
+                            Alert.alert('video has finished playing!');
+                        }
+                    };
+                    const togglePlaying = () => {
+                        this.setState({ playing: !this.state.playing });
+                    };
+                    const isEmbedVideo = false;
+
+                    return (
+                        <View>
+                            {image.LinkVideo !== null && (
+                                <PlayerYoutube
+                                    index={index}
+                                    currentShowIndex={
+                                        this.state.currentShowIndex
+                                    }
+                                    LinkVideo={image.LinkVideo}
+                                />
+                            )}
+                            {image.LinkVideo == null && (
+                                <ZoomButton handleScaleX={handleScaleX} />
+                            )}
+                            <ImageZoom
+                                key={index}
+                                ref={(el) => (this.imageRefs[index] = el)}
+                                cropWidth={this.width}
+                                cropHeight={this.height}
+                                maxOverflow={this.props.maxOverflow}
+                                horizontalOuterRangeOffset={
+                                    this.handleHorizontalOuterRangeOffset
+                                }
+                                responderRelease={this.handleResponderRelease}
+                                onMove={this.props.onMove}
+                                onLongPress={this.handleLongPressWithIndex.get(
+                                    index
+                                )}
+                                onClick={this.handleClick}
+                                onDoubleClick={this.handleDoubleClick}
+                                imageWidth={width}
+                                imageHeight={height}
+                                enableSwipeDown={this.props.enableSwipeDown}
+                                swipeDownThreshold={
+                                    this.props.swipeDownThreshold
+                                }
+                                onSwipeDown={this.handleSwipeDown}
+                                panToMove={!this.state.isShowMenu}
+                                pinchToZoom={
+                                    this.props.enableImageZoom &&
+                                    !this.state.isShowMenu
+                                }
+                                enableDoubleClickZoom={
+                                    this.props.enableImageZoom &&
+                                    !this.state.isShowMenu
+                                }
+                                doubleClickInterval={
+                                    this.props.doubleClickInterval
+                                }
+                                minScale={this.props.minScale}
+                                maxScale={this.props.maxScale}>
+                                {this.props.renderImage(image.props)}
+                            </ImageZoom>
+                        </View>
+                    );
+                case 'fail':
+                    return (
+                        <Wrapper
+                            key={index}
+                            style={this.styles.modalContainer}
+                            imageWidth={
+                                this.props.failImageSource
+                                    ? this.props.failImageSource.width
+                                    : screenWidth
+                            }
+                            imageHeight={
+                                this.props.failImageSource
+                                    ? this.props.failImageSource.height
+                                    : screenHeight
+                            }>
+                            {this.props.failImageSource &&
+                                this.props.renderImage({
+                                    source: {
+                                        uri: this.props.failImageSource.url
+                                    },
+                                    style: {
+                                        width: this.props.failImageSource.width,
+                                        height: this.props.failImageSource
+                                            .height
+                                    }
+                                })}
+                        </Wrapper>
+                    );
+
+                default:
+                    break;
+            }
         });
 
         return (
@@ -446,14 +653,26 @@ class ImageViewer extends React.Component {
 
                     <View style={this.styles.arrowLeftContainer}>
                         <TouchableWithoutFeedback onPress={this.goBack}>
-                            <View>{this.props.renderArrowLeft()}</View>
+                            <View
+                                style={[
+                                    this.styles.btnChangeSlider,
+                                    this.styles.btnChangeSliderPrevious
+                                ]}>
+                                {this.props.renderArrowLeft()}
+                            </View>
                         </TouchableWithoutFeedback>
                     </View>
 
                     <View style={this.styles.arrowRightContainer}>
-                        <TouchableWithoutFeedback onPress={this.goNext}>
-                            <View>{this.props.renderArrowRight()}</View>
-                        </TouchableWithoutFeedback>
+                        <TouchableOpacity onPress={this.goNext}>
+                            <View
+                                style={[
+                                    this.styles.btnChangeSlider,
+                                    this.styles.btnChangeSliderNext
+                                ]}>
+                                {this.props.renderArrowRight()}
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
                     <Animated.View

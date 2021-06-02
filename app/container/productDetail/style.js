@@ -27,12 +27,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomLeftRadius: 7,
         borderBottomRightRadius: 7,
-        borderTopColor: Colors.CATSKILL_WHITE,
-        borderTopWidth: 1,
+
         height: 35,
         justifyContent: 'center',
         position: 'relative',
         width: '100%'
+    },
+    boxBuyBorder: {
+        borderTopColor: Colors.CATSKILL_WHITE,
+        borderTopWidth: 1
     },
     buy: {
         alignItems: 'center',

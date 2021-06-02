@@ -10,6 +10,8 @@ import {
     useWindowDimensions,
     Image
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { helper } from '@app/common';
 import * as COLOR from '@app/styles/colors';
 import HTML from 'react-native-render-html';
@@ -125,13 +127,24 @@ const ProductArticle = (props) => {
                                     }}>
                                     {!isShowMore &&
                                         ProductArticle.length > 1000 && (
-                                            <Text
-                                                style={{ color: 'green' }}
-                                                onPress={() =>
-                                                    setIsShowMore(true)
-                                                }>
-                                                Xem thêm ^
-                                            </Text>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center'
+                                                }}>
+                                                <Text
+                                                    style={{ color: 'green' }}
+                                                    onPress={() =>
+                                                        setIsShowMore(true)
+                                                    }>
+                                                    {`Xem thêm `}
+                                                </Text>
+                                                <Icon
+                                                    name="chevron-down"
+                                                    size={10}
+                                                    color="green"
+                                                />
+                                            </View>
                                         )}
                                 </View>
                             </View>
