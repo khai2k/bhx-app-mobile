@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { SafeAreaView, ActivityIndicator, View } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -9,7 +9,7 @@ import { helper } from '@app/common';
 import Filter from './Filter';
 import Product from './Product';
 
-class Group extends Component {
+class Group extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

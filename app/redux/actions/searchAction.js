@@ -20,12 +20,16 @@ export const search_get = function (body) {
             apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, body)
                 .then((response) => {
                     console.log('SEARCH_GET Data:', response);
-                    const searchInfo = response;
-                    dispatch({
-                        type: SEARCH_GET,
-                        searchInfo
-                    });
-                    resolve(response);
+                    if (response.HttpCode !== 200) {
+                        resolve(response);
+                    } else {
+                        const searchInfo = response;
+                        dispatch({
+                            type: SEARCH_GET,
+                            searchInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);

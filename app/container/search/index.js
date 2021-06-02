@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { SafeAreaView, ActivityIndicator, View } from 'react-native';
+import { SafeAreaView, ActivityIndicator, View, Alert } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
 import * as searchCreator from '@app/redux/actions/searchAction';
 import { helper } from '@app/common';
+import { useNavigation } from '@react-navigation/native';
 import Product from './Product';
 
-class Search extends Component {
+class Search extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,6 +18,7 @@ class Search extends Component {
     }
 
     async componentDidMount() {
+        const navigation = useNavigation();
         const option = {
             key: this.props.route.params.url,
             provinceId:
@@ -32,7 +34,15 @@ class Search extends Component {
             phone: '',
             checkpromotion: true
         };
-        await this.props.actionSearch.search_get(option);
+        await this.props.actionSearch.search_get(option).then((res) => {
+            if (res.HttpCode !== 200) {
+                if (res.HttpCode === 302) {
+                    navigation.navigate('Group', { url: res.Message });
+                } else {
+                    Alert(res.Message);
+                }
+            }
+        });
         this.setState({ isLoading: false });
     }
 

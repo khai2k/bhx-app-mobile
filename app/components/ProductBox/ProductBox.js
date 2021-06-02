@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/redux/actions/cartAction';
 import * as locationCreator from '@app/redux/actions/generalAction';
 import FastImage from 'react-native-fast-image';
+import { showMessage } from 'react-native-flash-message';
+import HTML from 'react-native-render-html';
 import BuyBox from './BuyBox';
 import styles from './style';
 
@@ -176,7 +178,10 @@ const ProductBox = (props) => {
                 });
     };
     const alertAPI = (messages) => {
-        Alert.alert('', messages);
+        showMessage({
+            message: messages,
+            type: 'danger'
+        });
     };
 
     return (

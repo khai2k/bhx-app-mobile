@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { useDispatch } from 'react-redux';
-import * as homeCreator from '@app/container/product/action';
+import * as homeCreator from '@app/redux/actions/homeAction';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import styles from './style';
 import ProductBox from '../../components/ProductBox/ProductBox';
@@ -63,7 +63,7 @@ const RenderLine = (props) => {
         return excludeProductIds;
     }
 
-    // Xem thêm sản phẩm của các line
+    // Xem thêm sản phẩm của các lines
     function GenMoreProduct() {
         const excludeProductIds = Get9ProductId();
 
@@ -192,7 +192,9 @@ const RenderLine = (props) => {
                 <View style={styles.boxLines}>
                     {products?.map((item) => {
                         return (
-                            <View style={styles.boxLine}>
+                            <View
+                                key={`product_${item.Id}`}
+                                style={styles.boxLine}>
                                 <ProductBox bhxProduct={item} />
                             </View>
                         );

@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, ActivityIndicator, ScrollView } from 'react-native';
+import {
+    View,
+    ActivityIndicator,
+    ScrollView,
+    SafeAreaView
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Header, LoadingCart } from '@app/components';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import * as homeCreator from './action';
+import * as homeCreator from '@app/redux/actions/homeAction';
 import ListCategories from './ListCategories';
 import SliderTitle from './SliderTitle';
 import RenderLine from './RenderLine';
@@ -149,28 +154,31 @@ class Product extends Component {
             );
         } else {
             return (
-                <ScrollView style={styles.body} onScroll={this.handleScroll}>
+                <SafeAreaView>
                     <Header navigation={this.props.navigation} />
-
                     <ListCategories listCate={this.state.listCategories} />
+                    <ScrollView
+                        style={styles.body}
+                        onScroll={this.handleScroll}>
+                        <SliderTitle listTitle={this.listTitle} />
 
-                    <SliderTitle listTitle={this.listTitle} />
-
-                    {/* Render line */}
-                    {this.state.homeData?.map((lineItem) => {
-                        return (
-                            <RenderLine
-                                lineItem={lineItem}
-                                action={this.props}
-                            />
-                        );
-                    })}
-                    <ActivityIndicator
-                        animating={this.state.showLoading}
-                        size="large"
-                        color="#008848"
-                    />
-                </ScrollView>
+                        {/* Render line */}
+                        {this.state.homeData?.map((lineItem) => {
+                            return (
+                                <RenderLine
+                                    key={`line_${lineItem.CategoryId}`}
+                                    lineItem={lineItem}
+                                    action={this.props}
+                                />
+                            );
+                        })}
+                        <ActivityIndicator
+                            animating={this.state.showLoading}
+                            size="large"
+                            color="#008848"
+                        />
+                    </ScrollView>
+                </SafeAreaView>
             );
         }
     }

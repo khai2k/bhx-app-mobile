@@ -170,7 +170,7 @@ const SuggestSearchModal = () => {
     };
     const addToCart = (productID, expStoreId) => {
         actionCart
-            .cart_add_item_product(productID, 1, expStoreId)
+            .cart_add_item_product(productID, 1, true, expStoreId)
             .then(async (res) => {
                 console.log('cart_add_item_product');
                 console.log(res);
