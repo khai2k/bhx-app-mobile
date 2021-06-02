@@ -6,7 +6,6 @@ import { Header } from '@app/components';
 import { Colors } from '@app/styles';
 import * as searchCreator from '@app/redux/actions/searchAction';
 import { helper } from '@app/common';
-import { useNavigation } from '@react-navigation/native';
 import Product from './Product';
 
 class Search extends PureComponent {
@@ -18,7 +17,6 @@ class Search extends PureComponent {
     }
 
     async componentDidMount() {
-        const navigation = useNavigation();
         const option = {
             key: this.props.route.params.url,
             provinceId: !helper.isEmptyOrNull(this.locationInfo)
@@ -30,15 +28,7 @@ class Search extends PureComponent {
             phone: '',
             checkpromotion: true
         };
-        await this.props.actionSearch.search_get(option).then((res) => {
-            if (res.HttpCode !== 200) {
-                if (res.HttpCode === 302) {
-                    navigation.navigate('Group', { url: res.Message });
-                } else {
-                    Alert(res.Message);
-                }
-            }
-        });
+        await this.props.actionSearch.search_get(option);
         this.setState({ isLoading: false });
     }
 
