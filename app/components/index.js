@@ -8,12 +8,13 @@ import CartTotal from './CartInfo/CartTotal';
 import CartEmpty from './CartInfo/CartEmpty';
 import LoadingCart from './CartInfo/LoadingCart';
 import Loading from './Loading';
-import AlertCart from './CartInfo/AlertCart';
+//  import AlertCart from './CartInfo/AlertCart';
+import UnderConstruction from './UnderConstruction';
 
 export {
     MyText,
     Header,
-    AlertCart,
+    //  AlertCart,
     ProductItemCart,
     ProductItemCartOff,
     LoadingCart,
@@ -21,5 +22,6 @@ export {
     CartEmpty,
     CartTotal,
     CodePushUpdate,
-    NavMenu
+    NavMenu,
+    UnderConstruction
 };

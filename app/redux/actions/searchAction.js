@@ -1,29 +1,29 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
 
-const CATEGORY_GET = 'CATEGORY_GET';
-const CATEGORY_FILTER = 'CATEGORY_FILTER';
+const SEARCH_GET = 'SEARCH_GET';
+const SEARCH_FILTER = 'SEARCH_FILTER';
 const SELECT_BRAND = 'SELECT_BRAND';
 const SELECT_PROPERTY = 'SELECT_PROPERTY';
 const SELECT_SORT = 'SELECT_SORT';
 
-export const categoryAction = {
-    CATEGORY_GET,
-    CATEGORY_FILTER,
+export const searchAction = {
+    SEARCH_GET,
+    SEARCH_FILTER,
     SELECT_BRAND,
     SELECT_PROPERTY,
     SELECT_SORT
 };
 
-export const category_get = function (option) {
+export const search_get = function (body) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            apiBase(API_CONST.API_CATEGORY_GET, METHOD.GET, null, option)
+            apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, body)
                 .then((response) => {
-                    console.log('CATEGORY_GET Data:', response);
-                    const categoryInfo = response.Value;
+                    console.log('SEARCH_GET Data:', response);
+                    const searchInfo = response;
                     dispatch({
-                        type: CATEGORY_GET,
-                        categoryInfo
+                        type: SEARCH_GET,
+                        searchInfo
                     });
                     resolve(response);
                 })
@@ -34,45 +34,41 @@ export const category_get = function (option) {
         });
     };
 };
-export const category_filter = (
-    categoryId,
+export const search_filter = (
+    key,
+    totalRecord,
     selectedBrandId = 0,
-    propertyIdList = '',
+    propertyId = 0,
     sort = 0,
+    filter = 0,
     pageIndex = 0,
     pageSize = 12,
-    phone = 0,
-    cateListFilter = '',
-    provinceId = 3,
-    storeId = 6463,
-    isLoadVideo = 'false',
-    isPromotion = 'false'
+    IsCheckPromo = 'false'
 ) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
+            const location = getState().locationReducer;
             const bodyApi = {
-                provinceId,
-                storeId,
-                data: {
-                    categoryId,
-                    selectedBrandId,
-                    phone,
-                    cateListFilter,
-                    propertyIdList,
-                    pageIndex,
-                    pageSize,
-                    isLoadVideo,
-                    isPromotion,
-                    sort
-                }
+                OriginalKey: key,
+                Key: key,
+                CategoryId: propertyId,
+                ManufactureID: selectedBrandId,
+                PageSize: pageSize,
+                PageIndex: pageIndex,
+                TotalRecord: totalRecord,
+                QuerySort: sort,
+                QueryFilter: filter,
+                provinceId: location.crrLocationRs.ProvinceId,
+                storeId: location.crrLocationRs.StoreId,
+                IsCheckPromo
             };
-            apiBase(API_CONST.API_CATEGORY_AJAX_PRODUCT, METHOD.POST, bodyApi)
+            apiBase(API_CONST.API_SEARCH_AJAXPRODUCT, METHOD.POST, bodyApi)
                 .then((response) => {
-                    console.log('API_CATEGORY_AJAX_PRODUCT Data:', response);
-                    const categoryInfo = response.Value;
+                    console.log('API_SEARCH_AJAXPRODUCT Data:', response);
+                    const searchInfo = response;
                     dispatch({
-                        type: CATEGORY_FILTER,
-                        categoryInfo
+                        type: SEARCH_FILTER,
+                        searchInfo
                     });
                     resolve(response);
                 })
@@ -83,6 +79,7 @@ export const category_filter = (
         });
     };
 };
+
 export const select_brand = (selectedBrandId) => {
     return (dispatch, getState) => {
         dispatch({

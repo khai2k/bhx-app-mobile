@@ -10,10 +10,11 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from 'react-native';
-import styles from './style';
 import { connect } from 'react-redux';
-import * as voucherCreator from './action';
 import { showMessage, hideMessage } from 'react-native-flash-message';
+import styles from './style';
+import * as voucherCreator from './action';
+
 class UseVoucher extends Component {
     constructor(props) {
         super(props);
@@ -34,7 +35,7 @@ class UseVoucher extends Component {
     }
 
     handleAlert(res) {
-        if (res.HttpCode == 400) {
+        if (res.HttpCode == 400 || res.HttpCode == 404) {
             showMessage({
                 message: res.Message,
                 type: 'default',
@@ -139,7 +140,8 @@ class UseVoucher extends Component {
                         onPress={() => this.props.navigation.goBack()}>
                         <Image
                             style={styles.closeImage}
-                            source={require('../../../assets/images/close.png')}></Image>
+                            source={require('../../../assets/images/close.png')}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>

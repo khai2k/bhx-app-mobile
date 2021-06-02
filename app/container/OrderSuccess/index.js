@@ -38,21 +38,12 @@ class OrderSuccess extends Component {
             method: 'post',
             url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult',
             data: {
-                token: '',
-                us: '',
-                provinceId: 3,
-                districtId: 51,
-                wardId: 10399,
-                storeId: 6463,
-                data: {
-                    ProvinceId: 3,
-                    DistrictId: 51,
-                    WardId: 10399,
-                    StoreId: 6463,
-                    Sc: '36453A19D07F4258AC18570F1960E391',
-                    OrderId: 43422249
-                },
-                IsMobile: true
+                ProvinceId: 3,
+                DistrictId: 2087,
+                WardId: 27125,
+                StoreId: 6463,
+                Sc: '928744E549D34998E5C1714628B1028C',
+                OrderId: 43633490
             }
         })
             .then((res) => {

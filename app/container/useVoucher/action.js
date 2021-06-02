@@ -19,18 +19,20 @@ export const voucher_add = function (
     voucherCodeInput,
     pinCodeInput
 ) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
+            const location = getState().generalReducer.Location.LocationInfo;
+            const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 Code: voucherCodeInput,
                 PingCode: pinCodeInput,
                 PhoneNumber: phoneInput,
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+                ProvinceId: location.provinceId,
+                DistrictId: location.DistrictId,
+                WardId: location.WardId,
+                StoreId: location.StoreId,
+                CartId: cartId
             };
             apiBase(API_CONST.API_REQUEST_ADD_VOUCHER, METHOD.POST, bodyApi)
                 .then((response) => {
@@ -52,21 +54,24 @@ export const voucher_add = function (
 };
 
 export const voucher_get = function () {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
+            const location = getState().generalReducer.Location.LocationInfo;
+            const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 PhoneNumber: '',
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+                ProvinceId: location.ProvinceId,
+                DistrictId: location.DistrictId,
+                WardId: location.WardId,
+                StoreId: location.StoreId,
+                CartId: cartId
             };
             apiBase(API_CONST.API_REQUEST_GET_VOUCHER, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('voucher_get data:', response);
                     const vouchersInfo = response;
+                    console.log(cartId);
                     dispatch({
                         type: VOUCHER_GET,
                         vouchersInfo
@@ -84,20 +89,22 @@ export const voucher_get = function () {
 
 export const voucher_delete = function (code, giftType) {
     console.log(code, giftType);
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch({ type: DATA_LOADING });
         return new Promise(async (resolve, reject) => {
+            const location = getState().generalReducer.Location.LocationInfo;
+            const cartId = getState().generalReducer.CartId;
             const bodyApi = {
                 token: '',
                 us: '',
-                provinceId: 3,
-                districtId: 2087,
-                wardId: 27125,
-                storeId: 6463,
+                ProvinceId: location.ProvinceId,
+                DistrictId: location.DistrictId,
+                WardId: location.WardId,
+                StoreId: location.StoreId,
                 data: {
                     Code: code,
                     GiftType: giftType,
-                    CartId: '93E9D79154B163C26FAA21C8E150B1289D4A1174E5E82DFA3A6E9E2994437430'
+                    CartId: cartId
                 },
                 IsMobile: true
             };

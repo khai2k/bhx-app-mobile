@@ -11,10 +11,17 @@ const styles = StyleSheet.create({
     },
     backTop: {
         alignItems: 'center',
+        backgroundColor: '#F5F8FD',
         display: 'flex',
         flexDirection: 'row',
         fontSize: 15,
-        padding: 5
+        padding: 6
+    },
+    borderRadius: {
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8
     },
     boxCallOther: {
         padding: 7
@@ -59,22 +66,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     container: {
-        backgroundColor: '#F1F4F9'
+        backgroundColor: '#fff'
     },
     delichoose: {
         borderColor: '#D6E0F5',
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
-        display: 'flex',
-        width: '100%'
+        display: 'flex'
     },
     disBox: {
-        borderColor: '#D6E0F5',
-        borderRadius: 4,
+        borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
-        marginBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
         position: 'relative'
@@ -120,7 +124,7 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         borderColor: '#D6E0F5',
-        borderRadius: 4,
+        borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
         padding: 10
@@ -170,11 +174,9 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     provBox: {
-        borderColor: '#D6E0F5',
-        borderRadius: 4,
+        borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
-        marginBottom: 15,
         paddingLeft: 10,
         paddingRight: 10,
         position: 'relative'
@@ -209,7 +211,7 @@ const styles = StyleSheet.create({
     sectionInput: {
         backgroundColor: '#fff',
         marginTop: 20,
-        padding: 10
+        paddingHorizontal: 10
     },
     sectionInputTop: {
         backgroundColor: '#fff',
@@ -251,12 +253,10 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     wardBox: {
-        borderColor: '#D6E0F5',
-        borderRadius: 4,
+        borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
         display: 'flex',
-        marginBottom: 15,
         marginTop: 10,
         paddingLeft: 10,
         paddingRight: 10,

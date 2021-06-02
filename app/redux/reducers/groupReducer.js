@@ -1,5 +1,5 @@
-import * as _state from './state';
-import * as _action from './action';
+import * as _state from '../store/groupStore';
+import * as _action from '../actions/groupAction';
 
 const categoryReducer = function (state = _state.categoryState, action) {
     switch (action.type) {

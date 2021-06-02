@@ -6,7 +6,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { translate } from '@app/translate';
-import { Header } from '@app/components';
 import { constants } from '../constants';
 import Profile from '../container/profile';
 import Product from '../container/product';
@@ -17,10 +16,10 @@ import Group from '../container/group';
 import Search from '../container/search';
 import Promotion from '../container/promotion';
 import Notification from '../container/notification';
-import NavMenu from '../components/NavMenu';
 import OrderSuccess from '../container/OrderSuccess';
 import SuggestSearch from '../container/SuggestSearch/md';
 import UseVoucher from '../container/useVoucher';
+import { UnderConstruction, NavMenu } from '../components';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -37,7 +36,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
-            <MainStack.Screen
+            <Drawer.Screen
                 name="ProductDetail"
                 component={ProductDetail}
                 options={({ route }) => {
@@ -46,6 +45,7 @@ const MainNavigator = () => {
                     return { headerShown: false };
                 }}
             />
+
             <MainStack.Screen
                 name="Cart"
                 component={Cart}
@@ -58,15 +58,6 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="UserInfo"
                 component={UserInfo}
-                options={({ route }) => {
-                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-                    console.log('route:', routeName);
-                    return { headerShown: false };
-                }}
-            />
-            <MainStack.Screen
-                name="NavMenu"
-                component={NavMenu}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);
@@ -112,6 +103,22 @@ const MainNavigator = () => {
             <MainStack.Screen
                 name="Search"
                 component={Search}
+                options={({ route }) => {
+                    const routeName = getFocusedRouteNameFromRoute(route) ?? '';
+                    console.log('route:', routeName);
+                    return { headerShown: false };
+                }}
+            />
+            <MainStack.Screen
+                name="UnderConstruction"
+                component={UnderConstruction}
+                options={() => {
+                    return { headerShown: false };
+                }}
+            />
+            <Drawer.Screen
+                name="NavMenu"
+                component={NavMenu}
                 options={({ route }) => {
                     const routeName = getFocusedRouteNameFromRoute(route) ?? '';
                     console.log('route:', routeName);

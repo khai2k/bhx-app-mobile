@@ -7,6 +7,12 @@ import HTML from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {
+    ModalPortal,
+    ModalFooter,
+    ModalTitle,
+    ModalButton
+} from 'react-native-modals';
+import {
     Text,
     View,
     TouchableOpacity,
@@ -82,7 +88,7 @@ const ProductItemCart = (props) => {
 
     const setQuantityMinus = () => {
         if (quantity <= 1) {
-            props.alert(guildId);
+            alertDeleteItemProduct();
         } else {
             setQuantity(quantity - 1);
             updateTempItemCart(quantity - 1);
@@ -161,16 +167,35 @@ const ProductItemCart = (props) => {
     };
 
     const alertDeleteItemProduct = () => {
-        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={styles.btnAlertClose}
+                        text="Không xóa"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                    <ModalButton
+                        style={styles.btnAlert}
+                        textStyle={styles.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            actionRemoveItemProduct();
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
             {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
+                animationDuration: 0,
+                onHardwareBackPress: () => {
+                    return true;
+                }
             }
-        ]);
+        );
     };
 
     const alertMaxQuantityItemProduct = () => {
@@ -437,6 +462,15 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginRight: 8,
         width: 100
+    },
+    btnAlert: {
+        backgroundColor: Colors.GREEN_KEY
+    },
+    btnAlertClose: {
+        color: Colors.GRAY_ALERT_CLOSE
+    },
+    btnAlertText: {
+        color: Colors.WHITE
     },
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,

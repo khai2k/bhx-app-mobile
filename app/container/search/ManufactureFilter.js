@@ -10,7 +10,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Colors } from '@app/styles';
-import * as searchCreator from '@app/container/search/action';
+import * as searchCreator from '@app/redux/actions/searchAction';
 import FilterPopup from './FilterPopup';
 
 const ManufactureFilter = (props) => {
