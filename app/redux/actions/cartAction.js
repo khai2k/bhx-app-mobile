@@ -23,19 +23,19 @@ export const cartAction = {
     CART_REMOVE
 };
 
-export const cart_get = function () {
+export const cart_get = function (prov, dis, ward) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-            const cartId = getState().generalReducer.CartId;
-            // const cartId =
-            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            // const cartId = getState().generalReducer.CartId;
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: prov > 0 ? prov : location.ProvinceId,
+                districtId: dis > 0 ? dis : location.DistrictId,
+                wardId: ward > 0 ? ward : location.WardId,
                 storeId: location.StoreId,
                 data: {
                     cartId
@@ -71,18 +71,21 @@ export const cart_get = function () {
 
 export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
+    Cart.IsAdding = false;
+    Cart.IsEditing = false;
+    Cart.FirstEdit = false;
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            // const cartId =
-            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: Cart.ShipProvince,
+                districtId: Cart.ShipDistrict,
+                wardId: Cart.ShipWard,
                 storeId: location.StoreId,
                 data: Cart
             };
