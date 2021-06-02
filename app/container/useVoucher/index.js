@@ -35,7 +35,7 @@ class UseVoucher extends Component {
                 position: 'center',
                 message: res.Message,
                 type: 'default',
-                backgroundColor: 'purple',
+                backgroundColor: '#222B45',
                 icon: 'danger'
             });
         }
@@ -44,7 +44,7 @@ class UseVoucher extends Component {
                 position: 'center',
                 message: 'Áp dụng phiếu mua hàng thành công!',
                 type: 'default',
-                backgroundColor: 'purple',
+                backgroundColor: '#222B45',
                 icon: 'success'
             });
         }
@@ -53,7 +53,7 @@ class UseVoucher extends Component {
                 position: 'center',
                 message: res.Message,
                 type: 'default',
-                backgroundColor: 'purple',
+                backgroundColor: '#222B45',
                 icon: 'warning'
             });
         }
@@ -102,7 +102,7 @@ class UseVoucher extends Component {
                     position: 'center',
                     message: err.Message,
                     type: 'default',
-                    backgroundColor: 'purple',
+                    backgroundColor: '#222B45',
                     icon: 'danger'
                 });
             });
@@ -117,7 +117,7 @@ class UseVoucher extends Component {
                     position: 'center',
                     message: res.Message,
                     type: 'default',
-                    backgroundColor: 'purple',
+                    backgroundColor: '#222B45',
                     icon: 'success'
                 });
             })
@@ -126,7 +126,7 @@ class UseVoucher extends Component {
                     position: 'center',
                     message: err.Message,
                     type: 'default',
-                    backgroundColor: 'purple',
+                    backgroundColor: '#222B45',
                     icon: 'danger'
                 });
             });
@@ -239,7 +239,8 @@ class UseVoucher extends Component {
 
                                     <View
                                         style={{
-                                            flexDirection: 'row'
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between'
                                         }}>
                                         <Text style={styles.voucherDate}>
                                             Hạn sử dụng đến:{' '}
@@ -253,8 +254,7 @@ class UseVoucher extends Component {
                                                 this.handleDeleteVoucher(
                                                     itemVoucher
                                                 )
-                                            }
-                                            style={{ left: 40 }}>
+                                            }>
                                             <Text
                                                 style={
                                                     styles.voucherCancelText
