@@ -17,7 +17,8 @@ import { Colors } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { location_SaveChooseLocation } from '@app/redux/actions/generalAction';
+import { location_SaveChooseLocation } from '@app/redux/actions/locationAction';
+//  import TriggerLoadlocal from './index';
 
 const ModalLocation = (props) => {
     useEffect(() => {
@@ -34,7 +35,7 @@ const ModalLocation = (props) => {
 
     // Redux
     const locationinfo = useSelector(
-        (state) => state.generalReducer.Location.LocationInfo
+        (state) => state.locationReducer.Location.LocationInfo
     );
 
     // State

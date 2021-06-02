@@ -2,6 +2,13 @@ import { StyleSheet } from 'react-native';
 import { Colors } from '../../styles';
 
 export const styles = StyleSheet.create({
+    btnClearSearch: {
+        height: 40,
+        position: 'absolute',
+        right: 15,
+        top: 5,
+        width: 30
+    },
     btnClose: {
         alignItems: 'center',
         borderBottomColor: Colors.GRAY_E4E9F2,
@@ -24,7 +31,6 @@ export const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.GRAY_EAEEF7,
         flexDirection: 'row',
-        flex: 1,
         paddingTop: 60
     },
     iconCateChild: {
@@ -39,6 +45,11 @@ export const styles = StyleSheet.create({
         top: 0,
         width: 16,
         zIndex: 1
+    },
+    iconClearSearch: {
+        resizeMode: 'contain',
+        top: 5,
+        width: 20
     },
     iconClose: {
         height: 16,
@@ -84,13 +95,25 @@ export const styles = StyleSheet.create({
         height: 100,
         justifyContent: 'center',
         marginBottom: 15,
-        opacity: 1,
+        opacity: 0.5,
         paddingTop: 10,
         position: 'relative',
         width: 80
     },
     itemCateChildActive: {
-        opacity: 1
+        alignItems: 'center',
+        height: 100,
+        justifyContent: 'center',
+        marginBottom: 15,
+        paddingTop: 10,
+        position: 'relative',
+        width: 80
+    },
+    lineEachCate: {
+        backgroundColor: Colors.RED,
+        height: 20,
+        position: 'relative',
+        width: '100%'
     },
     navLeft: {
         flex: 2

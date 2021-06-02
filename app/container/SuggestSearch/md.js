@@ -29,7 +29,7 @@ const SuggestSearchModal = () => {
     useEffect(() => {
         setObjSearch({
             Phrase: '',
-            ProvinceId: locationinfo?.crrLocationRs?.ProvinceId,
+            ProvinceId: locationinfo?.ProvinceId,
             StoreId: 0,
             Phone: ''
         });
@@ -48,7 +48,7 @@ const SuggestSearchModal = () => {
 
     // Redux
     const locationinfo = useSelector(
-        (state) => state.generalReducer.Location.LocationInfo
+        (state) => state.locationReducer.Location.LocationInfo
     );
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);

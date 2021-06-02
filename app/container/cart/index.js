@@ -16,15 +16,17 @@ import {
     ProductItemCartOff
 } from '@app/components';
 
-import Dialog, {
-    DialogTitle,
-    DialogFooter,
-    DialogButton
-} from 'react-native-popup-dialog';
+import {
+    ModalPortal,
+    ModalFooter,
+    ModalContent,
+    ModalButton
+} from 'react-native-modals';
 
 import { connect } from 'react-redux';
 import { helper } from '@app/common';
 import * as cartCreator from '@app/redux/actions/cartAction';
+import { StyleGeneral } from '@app/styles';
 import styles from './style';
 
 // create a component
@@ -32,10 +34,7 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: true,
-            titleAlert: '',
-            visibleAlert: false,
-            guildId: ''
+            isLoading: true
         };
     }
 
@@ -61,26 +60,41 @@ class Cart extends Component {
         });
     }
 
-    alertDeleteItemProduct = (guildId) => {
-        this.setState({
-            titleAlert: 'Bạn muốn xóa sản phẩm này?',
-            visibleAlert: true,
-            guildId
-        });
-    };
-
-    actionRemoveItemProduct = () => {
-        this.setState({ visibleAlert: false });
-        this.props.actionCart
-            .cart_remove_item_product(this.state.guildId)
-            .then((res) => {
-                if (res.ResultCode < 0) {
-                    //  alertAPI(res.Message);
+    alertRemoveCart = () => {
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalContent>
+                    <Text>
+                        Bạn muốn xóa tất cả sản phẩm trong giỏ hàng này?
+                    </Text>
+                </ModalContent>
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
+                        text="Không xóa"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                    <ModalButton
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            this.props.actionCart.cart_remove();
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
+            {
+                animationDuration: 0,
+                width: 0.9,
+                onHardwareBackPress: () => {
+                    return true;
                 }
-            })
-            .catch((error) => {
-                //  alertAPI(error);
-            });
+            }
+        );
     };
 
     render() {
@@ -121,18 +135,12 @@ class Cart extends Component {
                     <View style={styles.titlecart}>
                         <Text style={styles.textcart}>Giỏ hàng của bạn</Text>
                     </View>
-                    {showListCartItemOff(
-                        this.props.cart.ListCartItemOff,
-                        this.alertDeleteItemProduct
-                    )}
-                    {showListCartItemBuy(
-                        this.props.cart.ListCartItemBuy,
-                        this.alertDeleteItemProduct
-                    )}
+                    {showListCartItemOff(this.props.cart.ListCartItemOff)}
+                    {showListCartItemBuy(this.props.cart.ListCartItemBuy)}
                     <CartTotal cartInfo={this.props.cartTotal} />
                     <View style={styles.boxbtn}>
                         <View style={styles.btn}>
-                            <TouchableOpacity onPress={this.handleRemoveCart}>
+                            <TouchableOpacity onPress={this.alertRemoveCart}>
                                 <Text style={styles.textbtn}>
                                     Xóa hết giỏ hàng
                                 </Text>
@@ -141,7 +149,7 @@ class Cart extends Component {
                         <View style={styles.btn}>
                             <TouchableOpacity
                                 onPress={() =>
-                                    this.props.navigation.navigate('Cart')
+                                    this.props.navigation.navigate('UseVoucher')
                                 }>
                                 <View>
                                     <Text style={styles.textbtn}>
@@ -165,39 +173,12 @@ class Cart extends Component {
                         </View>
                     </View>
                 </ScrollView>
-                <Dialog
-                    visible={this.state.visibleAlert}
-                    onHardwareBackPress={() => {
-                        return true;
-                    }}
-                    onTouchOutside={() => {
-                        this.setState({ visibleAlert: false });
-                    }}
-                    dialogTitle={<DialogTitle title={this.state.titleAlert} />}
-                    footer={
-                        <DialogFooter>
-                            <DialogButton
-                                textStyle={styles.btnAlertClose}
-                                text="Không xóa"
-                                onPress={() => {
-                                    this.setState({ visibleAlert: false });
-                                }}
-                            />
-                            <DialogButton
-                                style={styles.btnAlert}
-                                textStyle={styles.btnAlertText}
-                                text="Đồng ý"
-                                onPress={this.actionRemoveItemProduct}
-                            />
-                        </DialogFooter>
-                    }
-                />
             </View>
         );
     }
 }
 
-const showListCartItemOff = (listCartItemOff, alertDeleteItemProduct) => {
+const showListCartItemOff = (listCartItemOff) => {
     if (listCartItemOff != null && !helper.IsEmptyArray(listCartItemOff)) {
         const list = listCartItemOff.filter((item) => item.TypeProduct !== 3);
         if (!helper.IsEmptyArray(list)) {
@@ -207,7 +188,6 @@ const showListCartItemOff = (listCartItemOff, alertDeleteItemProduct) => {
                         return (
                             <ProductItemCartOff
                                 productCart={itemCart}
-                                alert={alertDeleteItemProduct}
                                 key={itemCart.Info.GuildId}
                             />
                         );
@@ -219,7 +199,7 @@ const showListCartItemOff = (listCartItemOff, alertDeleteItemProduct) => {
     }
 };
 
-const showListCartItemBuy = (listCartItemBuy, alertDeleteItemProduct) => {
+const showListCartItemBuy = (listCartItemBuy) => {
     if (listCartItemBuy != null && !helper.IsEmptyArray(listCartItemBuy)) {
         const list = listCartItemBuy.filter(
             (item) => item.TypeProduct !== 3 && item.TypeProduct !== 2
@@ -231,7 +211,6 @@ const showListCartItemBuy = (listCartItemBuy, alertDeleteItemProduct) => {
                         return (
                             <ProductItemCart
                                 productCart={itemCart}
-                                alert={alertDeleteItemProduct}
                                 key={itemCart.Info.GuildId}
                             />
                         );

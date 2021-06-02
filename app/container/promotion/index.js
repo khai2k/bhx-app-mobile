@@ -13,7 +13,7 @@ import ListCategoryTop from './ListCategoryTop';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import ProductBox from '../../components/ProductBox/ProductBox';
-import * as promotionAction from './action';
+import * as promotionAction from '../../redux/actions/promotionAction';
 import LineDealShock from './LineDealShock';
 import ListCategoryFilter from './ListCategoryFilter';
 import LoadMoreProduct from './LoadMoreProduct';
@@ -29,7 +29,7 @@ const Promotion = React.memo(() => {
     );
 
     const currentLocation = useSelector(
-        (state) => state.locationReducer?.crrLocationRs
+        (state) => state.locationReducer?.Location.LocationInfo
     );
 
     const isLoading = useSelector((state) => state.promotionReducer.IsLoading);
@@ -93,28 +93,30 @@ const Promotion = React.memo(() => {
     return (
         <SafeAreaView style={styles.container}>
             <Header />
-            <ActivityIndicator
-                style={[styles.loading, isLoading && styles.loadingActive]}
-                animating={isLoading}
-                size="large"
-                color="#00ff00"
-            />
-            <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
-                <ListCategoryTop
-                    lstCategoryTop={listCategoryTop}
-                    setGroupCateFilter={setGroupCateFilter}
+            <View>
+                <ActivityIndicator
+                    style={[styles.loading, isLoading && styles.loadingActive]}
+                    animating={isLoading}
+                    size="large"
+                    color="#00ff00"
                 />
-                <LineDealShock lstProductTopDeal={promotionTopDealData} />
-                <RenderGroupCate
-                    listGroupCate={listGroupCate}
-                    dispatch={dispatch}
-                    lstGroupCateFilter={lstGroupCateFilter}
-                    setListGroupCateFilter={setListGroupCateFilter}
-                    groupCateFilter={groupCateFilter}
-                    navigation={navigation}
-                    currentLocation={currentLocation}
-                />
-            </ScrollView>
+                <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
+                    <ListCategoryTop
+                        lstCategoryTop={listCategoryTop}
+                        setGroupCateFilter={setGroupCateFilter}
+                    />
+                    <LineDealShock lstProductTopDeal={promotionTopDealData} />
+                    <RenderGroupCate
+                        listGroupCate={listGroupCate}
+                        dispatch={dispatch}
+                        lstGroupCateFilter={lstGroupCateFilter}
+                        setListGroupCateFilter={setListGroupCateFilter}
+                        groupCateFilter={groupCateFilter}
+                        navigation={navigation}
+                        currentLocation={currentLocation}
+                    />
+                </ScrollView>
+            </View>
         </SafeAreaView>
     );
 });

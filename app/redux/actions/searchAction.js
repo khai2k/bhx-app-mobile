@@ -51,7 +51,7 @@ export const search_filter = (
 ) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const location = getState().locationReducer;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
                 OriginalKey: key,
                 Key: key,
@@ -62,8 +62,8 @@ export const search_filter = (
                 TotalRecord: totalRecord,
                 QuerySort: sort,
                 QueryFilter: filter,
-                provinceId: location.crrLocationRs.ProvinceId,
-                storeId: location.crrLocationRs.StoreId,
+                provinceId: location.ProvinceId,
+                storeId: location.StoreId,
                 IsCheckPromo
             };
             apiBase(API_CONST.API_SEARCH_AJAXPRODUCT, METHOD.POST, bodyApi)

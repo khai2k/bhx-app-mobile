@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { loginReducer } from '@app/container/login/reducer';
 import { authenReducer } from '@app/container/splash/reducer';
-// import { orderSuccessReducer } from '../container/OrderSuccess/reducer';
+import { orderSuccessReducer } from '../../container/OrderSuccess/reducer';
 import { menuReducer } from '@app/components/NavMenu/reducer';
-import { productDetailReducer } from '@app/container/productDetail/reducer';
-import { promotionReducer } from '@app/container/promotion/reducer';
+import { productDetailReducer } from './productDetailReducer';
+import { promotionReducer } from './promotionReducer';
 import { homeReducer } from './homeReducer';
 import { searchReducer } from './searchReducer';
 import { generalReducer } from './generalReducer';
@@ -12,12 +12,13 @@ import { categoryReducer } from './groupReducer';
 import { cartReducer } from './cartReducer';
 import { voucherReducer } from '../../container/useVoucher/reducer';
 import { notificationReducer } from './notificationReducer';
+import { locationReducer } from './locationReducer';
 
 const appReducer = combineReducers({
     loginReducer,
     authenReducer,
     cartReducer,
-    //  locationReducer,
+    locationReducer,
     categoryReducer,
     homeReducer,
     menuReducer,
@@ -26,8 +27,8 @@ const appReducer = combineReducers({
     searchReducer,
     notificationReducer,
     voucherReducer,
-    generalReducer
-    // orderSuccessReducer
+    generalReducer,
+    orderSuccessReducer
 });
 const rootReducer = (state, action) => {
     // when a logout action is dispatched it will reset redux state

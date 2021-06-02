@@ -8,10 +8,12 @@ const BuyBox = (props) => {
     useEffect(() => setQuantity(props.numberItems), [props.numberItems]);
 
     const inputQuantity = (number) => {
-        if (number !== '') {
-            setQuantity(+number);
-        } else {
+        const numreg = /^[0-9]+$/;
+        if (number === '') {
             setQuantity(0);
+        }
+        if (numreg.test(number)) {
+            setQuantity(+number);
         }
     };
 
