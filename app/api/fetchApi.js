@@ -34,7 +34,9 @@ const DELETE = 'DELETE';
 export const CONTENT_TYPE = 'content-type';
 export const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded';
 export const CONTENT_TYPE_JSON = 'application/json';
+export const CONTENT_REVERSEHOST = 'http://beta.bachhoaxanh.com';
 
+export const REVERSEHOST = 'ReverseHost';
 export const ACCEPT = 'Accept';
 export const AUTHORIZATION = 'Authorization';
 export const DEVICE_TOKEN = 'DeviceToken';
@@ -304,11 +306,19 @@ export const apiBase = (
                         headers.append(LANGUAGE, language);
                     }
 
-                    const params = {
-                        [ACCEPT]: CONTENT_TYPE_JSON,
-                        [CONTENT_TYPE]: CONTENT_TYPE_JSON
-                    };
-                    appendHeader(params, headers);
+                    if (method === METHOD.GET) {
+                        const params = {
+                            [REVERSEHOST]: CONTENT_REVERSEHOST
+                        };
+                        appendHeader(params, headers);
+                    } else {
+                        const params = {
+                            [ACCEPT]: CONTENT_TYPE_JSON,
+                            [CONTENT_TYPE]: CONTENT_TYPE_JSON,
+                            [REVERSEHOST]: CONTENT_REVERSEHOST
+                        };
+                        appendHeader(params, headers);
+                    }
                 }
 
                 // console.log('HEADER: ', headers);
@@ -387,6 +397,7 @@ export const apiBase = (
                 if (method === METHOD.GET) {
                     requests = {
                         signal: options.signal,
+                        headers,
                         method
                     };
                 }

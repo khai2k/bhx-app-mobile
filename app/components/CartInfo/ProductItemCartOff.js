@@ -13,7 +13,7 @@ import {
 import {
     ModalPortal,
     ModalFooter,
-    ModalTitle,
+    ModalContent,
     ModalButton
 } from 'react-native-modals';
 import { bindActionCreators } from 'redux';
@@ -45,7 +45,9 @@ const ProductItemCartOff = (props) => {
     const alertDeleteItemProduct = () => {
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalContent>
+                    <Text>Bạn muốn xóa sản phẩm này?</Text>
+                </ModalContent>
                 <ModalFooter>
                     <ModalButton
                         textStyle={StyleGeneral.styleAlert.btnAlertClose}
@@ -67,6 +69,7 @@ const ProductItemCartOff = (props) => {
             </View>,
             {
                 animationDuration: 0,
+                width: 0.8,
                 onHardwareBackPress: () => {
                     return true;
                 }
