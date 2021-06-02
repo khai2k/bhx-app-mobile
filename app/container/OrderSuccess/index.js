@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
     View,
-    Modal,
     Text,
     Image,
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback
 } from 'react-native';
+import Modal from 'react-native-modal';
 import CheckBox from '@react-native-community/checkbox';
 import { helper } from '@app/common';
 import * as orderSuccessCreator from './action';
@@ -60,7 +60,7 @@ class OrderSuccess extends Component {
                 showMessage({
                     message: res.Message,
                     type: 'default',
-                    backgroundColor: 'purple',
+                    backgroundColor: '#222B45',
                     icon: 'success'
                 });
                 // this.props.navigation.goBack();
@@ -70,7 +70,7 @@ class OrderSuccess extends Component {
                     position: 'bottom',
                     message: 'Hủy đơn hàng thất bại, xin vui lòng thử lại!',
                     type: 'default',
-                    backgroundColor: 'purple',
+                    backgroundColor: '#222B45',
                     icon: 'danger'
                 });
             });
@@ -301,11 +301,19 @@ class OrderSuccess extends Component {
 
     _renderCancelOrderModal() {
         return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={this.state.modalVisible}>
-                <View style={styles.centeredView}>
+            <View style={styles.modalContainer}>
+                <Modal
+                    visible={this.state.modalVisible}
+                    style={{
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        margin: 0
+                    }}
+                    onBackButtonPress={() => {
+                        this.setState({ modalVisible: false });
+                    }}
+                    onBackdropPress={() => {
+                        this.setState({ modalVisible: false });
+                    }}>
                     <View style={styles.modalView}>
                         <Text style={{ lineHeight: 20 }}>
                             BachhoaXANH.com mong nhận được sự góp ý của anh để
@@ -383,8 +391,8 @@ class OrderSuccess extends Component {
                             </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </View>
             // <CancelOrderModal
             //     isModalVisible={this.state.modalVisible}
             //     setModalVisible={setModalVisible}
@@ -431,11 +439,11 @@ class OrderSuccess extends Component {
                     {this._renderEPurchase()}
                 </View>
                 {this._renderEditButton()}
-                {this._renderCancelOrderModal()}
                 <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('Product')}>
                     <Text style={styles.backToHomeText}>Về trang chủ</Text>
                 </TouchableOpacity>
+                {this._renderCancelOrderModal()}
             </View>
         );
     }

@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { loginReducer } from '@app/container/login/reducer';
 import { authenReducer } from '@app/container/splash/reducer';
-import { homeReducer } from '@app/container/product/reducer';
 import { orderSuccessReducer } from '../../container/OrderSuccess/reducer';
 import { productDetailReducer } from './productDetailReducer';
 import { promotionReducer } from './promotionReducer';
+import { homeReducer } from './homeReducer';
 import { searchReducer } from './searchReducer';
 import { generalReducer } from './generalReducer';
 import { categoryReducer } from './groupReducer';

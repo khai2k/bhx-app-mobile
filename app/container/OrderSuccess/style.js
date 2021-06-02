@@ -155,18 +155,14 @@ const styles = StyleSheet.create({
         color: Colors.GREEN_PRIMARY,
         fontSize: 13
     },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+    modalContainer: {
+        flex: 1
     },
     modalView: {
-        margin: 10,
-        backgroundColor: Colors.WHITE,
+        marginHorizontal: 10,
+        backgroundColor: 'white',
         borderRadius: 5,
-        padding: 20,
-        borderWidth: 3,
-        borderColor: Colors.GREEN_PRIMARY
+        padding: 20
     },
     textInput: {
         width: '100%',
