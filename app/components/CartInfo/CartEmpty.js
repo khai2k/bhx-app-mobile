@@ -2,9 +2,12 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Colors, Typography } from '@app/styles';
+import { useNavigation } from '@react-navigation/native';
 
 // create a component
 const CartEmpty = (props) => {
+    const navigation = useNavigation();
+    console.log(props);
     return (
         <View style={styles.container}>
             <View style={styles.cartemph} />
@@ -20,7 +23,13 @@ const CartEmpty = (props) => {
                 <View style={styles.boxkey}>
                     {props.listCategory.map((item) => {
                         return (
-                            <TouchableOpacity style={styles.itembox}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('Group', {
+                                        url: item.Url
+                                    });
+                                }}
+                                style={styles.itembox}>
                                 <Text style={styles.textcolor}>
                                     {item.Name}
                                 </Text>

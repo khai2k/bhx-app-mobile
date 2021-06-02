@@ -1,5 +1,5 @@
-import * as _action from './action';
-import * as _state from './state';
+import * as _action from '../actions/homeAction';
+import * as _state from '../store/homeStore';
 
 const homeReducer = function (state = _state.homeState, action) {
     switch (action.type) {

@@ -20,12 +20,16 @@ export const search_get = function (body) {
             apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, body)
                 .then((response) => {
                     console.log('SEARCH_GET Data:', response);
-                    const searchInfo = response;
-                    dispatch({
-                        type: SEARCH_GET,
-                        searchInfo
-                    });
-                    resolve(response);
+                    if (response.HttpCode !== 200) {
+                        resolve(response);
+                    } else {
+                        const searchInfo = response;
+                        dispatch({
+                            type: SEARCH_GET,
+                            searchInfo
+                        });
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
@@ -47,7 +51,7 @@ export const search_filter = (
 ) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const location = getState().locationReducer;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
                 OriginalKey: key,
                 Key: key,
@@ -58,8 +62,8 @@ export const search_filter = (
                 TotalRecord: totalRecord,
                 QuerySort: sort,
                 QueryFilter: filter,
-                provinceId: location.crrLocationRs.ProvinceId,
-                storeId: location.crrLocationRs.StoreId,
+                provinceId: location.ProvinceId,
+                storeId: location.StoreId,
                 IsCheckPromo
             };
             apiBase(API_CONST.API_SEARCH_AJAXPRODUCT, METHOD.POST, bodyApi)

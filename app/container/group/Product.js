@@ -8,9 +8,10 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-import { Colors } from '@app/styles';
+import { Colors, Typography } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const Product = (props) => {
@@ -78,9 +79,11 @@ const Product = (props) => {
                     Còn {Total - pageIndex * PageSize} sản phẩm{' '}
                 </Text>
                 <Text style={styles.loadMoreTextBold}>{Name}</Text>
-                <Image
-                    style={styles.iconDown}
-                    source={require('../../../assets/images/chevron-down.png')}
+                <Icon
+                    style={styles.icontoggle}
+                    name="angle-down"
+                    size={Typography.FONT_SIZE_14}
+                    color={Colors.GREEN_KEY}
                 />
             </TouchableOpacity>
         ) : null;
@@ -122,10 +125,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textAlignVertical: 'center'
     },
-    iconDown: {
-        height: 3,
-        marginLeft: 5,
-        width: 6
+    icontoggle: {
+        marginLeft: 5
     },
     loadMore: {
         alignItems: 'center',

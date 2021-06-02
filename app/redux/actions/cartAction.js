@@ -242,13 +242,9 @@ export const cart_add_item_product = function (
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: !helper.isEmptyOrNull(location)
-                    ? location.ProvinceId
-                    : 3,
-                districtId: !helper.isEmptyOrNull(location)
-                    ? location.DistrictId
-                    : 0,
-                wardId: !helper.isEmptyOrNull(location) ? location.WardId : 0,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
                 storeId:
                     expStoreId > 0
                         ? expStoreId

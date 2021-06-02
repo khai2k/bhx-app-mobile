@@ -22,7 +22,7 @@ import LocationModal from './Location/ModalLocation';
 import RemiderLocation from './Location/RemiderLocation';
 
 const Header = () => {
-    locationAction.loadLocation();
+    //  locationAction.loadLocation();
     const navigation = useNavigation();
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -82,11 +82,11 @@ const Header = () => {
                         style={styles.input}
                         onPress={() => navigation.navigate('SuggestSearch')}>
                         <Text style={styles.inputText}>Bạn tìm gì</Text>
+                        <Image
+                            style={styles.iconsearch}
+                            source={require('../../assets/images/icon-search.png')}
+                        />
                     </TouchableOpacity>
-                    <Image
-                        style={styles.iconsearch}
-                        source={require('../../assets/images/icon-search.png')}
-                    />
                 </View>
                 <View style={styles.boxinfo}>
                     <TouchableOpacity
@@ -221,11 +221,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 12,
         margin: 5,
-        padding: 5,
         resizeMode: 'stretch',
         width: 12
     },
     input: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         paddingLeft: 5
     },
     // eslint-disable-next-line react-native/no-color-literals

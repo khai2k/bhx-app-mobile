@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { SafeAreaView, ActivityIndicator, View } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -8,8 +8,9 @@ import * as categoryCreator from '@app/redux/actions/groupAction';
 import { helper } from '@app/common';
 import Filter from './Filter';
 import Product from './Product';
+import { styles } from './style';
 
-class Group extends Component {
+class Group extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -65,7 +66,10 @@ class Group extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 <Header />
                 <ActivityIndicator
-                    style={{ marginTop: 50 }}
+                    style={[
+                        styles.loading,
+                        this.state.isLoading && styles.loadingActive
+                    ]}
                     size="large"
                     color={Colors.GREEN_KEY}
                 />
