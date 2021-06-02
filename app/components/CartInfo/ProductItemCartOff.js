@@ -10,6 +10,12 @@ import {
     StyleSheet,
     Alert
 } from 'react-native';
+import {
+    ModalPortal,
+    ModalFooter,
+    ModalTitle,
+    ModalButton
+} from 'react-native-modals';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/redux/actions/cartAction';
 
@@ -36,16 +42,35 @@ const ProductItemCartOff = (props) => {
     };
 
     const alertDeleteItemProduct = () => {
-        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={styles.btnAlertClose}
+                        text="Không xóa"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                    <ModalButton
+                        style={styles.btnAlert}
+                        textStyle={styles.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            actionRemoveItemProduct();
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
             {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
+                animationDuration: 0,
+                onHardwareBackPress: () => {
+                    return true;
+                }
             }
-        ]);
+        );
     };
 
     return (
@@ -93,6 +118,15 @@ const styles = StyleSheet.create({
     boxprice: {
         flexDirection: 'column',
         width: 100
+    },
+    btnAlert: {
+        backgroundColor: Colors.GREEN_KEY
+    },
+    btnAlertClose: {
+        color: Colors.GRAY_ALERT_CLOSE
+    },
+    btnAlertText: {
+        color: Colors.WHITE
     },
     closer: {
         backgroundColor: Colors.BG_BUTTON_CLOSER,
