@@ -26,6 +26,7 @@ import {
 import { connect } from 'react-redux';
 import { helper } from '@app/common';
 import * as cartCreator from '@app/redux/actions/cartAction';
+import { StyleGeneral } from '@app/styles';
 import styles from './style';
 
 // create a component
@@ -65,15 +66,15 @@ class Cart extends Component {
                 <ModalTitle title="Bạn muốn xóa tất cả sản phẩm trong giỏ hàng này?" />
                 <ModalFooter>
                     <ModalButton
-                        textStyle={styles.btnAlertClose}
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
                         text="Không xóa"
                         onPress={() => {
                             ModalPortal.dismiss(modalPortalId);
                         }}
                     />
                     <ModalButton
-                        style={styles.btnAlert}
-                        textStyle={styles.btnAlertText}
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
                         text="Đồng ý"
                         onPress={() => {
                             this.props.actionCart.cart_remove();
