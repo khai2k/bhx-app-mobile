@@ -134,6 +134,7 @@ export const cart_update_item_product = function (guildId, iQuantity) {
                         type: CART_UPDATE_ITEM_PRODUCT,
                         cartInfo
                     });
+                    dispatch(cart_get_simple());
                     resolve(response);
                 })
                 .catch((error) => {
@@ -176,6 +177,7 @@ export const cart_remove_item_product = function (guildId) {
                         type: CART_REMOVE_ITEM_PRODUCT,
                         cartInfo
                     });
+                    dispatch(cart_get_simple());
                     resolve(response);
                 })
                 .catch((error) => {
@@ -215,6 +217,7 @@ export const cart_remove = function () {
                         type: CART_REMOVE,
                         cartInfo
                     });
+                    dispatch(cart_get_simple());
                     resolve(response);
                 })
                 .catch((error) => {

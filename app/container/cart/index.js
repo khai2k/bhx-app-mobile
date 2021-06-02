@@ -19,7 +19,7 @@ import {
 import {
     ModalPortal,
     ModalFooter,
-    ModalTitle,
+    ModalContent,
     ModalButton
 } from 'react-native-modals';
 
@@ -63,7 +63,11 @@ class Cart extends Component {
     alertRemoveCart = () => {
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title="Bạn muốn xóa tất cả sản phẩm trong giỏ hàng này?" />
+                <ModalContent>
+                    <Text>
+                        Bạn muốn xóa tất cả sản phẩm trong giỏ hàng này?
+                    </Text>
+                </ModalContent>
                 <ModalFooter>
                     <ModalButton
                         textStyle={StyleGeneral.styleAlert.btnAlertClose}
@@ -85,6 +89,7 @@ class Cart extends Component {
             </View>,
             {
                 animationDuration: 0,
+                width: 0.9,
                 onHardwareBackPress: () => {
                     return true;
                 }
