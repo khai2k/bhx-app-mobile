@@ -4,7 +4,7 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, LoadingCart } from '@app/components';
 import { helper } from '@app/common';
-import * as productDetailCreator from './action';
+import * as productDetailCreator from '@app/redux/actions/productDetailAction';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
 import ProductArticle from './productArticle';
 import ProductRelative from './productRelative';

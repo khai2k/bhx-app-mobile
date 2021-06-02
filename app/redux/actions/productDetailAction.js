@@ -1,5 +1,4 @@
-// import { apiBase, METHOD, API_CONST } from '@app/api';
-import { apiBase, METHOD, API_CONST } from '../../api';
+import { apiBase, METHOD, API_CONST } from '@app/api';
 
 const GET_PRODUCT_DETAIL = 'GET_PRODUCT_DETAIL';
 const GET_PRODUCT_RELATIVE = 'GET_PRODUCT_RELATIVE';

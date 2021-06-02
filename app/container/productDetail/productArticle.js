@@ -201,7 +201,7 @@ const ProductArticle = (props) => {
         );
     }
     return (
-        <View style={{ backgroundColor: COLOR.WHITE }}>
+        <View style={{ backgroundColor: COLOR.WHITE, paddingBottom: 10 }}>
             {!helper.isEmptyOrNull(PromotionText) && renderPromotion()}
 
             <View style={{ flexDirection: 'row' }}>

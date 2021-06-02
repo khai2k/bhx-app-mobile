@@ -16,6 +16,7 @@ const BoxOption = (props) => {
     const { Info, Unit, BaseValue, BaseUnit, ExchangeQuantity } =
         exchangeProduct;
     const { Sales, Price, Avatar, StockQuantityNew } = Info;
+    const isSale = !helper.isEmptyObjectOrNull(Sales);
     const actionLocation = bindActionCreators(locationCreator, dispatch);
     const alertAPI = (messages) => {
         Alert.alert('', messages);
@@ -29,13 +30,13 @@ const BoxOption = (props) => {
         }
         return 1;
     };
-    const checkIsSaleOnly = (webStatusId, Sales) => {
-        if (webStatusId === 5 && Sales !== null) {
+    const checkIsSaleOnly = (webStatusId, isSale) => {
+        if (webStatusId === 5 && isSale === true) {
             return true;
         }
         return false;
     };
-    const isSaleOnly = checkIsSaleOnly(webStatusId, Sales);
+    const isSaleOnly = checkIsSaleOnly(webStatusId, isSale);
 
     const webStatusId = checkWebStatusId(Price, StockQuantityNew);
 
@@ -78,10 +79,7 @@ const BoxOption = (props) => {
 
     const locationInfo = useSelector((state) => state.locationReducer);
     const checkReminderLocation = () => {
-        if (
-            helper.isEmptyOrNull(locationInfo) ||
-            helper.isEmptyOrNull(locationInfo.crrLocationRs)
-        ) {
+        if (helper.IsEmptyObject(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }
@@ -121,7 +119,7 @@ const BoxOption = (props) => {
             <View style={styles.center}>
                 {isSaleOnly ? (
                     <Text style={{ fontWeight: 'bold' }}>
-                        {Sales &&
+                        {isSale &&
                             `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
                     </Text>
                 ) : (
@@ -146,7 +144,7 @@ const BoxOption = (props) => {
         return (
             <View style={styles.productNearDate}>
                 <Text style={{ fontWeight: 'bold' }}>
-                    {Sales && `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
+                    {isSale && `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
                 </Text>
                 <Text style={styles.ExpiredText}>
                     {' '}
@@ -238,7 +236,7 @@ const BoxOption = (props) => {
                     {renderBottomBox()}
                 </TouchableOpacity>
             </View>
-            {Sales !== null && !isSaleOnly && renderSale()}
+            {isSale && !isSaleOnly && renderSale()}
         </View>
     );
 };
