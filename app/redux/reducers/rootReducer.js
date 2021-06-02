@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
 import { loginReducer } from '@app/container/login/reducer';
 import { authenReducer } from '@app/container/splash/reducer';
-import { orderSuccessReducer } from '../../container/OrderSuccess/reducer';
 import { homeReducer } from '@app/container/product/reducer';
-import { menuReducer } from '@app/components/NavMenu/reducer';
+import { orderSuccessReducer } from '../../container/OrderSuccess/reducer';
 import { productDetailReducer } from './productDetailReducer';
 import { promotionReducer } from './promotionReducer';
 import { searchReducer } from './searchReducer';
@@ -21,7 +20,6 @@ const appReducer = combineReducers({
     locationReducer,
     categoryReducer,
     homeReducer,
-    menuReducer,
     productDetailReducer,
     promotionReducer,
     searchReducer,

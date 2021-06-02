@@ -5,12 +5,13 @@ import { CONST_STORAGE } from '@app/constants';
 const GENERAL_LOCATION_GETCURRENT = 'GENERAL_LOCATION_GETCURRENT';
 const GENERAL_LOCATION_REMINDER = 'GENERAL_LOCATION_REMINDER';
 
-export const generalAction = {
+export const locationAction = {
     GENERAL_LOCATION_GETCURRENT,
     GENERAL_LOCATION_REMINDER
 };
 
 export const location_getCurrent = function (crrLat, crrLong) {
+    console.log('location_getCurrent');
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
@@ -75,6 +76,7 @@ export const location_SaveChooseLocation = (crrLocationRs) => {
 };
 
 export const showReminderLocation = (status) => {
+    console.log('showReminderLocation');
     return (dispatch) => {
         const showReminder = status;
         dispatch({
