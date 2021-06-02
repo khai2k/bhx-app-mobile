@@ -1,12 +1,9 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Storage, helper } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
-import MD5 from 'md5';
 
 const CART_GET = 'CART_GET';
-const CART_LISTCATE_TOP = 'CART_LISTCATE_TOP';
 const CART_GET_SIMPLE = 'CART_GET_SIMPLE';
-const CART_SUBMIT = 'CART_SUBMIT';
 const CART_REMOVE_ITEM_PRODUCT = 'CART_REMOVE_ITEM_PRODUCT';
 const CART_UPDATE_ITEM_PRODUCT = 'CART_UPDATE_ITEM_PRODUCT';
 const CART_ADD_ITEM_PRODUCT = 'CART_ADD_ITEM_PRODUCT';
@@ -14,9 +11,7 @@ const CART_REMOVE = 'CART_REMOVE';
 
 export const cartAction = {
     CART_GET,
-    CART_LISTCATE_TOP,
     CART_GET_SIMPLE,
-    CART_SUBMIT,
     CART_REMOVE_ITEM_PRODUCT,
     CART_ADD_ITEM_PRODUCT,
     CART_UPDATE_ITEM_PRODUCT,
@@ -25,35 +20,41 @@ export const cartAction = {
 
 export const cart_get = function () {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const location = getState().locationReducer.Location.LocationInfo;
-            const cartId = getState().generalReducer.CartId;
+        return new Promise(async (resolve, reject) => {
             // const cartId =
-            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            //     '6E941396616C945AEB5A8EB061E900330076C10B8EA2896F953ACFD4336FFDDD';
+            // const location = getState().locationReducer;
+            // const bodyApi = {
+            //     token: cartId,
+            //     us: '',
+            //     provinceId: 3,
+            //     districtId: 2087,
+            //     wardId: 27125,
+            //     storeId: 6463,
+            //     data: {
+            //         cartId
+            //     }
+            // };
+            const location = getState().locationReducer;
+            // const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const cartId =
+                'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId
                 }
             };
+
             apiBase(API_CONST.API_REQUEST_GET_CART, METHOD.POST, bodyApi)
                 .then((response) => {
                     console.log('CART_GET Data:', response);
-                    if (
-                        response.OtherData != null &&
-                        response.OtherData.IsEmptyCart === true
-                    ) {
-                        dispatch({
-                            type: CART_LISTCATE_TOP,
-                            ListCategory:
-                                response.OtherData.ListSuggestCategorys
-                        });
-                    }
                     const cartInfo = response.Value;
                     dispatch({
                         type: CART_GET,
@@ -68,56 +69,19 @@ export const cart_get = function () {
         });
     };
 };
-
-export const cart_submit = function (Cart) {
-    Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
-    return (dispatch, getState) => {
-        return new Promise(async (resolve, reject) => {
-            const location = getState().locationReducer.Location.LocationInfo;
-            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            // const cartId =
-            //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
-            const bodyApi = {
-                token: cartId,
-                us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
-                data: Cart
-            };
-
-            apiBase(API_CONST.API_REQUEST_SUBMIT_CART, METHOD.POST, bodyApi)
-                .then((response) => {
-                    console.log('CART_SUBMIT Data:', response);
-                    const cartInfo = response.Value;
-                    dispatch({
-                        type: CART_SUBMIT,
-                        cartInfo
-                    });
-                    resolve(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject(error);
-                });
-        });
-    };
-};
-
 export const cart_update_item_product = function (guildId, iQuantity) {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cartId = getState().generalReducer.CartId;
-            const location = getState().locationReducer.Location.LocationInfo;
+        return new Promise(async (resolve, reject) => {
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = getState().locationReducer;
             console.log(location);
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId,
                     guid: guildId,
@@ -129,6 +93,7 @@ export const cart_update_item_product = function (guildId, iQuantity) {
             };
             apiBase(API_CONST.API_REQUEST_UPDATE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
+                    console.log('CART_UPDATE_ITEM_PRODUCT Data:', response);
                     const cartInfo = { ...response.Value };
                     dispatch({
                         type: CART_UPDATE_ITEM_PRODUCT,
@@ -146,17 +111,17 @@ export const cart_update_item_product = function (guildId, iQuantity) {
 
 export const cart_remove_item_product = function (guildId) {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cartId = getState().generalReducer.CartId;
-            const location = getState().locationReducer.Location.LocationInfo;
+        return new Promise(async (resolve, reject) => {
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = getState().locationReducer;
 
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId,
                     guid: guildId,
@@ -188,32 +153,29 @@ export const cart_remove_item_product = function (guildId) {
 
 export const cart_remove = function () {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cartId = getState().generalReducer.CartId;
-            const location = getState().locationReducer.Location.LocationInfo;
+        return new Promise(async (resolve, reject) => {
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = getState().locationReducer;
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
+                provinceId: location.crrLocationRs.ProvinceId,
+                districtId: location.crrLocationRs.DistrictId,
+                wardId: location.crrLocationRs.WardId,
+                storeId: location.crrLocationRs.StoreId,
                 data: {
                     cartId,
-                    isClearAllCoolProduct: false
+                    isClearAllCoolProduct: true
                 }
             };
             apiBase(API_CONST.API_REQUEST_REMOVE_CART, METHOD.POST, bodyApi)
                 .then((response) => {
-                    const cartInfo = response.Value;
-                    Storage.setItem(CONST_STORAGE.CARTID, cartInfo.Cart.CartId);
-                    dispatch({
-                        type: 'GENERAL_SET_CARTID',
-                        cartId: cartInfo.Cart.CartId
-                    });
+                    console.log('CART_REMOVE Data:', response);
+                    const rmCartId = response.Value;
+                    Storage.setItem(CONST_STORAGE.CARTID, rmCartId);
                     dispatch({
                         type: CART_REMOVE,
-                        cartInfo
+                        rmCartId
                     });
                     resolve(response);
                 })
@@ -233,26 +195,28 @@ export const cart_add_item_product = function (
     isUpdate = false
 ) {
     return (dispatch, getState) => {
-        return new Promise((resolve, reject) => {
-            const cartId = getState().generalReducer.CartId;
-            const location = getState().locationReducer.Location.LocationInfo;
+        return new Promise(async (resolve, reject) => {
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = getState().locationReducer;
             const bodyApi = {
                 token: cartId,
                 us: '',
                 provinceId: !helper.isEmptyOrNull(location)
-                    ? location.ProvinceId
+                    ? location.crrLocationRs.ProvinceId
                     : 3,
                 districtId: !helper.isEmptyOrNull(location)
-                    ? location.DistrictId
+                    ? location.crrLocationRs.DistrictId
                     : 0,
-                wardId: !helper.isEmptyOrNull(location) ? location.WardId : 0,
+                wardId: !helper.isEmptyOrNull(location)
+                    ? location.crrLocationRs.WardId
+                    : 0,
                 storeId:
                     expStoreId > 0
                         ? expStoreId
                         : !helper.isEmptyOrNull(location) &&
-                          !helper.isEmptyOrNull(location) &&
-                          !helper.isEmptyOrNull(location.StoreId)
-                        ? location.StoreId
+                          !helper.isEmptyOrNull(location.crrLocationRs) &&
+                          !helper.isEmptyOrNull(location.crrLocationRs.StoreId)
+                        ? location.crrLocationRs.StoreId
                         : 6815,
                 data: {
                     cartId,
@@ -291,18 +255,24 @@ export const cart_get_simple = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             // get cart simple from storage
-            let cartId = getState().generalReducer.CartId;
-            if (helper.isEmptyOrNull(cartId)) {
-                cartId = await Storage.getItem(CONST_STORAGE.CARTID);
-            }
-            const location = getState().locationReducer.Location.LocationInfo;
+            const cartId = await Storage.getItem(CONST_STORAGE.CARTID);
+            const location = getState().locationReducer;
+
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
-                storeId: location.StoreId,
+                provinceId: !helper.isEmptyOrNull(location)
+                    ? location.crrLocationRs.ProvinceId
+                    : 3,
+                districtId: !helper.isEmptyOrNull(location)
+                    ? location.crrLocationRs.DistrictId
+                    : 0,
+                wardId: !helper.isEmptyOrNull(location)
+                    ? location.crrLocationRs.WardId
+                    : 0,
+                storeId: !helper.isEmptyOrNull(location)
+                    ? location.crrLocationRs.StoreId
+                    : 6815,
                 data: {
                     cartId
                 }
@@ -311,17 +281,14 @@ export const cart_get_simple = function () {
                 .then((response) => {
                     console.log('API_REQUEST_GET_SIMPLE_CART Data:', response);
                     const cartInfo = response.Value;
-                    if (!helper.isEmptyOrNull(cartInfo.CartId)) {
-                        Storage.setItem(CONST_STORAGE.CARTID, cartInfo.CartId);
-                        dispatch({
-                            type: 'GENERAL_SET_CARTID',
-                            cartId: cartInfo.CartId
-                        });
-                    }
                     dispatch({
                         type: CART_GET_SIMPLE,
                         cartInfo
                     });
+                    if (cartInfo.CartId !== '') {
+                        Storage.setItem(CONST_STORAGE.CARTID, cartInfo.CartId);
+                    }
+
                     resolve(response);
                 })
                 .catch((error) => {
@@ -331,3 +298,36 @@ export const cart_get_simple = function () {
         });
     };
 };
+
+//  Thử loại async/await đều ngon lành
+// export const get_cart = function () {
+//     return async (dispatch, getSate) => {
+//         const bodyApi = {
+//             token: getSate().cartReducer.Cart.CartId,
+//             us: '',
+//             provinceId: 3,
+//             districtId: 0,
+//             wardId: 0,
+//             storeId: 6463,
+//             data: {
+//                 cartId: getSate().cartReducer.Cart.CartId
+//             }
+//         };
+//         const response = await apiBase(
+//             API_CONST.API_REQUEST_GET_CART,
+//             METHOD.POST,
+//             bodyApi,
+//             {
+//                 isCustomToken: false,
+//                 isOauthenToken: false,
+//                 isUpload: false
+//             }
+//         );
+//         const cartInfo = response.Value;
+//         console.log('response api Nhu test:', cartInfo);
+//         dispatch({
+//             type: GET_CART,
+//             cartInfo
+//         });
+//     };
+// };

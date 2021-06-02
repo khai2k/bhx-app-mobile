@@ -13,8 +13,11 @@ import {
     Image,
     ScrollView,
     Alert,
-    Dimensions
+    Dimensions,
+    ActivityIndicator,
+    Modal
 } from 'react-native';
+import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -28,25 +31,36 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
-
-const { width: WIDTH } = Dimensions.get('window');
+import DropDownPicker from 'react-native-custom-dropdown';
 
 const UserInfoCart = (props) => {
     useEffect(() => {
-        actionCart.cart_get();
-        console.log(cartState);
+        actionCart.cart_get().then((res) => {
+            setisLoading(false);
+            setCartModel(res.Value);
+        });
         console.log(shipdatetime);
     }, []);
 
     useEffect(() => {
+        console.log(isLoading);
+    }, isLoading);
+
+    useEffect(() => {
         console.log(curDateDeli);
     }, curDateDeli);
+
+    const windowWidth = Math.round(Dimensions.get('window').width);
+    const windowHeight = Math.round(Dimensions.get('window').height);
+
+    const [isLoading, setisLoading] = useState(true);
 
     const dispatch = useDispatch();
 
     const actionCart = bindActionCreators(cartCreator, dispatch);
     const actionLocation = bindActionCreators(locationCreator, dispatch);
 
+    const [cartmodel, setCartModel] = useState(null);
     const cart = useSelector((state) => state.cartReducer.Cart);
     const cartTotal = useSelector((state) => state.cartReducer.CartTotal);
     const shipdatetime = useSelector(
@@ -55,8 +69,7 @@ const UserInfoCart = (props) => {
     const location = useSelector(
         (state) => state.locationReducer.Location.LocationInfo
     );
-    
-    const [cartState, setCartState] = useState(cart);
+
     const [cartUserInfo, setCartUserInfo] = useState({
         CustomerName: '',
         CustomerGender: 1,
@@ -80,8 +93,8 @@ const UserInfoCart = (props) => {
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
     const [curDateDeli, setcurDateDeli] = useState(null);
 
-    const [dateDeliID, setdateDeliID] = useState('');
-    const [timeDeliID, settimeDeliID] = useState('');
+    const [dateSelected, setdateSelected] = useState('');
+    const [timeSelected, settimeSelected] = useState('');
 
     // Xuất Hóa Đơn
     const [isSelectedXHD, setSelectedXHD] = useState(false);
@@ -111,9 +124,56 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const onSubmitForm = () => {
-        const isValidForm = () => {};
+        const formError = validateForm();
+        if (formError === '') {
+            debugger;
+            actionCart.cart_submit(cartmodel).then((res) => {
+                Alert.alert(res.Message);
+            });
+            return;
+        } else Alert.alert(formError);
     };
 
+    const validateForm = () => {
+        if (helper.isEmptyOrNull(cartmodel)) {
+            return 'Data không chính xác!';
+        }
+        debugger;
+        cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
+        if (helper.isEmptyOrNull(phoneErrMessage) == false) {
+            return phoneErrMessage;
+        }
+        cartmodel.Cart.CustomerPhone = cartUserInfo.CustomerPhone;
+        if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
+            return phoneErrMessage;
+        }
+        cartmodel.Cart.CustomerName = cartUserInfo.CustomerName;
+        if (provinceSelected <= 0) {
+            return CONST_STRINGERR.ERR_PROVINCE;
+        }
+        cartmodel.Cart.ShipProvince = cartUserInfo.ShipProvince;
+        if (districtSelected <= 0) {
+            return CONST_STRINGERR.ERR_DISTRICT;
+        }
+        cartmodel.Cart.ShipDistrict = cartUserInfo.ShipDistrict;
+        if (wardSelected <= 0) {
+            return CONST_STRINGERR.ERR_WARD;
+        }
+        cartmodel.Cart.ShipWard = cartUserInfo.ShipWard;
+        if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
+            return cusAddressErrMessage;
+        }
+        cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
+        if (dateSelected == '' || dateSelected == null) {
+            return 'Vui lòng chọn ngày nhận hàng';
+        }
+        cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
+        if (timeSelected == '' || timeSelected == null) {
+            return 'Vui lòng chọn thời gian nhận hàng';
+        }
+        cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
+        return '';
+    };
     const handleErrorPhone = (value) => {
         if (helper.isEmptyOrNull(value)) {
             setphoneErrMessage(CONST_STRINGERR.EMPTY_PHONE);
@@ -149,91 +209,119 @@ const UserInfoCart = (props) => {
             setcusAddressErrMessage(CONST_STRINGERR.OUTOFRANGE_SHIPADDRESS);
         } else setcusAddressErrMessage('');
     };
+
+    const [isVisibleDatePicker, setisVisibleDatePicker] = useState(false);
+    const [isVisibleTimePicker, setisVisibleTimePicker] = useState(false);
+
     const chosenDeliDate = () => {
         const isActive =
             shipdatetime !== undefined &&
             shipdatetime[0]?.DateList !== null &&
             shipdatetime[0]?.DateList?.length > 0;
+        const listDeliDate = [
+            { label: 'Ngày nhận', value: '-1', selected: true, disabled: true }
+        ];
+        if (isActive)
+            shipdatetime[0]?.DateList.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.text +
+                    '","value": "' +
+                    element.timeid +
+                    '"}';
+                listDeliDate.push(JSON.parse(temp));
+            });
+
+        console.log(listDeliDate);
         return (
-            <View style={[styles.delichoose]}>
-                <Picker
-                    selectedValue={dateDeliID > 0 ? 0 : dateDeliID}
-                    style={{
-                        height: 50,
-                        width: '100%',
-                        color: isActive ? '#000' : '#C2C2C2'
-                    }}
-                    enabled={isActive}
-                    mode={'dropdown'}
-                    onValueChange={(itemValue, itemIndex) => {
-                        if (itemValue > 0) {
-                            setcurDateDeli(
-                                shipdatetime[0]?.DateList[itemIndex]
-                            );
-                            setdateDeliID(itemValue);
-                        } else {
-                            setcurDateDeli(null);
-                        }
-                    }}>
-                    <Picker.Item label="Ngày nhận" value="-1" color="#C2C2C2" />
-                    {isActive &&
-                        shipdatetime[0]?.DateList.map((item) => {
-                            return (
-                                <Picker.Item
-                                    label={item.text}
-                                    value={item.timeid}
-                                    key={item.timeid}
-                                />
-                            );
-                        })}
-                </Picker>
-            </View>
+            <DropDownPicker
+                items={listDeliDate}
+                placeholder={'Ngày nhận'}
+                zIndex={20}
+                defaultValue={'-1'}
+                containerStyle={{ height: 50, marginHorizontal: 10 }}
+                style={[styles.borderRadius, { backgroundColor: '#fff', borderColor:  dateSelected == '' || dateSelected == null ? '#ff001f' : '#8F9BB3' }]}
+                dropDownMaxHeight={200}
+                itemStyle={{
+                    justifyContent: 'flex-start'                   
+                }}
+                dropDownStyle={{ backgroundColor: '#fff' }}
+                isVisible={isVisibleDatePicker}
+                onOpen={() => {
+                    setisVisibleTimePicker(false);
+                }}
+                onChangeItem={(itemValue, itemIndex) => {
+                    if (itemValue.value > 0) {
+                        setcurDateDeli(shipdatetime[0]?.DateList[itemIndex - 1]);
+                        setdateSelected(
+                            shipdatetime[0]?.DateList[itemIndex - 1]?.id
+                        );
+                    } else {
+                        setcurDateDeli(null);
+                        setdateSelected('');
+                    }
+                    settimeSelected('-1');
+                }}
+            />
         );
     };
     const chosenDeliTime = (datelist) => {
         const isActive =
             datelist?.curDateDeli?.TimeList !== null &&
             datelist?.curDateDeli?.TimeList?.length > 0;
+        const listDeliTime = [
+            {
+                label: 'Thời gian nhận',
+                value: '-1',
+                selected: true,
+                disabled: true
+            }
+        ];
+        if (isActive)
+            datelist?.curDateDeli?.TimeList.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.timetext +
+                    ' - Phí: ' +
+                    helper.formatMoney(element.shippingcost) +
+                    '","value": "' +
+                    element.id +
+                    // '","disabled": "' +
+                    // element.disabled +
+                    '"}';
+                listDeliTime.push(JSON.parse(temp));
+            });
         return (
-            <View
-                style={[
-                    styles.delichoose,
-                    { marginTop: 10, marginBottom: 10 }
-                ]}>
-                <Picker
-                    selectedValue={0}
-                    style={{
-                        height: 50,
-                        width: '100%',
-                        color: isActive ? '#000' : '#C2C2C2'
-                    }}
-                    enabled={isActive}
-                    mode={'dropdown'}
-                    onValueChange={(itemValue, itemIndex) => {
-                        settimeDeliID(itemValue);
-                        setCartUserInfo(previousState => ({
-                            ...previousState,
-                            OthersGenderCall: itemValue
-                        }));
-                    }}>
-                    <Picker.Item
-                        label="Thời gian nhận"
-                        value="-1"
-                        color="#C2C2C2"
-                    />
-                    {isActive &&
-                        datelist?.curDateDeli?.TimeList.map((item) => {
-                            return (
-                                <Picker.Item
-                                    label={item.text}
-                                    displayName={<HTML source={item.text} />}
-                                    value={item.id}
-                                    key={item.id}
-                                />
-                            );
-                        })}
-                </Picker>
-            </View>
+            <DropDownPicker
+                items={listDeliTime}
+                zIndex={20}
+                disabled={isActive == false}
+                defaultValue={'-1'}
+                containerStyle={{
+                    height: 50,
+                    marginHorizontal: 10,
+                    marginTop: 10
+                }}
+                style={[styles.borderRadius, { backgroundColor: '#fff', borderColor:  dateSelected == '' || dateSelected == null ? '#ff001f' : '#8F9BB3' }]}
+                dropDownMaxHeight={200}
+                itemStyle={{
+                    justifyContent: 'flex-start'
+                }}
+                dropDownStyle={{ backgroundColor: '#fff' }}
+                isVisible={false}
+                onOpen={() => {
+                    setisVisibleDatePicker(false);
+                }}
+                onChangeItem={(itemValue, itemIndex) => {
+                    settimeSelected(itemValue.value);
+                    console.log(
+                        'timeSelected ' +
+                            timeSelected +
+                            'dateSelected ' +
+                            dateSelected
+                    );
+                }}
+            />
         );
     };
 
@@ -319,7 +407,7 @@ const UserInfoCart = (props) => {
                 selected: true
             },
             {
-                id: 2,
+                id: 0,
                 value: false,
                 name: 'Chị',
                 selected: false
@@ -332,9 +420,9 @@ const UserInfoCart = (props) => {
                     : { ...setSexOther, selected: false }
             );
             setSexOther(updatedState);
-            setCartUserInfo(previousState => ({
+            setCartUserInfo((previousState) => ({
                 ...previousState,
-                OthersGenderCall: updatedState
+                OthersGenderCall: item.id
             }));
         };
         if (isSelectedCallOther) {
@@ -366,7 +454,7 @@ const UserInfoCart = (props) => {
                         label={<Text>Số điện thoại (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersPhone}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 OthersPhone: value
                             }));
@@ -395,7 +483,7 @@ const UserInfoCart = (props) => {
                         label={<Text>Họ và tên (bắt buộc)</Text>}
                         value={cartUserInfo?.OthersName}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 OthersName: value
                             }));
@@ -431,12 +519,16 @@ const UserInfoCart = (props) => {
                     if (location !== null && location.ProvinceId > 0) {
                         setprovinceSelected(location.ProvinceId);
                         getLstDis(location.ProvinceId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipProvince: location.ProvinceId
+                        }));
                     }
                 })
                 .catch((err) => {});
         };
 
-        const getLstDis = (provinceId) => {
+        const getLstDis = (provinceId, onManualSelect = false) => {
             apiBase(
                 API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
                 METHOD.GET,
@@ -446,15 +538,19 @@ const UserInfoCart = (props) => {
                 .then((response) => {
                     setLstDis(response.Value);
                     setprovinceSelected(provinceId);
-                    setEnableDis(true);
-                    if (provinceId > 0 && location?.DistrictId > 0) {
+                    setEnableDis(provinceId > 0);
+                    if (provinceId > 0 && location?.DistrictId > 0 && !onManualSelect) {
                         setdistrictSelected(location.DistrictId);
                         getLstWard(provinceId, location.DistrictId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipDistrict: location.DistrictId
+                        }));
                     } else setEnableWard(false);
                 })
                 .catch(() => {});
         };
-        const getLstWard = (ProvinceId, DistrictId) => {
+        const getLstWard = (ProvinceId, DistrictId, onManualSelect = false) => {
             apiBase(
                 API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
                 METHOD.GET,
@@ -464,22 +560,25 @@ const UserInfoCart = (props) => {
                 .then((response) => {
                     setLstWard(response.Value);
                     setEnableWard(true);
-                    if (location?.WardId > 0) {
+                    setwardSelected(-1);
+                    if (location?.WardId > 0 && !onManualSelect) {
                         setwardSelected(location?.WardId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipWard: location.WardId
+                        }));
                     }
                 })
-                .catch(() => {
-                    setIsLoadingWard(false);
-                });
+                .catch(() => {});
         };
 
         return (
             <View>
                 <View style={styles.provAndDic}>
-                    <View style={[styles.provBox]}>
+                    <View style={[styles.provBox,{borderColor:  provinceSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                         <Picker
                             selectedValue={provinceSelected}
-                            style={{ height: 50, width: 150 }}
+                            style={{ height: 50, width: 150, color: '#000' }}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -490,8 +589,12 @@ const UserInfoCart = (props) => {
 
                                 //reset district
                                 setEnableDis(false);
-                                getLstDis(itemValue);
+                                getLstDis(itemValue, true);
                                 setdistrictSelected(false);
+                                setCartUserInfo((previousState) => ({
+                                    ...previousState,
+                                    ShipProvince: itemValue > 0 ? itemValue : 0
+                                }));
                             }}>
                             <Picker.Item
                                 label="Tỉnh thành"
@@ -510,13 +613,13 @@ const UserInfoCart = (props) => {
                                     );
                                 })}
                         </Picker>
-                        {provinceSelected <= 0 && (
+                        {/* {provinceSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
                                 {CONST_STRINGERR.ERR_PROVINCE}
                             </Text>
-                        )}
+                        )} */}
                     </View>
-                    <View style={styles.disBox}>
+                    <View style={[styles.disBox,{borderColor:  districtSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
@@ -526,8 +629,12 @@ const UserInfoCart = (props) => {
                                 color: enableDis ? '#000' : '#C2C2C2'
                             }}
                             onValueChange={(itemValue, itemIndex) => {
-                                getLstWard(provinceSelected, itemValue);
+                                getLstWard(provinceSelected, itemValue, true);
                                 setdistrictSelected(itemValue);
+                                setCartUserInfo((previousState) => ({
+                                    ...previousState,
+                                    ShipDistrict: itemValue > 0 ? itemValue : 0
+                                }));
                             }}>
                             <Picker.Item
                                 label="Quận, huyện"
@@ -547,19 +654,23 @@ const UserInfoCart = (props) => {
                                 })}
                         </Picker>
 
-                        {districtSelected <= 0 && (
+                        {/* {districtSelected <= 0 && (
                             <Text style={[styles.textErr, styles.textErrAbs]}>
                                 {CONST_STRINGERR.ERR_DISTRICT}
                             </Text>
-                        )}
+                        )} */}
                     </View>
                 </View>
-                <View style={styles.wardBox}>
+                <View style={[styles.wardBox,{borderColor:  wardSelected <= 0 ? '#ff001f' : '#D6E0F5'}]}>
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
+                            setCartUserInfo((previousState) => ({
+                                ...previousState,
+                                ShipWard: itemValue > 0 ? itemValue : 0
+                            }));
                         }}
                         style={{
                             height: 50,
@@ -583,11 +694,11 @@ const UserInfoCart = (props) => {
                                 );
                             })}
                     </Picker>
-                    {wardSelected <= 0 && (
+                    {/* {wardSelected <= 0 && (
                         <Text style={[styles.textErr, styles.textErrAbs]}>
                             {CONST_STRINGERR.ERR_WARD}
                         </Text>
-                    )}
+                    )} */}
                 </View>
             </View>
         );
@@ -602,7 +713,7 @@ const UserInfoCart = (props) => {
                 selected: props == -1 || props == 1 ? true : false
             },
             {
-                id: 2,
+                id: 0,
                 value: false,
                 name: 'Chị',
                 selected: props == 2 ? true : false
@@ -615,9 +726,9 @@ const UserInfoCart = (props) => {
                     : { ...setSex, selected: false }
             );
             setSex(updatedState);
-            setCartUserInfo(previousState => ({
+            setCartUserInfo((previousState) => ({
                 ...previousState,
-                CustomerGender: updatedState
+                CustomerGender: item.id
             }));
         };
         return (
@@ -650,8 +761,37 @@ const UserInfoCart = (props) => {
     return (
         <View>
             <Header />
+            <Modal
+                visible={isLoading}
+                transparent={true}
+                index
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                animationType="fade"
+                onRequestClose={() => {}}>
+                <ActivityIndicator
+                    style={{ marginTop: 150 }}
+                    size="large"
+                    color={Colors.GREEN_KEY}
+                />
+            </Modal>
             <ScrollView
-                style={[styles.container]}
+                style={[
+                    styles.container,
+                    { zIndex: 10 },
+                    isLoading
+                        ? {
+                              width: windowWidth,
+                              height: windowHeight,
+                              backgroundColor: '#999',
+                              opacity: 0.2
+                          }
+                        : ''
+                ]}
+                nestedScrollEnabled={false}
                 contentContainerStyle={{
                     paddingBottom: 60
                 }}>
@@ -663,7 +803,7 @@ const UserInfoCart = (props) => {
                         source={require('../../../assets/images/icon-back.png')}
                     />
                     <Text onclick={() => {}} style={styles.backTop}>
-                        Xem lại giỏ hàng
+                        {' '}Xem lại giỏ hàng
                     </Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity>
@@ -679,7 +819,6 @@ const UserInfoCart = (props) => {
                 </TouchableOpacity> */}
                 <View style={styles.sectionInputTop}>
                     <Text style={styles.stepTitle}>1. Thông tin nhận hàng</Text>
-
                     <FloatingLabelInput
                         customLabelStyles={{
                             colorFocused: '#000',
@@ -700,8 +839,9 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
-                        onChangeText={(value) => {                            
-                            setCartUserInfo(previousState => ({
+                        onBlur={() => {}}
+                        onChangeText={(value) => {
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 CustomerPhone: value
                             }));
@@ -713,9 +853,7 @@ const UserInfoCart = (props) => {
                         <Text style={styles.textErr}>{phoneErrMessage}</Text>
                     )}
 
-                    {SexRadio(
-                        cart?.CustomerGender > 0 ? cart?.CustomerGender : 1
-                    )}
+                    {SexRadio(1)}
 
                     <FloatingLabelInput
                         customLabelStyles={{
@@ -737,7 +875,7 @@ const UserInfoCart = (props) => {
                         }
                         value={cartUserInfo?.CustomerName}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 CustomerName: value
                             }));
@@ -753,7 +891,7 @@ const UserInfoCart = (props) => {
                         placeholder="Số nhà, tên đường"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
-                            setCartUserInfo(previousState => ({
+                            setCartUserInfo((previousState) => ({
                                 ...previousState,
                                 ShipAddress: value
                             }));
@@ -801,25 +939,25 @@ const UserInfoCart = (props) => {
                     <Text style={styles.stepTitle}>
                         2. Chọn thời gian nhận hàng
                     </Text>
-                    {chosenDeliDate()}
+                </View>
 
-                    {chosenDeliTime({ curDateDeli })}
+                {chosenDeliDate()}
 
-                    <View>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
-                            Mua thêm để miễn phí giao với đơn trên 100.000đ (còn
-                            5 lần)
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    fontWeight: 'normal',
-                                    color: '#8F9BB3'
-                                }}>
-                                &nbsp;không tính hàng nặng, to: Bia, Nước các
-                                loại
-                            </Text>
+                {chosenDeliTime({ curDateDeli })}
+
+                <View style={{ padding: 10 }}>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+                        Mua thêm để miễn phí giao với đơn trên 100.000đ (còn 5
+                        lần)
+                        <Text
+                            style={{
+                                fontSize: 14,
+                                fontWeight: 'normal',
+                                color: '#8F9BB3'
+                            }}>
+                            &nbsp;không tính hàng nặng, to: Bia, Nước các loại
                         </Text>
-                    </View>
+                    </Text>
                 </View>
                 <View style={styles.sectionInput}>
                     <View style={styles.checkboxContainer}>
@@ -862,9 +1000,10 @@ const UserInfoCart = (props) => {
                     </View>
                     <View style={styles.btnbuy}>
                         <TouchableOpacity
-                            onPress={() =>
-                                props.navigation.navigate('UserInfo')
-                            }>
+                            onPress={() => {
+                                debugger;
+                                onSubmitForm();
+                            }}>
                             <View>
                                 <Text style={styles.textbtnbuy}>
                                     Hoàn tất mua
