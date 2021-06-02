@@ -14,8 +14,9 @@ import {
     FlatList
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ImageViewer from 'react-native-image-zoom-viewer';
+// import ImageViewer from 'react-native-image-zoom-viewer';
 import * as COLOR from '@app/styles/colors';
+import ImageViewer from './ImageViewer';
 
 const THUMB_SIZE = 50;
 const { width } = Dimensions.get('window');
@@ -58,7 +59,10 @@ export default class ProductGallery extends Component {
         const data = this.props.Gallery_product;
         const { crrImgIdx } = this.state;
         const DATA_IMAGES_LENGTH = data.length;
-        const images = data.map((s) => ({ url: s.ImageThumb }));
+        const images = data.map((s) => ({
+            url: s.ImageLarge,
+            LinkVideo: s.LinkVideo
+        }));
 
         return (
             <View
@@ -88,14 +92,37 @@ export default class ProductGallery extends Component {
                                     onPress={() => this.openModal(index)}
                                     style={{
                                         width,
-                                        height: IMG_HEIGHT
+                                        height: IMG_HEIGHT,
+                                        position: 'relative'
                                     }}>
+                                    {item.LinkVideo !== null && (
+                                        <View
+                                            style={{
+                                                alignItems: 'center',
+                                                bottom: 0,
+                                                justifyContent: 'center',
+                                                left: 0,
+                                                position: 'absolute',
+                                                right: 0,
+                                                top: 0,
+                                                zIndex: 13,
+                                                opacity: 0.5
+                                            }}>
+                                            <View>
+                                                <Icon
+                                                    name="play-circle"
+                                                    size={100}
+                                                    color="black"
+                                                />
+                                            </View>
+                                        </View>
+                                    )}
                                     <Image
                                         style={{
                                             width,
                                             height: IMG_HEIGHT
                                         }}
-                                        resizeMode="contain"
+                                        resizeMode="cover"
                                         source={{ uri: item.ImageThumb }}
                                     />
                                 </TouchableOpacity>
@@ -218,6 +245,20 @@ export default class ProductGallery extends Component {
                             }}
                             backgroundColor="white"
                             footerContainerStyle={[styles.modalFooterStyle]}
+                            renderArrowLeft={() => (
+                                <Icon
+                                    name="angle-left"
+                                    size={26}
+                                    color={COLOR.BLACK}
+                                />
+                            )}
+                            renderArrowRight={() => (
+                                <Icon
+                                    name="angle-right"
+                                    size={26}
+                                    color={COLOR.BLACK}
+                                />
+                            )}
                             renderFooter={() =>
                                 this._renderFooterModalItems(data)
                             }

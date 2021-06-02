@@ -7,7 +7,8 @@ import { bindActionCreators } from 'redux';
 // import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
 import * as locationCreator from '@app/redux/actions/locationAction';
-
+import { ModalPortal, ModalContent } from 'react-native-modals';
+import HTML from 'react-native-render-html';
 import FastImage from 'react-native-fast-image';
 import styles from './style';
 import BuyBox from './BuyBox';
@@ -138,7 +139,21 @@ const ComboProductBox = (props) => {
                 });
     };
     const alertAPI = (messages) => {
-        Alert.alert('', messages);
+        const alertModal = ModalPortal.show(
+            <ModalContent>
+                <HTML source={{ html: messages }} />
+            </ModalContent>,
+            {
+                animationDuration: 0,
+                width: 0.8,
+                onTouchOutside: () => {
+                    ModalPortal.dismiss(alertModal);
+                },
+                onHardwareBackPress: () => {
+                    return true;
+                }
+            }
+        );
     };
 
     const imageModal =

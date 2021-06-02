@@ -6,9 +6,11 @@ export const styleAlert = StyleSheet.create({
         backgroundColor: Colors.GREEN_KEY
     },
     btnAlertClose: {
+        ...Typography.FONT_BOLD_16,
         color: Colors.GRAY_ALERT_CLOSE
     },
     btnAlertText: {
+        ...Typography.FONT_BOLD_16,
         color: Colors.WHITE
     }
 });

@@ -1,18 +1,10 @@
-// import * as _state from './state';
-// import { cartState } from '../cart/state';
-import * as _action from './action';
+import * as _action from '../actions/productDetailAction';
+import * as _store from '../store/productDetailStore';
 
-const productDetailStateInit = {
-    Product_detail: [],
-    Product_relative: [],
-    Combo_detail: [],
-    Box_banner: '',
-    isExchangeProduct: true,
-    Gallery_product: [],
-    Is_loading: true
-};
-
-const productDetailReducer = function (state = productDetailStateInit, action) {
+const productDetailReducer = function (
+    state = _store.productDetailState,
+    action
+) {
     switch (action.type) {
         case _action.productDetailAction.IS_LOADING:
             return {

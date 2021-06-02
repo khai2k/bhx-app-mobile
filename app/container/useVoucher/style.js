@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     voucherPriceBox: {
-        left: 10,
+        marginHorizontal: 10,
         backgroundColor: 'green',
         width: 52,
         height: 40,
@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
         marginBottom: 7
     },
     voucherInfoBox: {
-        left: 45
+        width: '70%',
+        marginLeft: 15
     },
     labelPriceVoucher: {
         color: 'white',

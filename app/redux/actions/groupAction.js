@@ -48,10 +48,10 @@ export const category_filter = (
 ) => {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            const location = getState().locationReducer;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
-                provinceId: location.crrLocationRs.ProvinceId,
-                storeId: location.crrLocationRs.StoreId,
+                provinceId: location.ProvinceId,
+                storeId: location.StoreId,
                 data: {
                     categoryId,
                     selectedBrandId,

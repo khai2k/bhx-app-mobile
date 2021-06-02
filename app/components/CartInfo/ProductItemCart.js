@@ -10,7 +10,8 @@ import {
     ModalPortal,
     ModalFooter,
     ModalTitle,
-    ModalButton
+    ModalButton,
+    ModalContent
 } from 'react-native-modals';
 import {
     Text,
@@ -169,7 +170,9 @@ const ProductItemCart = (props) => {
     const alertDeleteItemProduct = () => {
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalContent>
+                    <Text>Bạn muốn xóa sản phẩm này?</Text>
+                </ModalContent>
                 <ModalFooter>
                     <ModalButton
                         textStyle={StyleGeneral.styleAlert.btnAlertClose}
@@ -191,6 +194,7 @@ const ProductItemCart = (props) => {
             </View>,
             {
                 animationDuration: 0,
+                width: 0.8,
                 onHardwareBackPress: () => {
                     return true;
                 }
@@ -525,8 +529,8 @@ const styles = StyleSheet.create({
     quantity: {
         flex: 3,
         flexDirection: 'row',
-        textAlign: 'center',
-        marginTop: 5
+        marginTop: 5,
+        textAlign: 'center'
     },
     sboxcombo: {
         backgroundColor: Colors.BG_COMBO,

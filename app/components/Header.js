@@ -31,6 +31,7 @@ const Header = () => {
 
     const locationinfo = useSelector((state) => state.locationReducer.Location);
     const general = useSelector((state) => state.locationReducer);
+    const cartId = useSelector((state) => state.generalReducer.CartId);
     const cartSimpleInfo = useSelector((state) => state.cartReducer.CartSimple);
 
     useEffect(async () => {
@@ -58,7 +59,10 @@ const Header = () => {
     };
 
     const showDataTest = () => {
-        Alert.alert('Data dùng cho test', JSON.stringify(general));
+        Alert.alert(
+            'Data dùng cho test',
+            `CartId: ${cartId} ${JSON.stringify(general)}`
+        );
     };
 
     return (
@@ -78,11 +82,11 @@ const Header = () => {
                         style={styles.input}
                         onPress={() => navigation.navigate('SuggestSearch')}>
                         <Text style={styles.inputText}>Bạn tìm gì</Text>
+                        <Image
+                            style={styles.iconsearch}
+                            source={require('../../assets/images/icon-search.png')}
+                        />
                     </TouchableOpacity>
-                    <Image
-                        style={styles.iconsearch}
-                        source={require('../../assets/images/icon-search.png')}
-                    />
                 </View>
                 <View style={styles.boxinfo}>
                     <TouchableOpacity
@@ -167,17 +171,17 @@ const styles = StyleSheet.create({
         width: '26%'
     },
     boxinfo: {
+        alignItems: 'center',
         flex: 9,
         flexDirection: 'row',
-        alignItems: 'center',
         flexWrap: 'wrap',
-        paddingTop: 5,
-        paddingBottom: 5
+        paddingBottom: 5,
+        paddingTop: 5
     },
     boxlogo: {
+        alignItems: 'center',
         flex: 1,
-        flexWrap: 'wrap',
-        alignItems: 'center'
+        flexWrap: 'wrap'
     },
     boxnumber: {
         alignItems: 'flex-end',
@@ -186,14 +190,14 @@ const styles = StyleSheet.create({
         width: '20%'
     },
     boxsearch: {
-        flex: 4,
-        flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: Colors.WHITE,
-        borderWidth: 0.5,
         borderColor: Colors.BLACK,
-        fontSize: Typography.FONT_SIZE_10,
         borderRadius: 10,
+        borderWidth: 0.5,
+        flex: 4,
+        flexDirection: 'row',
+        fontSize: Typography.FONT_SIZE_10,
         marginLeft: 5,
         marginRight: 5
     },
@@ -217,11 +221,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 12,
         margin: 5,
-        padding: 5,
         resizeMode: 'stretch',
         width: 12
     },
     input: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         paddingLeft: 5
     },
     // eslint-disable-next-line react-native/no-color-literals

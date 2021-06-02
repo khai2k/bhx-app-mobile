@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { SafeAreaView, ActivityIndicator, View } from 'react-native';
+import { SafeAreaView, ActivityIndicator, View, Alert } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
@@ -8,7 +8,7 @@ import * as searchCreator from '@app/redux/actions/searchAction';
 import { helper } from '@app/common';
 import Product from './Product';
 
-class Search extends Component {
+class Search extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

@@ -71,10 +71,7 @@ const Box = (props) => {
     };
     const locationInfo = useSelector((state) => state.locationReducer);
     const checkReminderLocation = () => {
-        if (
-            helper.isEmptyOrNull(locationInfo) ||
-            helper.isEmptyOrNull(locationInfo.crrLocationRs)
-        ) {
+        if (helper.IsEmptyObject(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }
@@ -136,15 +133,17 @@ const Box = (props) => {
         }
         return 1;
     };
-    const checkIsSaleOnly = (webStatusId, Sales) => {
-        if (webStatusId === 5 && Sales !== null) {
+    const checkIsSaleOnly = (webStatusId, isSale) => {
+        if (webStatusId === 5 && isSale === true) {
             return true;
         }
         return false;
     };
     const { StockQuantityNew, Price, Sales } = bHXProduct;
+
+    const isSale = !helper.isEmptyObjectOrNull(Sales);
     const webStatusId = checkWebStatusId(Price, StockQuantityNew);
-    const isSaleOnly = checkIsSaleOnly(webStatusId, Sales);
+    const isSaleOnly = checkIsSaleOnly(webStatusId, isSale);
 
     function renderBottomBox() {
         return (
@@ -161,7 +160,7 @@ const Box = (props) => {
                 ) : (
                     <View>
                         {isSaleOnly ? (
-                            <View style={styles.boxBuy}>
+                            <View style={[styles.boxBuy, styles.boxBuyBorder]}>
                                 <Text style={styles.ExpiredText}>
                                     {' '}
                                     {Sales['6613'].ExpiredText === ''
@@ -170,7 +169,9 @@ const Box = (props) => {
                                 </Text>
                             </View>
                         ) : (
-                            <View className="boxBuy" style={styles.boxBuy}>
+                            <View
+                                className="boxBuy"
+                                style={[styles.boxBuy, styles.boxBuyBorder]}>
                                 {webStatusId === 3 ? (
                                     <View
                                         className="priceInfo"
@@ -205,7 +206,7 @@ const Box = (props) => {
             <View style={styles.center}>
                 {isSaleOnly ? (
                     <Text style={{ fontWeight: 'bold' }}>
-                        {Sales &&
+                        {isSale &&
                             `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
                     </Text>
                 ) : (
@@ -227,7 +228,7 @@ const Box = (props) => {
                 }}>
                 <View style={styles.productNearDate}>
                     <Text>
-                        {Sales &&
+                        {isSale &&
                             `MUA ${helper.formatMoney(Sales['6613'].Price)}`}
                     </Text>
                     <Text style={styles.ExpiredText}>
@@ -261,7 +262,7 @@ const Box = (props) => {
                     {renderBottomBox()}
                 </TouchableOpacity>
             </View>
-            {Sales !== null && !isSaleOnly && renderSale()}
+            {isSale && !isSaleOnly && renderSale()}
         </View>
     );
 };

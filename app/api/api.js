@@ -1,4 +1,4 @@
-//  export const API_BASE = 'https://beta.bachhoaxanh.com/apiapp/api/';
+//  export const API_BASE = 'https://betazuul.tgdd.vn/apiapp/api/';
 export const API_BASE = 'https://staging.bachhoaxanh.com/apiapp/api/';
 //  export const API_BASE = 'https://www.bachhoaxanh.com/apiapp/api/';
 export const API_REQUEST_GET_CART = `${API_BASE}Order/get`;
@@ -19,7 +19,9 @@ export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
 export const GET_MORE_LINE = `${API_BASE}Home/LoadMoreHomeData`;
 export const GET_FRESH_PRODUCTS = `${API_BASE}Home/AjGetFreshProducts`;
 
-export const API_REQUEST_GET_ODER_SUCCESS = `${API_BASE}Order/OrderResult`;
+//OrderSuccess
+export const API_REQUEST_GET_ORDER_SUCCESS = `${API_BASE}Order/OrderResult`;
+export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancelorder`;
 
 // Location
 export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;

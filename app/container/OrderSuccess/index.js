@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
-import axios from 'axios';
+import { bindActionCreators } from 'redux';
 import {
     View,
-    Modal,
     Text,
     Image,
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback
 } from 'react-native';
+import Modal from 'react-native-modal';
 import CheckBox from '@react-native-community/checkbox';
 import { helper } from '@app/common';
-// import * as orderSuccessCreator from './action';
+import * as orderSuccessCreator from './action';
 // import CancelOrderModal from './cancelOrderModal';
 import Header from '../../components/Header';
+import { showMessage, hideMessage } from 'react-native-flash-message';
 import styles from './style';
 
 class OrderSuccess extends Component {
@@ -28,35 +28,52 @@ class OrderSuccess extends Component {
             checkBox3: false,
             modalVisible: false,
             infoOrder: {},
-            productList: [],
             purchaseMethodText: 'tiền mặt'
         };
     }
 
     componentDidMount() {
-        axios({
-            method: 'post',
-            url: 'https://staging.bachhoaxanh.com/apiapp/api/Order/OrderResult',
-            data: {
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                Sc: '928744E549D34998E5C1714628B1028C',
-                OrderId: 43633490
-            }
-        })
+        this.get_order_success();
+    }
+
+    get_order_success() {
+        this.props.actionOrderSuccess
+            .orderSuccess_get()
             .then((res) => {
-                const { data } = res;
-                const orderInfo = data.Value;
+                // console.log('dataaaaaa', res);
                 this.setState({
-                    totalPrice: orderInfo.Total,
-                    deliveryTime: orderInfo.DeliveryTextTime,
-                    infoOrder: orderInfo.Detail,
-                    productList: orderInfo.Detail.DeliveryList
+                    totalPrice: res.Value.Total,
+                    deliveryTime: res.Value.DeliveryTextTime,
+                    infoOrder: res.Value.Detail,
+                    productList: res.Value.Detail.DeliveryList
                 });
             })
-            .catch((err) => console.log('err', err));
+            .catch((err) => {
+                console.log('err', err);
+            });
+    }
+
+    cancel_order() {
+        this.props.actionOrderSuccess
+            .orderSuccess_cancel()
+            .then((res) => {
+                showMessage({
+                    message: res.Message,
+                    type: 'default',
+                    backgroundColor: '#222B45',
+                    icon: 'success'
+                });
+                // this.props.navigation.goBack();
+            })
+            .catch((err) => {
+                showMessage({
+                    position: 'bottom',
+                    message: 'Hủy đơn hàng thất bại, xin vui lòng thử lại!',
+                    type: 'default',
+                    backgroundColor: '#222B45',
+                    icon: 'danger'
+                });
+            });
     }
 
     _renderUserInfo() {
@@ -119,9 +136,7 @@ class OrderSuccess extends Component {
             <TouchableOpacity>
                 <View style={styles.infoLine}>
                     <View style={styles.dot} />
-                    <Text>
-                        Xem {this.state.productList.length} sản phẩm đã đặt:{' '}
-                    </Text>
+                    <Text>Xem 3 sản phẩm đã đặt: </Text>
                 </View>
             </TouchableOpacity>
         );
@@ -286,11 +301,19 @@ class OrderSuccess extends Component {
 
     _renderCancelOrderModal() {
         return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={this.state.modalVisible}>
-                <View style={styles.centeredView}>
+            <View style={styles.modalContainer}>
+                <Modal
+                    visible={this.state.modalVisible}
+                    style={{
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        margin: 0
+                    }}
+                    onBackButtonPress={() => {
+                        this.setState({ modalVisible: false });
+                    }}
+                    onBackdropPress={() => {
+                        this.setState({ modalVisible: false });
+                    }}>
                     <View style={styles.modalView}>
                         <Text style={{ lineHeight: 20 }}>
                             BachhoaXANH.com mong nhận được sự góp ý của anh để
@@ -302,9 +325,7 @@ class OrderSuccess extends Component {
                                     value={this.state.checkBox1}
                                     onValueChange={() =>
                                         this.setState({
-                                            checkBox1: !this.state.checkBox1,
-                                            checkBox2: false,
-                                            checkBox3: false
+                                            checkBox1: !this.state.checkBox1
                                         })
                                     }
                                 />
@@ -317,9 +338,7 @@ class OrderSuccess extends Component {
                                     value={this.state.checkBox2}
                                     onValueChange={() =>
                                         this.setState({
-                                            checkBox2: !this.state.checkBox2,
-                                            checkBox1: false,
-                                            checkBox3: false
+                                            checkBox2: !this.state.checkBox2
                                         })
                                     }
                                 />
@@ -332,9 +351,7 @@ class OrderSuccess extends Component {
                                     value={this.state.checkBox3}
                                     onValueChange={() =>
                                         this.setState({
-                                            checkBox3: !this.state.checkBox3,
-                                            checkBox2: false,
-                                            checkBox1: false
+                                            checkBox3: !this.state.checkBox3
                                         })
                                     }
                                 />
@@ -363,7 +380,10 @@ class OrderSuccess extends Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.confirmButton}>
-                                <TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.cancel_order();
+                                    }}>
                                     <Text style={styles.confirmText}>
                                         XÁC NHẬN HỦY ĐƠN HÀNG
                                     </Text>
@@ -371,8 +391,8 @@ class OrderSuccess extends Component {
                             </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            </View>
             // <CancelOrderModal
             //     isModalVisible={this.state.modalVisible}
             //     setModalVisible={setModalVisible}
@@ -419,25 +439,25 @@ class OrderSuccess extends Component {
                     {this._renderEPurchase()}
                 </View>
                 {this._renderEditButton()}
-                {this._renderCancelOrderModal()}
                 <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}>
+                    onPress={() => this.props.navigation.navigate('Product')}>
                     <Text style={styles.backToHomeText}>Về trang chủ</Text>
                 </TouchableOpacity>
+                {this._renderCancelOrderModal()}
             </View>
         );
     }
 }
 
-const mapStateToProps = function () {
+const mapStateToProps = (state) => {
     return {
-        // orderSuccessInfo: state.orderSuccessReducer
+        orderInfo: state.orderSuccessReducer.OrderInfo
     };
 };
 
-const mapDispatchToProps = function () {
+const mapDispatchToProps = (dispatch) => {
     return {
-        // action: bindActionCreators(orderSuccessCreator, dispatch)
+        actionOrderSuccess: bindActionCreators(orderSuccessCreator, dispatch)
     };
 };
 
