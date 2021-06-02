@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
         textAlign: 'center'
     },
     loading: {
-        height: '100%',
+        height: '90%',
         position: 'absolute',
         width: '100%'
     },

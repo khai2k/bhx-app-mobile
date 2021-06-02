@@ -93,28 +93,30 @@ const Promotion = React.memo(() => {
     return (
         <SafeAreaView style={styles.container}>
             <Header />
-            <ActivityIndicator
-                style={[styles.loading, isLoading && styles.loadingActive]}
-                animating={isLoading}
-                size="large"
-                color="#00ff00"
-            />
-            <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
-                <ListCategoryTop
-                    lstCategoryTop={listCategoryTop}
-                    setGroupCateFilter={setGroupCateFilter}
+            <View>
+                <ActivityIndicator
+                    style={[styles.loading, isLoading && styles.loadingActive]}
+                    animating={isLoading}
+                    size="large"
+                    color="#00ff00"
                 />
-                <LineDealShock lstProductTopDeal={promotionTopDealData} />
-                <RenderGroupCate
-                    listGroupCate={listGroupCate}
-                    dispatch={dispatch}
-                    lstGroupCateFilter={lstGroupCateFilter}
-                    setListGroupCateFilter={setListGroupCateFilter}
-                    groupCateFilter={groupCateFilter}
-                    navigation={navigation}
-                    currentLocation={currentLocation}
-                />
-            </ScrollView>
+                <ScrollView contentOffset={{ x: 0, y: getPosition() }}>
+                    <ListCategoryTop
+                        lstCategoryTop={listCategoryTop}
+                        setGroupCateFilter={setGroupCateFilter}
+                    />
+                    <LineDealShock lstProductTopDeal={promotionTopDealData} />
+                    <RenderGroupCate
+                        listGroupCate={listGroupCate}
+                        dispatch={dispatch}
+                        lstGroupCateFilter={lstGroupCateFilter}
+                        setListGroupCateFilter={setListGroupCateFilter}
+                        groupCateFilter={groupCateFilter}
+                        navigation={navigation}
+                        currentLocation={currentLocation}
+                    />
+                </ScrollView>
+            </View>
         </SafeAreaView>
     );
 });
