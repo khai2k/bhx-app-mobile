@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Colors, Typography, Mixins } from '@app/styles';
+import { Colors, Typography, Mixins, StyleGeneral } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useSelector, useDispatch } from 'react-redux';
 import { helper } from '@app/common';
 import HTML from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {
+    ModalPortal,
+    ModalFooter,
+    ModalTitle,
+    ModalButton
+} from 'react-native-modals';
 import {
     Text,
     View,
@@ -82,7 +88,7 @@ const ProductItemCart = (props) => {
 
     const setQuantityMinus = () => {
         if (quantity <= 1) {
-            props.alert(guildId);
+            alertDeleteItemProduct();
         } else {
             setQuantity(quantity - 1);
             updateTempItemCart(quantity - 1);
@@ -161,16 +167,35 @@ const ProductItemCart = (props) => {
     };
 
     const alertDeleteItemProduct = () => {
-        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
+                        text="Không xóa"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                    <ModalButton
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            actionRemoveItemProduct();
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
             {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
+                animationDuration: 0,
+                onHardwareBackPress: () => {
+                    return true;
+                }
             }
-        ]);
+        );
     };
 
     const alertMaxQuantityItemProduct = () => {

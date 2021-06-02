@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Colors, Typography, Mixins } from '@app/styles';
+import { Colors, Typography, Mixins, StyleGeneral } from '@app/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { useDispatch } from 'react-redux';
 import {
@@ -10,12 +10,19 @@ import {
     StyleSheet,
     Alert
 } from 'react-native';
+import {
+    ModalPortal,
+    ModalFooter,
+    ModalTitle,
+    ModalButton
+} from 'react-native-modals';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/redux/actions/cartAction';
 
 const ProductItemCartOff = (props) => {
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
+    // eslint-disable-next-line no-unused-vars
     const [guildId, setguildId] = useState(props.productCart.GuildId);
 
     const actionRemoveItemProduct = () => {
@@ -36,16 +43,35 @@ const ProductItemCartOff = (props) => {
     };
 
     const alertDeleteItemProduct = () => {
-        Alert.alert('', 'Bạn muốn xóa sản phẩm này?', [
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalTitle title="Bạn muốn xóa sản phẩm này?" />
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
+                        text="Không xóa"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                    <ModalButton
+                        style={StyleGeneral.styleAlert.btnAlert}
+                        textStyle={StyleGeneral.styleAlert.btnAlertText}
+                        text="Đồng ý"
+                        onPress={() => {
+                            actionRemoveItemProduct();
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
             {
-                text: 'Không xóa',
-                style: 'cancel'
-            },
-            {
-                text: 'Đồng ý',
-                onPress: actionRemoveItemProduct
+                animationDuration: 0,
+                onHardwareBackPress: () => {
+                    return true;
+                }
             }
-        ]);
+        );
     };
 
     return (

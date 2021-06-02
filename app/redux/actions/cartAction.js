@@ -137,7 +137,6 @@ export const cart_update_item_product = function (guildId, iQuantity) {
                         type: CART_UPDATE_ITEM_PRODUCT,
                         cartInfo
                     });
-                    cart_get_simple();
                     resolve(response);
                 })
                 .catch((error) => {
@@ -300,7 +299,6 @@ export const cart_get_simple = function () {
                 cartId = await Storage.getItem(CONST_STORAGE.CARTID);
             }
             const location = getState().locationReducer.Location.LocationInfo;
-
             const bodyApi = {
                 token: cartId,
                 us: '',
