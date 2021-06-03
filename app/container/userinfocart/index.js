@@ -48,8 +48,7 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    useEffect(() => {
-    }, curDateDeli);
+    useEffect(() => {}, curDateDeli);
 
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
@@ -70,10 +69,13 @@ const UserInfoCart = (props) => {
 
     const getCart = (prov, dis, ward) => {
         setisLoading(true);
+        setshipdatetime(null);
+        setdateSelected('-1');
+        settimeSelected('-1');
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
             setCartModel(res.Value);
-            if(res.Value.ShiptimeGroupList != null){
+            if (res.Value.ShiptimeGroupList != null) {
                 setshipdatetime(res.Value.ShiptimeGroupList);
             }
         });
@@ -182,38 +184,38 @@ const UserInfoCart = (props) => {
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
 
-        if(isSelectedXHD){
+        if (isSelectedXHD) {
             cartmodel.Cart.IsGetBill = isSelectedXHD;
-            if(helper.isEmptyOrNull(companyName)){
-                return "Vui lòng nhập tên Công ty!"
+            if (helper.isEmptyOrNull(companyName)) {
+                return 'Vui lòng nhập tên Công ty!';
             }
             cartmodel.Cart.CompanyName = companyName;
-            if(helper.isEmptyOrNull(companyAddress)){
-                return "Vui lòng nhập địa chỉ Công ty!"
+            if (helper.isEmptyOrNull(companyAddress)) {
+                return 'Vui lòng nhập địa chỉ Công ty!';
             }
             cartmodel.Cart.CompanyAddress = companyAddress;
-            if(helper.isEmptyOrNull(companyTax)){
-                return "Vui lòng nhập Mã số thuế!"
+            if (helper.isEmptyOrNull(companyTax)) {
+                return 'Vui lòng nhập Mã số thuế!';
             }
             cartmodel.Cart.CompanyTaxNumber = companyTax;
-        }else{
+        } else {
             cartmodel.Cart.IsGetBill = false;
             cartmodel.Cart.CompanyName = '';
             cartmodel.Cart.CompanyAddress = '';
             cartmodel.Cart.CompanyTaxNumber = '';
         }
-        if(isSelectedCallOther){
+        if (isSelectedCallOther) {
             cartmodel.Cart.IsCallOthers = isSelectedCallOther;
             cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
-            if(helper.isEmptyOrNull(phoneOtherErrMessage) == false){
+            if (helper.isEmptyOrNull(phoneOtherErrMessage) == false) {
                 return phoneOtherErrMessage;
             }
             cartmodel.Cart.OthersPhone = cartUserInfo.OthersPhone;
-            if(helper.isEmptyOrNull(cusNameOtherErrMessage) == false){
+            if (helper.isEmptyOrNull(cusNameOtherErrMessage) == false) {
                 return cusNameOtherErrMessage;
             }
             cartmodel.Cart.OthersName = cartUserInfo.OthersName;
-        }else{
+        } else {
             cartmodel.Cart.IsCallOthers = false;
             cartmodel.Cart.OthersGenderCall = -1;
             cartmodel.Cart.OthersPhone = '';
@@ -223,7 +225,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(phoneErrMessage) == false) {
             return phoneErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerPhone)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerPhone)) {
             handleErrorPhone(cartUserInfo.CustomerPhone);
             return CONST_STRINGERR.EMPTY_PHONE;
         }
@@ -232,7 +234,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
             return cusNameErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerName)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerName)) {
             handleErrorCusName(cartUserInfo.CustomerName);
             return CONST_STRINGERR.EMPTY_CUSNAME;
         }
@@ -252,7 +254,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
             return cusAddressErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.ShipAddress)){
+        if (helper.isEmptyOrNull(cartUserInfo.ShipAddress)) {
             handleErrorCusAddress(cartUserInfo.ShipAddress);
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
@@ -334,16 +336,16 @@ const UserInfoCart = (props) => {
             setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE_OTHER);
         } else setphoneOtherErrMessage('');
     };
-    const handleErrorCusName = (value, maxlength) => {
+    const handleErrorCusName = (value, maxlength = 50) => {
         if (helper.isEmptyOrNull(value)) {
             setcusNameErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
         } else if (value.length > maxlength) {
             setcusNameErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameErrMessage('');
     };
-    const handleErrorCusNameOther = (value, maxlength) => {
+    const handleErrorCusNameOther = (value, maxlength = 50) => {
         if (helper.isEmptyOrNull(value)) {
-            setcusNameOtherErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
+            setcusNameOtherErrMessage(CONST_STRINGERR.EMPTY_CUSNAME_OTHER);
         } else if (value.length > maxlength) {
             setcusNameOtherErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameOtherErrMessage('');
@@ -396,6 +398,7 @@ const UserInfoCart = (props) => {
                 placeholder={'Ngày nhận'}
                 disabled={isActive == false}
                 zIndex={20}
+                arrowColor={'#007842'}
                 defaultValue={'-1'}
                 containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
@@ -420,7 +423,11 @@ const UserInfoCart = (props) => {
                     textAlign: 'left',
                     color: '#000'
                 }}
-                dropDownStyle={{ backgroundColor: '#fff' }}
+                dropDownStyle={{
+                    backgroundColor: '#fff',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10
+                }}
                 isVisible={isVisibleDatePicker}
                 onOpen={() => {
                     setisVisibleDatePicker(true);
@@ -428,7 +435,6 @@ const UserInfoCart = (props) => {
                 }}
                 onClose={() => {
                     setisVisibleDatePicker(false);
-                    setisVisibleTimePicker(true);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     if (itemValue.value > 0) {
@@ -485,7 +491,7 @@ const UserInfoCart = (props) => {
                 disabled={isActive == false}
                 defaultValue={'-1'}
                 activeLabelStyle={{
-                    color: '#39739d'
+                    color: '#1B6EAA'
                 }}
                 labelStyle={{
                     fontSize: 14,
@@ -515,7 +521,11 @@ const UserInfoCart = (props) => {
                     justifyContent: 'flex-start',
                     color: '#000'
                 }}
-                dropDownStyle={{ backgroundColor: '#fff' }}
+                dropDownStyle={{
+                    backgroundColor: '#fff',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10
+                }}
                 isVisible={isVisibleTimePicker}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
@@ -527,7 +537,7 @@ const UserInfoCart = (props) => {
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     //debugger;
-                    if(itemValue.disabled == true){
+                    if (itemValue.disabled == true) {
                         settimeSelected('-1');
                         setisVisibleTimePicker(true);
                     } else settimeSelected(itemValue.value);
@@ -660,7 +670,7 @@ const UserInfoCart = (props) => {
                             colorFocused: '#000',
                             colorBlurred: '#000',
                             topFocused: -15,
-                            fontSizeFocused: 11
+                            fontSizeFocused: 10
                         }}
                         containerStyles={
                             helper.isEmptyOrNull(phoneOtherErrMessage) == false
@@ -1040,10 +1050,7 @@ const UserInfoCart = (props) => {
                           }
                         : ''
                 ]}
-                nestedScrollEnabled={false}
-                contentContainerStyle={{
-                    paddingBottom: 60
-                }}>
+                nestedScrollEnabled={false}>
                 <TouchableOpacity
                     style={styles.backTop}
                     onPress={() => props.navigation.goBack()}>
@@ -1237,40 +1244,47 @@ const UserInfoCart = (props) => {
                         }}
                     />
                 </View>
-                <CartTotal cartInfo={cartTotal} />
-                <View style={styles.boxbtn}>
-                    <View style={styles.btn}>
-                        <TouchableOpacity onPress={() => {}}>
-                            <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.btn}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                props.navigation.navigate('UseVoucher');
-                            }}>
-                            <View>
+                <View style={styles.blockPadding}></View>
+                <View style={styles.sectionInput}>
+                    <CartTotal cartInfo={cartTotal} />
+                    <View style={styles.boxbtn}>
+                        <View style={styles.btn}>
+                            <TouchableOpacity onPress={() => {}}>
                                 <Text style={styles.textbtn}>
-                                    Dùng phiếu mua hàng
+                                    Xóa hết giỏ hàng
                                 </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.btnbuy}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                onSubmitForm();
-                            }}>
-                            <View>
-                                <Text style={styles.textbtnbuy}>
-                                    Hoàn tất mua
-                                </Text>
-                                <Text style={styles.textPriceTotal}>
-                                    {cartTotal?.SumTotal > 0 &&
-                                        helper.formatMoney(cartTotal.SumTotal)}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btn}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    props.navigation.navigate('UseVoucher');
+                                }}>
+                                <View>
+                                    <Text style={styles.textbtn}>
+                                        Dùng phiếu mua hàng
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btnbuy}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    onSubmitForm();
+                                }}>
+                                <View>
+                                    <Text style={styles.textbtnbuy}>
+                                        Hoàn tất mua
+                                    </Text>
+                                    <Text style={styles.textPriceTotal}>
+                                        {cartTotal?.SumTotal > 0 &&
+                                            helper.formatMoney(
+                                                cartTotal.SumTotal
+                                            )}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </ScrollView>

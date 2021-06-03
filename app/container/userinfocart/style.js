@@ -32,8 +32,10 @@ const styles = StyleSheet.create({
     },
     boxbtn: {
         alignItems: 'center',
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
+        marginBottom: 100,
         paddingBottom: 10
     },
     btn: {
@@ -41,7 +43,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         height: 50,
-        justifyContent: 'center',
         padding: 5,
         width: '30%'
     },
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
-        marginTop: 10,
+        marginVertical: 10,
         padding: 10,
         textAlignVertical: 'top',
         width: '100%'
