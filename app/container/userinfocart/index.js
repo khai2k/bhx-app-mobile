@@ -49,9 +49,8 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, cartmodel);
 
     useEffect(() => {
-        console.log(curDateDeli);
     }, curDateDeli);
-    
+
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
 
@@ -74,7 +73,9 @@ const UserInfoCart = (props) => {
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
             setCartModel(res.Value);
-            setshipdatetime(cartmodel.ShiptimeGroupList);
+            if(res.Value.ShiptimeGroupList != null){
+                setshipdatetime(res.Value.ShiptimeGroupList);
+            }
         });
         console.log(shipdatetime);
     };
@@ -117,14 +118,14 @@ const UserInfoCart = (props) => {
         ""
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_PHONE
+        CONST_STRINGERR.EMPTY_PHONE_OTHER
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_CUSNAME
         ""
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_CUSNAME
+        CONST_STRINGERR.EMPTY_CUSNAME_OTHER
     );
     const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_SHIPADDRESS
@@ -180,6 +181,44 @@ const UserInfoCart = (props) => {
         }
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
+
+        if(isSelectedXHD){
+            cartmodel.Cart.IsGetBill = isSelectedXHD;
+            if(helper.isEmptyOrNull(companyName)){
+                return "Vui lòng nhập tên Công ty!"
+            }
+            cartmodel.Cart.CompanyName = companyName;
+            if(helper.isEmptyOrNull(companyAddress)){
+                return "Vui lòng nhập địa chỉ Công ty!"
+            }
+            cartmodel.Cart.CompanyAddress = companyAddress;
+            if(helper.isEmptyOrNull(companyTax)){
+                return "Vui lòng nhập Mã số thuế!"
+            }
+            cartmodel.Cart.CompanyTaxNumber = companyTax;
+        }else{
+            cartmodel.Cart.IsGetBill = false;
+            cartmodel.Cart.CompanyName = '';
+            cartmodel.Cart.CompanyAddress = '';
+            cartmodel.Cart.CompanyTaxNumber = '';
+        }
+        if(isSelectedCallOther){
+            cartmodel.Cart.IsCallOthers = isSelectedCallOther;
+            cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
+            if(helper.isEmptyOrNull(phoneOtherErrMessage) == false){
+                return phoneOtherErrMessage;
+            }
+            cartmodel.Cart.OthersPhone = cartUserInfo.OthersPhone;
+            if(helper.isEmptyOrNull(cusNameOtherErrMessage) == false){
+                return cusNameOtherErrMessage;
+            }
+            cartmodel.Cart.OthersName = cartUserInfo.OthersName;
+        }else{
+            cartmodel.Cart.IsCallOthers = false;
+            cartmodel.Cart.OthersGenderCall = -1;
+            cartmodel.Cart.OthersPhone = '';
+            cartmodel.Cart.OthersName = '';
+        }
 
         if (helper.isEmptyOrNull(phoneErrMessage) == false) {
             return phoneErrMessage;
@@ -242,7 +281,7 @@ const UserInfoCart = (props) => {
     };
 
     const SelectTime = (index, timevalue) => {
-        debugger;
+        //debugger;
         if (
             cartmodel == null ||
             cartmodel.ProfileItems.Count == 0 ||
@@ -290,9 +329,9 @@ const UserInfoCart = (props) => {
     };
     const handleErrorPhoneOther = (value) => {
         if (helper.isEmptyOrNull(value)) {
-            setphoneOtherErrMessage(CONST_STRINGERR.EMPTY_PHONE);
+            setphoneOtherErrMessage(CONST_STRINGERR.EMPTY_PHONE_OTHER);
         } else if (helper.isPhoneNumber(value) == false) {
-            setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE);
+            setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE_OTHER);
         } else setphoneOtherErrMessage('');
     };
     const handleErrorCusName = (value, maxlength) => {
@@ -355,6 +394,7 @@ const UserInfoCart = (props) => {
             <DropDownPicker
                 items={listDeliDate}
                 placeholder={'Ngày nhận'}
+                disabled={isActive == false}
                 zIndex={20}
                 defaultValue={'-1'}
                 containerStyle={{ height: 50, marginHorizontal: 10 }}
@@ -486,7 +526,7 @@ const UserInfoCart = (props) => {
                     setisVisibleDatePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
-                    debugger;
+                    //debugger;
                     if(itemValue.disabled == true){
                         settimeSelected('-1');
                         setisVisibleTimePicker(true);
@@ -680,7 +720,7 @@ const UserInfoCart = (props) => {
 
     const UserProvAndDis = (location) => {
         useEffect(() => {
-            //  getLstProv();
+            getLstProv();
         }, []);
 
         const [enableDis, setEnableDis] = useState(false);
@@ -783,7 +823,7 @@ const UserInfoCart = (props) => {
                                     ...previousState,
                                     ShipProvince: itemValue > 0 ? itemValue : 0
                                 }));
-                                getCart(provinceSelected);
+                                getCart(itemValue);
                             }}>
                             <Picker.Item
                                 label="Tỉnh thành"
