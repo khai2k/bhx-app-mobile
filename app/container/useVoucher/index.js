@@ -322,17 +322,26 @@ class UseVoucher extends Component {
                                     this.handleDeleteVoucher(itemVoucher)
                                 }>
                                 <View style={styles.voucherBox}>
-                                    <View style={styles.voucherPriceBox}>
-                                        <Text style={styles.labelPriceVoucher}>
-                                            {itemVoucher.VoucherCode
-                                                ? itemVoucher.VoucherAmount /
-                                                      1000 +
-                                                  'K'
-                                                : itemVoucher.VoucherAmount +
-                                                  '%'}
-                                        </Text>
+                                    <View style={styles.voucherLeft}>
+                                        <View style={styles.voucherPriceBox}>
+                                            <Text
+                                                style={
+                                                    styles.labelPriceVoucher
+                                                }>
+                                                {itemVoucher.VoucherCode
+                                                    ? itemVoucher.VoucherAmount /
+                                                          1000 +
+                                                      'K'
+                                                    : itemVoucher.VoucherAmount +
+                                                      '%'}
+                                            </Text>
+                                        </View>
                                     </View>
-                                    <View style={styles.voucherInfoBox}>
+                                    <View style={styles.voucherMid}>
+                                        <View style={styles.voucherMidTop} />
+                                        <View style={styles.voucherMidBottom} />
+                                    </View>
+                                    <View style={styles.voucherRight}>
                                         {itemVoucher.MinOrderAmount > 0 ? (
                                             <Text style={styles.voucherLabel}>
                                                 Giảm{' '}
