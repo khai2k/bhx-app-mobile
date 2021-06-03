@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 6
     },
+    blockPadding: {
+        backgroundColor: '#F5F8FD',
+        height: 20
+    },
     borderRadius: {
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
@@ -210,7 +214,6 @@ const styles = StyleSheet.create({
     },
     sectionInput: {
         backgroundColor: '#fff',
-        marginTop: 20,
         paddingHorizontal: 10
     },
     sectionInputTop: {
@@ -220,7 +223,8 @@ const styles = StyleSheet.create({
     stepTitle: {
         fontSize: 17,
         fontWeight: 'bold',
-        marginBottom: 15
+        marginBottom: 15,
+        marginTop: 10
     },
     textErr: {
         color: '#ff001f',
