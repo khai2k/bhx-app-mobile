@@ -35,6 +35,7 @@ import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
 
 import {
+    ModalContent,
     ModalPortal,
     ModalFooter,
     ModalTitle,
@@ -152,7 +153,9 @@ const UserInfoCart = (props) => {
         );
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title={html} />
+                 <ModalContent>
+                    {html}
+                </ModalContent>
                 <ModalFooter>
                     <ModalButton
                         style={[
