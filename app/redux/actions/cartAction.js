@@ -23,7 +23,7 @@ export const cartAction = {
     CART_REMOVE
 };
 
-export const cart_get = function () {
+export const cart_get = function (prov, dis, ward) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
@@ -33,9 +33,9 @@ export const cart_get = function () {
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: prov > 0 ? prov : location.ProvinceId,
+                districtId: dis > 0 ? dis : location.DistrictId,
+                wardId: ward > 0 ? ward : location.WardId,
                 storeId: location.StoreId,
                 data: {
                     cartId
@@ -71,6 +71,8 @@ export const cart_get = function () {
 
 export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
+    Cart.IsAdding = false;
+    Cart.IsEditing = false;
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
@@ -80,9 +82,9 @@ export const cart_submit = function (Cart) {
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: Cart.Cart.ShipProvince,
+                districtId: Cart.Cart.ShipDistrict,
+                wardId: Cart.Cart.ShipWard,
                 storeId: location.StoreId,
                 data: Cart
             };
