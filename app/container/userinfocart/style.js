@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     container: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        zIndex: 10
     },
     delichoose: {
         borderColor: '#D6E0F5',

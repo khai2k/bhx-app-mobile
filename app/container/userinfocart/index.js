@@ -33,6 +33,8 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import DropDownPickerNew from 'react-native-dropdown-picker';
+
 import {
     ModalPortal,
     ModalFooter,
@@ -406,7 +408,7 @@ const UserInfoCart = (props) => {
                     {
                         backgroundColor: '#fff',
                         borderColor:
-                            dateSelected == '' || dateSelected == null
+                            dateSelected == '' || dateSelected == null || dateSelected == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
@@ -487,7 +489,7 @@ const UserInfoCart = (props) => {
         return (
             <DropDownPicker
                 items={listDeliTime}
-                zIndex={20}
+                zIndex={30}
                 disabled={isActive == false}
                 defaultValue={'-1'}
                 activeLabelStyle={{
@@ -516,7 +518,7 @@ const UserInfoCart = (props) => {
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={200}
+                dropDownMaxHeight={300}
                 itemStyle={{
                     justifyContent: 'flex-start',
                     color: '#000'
@@ -526,7 +528,6 @@ const UserInfoCart = (props) => {
                     borderBottomLeftRadius: 10,
                     borderBottomRightRadius: 10
                 }}
-                isVisible={isVisibleTimePicker}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
                     setisVisibleDatePicker(false);
@@ -1096,7 +1097,6 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
-                        onBlur={() => {}}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
                                 ...previousState,

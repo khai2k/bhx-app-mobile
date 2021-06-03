@@ -27,7 +27,7 @@ export const cart_get = function (prov, dis, ward) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
-             const cartId = getState().generalReducer.CartId;
+            const cartId = getState().generalReducer.CartId;
             // const cartId =
             //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
             let provID = location.ProvinceId;
