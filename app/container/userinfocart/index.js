@@ -141,12 +141,23 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const alert = (message) => {
+        const html = (
+            <HTML
+                style={styles.error}
+                tagsStyles={{ b: styles.errorbold }}
+                source={{ html: '<section>' + message + '</section>' }}
+                contentWidth={200}
+            />
+        );
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title={message} />
+                <ModalTitle title={html} />
                 <ModalFooter>
                     <ModalButton
-                        style={StyleGeneral.styleAlert.btnAlert}
+                        style={[
+                            StyleGeneral.styleAlert.btnAlert,
+                            { paddingTop: 10, paddingBottom: 10 }
+                        ]}
                         textStyle={StyleGeneral.styleAlert.btnAlertText}
                         text="Đồng ý"
                         onPress={() => {
@@ -157,6 +168,7 @@ const UserInfoCart = (props) => {
             </View>,
             {
                 animationDuration: 0,
+                width: 0.8,
                 onHardwareBackPress: () => {
                     return true;
                 }
@@ -168,7 +180,6 @@ const UserInfoCart = (props) => {
         const formError = validateForm();
         if (formError === '') {
             setisLoading(true);
-            debugger;
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
@@ -382,7 +393,7 @@ const UserInfoCart = (props) => {
                 disabled: true
             }
         ];
-        if (isActive)
+        if (isActive) {
             shipdatetime[0]?.DateList.forEach((element) => {
                 var temp =
                     '{"label":"' +
@@ -392,8 +403,7 @@ const UserInfoCart = (props) => {
                     '"}';
                 listDeliDate.push(JSON.parse(temp));
             });
-
-        console.log(listDeliDate);
+        }
         return (
             <DropDownPicker
                 items={listDeliDate}
@@ -408,7 +418,9 @@ const UserInfoCart = (props) => {
                     {
                         backgroundColor: '#fff',
                         borderColor:
-                            dateSelected == '' || dateSelected == null || dateSelected == '-1'
+                            dateSelected == '' ||
+                            dateSelected == null ||
+                            dateSelected == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
@@ -451,6 +463,7 @@ const UserInfoCart = (props) => {
                         setdateSelected('');
                     }
                     settimeSelected('-1');
+                    console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
         );
@@ -1130,6 +1143,7 @@ const UserInfoCart = (props) => {
                                 <Text style={{ color: '#ff001f' }}>*</Text>
                             </Text>
                         }
+                        // staticLabel={helper.isEmptyOrNull(cartUserInfo?.CustomerPhone) == false}
                         value={cartUserInfo?.CustomerName}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
