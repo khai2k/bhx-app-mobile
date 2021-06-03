@@ -31,7 +31,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
-import * as locationCreator from '@app/components/Location/action';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
 import {
@@ -49,9 +48,9 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    useEffect(() => {
-        console.log(curDateDeli);
-    }, curDateDeli);
+    // useEffect(() => {
+    //     console.log(curDateDeli);
+    // }, curDateDeli);
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
 
@@ -60,7 +59,6 @@ const UserInfoCart = (props) => {
     const dispatch = useDispatch();
 
     const actionCart = bindActionCreators(cartCreator, dispatch);
-    const actionLocation = bindActionCreators(locationCreator, dispatch);
 
     const [cartmodel, setCartModel] = useState(null);
     const cart = useSelector((state) => state.cartReducer.Cart);
@@ -681,7 +679,7 @@ const UserInfoCart = (props) => {
 
     const UserProvAndDis = (location) => {
         useEffect(() => {
-            getLstProv();
+            //  getLstProv();
         }, []);
 
         const [enableDis, setEnableDis] = useState(false);

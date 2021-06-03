@@ -22,7 +22,7 @@ import LocationModal from './Location/ModalLocation';
 import RemiderLocation from './Location/RemiderLocation';
 
 const Header = () => {
-    locationAction.loadLocation();
+    //  locationAction.loadLocation();
     const navigation = useNavigation();
     const [isModalVisible, setIsModalVisible] = useState(false);
 

@@ -5,7 +5,7 @@ import { helper } from '@app/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/redux/actions/cartAction';
-import * as locationCreator from '@app/components/Location/action';
+import * as locationCreator from '@app/redux/actions/locationAction';
 import styles from './style';
 import BuyBox from '../../components/ProductBox/BuyBox';
 
@@ -69,7 +69,9 @@ const Box = (props) => {
                 alertAPI(error);
             });
     };
-    const locationInfo = useSelector((state) => state.locationReducer);
+    const locationInfo = useSelector(
+        (state) => state.locationReducer.Location.LocationInfo
+    );
     const checkReminderLocation = () => {
         if (helper.IsEmptyObject(locationInfo)) {
             actionLocation.showReminderLocation(true);

@@ -36,19 +36,21 @@ const styles = StyleSheet.create({
         borderColor: '#8F9BB3',
         borderWidth: 1,
         marginHorizontal: 8,
-        paddingHorizontal: 5,
-        marginBottom: 10
+        paddingHorizontal: 10,
+        marginBottom: 10,
+        height: 50
     },
     phoneInput: {
         borderRadius: 10,
         borderColor: '#8F9BB3',
         borderWidth: 1,
         marginHorizontal: 8,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 50
     },
     submitPhone: {
         backgroundColor: '#E4E9F2',
@@ -67,8 +69,9 @@ const styles = StyleSheet.create({
         borderColor: '#8F9BB3',
         borderWidth: 1,
         marginHorizontal: 8,
-        paddingHorizontal: 5,
-        marginBottom: 10
+        paddingHorizontal: 10,
+        marginBottom: 10,
+        height: 50
     },
     footer: {
         borderWidth: 2,
@@ -192,7 +195,34 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         opacity: 0.3,
         zIndex: 1
-    }
+    },
+    onfocusInput: {
+        paddingHorizontal: 5,
+        height: 30,
+        paddingVertical: 0
+    },
+    onfocusLabel: {
+        fontSize: 12,
+        paddingHorizontal: 5,
+        top: 5,
+        color: '#8f9bb3'
+    },
+    onfocusPhoneInput: {
+        paddingHorizontal: 5,
+        height: 30,
+        marginBottom: 4,
+        paddingVertical: 0
+    },
+    onfocusPhoneLabel: {
+        fontSize: 12,
+        paddingHorizontal: 5,
+        top: 5,
+        color: '#8f9bb3'
+    },
+    onBlurLabel: {
+        display: 'none'
+    },
+    onBlurInput: {}
 });
 
 export default styles;
