@@ -33,7 +33,6 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
-import DropDownPickerNew from 'react-native-dropdown-picker';
 
 import {
     ModalPortal,
@@ -51,6 +50,8 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, cartmodel);
 
     useEffect(() => {}, curDateDeli);
+    useEffect(() => {}, timeSelected);
+
 
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
@@ -830,6 +831,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
+                            mode={'dropdown'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -884,6 +886,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
+                            mode={'dropdown'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -934,6 +937,7 @@ const UserInfoCart = (props) => {
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
+                        mode={'dropdown'}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
                             setCartUserInfo((previousState) => ({
