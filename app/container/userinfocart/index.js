@@ -500,7 +500,7 @@ const UserInfoCart = (props) => {
 
     const UserProvAndDis = (location) => {
         useEffect(() => {
-            //  getLstProv();
+            getLstProv();
         }, []);
 
         const [enableDis, setEnableDis] = useState(false);
