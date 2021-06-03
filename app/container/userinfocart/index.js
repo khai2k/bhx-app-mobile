@@ -48,9 +48,10 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    // useEffect(() => {
-    //     console.log(curDateDeli);
-    // }, curDateDeli);
+    useEffect(() => {
+        console.log(curDateDeli);
+    }, curDateDeli);
+    
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
 
