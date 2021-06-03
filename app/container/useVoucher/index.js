@@ -151,7 +151,7 @@ class UseVoucher extends Component {
     _renderHeader() {
         return (
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Dùng Phiếu mua hàng</Text>
+                <Text style={styles.headerTitle}>Dùng phiếu mua hàng</Text>
                 <View style={styles.closeHeader}>
                     <TouchableOpacity
                         onPress={() => this.props.navigation.goBack()}>

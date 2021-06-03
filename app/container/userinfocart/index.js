@@ -51,7 +51,7 @@ const UserInfoCart = (props) => {
     useEffect(() => {
         console.log(curDateDeli);
     }, curDateDeli);
-    
+
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
 
@@ -114,21 +114,21 @@ const UserInfoCart = (props) => {
     // Validate Error
     const [phoneErrMessage, setphoneErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_PHONE
-        ""
+        ''
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_PHONE
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_CUSNAME
-        ""
+        ''
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_CUSNAME
     );
     const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_SHIPADDRESS
-        ""
+        ''
     );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
@@ -184,7 +184,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(phoneErrMessage) == false) {
             return phoneErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerPhone)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerPhone)) {
             handleErrorPhone(cartUserInfo.CustomerPhone);
             return CONST_STRINGERR.EMPTY_PHONE;
         }
@@ -193,7 +193,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
             return cusNameErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerName)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerName)) {
             handleErrorCusName(cartUserInfo.CustomerName);
             return CONST_STRINGERR.EMPTY_CUSNAME;
         }
@@ -213,7 +213,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
             return cusAddressErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.ShipAddress)){
+        if (helper.isEmptyOrNull(cartUserInfo.ShipAddress)) {
             handleErrorCusAddress(cartUserInfo.ShipAddress);
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
@@ -487,11 +487,10 @@ const UserInfoCart = (props) => {
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     debugger;
-                    if(itemValue.disabled == true){
+                    if (itemValue.disabled == true) {
                         settimeSelected('-1');
                         setisVisibleTimePicker(true);
-                    }else
-                        settimeSelected(itemValue.value);
+                    } else settimeSelected(itemValue.value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -1207,9 +1206,9 @@ const UserInfoCart = (props) => {
                     </View>
                     <View style={styles.btn}>
                         <TouchableOpacity
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
+                            onPress={() => {
+                                props.navigation.navigate('UseVoucher');
+                            }}>
                             <View>
                                 <Text style={styles.textbtn}>
                                     Dùng phiếu mua hàng
