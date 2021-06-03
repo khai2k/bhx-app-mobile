@@ -296,9 +296,16 @@ const ProductBox = (props) => {
                                 ? props.bhxProduct.Sales[
                                       props.bhxProduct.ExpStoreId
                                   ].LabelText
-                                : props.bhxProduct.Sales[
-                                      props.bhxProduct.ExpStoreId
-                                  ].ExpiredDate}
+                                : !helper.checkMinDate(
+                                      props.bhxProduct.Sales[
+                                          props.bhxProduct.ExpStoreId
+                                      ].ExpiredDate
+                                  ) &&
+                                  helper.formatExpiredDate(
+                                      props.bhxProduct.Sales[
+                                          props.bhxProduct.ExpStoreId
+                                      ].ExpiredDate
+                                  )}
                         </Text>
                     </TouchableOpacity>
                 ) : null}
@@ -375,9 +382,16 @@ const ProductBox = (props) => {
                                 ? props.bhxProduct.Sales[
                                       props.bhxProduct.ExpStoreId
                                   ].LabelText
-                                : props.bhxProduct.Sales[
-                                      props.bhxProduct.ExpStoreId
-                                  ].ExpiredDate}
+                                : !helper.checkMinDate(
+                                      props.bhxProduct.Sales[
+                                          props.bhxProduct.ExpStoreId
+                                      ].ExpiredDate
+                                  ) &&
+                                  helper.formatExpiredDate(
+                                      props.bhxProduct.Sales[
+                                          props.bhxProduct.ExpStoreId
+                                      ].ExpiredDate
+                                  )}
                         </Text>
                     </TouchableOpacity>
                 ) : null}

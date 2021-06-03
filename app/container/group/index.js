@@ -43,8 +43,12 @@ class Group extends PureComponent {
             const option = {
                 params: {
                     categoryUrl: this.props.route.params.url,
-                    provinceId: 3,
-                    storeId: 6463,
+                    provinceId: !helper.isEmptyOrNull(this.locationInfo)
+                        ? this.locationInfo.ProvinceId
+                        : 3,
+                    storeId: !helper.isEmptyOrNull(this.locationInfo)
+                        ? this.locationInfo.StoreId
+                        : 6463,
                     phone: 0,
                     isMobile: 'true',
                     clearcache: ''

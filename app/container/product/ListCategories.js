@@ -6,16 +6,10 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 const ListCategories = (props) => {
     if (props.listCate != null && props.listCate.length > 0) {
-        const navigation = useNavigation();
-        const handleSelectCateChild = (groupUrl) => {
-            navigation.navigate('Group', { url: groupUrl });
-            console.log('groupUrl', groupUrl);
-        };
         return (
             <SafeAreaView style={styles.boxCategory}>
                 <FlatList
@@ -23,11 +17,16 @@ const ListCategories = (props) => {
                     horizontal
                     data={props.listCate}
                     keyExtractor={(item) => item.Id}
-                    renderItem={({ item }) => (
+                    renderItem={({ item, index }) => (
                         <TouchableOpacity
-                            onPress={() => handleSelectCateChild(item.Url)}>
+                            onPress={() => props.scrollToLine(index)}>
                             <View>
-                                <Text style={styles.categoryItem}>
+                                <Text
+                                    style={[
+                                        styles.categoryItem,
+                                        props.selectedIndex === index &&
+                                            styles.selectedCategoryItem
+                                    ]}>
                                     {item.Name}
                                 </Text>
                             </View>

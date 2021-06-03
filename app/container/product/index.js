@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { createRef, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
     View,
@@ -7,7 +7,6 @@ import {
     SafeAreaView
 } from 'react-native';
 import { bindActionCreators } from 'redux';
-import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Header, LoadingCart } from '@app/components';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from '@app/redux/actions/homeAction';
@@ -16,7 +15,9 @@ import SliderTitle from './SliderTitle';
 import RenderLine from './RenderLine';
 import styles from './style';
 
-class Product extends Component {
+class Product extends PureComponent {
+    ref = createRef();
+
     listTitle = [
         {
             titleId: 1,
@@ -35,107 +36,47 @@ class Product extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loadingLine: true, // Check xem còn line nào cần load ra nữa hay ko. dựa vô field IsNextGroup api trả ra
-            pageIndexLine: 0,
-            maxPageLine: 0, // Truyền vô hàm loadmore line, lấy từ hàm GetHomeData -> MaxPage
-            homeData: [],
-            listCategories: [],
-            isLoading: true, // Check xem đang đợi gọi api hay ko, tránh bị loop,
-            showLoading: true,
-            firstLoading: true
+            isLoadingAPI: false,
+            firstLoading: true,
+            lineLocations: [],
+            cateIndexSelected: 0
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // Hàm gọi lấy 3 line đầu tiên
-        const bodyApi = {
-            provinceId: 3,
-            storeId: 6463,
-            userId: 0,
-            phone: '',
-            clearcache: 'null',
-            IsMobile: true
-        };
-        const self = this;
-
-        apiBase(API_CONST.GET_LIST_PRODUCT, METHOD.GET, {}, { params: bodyApi })
-            .then((response) => {
-                self.setState({
-                    homeData: response.Value,
-                    maxPageLine: response.OtherData?.MaxPage,
-                    showLoading: false,
-                    firstLoading: false
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
+        await this.props.actionHome.getHomeData();
         // Lấy danh sách cate
-        const queryCate = {
-            phone: '',
-            isMobile: true,
-            storeId: 6463,
-            clearcache: ''
-        };
-        apiBase(
-            API_CONST.GET_LIST_CATEGORIES,
-            METHOD.GET,
-            {},
-            { params: queryCate }
-        )
-            .then((response) => {
-                console.log('GET_LIST_CATEGORIES Data:', response);
-                self.setState({
-                    listCategories: response.Value
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        await this.props.actionHome.getListCategories();
+        this.setState({ firstLoading: false });
     }
 
     handleScroll = () => {
         // Lúc scroll thì lấy tiếp các line sau
-        if (this.state.loadingLine) {
-            const self = this;
-            const bodyApi = {
-                phone: '',
-                isMobile: true,
-                storeId: 6463,
-                pageIndex: self.state.pageIndexLine,
-                pageSize: 3,
-                provinceId: 3,
-                maxPage: self.state.maxPageLine,
-                clearcache: ''
-            };
-            if (self.state.isLoading) {
-                self.setState({ isLoading: false, showLoading: true });
-                apiBase(
-                    API_CONST.GET_MORE_LINE,
-                    METHOD.GET,
-                    {},
-                    { params: bodyApi }
-                )
-                    .then((response) => {
-                        response !== null &&
-                            response.Value !== null &&
-                            self.setState({
-                                homeData: [
-                                    ...self.state.homeData,
-                                    ...response.Value
-                                ],
-                                loadingLine: response.OtherData?.IsNextGroup,
-                                pageIndexLine: self.state.pageIndexLine + 1,
-                                isLoading: true,
-                                showLoading: false
-                            });
-                    })
-                    .catch((error) => {
-                        console.log(error);
+        if (this.props.homeData.IsNextGroup && !this.state.isLoadingAPI) {
+            this.setState({
+                isLoadingAPI: true
+            });
+            this.props.actionHome
+                .loadMoreHomeData(this.props.homeData.PageIndexLine)
+                .then((response) => {
+                    this.setState({
+                        isLoadingAPI: false
                     });
-            }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
+    };
+
+    scrollToLine = (lineIndex) => {
+        this.ref.scrollTo({
+            x: 0,
+            y: this.state.lineLocations[lineIndex],
+            animated: true
+        });
+        this.setState({ cateIndexSelected: lineIndex });
     };
 
     render() {
@@ -156,22 +97,43 @@ class Product extends Component {
             return (
                 <SafeAreaView>
                     <Header navigation={this.props.navigation} />
-                    <ListCategories listCate={this.state.listCategories} />
+                    <ListCategories
+                        listCate={this.props.homeData.ListCategories}
+                        scrollToLine={this.scrollToLine}
+                        selectedIndex={this.state.cateIndexSelected}
+                    />
                     <ScrollView
+                        ref={(scroll) => {
+                            this.ref = scroll;
+                        }}
                         style={styles.body}
                         onScroll={this.handleScroll}>
                         <SliderTitle listTitle={this.listTitle} />
 
                         {/* Render line */}
-                        {this.state.homeData?.map((lineItem) => {
-                            return (
-                                <RenderLine
-                                    key={`line_${lineItem.CategoryId}`}
-                                    lineItem={lineItem}
-                                    action={this.props}
-                                />
-                            );
-                        })}
+                        {this.props.homeData.ListLineProducts?.map(
+                            (lineItem) => {
+                                return (
+                                    <View
+                                        onLayout={(event) => {
+                                            const { layout } =
+                                                event.nativeEvent;
+                                            this.setState({
+                                                lineLocations: [
+                                                    ...this.state.lineLocations,
+                                                    layout.y
+                                                ]
+                                            });
+                                        }}>
+                                        <RenderLine
+                                            key={`line_${lineItem.CategoryId}`}
+                                            lineItem={lineItem}
+                                            action={this.props}
+                                        />
+                                    </View>
+                                );
+                            }
+                        )}
                         <ActivityIndicator
                             animating={this.state.showLoading}
                             size="large"
@@ -186,7 +148,7 @@ class Product extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        HomeReducer: state.homeReducer
+        homeData: state.homeReducer
     };
 };
 

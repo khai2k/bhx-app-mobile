@@ -69,6 +69,10 @@ const styles = StyleSheet.create({
     productList: {
         flex: 1
     },
+    selectedCategoryItem: {
+        backgroundColor: Colors.TROPICAL_RAIN_FOREST,
+        color: Colors.TURBO
+    },
     slideItem: {
         alignContent: 'center',
         alignItems: 'center',

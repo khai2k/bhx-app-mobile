@@ -10,6 +10,7 @@ import {
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
+import { useSelector } from 'react-redux';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import Filter from './Filter';
 import OEMProduct from './OEMProduct';
@@ -17,6 +18,10 @@ import OEMProduct from './OEMProduct';
 const Product = (props) => {
     const { PageIndex, PageSize, TotalRecord } = props.info;
     const Products = props.products;
+
+    const locationInfo = useSelector(
+        (state) => state.locationReducer?.Location.LocationInfo
+    );
 
     const [listProductLoadMore, setListProductLoadMore] = useState(Products);
     const [remainProducts, setRemainProducts] = useState(TotalRecord);
@@ -44,8 +49,8 @@ const Product = (props) => {
             TotalRecord: remainProducts,
             QuerySort: props.selectedSort,
             QueryFilter: filter,
-            provinceId: 3,
-            storeId: 6463,
+            provinceId: locationInfo.ProvinceId,
+            storeId: locationInfo.StoreId,
             IsCheckPromo: false
         };
         console.log('Start call api');
