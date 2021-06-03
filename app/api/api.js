@@ -19,7 +19,7 @@ export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
 export const GET_MORE_LINE = `${API_BASE}Home/LoadMoreHomeData`;
 export const GET_FRESH_PRODUCTS = `${API_BASE}Home/AjGetFreshProducts`;
 
-//OrderSuccess
+// OrderSuccess
 export const API_REQUEST_GET_ORDER_SUCCESS = `${API_BASE}Order/OrderResult`;
 export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancelorder`;
 

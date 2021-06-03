@@ -115,21 +115,21 @@ const UserInfoCart = (props) => {
     // Validate Error
     const [phoneErrMessage, setphoneErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_PHONE
-        ""
+        ''
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_PHONE_OTHER
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_CUSNAME
-        ""
+        ''
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
         CONST_STRINGERR.EMPTY_CUSNAME_OTHER
     );
     const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_SHIPADDRESS
-        ""
+        ''
     );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
@@ -530,8 +530,7 @@ const UserInfoCart = (props) => {
                     if(itemValue.disabled == true){
                         settimeSelected('-1');
                         setisVisibleTimePicker(true);
-                    }else
-                        settimeSelected(itemValue.value);
+                    } else settimeSelected(itemValue.value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -1247,9 +1246,9 @@ const UserInfoCart = (props) => {
                     </View>
                     <View style={styles.btn}>
                         <TouchableOpacity
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
+                            onPress={() => {
+                                props.navigation.navigate('UseVoucher');
+                            }}>
                             <View>
                                 <Text style={styles.textbtn}>
                                     Dùng phiếu mua hàng

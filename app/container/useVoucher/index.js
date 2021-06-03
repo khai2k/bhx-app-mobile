@@ -72,6 +72,21 @@ class UseVoucher extends Component {
         });
     }
 
+    handlePinCodeInput() {
+        if (
+            this.state.isPinCodeInput == 100 ||
+            this.state.message == 'Mã PINCode không đúng. Vui lòng kiểm tra lại'
+        ) {
+            return this._renderPincodeInput();
+        }
+    }
+
+    formatDate(value) {
+        let newValue = value.substring(0, 10);
+        let p = newValue.split(/\D/g);
+        return [p[2], p[1], p[0]].join('/');
+    }
+
     fetchVoucher() {
         this.props.actionVoucher
             .voucher_get()
@@ -133,19 +148,10 @@ class UseVoucher extends Component {
             });
     }
 
-    handlePinCodeInput() {
-        if (
-            this.state.isPinCodeInput == 100 ||
-            this.state.message == 'Mã PINCode không đúng. Vui lòng kiểm tra lại'
-        ) {
-            return this._renderPincodeInput();
-        }
-    }
-
     _renderHeader() {
         return (
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Dùng Phiếu mua hàng</Text>
+                <Text style={styles.headerTitle}>Dùng phiếu mua hàng</Text>
                 <View style={styles.closeHeader}>
                     <TouchableOpacity
                         onPress={() => this.props.navigation.goBack()}>
@@ -209,6 +215,7 @@ class UseVoucher extends Component {
                         </Text>
                         <TextInput
                             value={this.state.phoneInput}
+                            maxLength={10}
                             placeholder={
                                 this.state.isFocusPhoneInput == true
                                     ? ''
@@ -228,10 +235,15 @@ class UseVoucher extends Component {
                             }
                             onBlur={() =>
                                 this.state.phoneInput
-                                    ? this.setState({ isFocusPhoneInput: true })
+                                    ? this.setState({
+                                          isFocusPhoneInput: true
+                                      })
                                     : this.setState({
                                           isFocusPhoneInput: false
                                       })
+                            }
+                            onEndEditing={() =>
+                                this.validatePhone(this.state.phoneInput)
                             }
                         />
                     </View>
@@ -247,6 +259,18 @@ class UseVoucher extends Component {
                 {this.handlePinCodeInput()}
             </View>
         );
+    }
+
+    validatePhone(phone) {
+        console.log('dmmmmm', phone);
+        if (helper.isPhoneNumber(phone) == false) {
+            showMessage({
+                message: 'Số điện thoại không hợp lệ',
+                type: 'default',
+                backgroundColor: '#222B45',
+                icon: 'danger'
+            });
+        }
     }
 
     _renderPincodeInput() {
@@ -339,9 +363,8 @@ class UseVoucher extends Component {
                                             }}>
                                             <Text style={styles.voucherDate}>
                                                 Hạn sử dụng đến:{' '}
-                                                {itemVoucher.VoucherExpiredDate.substr(
-                                                    0,
-                                                    10
+                                                {this.formatDate(
+                                                    itemVoucher.VoucherExpiredDate
                                                 )}
                                             </Text>
                                             <Text
