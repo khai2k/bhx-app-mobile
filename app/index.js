@@ -31,7 +31,14 @@ class App extends Component {
                     </Provider>
                 </View>
                 {/* <CodePushUpdate /> */}
-                <FlashMessage />
+                <FlashMessage
+                    hideOnPress={true}
+                    position="center"
+                    style={{
+                        borderRadius: 30,
+                        alignItems: 'center'
+                    }}
+                />
             </SafeAreaProvider>
         );
     }

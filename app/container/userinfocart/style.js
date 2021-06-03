@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         padding: 6
     },
+    blockPadding: {
+        backgroundColor: '#F5F8FD',
+        height: 20
+    },
     borderRadius: {
         borderBottomLeftRadius: 8,
         borderBottomRightRadius: 8,
@@ -28,8 +32,10 @@ const styles = StyleSheet.create({
     },
     boxbtn: {
         alignItems: 'center',
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
+        marginBottom: 100,
         paddingBottom: 10
     },
     btn: {
@@ -37,7 +43,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         height: 50,
-        justifyContent: 'center',
         padding: 5,
         width: '30%'
     },
@@ -66,7 +71,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     container: {
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        zIndex: 10
     },
     delichoose: {
         borderColor: '#D6E0F5',
@@ -137,7 +143,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderStyle: 'solid',
         borderWidth: 1,
-        marginTop: 10,
+        marginVertical: 10,
         padding: 10,
         textAlignVertical: 'top',
         width: '100%'
@@ -210,7 +216,6 @@ const styles = StyleSheet.create({
     },
     sectionInput: {
         backgroundColor: '#fff',
-        marginTop: 20,
         paddingHorizontal: 10
     },
     sectionInputTop: {
@@ -220,7 +225,8 @@ const styles = StyleSheet.create({
     stepTitle: {
         fontSize: 17,
         fontWeight: 'bold',
-        marginBottom: 15
+        marginBottom: 15,
+        marginTop: 10
     },
     textErr: {
         color: '#ff001f',

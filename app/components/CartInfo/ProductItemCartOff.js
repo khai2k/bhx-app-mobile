@@ -16,11 +16,13 @@ import {
     ModalContent,
     ModalButton
 } from 'react-native-modals';
+import { useNavigation } from '@react-navigation/native';
 import { bindActionCreators } from 'redux';
 import * as cartCreator from '@app/redux/actions/cartAction';
 
 const ProductItemCartOff = (props) => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const actionCart = bindActionCreators(cartCreator, dispatch);
     // eslint-disable-next-line no-unused-vars
     const [guildId, setguildId] = useState(props.productCart.GuildId);
@@ -103,7 +105,13 @@ const ProductItemCartOff = (props) => {
                 <Text style={styles.statusoff}>Tạm hết hàng</Text>
             </View>
             <View style={styles.boxprice} />
-            <TouchableOpacity style={styles.link}>
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('Group', {
+                        url: props.productCart.UrlParent
+                    });
+                }}
+                style={styles.link}>
                 <Text>Xem sản phẩm tương tự</Text>
             </TouchableOpacity>
         </View>

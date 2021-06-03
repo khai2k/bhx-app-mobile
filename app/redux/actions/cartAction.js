@@ -23,19 +23,27 @@ export const cartAction = {
     CART_REMOVE
 };
 
-export const cart_get = function () {
+export const cart_get = function (prov, dis, ward) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
             const cartId = getState().generalReducer.CartId;
             // const cartId =
             //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            let provID = location.ProvinceId;
+            let disID = location.DistrictId;
+            let wardID = location.WardId;
+            if (prov > 0) {
+                provID = prov;
+                disID = dis > 0 ? dis : 0;
+                wardID = ward > 0 ? ward : 0;
+            }
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: provID,
+                districtId: disID,
+                wardId: wardID,
                 storeId: location.StoreId,
                 data: {
                     cartId
@@ -71,6 +79,7 @@ export const cart_get = function () {
 
 export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
+    Cart.IsAdding = false;
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
@@ -80,9 +89,9 @@ export const cart_submit = function (Cart) {
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: location.ProvinceId,
-                districtId: location.DistrictId,
-                wardId: location.WardId,
+                provinceId: Cart.Cart.ShipProvince,
+                districtId: Cart.Cart.ShipDistrict,
+                wardId: Cart.Cart.ShipWard,
                 storeId: location.StoreId,
                 data: Cart
             };
@@ -242,13 +251,9 @@ export const cart_add_item_product = function (
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: !helper.isEmptyOrNull(location)
-                    ? location.ProvinceId
-                    : 3,
-                districtId: !helper.isEmptyOrNull(location)
-                    ? location.DistrictId
-                    : 0,
-                wardId: !helper.isEmptyOrNull(location) ? location.WardId : 0,
+                provinceId: location.ProvinceId,
+                districtId: location.DistrictId,
+                wardId: location.WardId,
                 storeId:
                     expStoreId > 0
                         ? expStoreId

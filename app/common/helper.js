@@ -22,7 +22,7 @@ export function isNumber(obj) {
         obj !== undefined &&
         obj !== null &&
         !Number.isNaN(obj) &&
-        obj.constructor === Number
+        Number.parseInt(obj).constructor === Number
     );
 }
 

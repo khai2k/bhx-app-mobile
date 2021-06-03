@@ -9,7 +9,6 @@ import FastImage from 'react-native-fast-image';
 import {
     ModalPortal,
     ModalFooter,
-    ModalTitle,
     ModalButton,
     ModalContent
 } from 'react-native-modals';
@@ -41,8 +40,6 @@ const ProductItemCart = (props) => {
         props.productCart.TypeProduct === 1
     );
     useEffect(() => {
-        console.log('useEffect');
-        console.log(props.productCart.Quantity);
         setQuantity(props.productCart.Quantity);
         setTotalPrice(props.productCart.Total);
     }, []);
@@ -51,7 +48,11 @@ const ProductItemCart = (props) => {
         props.productCart.NoChangeQuantity === true;
 
     const handleInputQuantity = (number) => {
-        setQuantity(number);
+        if (helper.isEmptyOrNull(number) || helper.isNumber(number)) {
+            setQuantity(number);
+        } else {
+            alertAPI('Bạn nhập không đúng số lượng');
+        }
     };
 
     const handleSetIsHideCombo = () => {
@@ -60,6 +61,7 @@ const ProductItemCart = (props) => {
 
     const submitQuantity = () => {
         if (helper.isEmptyOrNull(quantity)) {
+            setQuantity(props.productCart.Quantity);
             return false;
         }
         if (quantity > 50) {
@@ -164,7 +166,29 @@ const ProductItemCart = (props) => {
     };
 
     const alertAPI = (mesages) => {
-        Alert.alert('', mesages);
+        const modalPortalId = ModalPortal.show(
+            <View>
+                <ModalContent>
+                    <Text>{mesages}</Text>
+                </ModalContent>
+                <ModalFooter>
+                    <ModalButton
+                        textStyle={StyleGeneral.styleAlert.btnAlertClose}
+                        text="Đồng ý"
+                        onPress={() => {
+                            ModalPortal.dismiss(modalPortalId);
+                        }}
+                    />
+                </ModalFooter>
+            </View>,
+            {
+                animationDuration: 0,
+                width: 0.8,
+                onHardwareBackPress: () => {
+                    return true;
+                }
+            }
+        );
     };
 
     const alertDeleteItemProduct = () => {

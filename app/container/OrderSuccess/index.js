@@ -40,7 +40,6 @@ class OrderSuccess extends Component {
         this.props.actionOrderSuccess
             .orderSuccess_get()
             .then((res) => {
-                // console.log('dataaaaaa', res);
                 this.setState({
                     totalPrice: res.Value.Total,
                     deliveryTime: res.Value.DeliveryTextTime,
@@ -67,7 +66,6 @@ class OrderSuccess extends Component {
             })
             .catch((err) => {
                 showMessage({
-                    position: 'bottom',
                     message: 'Hủy đơn hàng thất bại, xin vui lòng thử lại!',
                     type: 'default',
                     backgroundColor: '#222B45',
@@ -383,6 +381,7 @@ class OrderSuccess extends Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         this.cancel_order();
+                                        this.setState({ modalVisible: false });
                                     }}>
                                     <Text style={styles.confirmText}>
                                         XÁC NHẬN HỦY ĐƠN HÀNG

@@ -3,13 +3,13 @@ import { PermissionsAndroid } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { Storage } from '@app/common';
 import { CONST_STORAGE } from '@app/constants';
-import { location_SaveChooseLocation, location_getCurrent } from './action';
+import { location_getCurrent } from '@app/redux/actions/locationAction';
 
 const loadLocation = async () => {
     const dispatch = useDispatch();
 
-    const dispatchlocation_SaveChooseLocation = (model) =>
-        dispatch(location_SaveChooseLocation(model));
+    // const dispatchlocation_SaveChooseLocation = (model) =>
+    //     dispatch(location_SaveChooseLocation(model));
 
     const dispatchlocation_getCurrent = (model) =>
         dispatch(location_getCurrent(model));
@@ -46,9 +46,10 @@ const loadLocation = async () => {
         } else {
             return this.props.locationAction.location_getCurrent(0, 0);
         }
-    } else {
-        return dispatchlocation_SaveChooseLocation(_crrLocation);
     }
+    // else {
+    //     return dispatchlocation_SaveChooseLocation(_crrLocation);
+    // }
 
     return new Promise((resolve) => {
         resolve('result');

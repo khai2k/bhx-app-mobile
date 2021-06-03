@@ -72,7 +72,6 @@ export const voucher_get = function () {
                 .then((response) => {
                     console.log('voucher_get data:', response);
                     const vouchersInfo = response;
-                    console.log(cartId);
                     dispatch({
                         type: VOUCHER_GET,
                         vouchersInfo

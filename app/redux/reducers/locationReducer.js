@@ -3,7 +3,7 @@ import * as _action from '../actions/locationAction';
 
 const locationReducer = function (state = _store.locationState, action) {
     switch (action.type) {
-        case _action.generalAction.GENERAL_LOCATION_GETCURRENT:
+        case _action.locationAction.GENERAL_LOCATION_GETCURRENT:
             return {
                 ...state,
                 Location: {
@@ -11,7 +11,7 @@ const locationReducer = function (state = _store.locationState, action) {
                     IsReminderLocation: state.Location.IsReminderLocation
                 }
             };
-        case _action.generalAction.GENERAL_LOCATION_REMINDER:
+        case _action.locationAction.GENERAL_LOCATION_REMINDER:
             return {
                 ...state,
                 Location: {

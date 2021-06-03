@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     },
     loadMore: {
         alignItems: 'center',
+        backgroundColor: Colors.WHITE,
         borderColor: Colors.TROPICAL_RAIN_FOREST,
         borderRadius: 8,
         borderWidth: 1,
@@ -150,8 +151,7 @@ const styles = StyleSheet.create({
         paddingTop: 12,
         position: 'relative',
         textAlign: 'center',
-        textAlignVertical: 'center',
-        backgroundColor: Colors.WHITE
+        textAlignVertical: 'center'
     },
     loadMoreText: {
         color: Colors.TROPICAL_RAIN_FOREST
