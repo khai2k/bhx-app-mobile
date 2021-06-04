@@ -21,7 +21,8 @@ class App extends Component {
             <SafeAreaProvider>
                 <View style={styles.container}>
                     <StatusBar
-                        barStyle="hight-content"
+                        // barStyle="hight-content" //ios chỗ này dark hoặc light hen ae
+                        barStyle="light"
                         translucent
                         backgroundColor={Colors.GREEN_KEY}
                     />
@@ -32,7 +33,7 @@ class App extends Component {
                 </View>
                 {/* <CodePushUpdate /> */}
                 <FlashMessage
-                    hideOnPress={true}
+                    hideOnPress
                     position="center"
                     style={{
                         borderRadius: 30,
