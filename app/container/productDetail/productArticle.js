@@ -21,13 +21,9 @@ import GroupBoxOption from './groupBoxOption';
 const ProductArticle = (props) => {
     const contentWidth = useWindowDimensions().width;
     const { product, isExchangeProduct } = props;
-    const {
-        MetaDescription,
-
-        FeatureSpecification,
-        bHXProduct
-    } = product;
-    const { PromotionText, ShortName, Avatar } = bHXProduct;
+    const { MetaDescription, FeatureSpecification, bHXProduct } = product;
+    const { PromotionText, ShortName, FullName, Avatar, ExpiredText } =
+        bHXProduct;
     let { ProductArticle } = product;
     /// modify ProductArticle to display Image
     ProductArticle = ProductArticle.split('data-src').join('src');
@@ -172,7 +168,7 @@ const ProductArticle = (props) => {
         return (
             <View style={{ flex: 1, padding: 5 }}>
                 <Text>
-                    <Text style={{ fontWeight: 'bold' }}>{ShortName}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{FullName}</Text>
                     {` ${MetaDescription} `}
                     <Text
                         onPress={() => setIsShowModal(true)}
@@ -200,10 +196,25 @@ const ProductArticle = (props) => {
             </View>
         );
     }
+    function renderExpiredText() {
+        return (
+            <View
+                style={{
+                    position: 'absolute',
+                    top: -60,
+                    left: 10,
+                    backgroundColor: '#222b45b5',
+                    paddingHorizontal: 8,
+                    borderRadius: 10
+                }}>
+                <Text style={{ color: 'white' }}>{ExpiredText}</Text>
+            </View>
+        );
+    }
     return (
         <View style={{ backgroundColor: COLOR.WHITE, paddingBottom: 10 }}>
+            {!helper.isEmptyOrNull(ExpiredText) && renderExpiredText()}
             {!helper.isEmptyOrNull(PromotionText) && renderPromotion()}
-
             <View style={{ flexDirection: 'row' }}>
                 {renderDescription()}
                 {!isExchangeProduct && (
