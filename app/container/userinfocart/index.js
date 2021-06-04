@@ -50,9 +50,11 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    useEffect(() => {}, curDateDeli);
+    useEffect(() => {
+        console.log(curDateDeli);
+    }, curDateDeli);
     useEffect(() => {}, timeSelected);
-
+    useEffect(() => {}, dateSelected);
 
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
@@ -107,6 +109,8 @@ const UserInfoCart = (props) => {
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
+
+    //Delivery Date and Time State
     const [curDateDeli, setcurDateDeli] = useState(null);
 
     const [dateSelected, setdateSelected] = useState('');
@@ -153,9 +157,7 @@ const UserInfoCart = (props) => {
         );
         const modalPortalId = ModalPortal.show(
             <View>
-                 <ModalContent>
-                    {html}
-                </ModalContent>
+                <ModalContent>{html}</ModalContent>
                 <ModalFooter>
                     <ModalButton
                         style={[
@@ -276,12 +278,20 @@ const UserInfoCart = (props) => {
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
         cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
-        if (dateSelected == '' || dateSelected == null) {
+        if (
+            dateSelected == '' ||
+            dateSelected == null ||
+            dateSelected == '-1'
+        ) {
             return 'Vui lòng chọn ngày nhận hàng';
         }
         cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
         cartmodel.SelectedShipTimeList[0].IsDateSelectedByCus = true;
-        if (timeSelected == '' || timeSelected == null) {
+        if (
+            timeSelected == '' ||
+            timeSelected == null ||
+            timeSelected == '-1'
+        ) {
             return 'Vui lòng chọn thời gian nhận hàng';
         }
         //cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
@@ -380,7 +390,6 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
 
-
     let controllerDate;
     let controllerTime;
 
@@ -418,7 +427,7 @@ const UserInfoCart = (props) => {
                 placeholder={'Ngày nhận'}
                 disabled={isActive == false}
                 zIndex={20}
-                controller={instance => controllerDate = instance}
+                controller={(instance) => (controllerDate = instance)}
                 arrowColor={'#007842'}
                 defaultValue={'-1'}
                 containerStyle={{ height: 50, marginHorizontal: 10 }}
@@ -460,28 +469,40 @@ const UserInfoCart = (props) => {
                     setisVisibleTimePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
-                    if (itemValue.value > 0) {
-                        setcurDateDeli(
-                            shipdatetime[0]?.DateList[itemIndex - 1]
-                        );
+                    console.log(itemValue.value > 0);
+                    settimeSelected('-1');
+                    controllerTime.reset();
+                    debugger;
+                    if (itemValue.value !== '' && itemValue.value !== '-1') {
                         setdateSelected(
                             shipdatetime[0]?.DateList[itemIndex - 1]?.id
                         );
+                        setcurDateDeli(
+                            shipdatetime[0]?.DateList[itemIndex - 1]
+                        );
                     } else {
                         setcurDateDeli(null);
-                        setdateSelected('');
+                        setdateSelected('-1');
                     }
-                    settimeSelected('-1');
-                     controllerTime.reset()
+                    console.log('itemValue.value: ' + itemValue.value + 'dateSelected: ' + dateSelected + 'curDateDeli: ' + curDateDeli);
                     console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
         );
     };
-    const chosenDeliTime = (datelist) => {
-        const isActive =
-            datelist?.curDateDeli?.TimeList !== null &&
-            datelist?.curDateDeli?.TimeList?.length > 0;
+
+    const buildMessageDeliveryTime = (element) => {
+        let statusDeli = ' (hết nhân viên đi giao) ';
+        let typeDeli = '';
+        if (element.deliverytypeid == 261) {
+            typeDeli = ' (khung giao 2h)';
+        } else if (element.deliverytypeid == 141) {
+            typeDeli = ' (khung giao 4h)';
+        }
+        return statusDeli + typeDeli;
+    };
+    const chosenDeliTime = () => {
+        const isActive = curDateDeli?.TimeList?.length > 0;
         const listDeliTime = [
             {
                 label: 'Thời gian nhận',
@@ -494,12 +515,14 @@ const UserInfoCart = (props) => {
             }
         ];
         if (isActive)
-            datelist?.curDateDeli?.TimeList.forEach((element) => {
+            curDateDeli?.TimeList.forEach((element) => {
+                let statusTime = buildMessageDeliveryTime(element);
                 var temp =
                     '{"label":"' +
                     element.timetext +
                     ' - Phí: ' +
                     helper.formatMoney(element.shippingcost) +
+                    statusTime +
                     '","value": "' +
                     element.id +
                     '","disabled": ' +
@@ -515,14 +538,14 @@ const UserInfoCart = (props) => {
                 items={listDeliTime}
                 zIndex={30}
                 isVisible={isVisibleTimePicker}
-                controller={instance => controllerTime = instance}
-                disabled={isActive == false}
-                defaultValue={timeSelected}
+                controller={(instance) => (controllerTime = instance)}
+                disabled={dateSelected == null || dateSelected == '' || dateSelected == '-1'}
+                defaultValue={'-1'}
                 activeLabelStyle={{
                     color: '#1B6EAA'
                 }}
                 labelStyle={{
-                    fontSize: 14,
+                    fontSize: 13,
                     textAlign: 'left',
                     color: '#000'
                 }}
@@ -1175,7 +1198,7 @@ const UserInfoCart = (props) => {
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
-                        placeholderTextColor='#999'
+                        placeholderTextColor="#999"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1196,7 +1219,10 @@ const UserInfoCart = (props) => {
                                 value={isSelectedDeliAtDoor}
                                 onValueChange={setSelectedDeliAtDoor}
                                 style={styles.checkbox}
-                                tintColors={{ true: '#008848', false: '#008848' }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                             />
                             <Text style={styles.label}>
                                 Yêu cầu giao tận cửa chung cư, văn phòng
@@ -1214,7 +1240,10 @@ const UserInfoCart = (props) => {
                                         handleErrorCusNameOther('');
                                     }
                                 }}
-                                tintColors={{ true: '#008848', false: '#008848' }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                                 style={styles.checkbox}
                             />
                             <Text style={styles.label}>
@@ -1233,7 +1262,7 @@ const UserInfoCart = (props) => {
 
                 {chosenDeliDate()}
 
-                {chosenDeliTime({ curDateDeli })}
+                {chosenDeliTime()}
 
                 <View style={{ padding: 10 }}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
@@ -1275,7 +1304,7 @@ const UserInfoCart = (props) => {
                                 Note: value
                             }));
                         }}
-                        placeholderTextColor='#999'
+                        placeholderTextColor="#999"
                     />
                 </View>
                 <View style={styles.blockPadding}></View>
