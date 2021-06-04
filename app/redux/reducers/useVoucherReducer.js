@@ -1,7 +1,7 @@
-import * as _state from './state';
-import * as _action from './action';
+import * as _store from '../store/useVoucherStore';
+import * as _action from '../actions/useVoucherAction';
 
-const voucherReducer = function (state = _state.voucherState, action) {
+const voucherReducer = function (state = _store.voucherState, action) {
     switch (action.type) {
         case _action.voucherAction.VOUCHER_ADD:
             return {
