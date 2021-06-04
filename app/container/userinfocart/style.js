@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     },
     blockPadding: {
         backgroundColor: '#F5F8FD',
-        height: 20
+        height: 20,
+        zIndex: 10
     },
     borderRadius: {
         borderBottomLeftRadius: 8,
@@ -147,7 +148,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
         textAlignVertical: 'top',
-        width: '100%'
+        width: '100%',
+        zIndex: 10
     },
     label: {
         margin: 8
