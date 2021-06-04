@@ -380,6 +380,10 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
 
+
+    let controllerDate;
+    let controllerTime;
+
     const chosenDeliDate = () => {
         const isActive =
             shipdatetime !== undefined &&
@@ -414,13 +418,13 @@ const UserInfoCart = (props) => {
                 placeholder={'Ngày nhận'}
                 disabled={isActive == false}
                 zIndex={20}
+                controller={instance => controllerDate = instance}
                 arrowColor={'#007842'}
                 defaultValue={'-1'}
                 containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
                     styles.borderRadius,
                     {
-                        backgroundColor: '#fff',
                         borderColor:
                             dateSelected == '' ||
                             dateSelected == null ||
@@ -453,6 +457,7 @@ const UserInfoCart = (props) => {
                 }}
                 onClose={() => {
                     setisVisibleDatePicker(false);
+                    setisVisibleTimePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
                     if (itemValue.value > 0) {
@@ -467,6 +472,7 @@ const UserInfoCart = (props) => {
                         setdateSelected('');
                     }
                     settimeSelected('-1');
+                     controllerTime.reset()
                     console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
@@ -505,10 +511,13 @@ const UserInfoCart = (props) => {
             });
         return (
             <DropDownPicker
+                placeholder={'Thời gian nhận'}
                 items={listDeliTime}
                 zIndex={30}
+                isVisible={isVisibleTimePicker}
+                controller={instance => controllerTime = instance}
                 disabled={isActive == false}
-                defaultValue={'-1'}
+                defaultValue={timeSelected}
                 activeLabelStyle={{
                     color: '#1B6EAA'
                 }}
@@ -522,7 +531,6 @@ const UserInfoCart = (props) => {
                     marginHorizontal: 10,
                     marginTop: 10
                 }}
-                activeValue={timeSelected}
                 style={[
                     styles.borderRadius,
                     {
@@ -1167,6 +1175,7 @@ const UserInfoCart = (props) => {
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
+                        placeholderTextColor='#999'
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1187,6 +1196,7 @@ const UserInfoCart = (props) => {
                                 value={isSelectedDeliAtDoor}
                                 onValueChange={setSelectedDeliAtDoor}
                                 style={styles.checkbox}
+                                tintColors={{ true: '#008848', false: '#008848' }}
                             />
                             <Text style={styles.label}>
                                 Yêu cầu giao tận cửa chung cư, văn phòng
@@ -1204,6 +1214,7 @@ const UserInfoCart = (props) => {
                                         handleErrorCusNameOther('');
                                     }
                                 }}
+                                tintColors={{ true: '#008848', false: '#008848' }}
                                 style={styles.checkbox}
                             />
                             <Text style={styles.label}>
@@ -1245,6 +1256,7 @@ const UserInfoCart = (props) => {
                             value={isSelectedXHD}
                             onValueChange={setSelectedXHD}
                             style={styles.checkbox}
+                            tintColors={{ true: '#008848', false: '#008848' }}
                         />
                         <Text style={styles.label}>Xuất hóa đơn công ty</Text>
                     </View>
@@ -1263,6 +1275,7 @@ const UserInfoCart = (props) => {
                                 Note: value
                             }));
                         }}
+                        placeholderTextColor='#999'
                     />
                 </View>
                 <View style={styles.blockPadding}></View>

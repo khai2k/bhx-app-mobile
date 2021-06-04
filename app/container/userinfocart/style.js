@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderStyle: 'solid',
         borderWidth: 1,
+        color: '#000',
         padding: 10
     },
     inputErr: {
