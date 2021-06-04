@@ -40,7 +40,6 @@ class OrderSuccess extends Component {
         this.props.actionOrderSuccess
             .orderSuccess_get()
             .then((res) => {
-                // console.log('dataaaaaa', res);
                 this.setState({
                     totalPrice: res.Value.Total,
                     deliveryTime: res.Value.DeliveryTextTime,
