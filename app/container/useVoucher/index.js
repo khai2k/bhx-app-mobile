@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import styles from './style';
-import * as voucherCreator from './action';
+import * as voucherCreator from '@app/redux/actions/useVoucherAction';
 import { TouchableWithoutFeedback } from 'react-native';
 
 class UseVoucher extends Component {
@@ -91,7 +91,6 @@ class UseVoucher extends Component {
         this.props.actionVoucher
             .voucher_get()
             .then((res) => {
-                console.log('get', res);
                 this.setState({
                     voucherCart: res.OtherData,
                     voucherList: res.Value
