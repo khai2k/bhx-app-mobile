@@ -1178,18 +1178,18 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-firebase/app@^12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-12.0.0.tgz#52b647a8fc65695eeec89f45bcd7538d727d5864"
-  integrity sha512-ONIQUOiApnCwN/Xxnl6o9305hsuUsQaCWOp8JdlIniNM7QkkIlGqYgnvPowjEXEJVhMVME/B6NSNSidnOd/hHw==
+"@react-native-firebase/app@^8.2.0":
+  version "8.4.7"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-8.4.7.tgz#7393ba7af36bd815bd5af7c64a20b0dd8a7e3341"
+  integrity sha512-jN788Q17aMOHc49wKc74RC3iZNhFoS+yTZhMBHFVyytf64uK3ofYAk3hjvukkylUTKF0Ni/L+04M0IDv8kStKg==
   dependencies:
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/messaging@^12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-12.0.0.tgz#6146b9572a289ffc7f89abd9c2b58d013ed36a22"
-  integrity sha512-rxanSjTfub75g5KgEtnmW7pFHNy5M0iEw+xCtlb/NLCQ4C9asCH3TGCAUqel9NbgsFzUv67WxrVOFRKHHrb4TA==
+"@react-native-firebase/messaging@^7.5.0":
+  version "7.9.2"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-7.9.2.tgz#f5946ce0da4c1454df4701de7284d52a4ccc8d5b"
+  integrity sha512-xK9oRkQAxJ5+9e3W9EUnxqhecA2iwZb4OCYPWyO5BzldIMa1B4UdYLHDHU8oYpgsefqS51bPDdczC0yn+/8RTA==
 
 "@react-native/assets@1.0.0":
   version "1.0.0"
