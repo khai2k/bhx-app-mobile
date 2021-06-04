@@ -108,7 +108,7 @@ const ProductItemCartOff = (props) => {
             <TouchableOpacity
                 onPress={() => {
                     navigation.navigate('Group', {
-                        url: props.productCart.Info.Url
+                        url: props.productCart.UrlParent
                     });
                 }}
                 style={styles.link}>

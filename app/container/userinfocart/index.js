@@ -33,7 +33,9 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+
 import {
+    ModalContent,
     ModalPortal,
     ModalFooter,
     ModalTitle,
@@ -51,7 +53,9 @@ const UserInfoCart = (props) => {
     useEffect(() => {
         console.log(curDateDeli);
     }, curDateDeli);
-    
+    useEffect(() => {}, timeSelected);
+    useEffect(() => {}, dateSelected);
+
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
 
@@ -71,10 +75,15 @@ const UserInfoCart = (props) => {
 
     const getCart = (prov, dis, ward) => {
         setisLoading(true);
+        setshipdatetime(null);
+        setdateSelected('-1');
+        settimeSelected('-1');
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
             setCartModel(res.Value);
-            setshipdatetime(cartmodel.ShiptimeGroupList);
+            if (res.Value.ShiptimeGroupList != null) {
+                setshipdatetime(res.Value.ShiptimeGroupList);
+            }
         });
         console.log(shipdatetime);
     };
@@ -100,6 +109,8 @@ const UserInfoCart = (props) => {
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
+
+    //Delivery Date and Time State
     const [curDateDeli, setcurDateDeli] = useState(null);
 
     const [dateSelected, setdateSelected] = useState('');
@@ -114,21 +125,21 @@ const UserInfoCart = (props) => {
     // Validate Error
     const [phoneErrMessage, setphoneErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_PHONE
-        ""
+        ''
     );
     const [phoneOtherErrMessage, setphoneOtherErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_PHONE
+        CONST_STRINGERR.EMPTY_PHONE_OTHER
     );
     const [cusNameErrMessage, setcusNameErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_CUSNAME
-        ""
+        ''
     );
     const [cusNameOtherErrMessage, setcusNameOtherErrMessage] = useState(
-        CONST_STRINGERR.EMPTY_CUSNAME
+        CONST_STRINGERR.EMPTY_CUSNAME_OTHER
     );
     const [cusAddressErrMessage, setcusAddressErrMessage] = useState(
         // CONST_STRINGERR.EMPTY_SHIPADDRESS
-        ""
+        ''
     );
     // Province District Ward
     const [provinceSelected, setprovinceSelected] = useState(-1);
@@ -136,12 +147,23 @@ const UserInfoCart = (props) => {
     const [wardSelected, setwardSelected] = useState(-1);
 
     const alert = (message) => {
+        const html = (
+            <HTML
+                style={styles.error}
+                tagsStyles={{ b: styles.errorbold }}
+                source={{ html: '<section>' + message + '</section>' }}
+                contentWidth={200}
+            />
+        );
         const modalPortalId = ModalPortal.show(
             <View>
-                <ModalTitle title={message} />
+                <ModalContent>{html}</ModalContent>
                 <ModalFooter>
                     <ModalButton
-                        style={StyleGeneral.styleAlert.btnAlert}
+                        style={[
+                            StyleGeneral.styleAlert.btnAlert,
+                            { paddingTop: 10, paddingBottom: 10 }
+                        ]}
                         textStyle={StyleGeneral.styleAlert.btnAlertText}
                         text="Đồng ý"
                         onPress={() => {
@@ -152,6 +174,7 @@ const UserInfoCart = (props) => {
             </View>,
             {
                 animationDuration: 0,
+                width: 0.8,
                 onHardwareBackPress: () => {
                     return true;
                 }
@@ -163,7 +186,6 @@ const UserInfoCart = (props) => {
         const formError = validateForm();
         if (formError === '') {
             setisLoading(true);
-            debugger;
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
@@ -181,10 +203,48 @@ const UserInfoCart = (props) => {
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
 
+        if (isSelectedXHD) {
+            cartmodel.Cart.IsGetBill = isSelectedXHD;
+            if (helper.isEmptyOrNull(companyName)) {
+                return 'Vui lòng nhập tên Công ty!';
+            }
+            cartmodel.Cart.CompanyName = companyName;
+            if (helper.isEmptyOrNull(companyAddress)) {
+                return 'Vui lòng nhập địa chỉ Công ty!';
+            }
+            cartmodel.Cart.CompanyAddress = companyAddress;
+            if (helper.isEmptyOrNull(companyTax)) {
+                return 'Vui lòng nhập Mã số thuế!';
+            }
+            cartmodel.Cart.CompanyTaxNumber = companyTax;
+        } else {
+            cartmodel.Cart.IsGetBill = false;
+            cartmodel.Cart.CompanyName = '';
+            cartmodel.Cart.CompanyAddress = '';
+            cartmodel.Cart.CompanyTaxNumber = '';
+        }
+        if (isSelectedCallOther) {
+            cartmodel.Cart.IsCallOthers = isSelectedCallOther;
+            cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
+            if (helper.isEmptyOrNull(phoneOtherErrMessage) == false) {
+                return phoneOtherErrMessage;
+            }
+            cartmodel.Cart.OthersPhone = cartUserInfo.OthersPhone;
+            if (helper.isEmptyOrNull(cusNameOtherErrMessage) == false) {
+                return cusNameOtherErrMessage;
+            }
+            cartmodel.Cart.OthersName = cartUserInfo.OthersName;
+        } else {
+            cartmodel.Cart.IsCallOthers = false;
+            cartmodel.Cart.OthersGenderCall = -1;
+            cartmodel.Cart.OthersPhone = '';
+            cartmodel.Cart.OthersName = '';
+        }
+
         if (helper.isEmptyOrNull(phoneErrMessage) == false) {
             return phoneErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerPhone)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerPhone)) {
             handleErrorPhone(cartUserInfo.CustomerPhone);
             return CONST_STRINGERR.EMPTY_PHONE;
         }
@@ -193,7 +253,7 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusNameErrMessage) == false) {
             return cusNameErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.CustomerName)){
+        if (helper.isEmptyOrNull(cartUserInfo.CustomerName)) {
             handleErrorCusName(cartUserInfo.CustomerName);
             return CONST_STRINGERR.EMPTY_CUSNAME;
         }
@@ -213,17 +273,25 @@ const UserInfoCart = (props) => {
         if (helper.isEmptyOrNull(cusAddressErrMessage) == false) {
             return cusAddressErrMessage;
         }
-        if(helper.isEmptyOrNull(cartUserInfo.ShipAddress)){
+        if (helper.isEmptyOrNull(cartUserInfo.ShipAddress)) {
             handleErrorCusAddress(cartUserInfo.ShipAddress);
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
         cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
-        if (dateSelected == '' || dateSelected == null) {
+        if (
+            dateSelected == '' ||
+            dateSelected == null ||
+            dateSelected == '-1'
+        ) {
             return 'Vui lòng chọn ngày nhận hàng';
         }
         cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
         cartmodel.SelectedShipTimeList[0].IsDateSelectedByCus = true;
-        if (timeSelected == '' || timeSelected == null) {
+        if (
+            timeSelected == '' ||
+            timeSelected == null ||
+            timeSelected == '-1'
+        ) {
             return 'Vui lòng chọn thời gian nhận hàng';
         }
         //cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
@@ -242,7 +310,7 @@ const UserInfoCart = (props) => {
     };
 
     const SelectTime = (index, timevalue) => {
-        debugger;
+        //debugger;
         if (
             cartmodel == null ||
             cartmodel.ProfileItems.Count == 0 ||
@@ -290,21 +358,21 @@ const UserInfoCart = (props) => {
     };
     const handleErrorPhoneOther = (value) => {
         if (helper.isEmptyOrNull(value)) {
-            setphoneOtherErrMessage(CONST_STRINGERR.EMPTY_PHONE);
+            setphoneOtherErrMessage(CONST_STRINGERR.EMPTY_PHONE_OTHER);
         } else if (helper.isPhoneNumber(value) == false) {
-            setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE);
+            setphoneOtherErrMessage(CONST_STRINGERR.INVALID_PHONE_OTHER);
         } else setphoneOtherErrMessage('');
     };
-    const handleErrorCusName = (value, maxlength) => {
+    const handleErrorCusName = (value, maxlength = 50) => {
         if (helper.isEmptyOrNull(value)) {
             setcusNameErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
         } else if (value.length > maxlength) {
             setcusNameErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameErrMessage('');
     };
-    const handleErrorCusNameOther = (value, maxlength) => {
+    const handleErrorCusNameOther = (value, maxlength = 50) => {
         if (helper.isEmptyOrNull(value)) {
-            setcusNameOtherErrMessage(CONST_STRINGERR.EMPTY_CUSNAME);
+            setcusNameOtherErrMessage(CONST_STRINGERR.EMPTY_CUSNAME_OTHER);
         } else if (value.length > maxlength) {
             setcusNameOtherErrMessage(CONST_STRINGERR.OUTOFRANGE_CUSNAME);
         } else setcusNameOtherErrMessage('');
@@ -321,6 +389,9 @@ const UserInfoCart = (props) => {
     const [isVisibleTimePicker, setisVisibleTimePicker] = useState(false);
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
+
+    let controllerDate;
+    let controllerTime;
 
     const chosenDeliDate = () => {
         const isActive =
@@ -339,7 +410,7 @@ const UserInfoCart = (props) => {
                 disabled: true
             }
         ];
-        if (isActive)
+        if (isActive) {
             shipdatetime[0]?.DateList.forEach((element) => {
                 var temp =
                     '{"label":"' +
@@ -349,21 +420,24 @@ const UserInfoCart = (props) => {
                     '"}';
                 listDeliDate.push(JSON.parse(temp));
             });
-
-        console.log(listDeliDate);
+        }
         return (
             <DropDownPicker
                 items={listDeliDate}
                 placeholder={'Ngày nhận'}
+                disabled={isActive == false}
                 zIndex={20}
+                controller={(instance) => (controllerDate = instance)}
+                arrowColor={'#007842'}
                 defaultValue={'-1'}
                 containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
                     styles.borderRadius,
                     {
-                        backgroundColor: '#fff',
                         borderColor:
-                            dateSelected == '' || dateSelected == null
+                            dateSelected == '' ||
+                            dateSelected == null ||
+                            dateSelected == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
@@ -380,7 +454,11 @@ const UserInfoCart = (props) => {
                     textAlign: 'left',
                     color: '#000'
                 }}
-                dropDownStyle={{ backgroundColor: '#fff' }}
+                dropDownStyle={{
+                    backgroundColor: '#fff',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10
+                }}
                 isVisible={isVisibleDatePicker}
                 onOpen={() => {
                     setisVisibleDatePicker(true);
@@ -388,29 +466,43 @@ const UserInfoCart = (props) => {
                 }}
                 onClose={() => {
                     setisVisibleDatePicker(false);
-                    setisVisibleTimePicker(true);
+                    setisVisibleTimePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
-                    if (itemValue.value > 0) {
-                        setcurDateDeli(
-                            shipdatetime[0]?.DateList[itemIndex - 1]
-                        );
+                    console.log(itemValue.value > 0);
+                    settimeSelected('-1');
+                    controllerTime.reset();
+                    debugger;
+                    if (itemValue.value !== '' && itemValue.value !== '-1') {
                         setdateSelected(
                             shipdatetime[0]?.DateList[itemIndex - 1]?.id
                         );
+                        setcurDateDeli(
+                            shipdatetime[0]?.DateList[itemIndex - 1]
+                        );
                     } else {
                         setcurDateDeli(null);
-                        setdateSelected('');
+                        setdateSelected('-1');
                     }
-                    settimeSelected('-1');
+                    console.log('itemValue.value: ' + itemValue.value + 'dateSelected: ' + dateSelected + 'curDateDeli: ' + curDateDeli);
+                    console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
         );
     };
-    const chosenDeliTime = (datelist) => {
-        const isActive =
-            datelist?.curDateDeli?.TimeList !== null &&
-            datelist?.curDateDeli?.TimeList?.length > 0;
+
+    const buildMessageDeliveryTime = (element) => {
+        let statusDeli = ' (hết nhân viên đi giao) ';
+        let typeDeli = '';
+        if (element.deliverytypeid == 261) {
+            typeDeli = ' (khung giao 2h)';
+        } else if (element.deliverytypeid == 141) {
+            typeDeli = ' (khung giao 4h)';
+        }
+        return statusDeli + typeDeli;
+    };
+    const chosenDeliTime = () => {
+        const isActive = curDateDeli?.TimeList?.length > 0;
         const listDeliTime = [
             {
                 label: 'Thời gian nhận',
@@ -423,12 +515,14 @@ const UserInfoCart = (props) => {
             }
         ];
         if (isActive)
-            datelist?.curDateDeli?.TimeList.forEach((element) => {
+            curDateDeli?.TimeList.forEach((element) => {
+                let statusTime = buildMessageDeliveryTime(element);
                 var temp =
                     '{"label":"' +
                     element.timetext +
                     ' - Phí: ' +
                     helper.formatMoney(element.shippingcost) +
+                    statusTime +
                     '","value": "' +
                     element.id +
                     '","disabled": ' +
@@ -440,15 +534,18 @@ const UserInfoCart = (props) => {
             });
         return (
             <DropDownPicker
+                placeholder={'Thời gian nhận'}
                 items={listDeliTime}
-                zIndex={20}
-                disabled={isActive == false}
+                zIndex={30}
+                isVisible={isVisibleTimePicker}
+                controller={(instance) => (controllerTime = instance)}
+                disabled={dateSelected == null || dateSelected == '' || dateSelected == '-1'}
                 defaultValue={'-1'}
                 activeLabelStyle={{
-                    color: '#39739d'
+                    color: '#1B6EAA'
                 }}
                 labelStyle={{
-                    fontSize: 14,
+                    fontSize: 13,
                     textAlign: 'left',
                     color: '#000'
                 }}
@@ -457,7 +554,6 @@ const UserInfoCart = (props) => {
                     marginHorizontal: 10,
                     marginTop: 10
                 }}
-                activeValue={timeSelected}
                 style={[
                     styles.borderRadius,
                     {
@@ -470,13 +566,16 @@ const UserInfoCart = (props) => {
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={200}
+                dropDownMaxHeight={300}
                 itemStyle={{
                     justifyContent: 'flex-start',
                     color: '#000'
                 }}
-                dropDownStyle={{ backgroundColor: '#fff' }}
-                isVisible={isVisibleTimePicker}
+                dropDownStyle={{
+                    backgroundColor: '#fff',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10
+                }}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
                     setisVisibleDatePicker(false);
@@ -486,12 +585,11 @@ const UserInfoCart = (props) => {
                     setisVisibleDatePicker(false);
                 }}
                 onChangeItem={(itemValue, itemIndex) => {
-                    debugger;
-                    if(itemValue.disabled == true){
+                    //debugger;
+                    if (itemValue.disabled == true) {
                         settimeSelected('-1');
                         setisVisibleTimePicker(true);
-                    }else
-                        settimeSelected(itemValue.value);
+                    } else settimeSelected(itemValue.value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -621,7 +719,7 @@ const UserInfoCart = (props) => {
                             colorFocused: '#000',
                             colorBlurred: '#000',
                             topFocused: -15,
-                            fontSizeFocused: 11
+                            fontSizeFocused: 10
                         }}
                         containerStyles={
                             helper.isEmptyOrNull(phoneOtherErrMessage) == false
@@ -680,7 +778,7 @@ const UserInfoCart = (props) => {
 
     const UserProvAndDis = (location) => {
         useEffect(() => {
-            //  getLstProv();
+            getLstProv();
         }, []);
 
         const [enableDis, setEnableDis] = useState(false);
@@ -767,6 +865,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
+                            mode={'dropdown'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -783,7 +882,7 @@ const UserInfoCart = (props) => {
                                     ...previousState,
                                     ShipProvince: itemValue > 0 ? itemValue : 0
                                 }));
-                                getCart(provinceSelected);
+                                getCart(itemValue);
                             }}>
                             <Picker.Item
                                 label="Tỉnh thành"
@@ -821,6 +920,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
+                            mode={'dropdown'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -871,6 +971,7 @@ const UserInfoCart = (props) => {
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
+                        mode={'dropdown'}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
                             setCartUserInfo((previousState) => ({
@@ -1001,10 +1102,7 @@ const UserInfoCart = (props) => {
                           }
                         : ''
                 ]}
-                nestedScrollEnabled={false}
-                contentContainerStyle={{
-                    paddingBottom: 60
-                }}>
+                nestedScrollEnabled={false}>
                 <TouchableOpacity
                     style={styles.backTop}
                     onPress={() => props.navigation.goBack()}>
@@ -1050,7 +1148,6 @@ const UserInfoCart = (props) => {
                             </Text>
                         }
                         value={cartUserInfo?.CustomerPhone}
-                        onBlur={() => {}}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
                                 ...previousState,
@@ -1084,6 +1181,7 @@ const UserInfoCart = (props) => {
                                 <Text style={{ color: '#ff001f' }}>*</Text>
                             </Text>
                         }
+                        // staticLabel={helper.isEmptyOrNull(cartUserInfo?.CustomerPhone) == false}
                         value={cartUserInfo?.CustomerName}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1100,6 +1198,7 @@ const UserInfoCart = (props) => {
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
+                        placeholderTextColor="#999"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1120,6 +1219,10 @@ const UserInfoCart = (props) => {
                                 value={isSelectedDeliAtDoor}
                                 onValueChange={setSelectedDeliAtDoor}
                                 style={styles.checkbox}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                             />
                             <Text style={styles.label}>
                                 Yêu cầu giao tận cửa chung cư, văn phòng
@@ -1136,6 +1239,10 @@ const UserInfoCart = (props) => {
                                         cartUserInfo.OthersName = '';
                                         handleErrorCusNameOther('');
                                     }
+                                }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
                                 }}
                                 style={styles.checkbox}
                             />
@@ -1155,7 +1262,7 @@ const UserInfoCart = (props) => {
 
                 {chosenDeliDate()}
 
-                {chosenDeliTime({ curDateDeli })}
+                {chosenDeliTime()}
 
                 <View style={{ padding: 10 }}>
                     <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
@@ -1178,6 +1285,7 @@ const UserInfoCart = (props) => {
                             value={isSelectedXHD}
                             onValueChange={setSelectedXHD}
                             style={styles.checkbox}
+                            tintColors={{ true: '#008848', false: '#008848' }}
                         />
                         <Text style={styles.label}>Xuất hóa đơn công ty</Text>
                     </View>
@@ -1196,42 +1304,50 @@ const UserInfoCart = (props) => {
                                 Note: value
                             }));
                         }}
+                        placeholderTextColor="#999"
                     />
                 </View>
-                <CartTotal cartInfo={cartTotal} />
-                <View style={styles.boxbtn}>
-                    <View style={styles.btn}>
-                        <TouchableOpacity onPress={() => {}}>
-                            <Text style={styles.textbtn}>Xóa hết giỏ hàng</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.btn}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                this.props.navigation.navigate('Cart')
-                            }>
-                            <View>
+                <View style={styles.blockPadding}></View>
+                <View style={styles.sectionInput}>
+                    <CartTotal cartInfo={cartTotal} />
+                    <View style={styles.boxbtn}>
+                        <View style={styles.btn}>
+                            <TouchableOpacity onPress={() => {}}>
                                 <Text style={styles.textbtn}>
-                                    Dùng phiếu mua hàng
+                                    Xóa hết giỏ hàng
                                 </Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.btnbuy}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                onSubmitForm();
-                            }}>
-                            <View>
-                                <Text style={styles.textbtnbuy}>
-                                    Hoàn tất mua
-                                </Text>
-                                <Text style={styles.textPriceTotal}>
-                                    {cartTotal?.SumTotal > 0 &&
-                                        helper.formatMoney(cartTotal.SumTotal)}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btn}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    props.navigation.navigate('UseVoucher');
+                                }}>
+                                <View>
+                                    <Text style={styles.textbtn}>
+                                        Dùng phiếu mua hàng
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.btnbuy}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    onSubmitForm();
+                                }}>
+                                <View>
+                                    <Text style={styles.textbtnbuy}>
+                                        Hoàn tất mua
+                                    </Text>
+                                    <Text style={styles.textPriceTotal}>
+                                        {cartTotal?.SumTotal > 0 &&
+                                            helper.formatMoney(
+                                                cartTotal.SumTotal
+                                            )}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </ScrollView>

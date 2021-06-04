@@ -32,6 +32,7 @@ class App extends Component {
                 </View>
                 {/* <CodePushUpdate /> */}
                 <FlashMessage
+                    hideOnPress={true}
                     position="center"
                     style={{
                         borderRadius: 30,

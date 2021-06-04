@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux';
 import { showMessage, hideMessage } from 'react-native-flash-message';
 import styles from './style';
-import * as voucherCreator from './action';
+import * as voucherCreator from '@app/redux/actions/useVoucherAction';
 import { TouchableWithoutFeedback } from 'react-native';
 
 class UseVoucher extends Component {
@@ -91,7 +91,6 @@ class UseVoucher extends Component {
         this.props.actionVoucher
             .voucher_get()
             .then((res) => {
-                console.log('get', res);
                 this.setState({
                     voucherCart: res.OtherData,
                     voucherList: res.Value
@@ -151,7 +150,7 @@ class UseVoucher extends Component {
     _renderHeader() {
         return (
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Dùng Phiếu mua hàng</Text>
+                <Text style={styles.headerTitle}>Dùng phiếu mua hàng</Text>
                 <View style={styles.closeHeader}>
                     <TouchableOpacity
                         onPress={() => this.props.navigation.goBack()}>
@@ -322,17 +321,26 @@ class UseVoucher extends Component {
                                     this.handleDeleteVoucher(itemVoucher)
                                 }>
                                 <View style={styles.voucherBox}>
-                                    <View style={styles.voucherPriceBox}>
-                                        <Text style={styles.labelPriceVoucher}>
-                                            {itemVoucher.VoucherCode
-                                                ? itemVoucher.VoucherAmount /
-                                                      1000 +
-                                                  'K'
-                                                : itemVoucher.VoucherAmount +
-                                                  '%'}
-                                        </Text>
+                                    <View style={styles.voucherLeft}>
+                                        <View style={styles.voucherPriceBox}>
+                                            <Text
+                                                style={
+                                                    styles.labelPriceVoucher
+                                                }>
+                                                {itemVoucher.VoucherCode
+                                                    ? itemVoucher.VoucherAmount /
+                                                          1000 +
+                                                      'K'
+                                                    : itemVoucher.VoucherAmount +
+                                                      '%'}
+                                            </Text>
+                                        </View>
                                     </View>
-                                    <View style={styles.voucherInfoBox}>
+                                    <View style={styles.voucherMid}>
+                                        <View style={styles.voucherMidTop} />
+                                        <View style={styles.voucherMidBottom} />
+                                    </View>
+                                    <View style={styles.voucherRight}>
                                         {itemVoucher.MinOrderAmount > 0 ? (
                                             <Text style={styles.voucherLabel}>
                                                 Giảm{' '}

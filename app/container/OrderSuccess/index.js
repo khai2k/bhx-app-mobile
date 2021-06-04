@@ -12,7 +12,7 @@ import {
 import Modal from 'react-native-modal';
 import CheckBox from '@react-native-community/checkbox';
 import { helper } from '@app/common';
-import * as orderSuccessCreator from './action';
+import * as orderSuccessCreator from '@app/redux/actions/orderSuccessAction';
 // import CancelOrderModal from './cancelOrderModal';
 import Header from '../../components/Header';
 import { showMessage, hideMessage } from 'react-native-flash-message';
@@ -40,7 +40,6 @@ class OrderSuccess extends Component {
         this.props.actionOrderSuccess
             .orderSuccess_get()
             .then((res) => {
-                // console.log('dataaaaaa', res);
                 this.setState({
                     totalPrice: res.Value.Total,
                     deliveryTime: res.Value.DeliveryTextTime,

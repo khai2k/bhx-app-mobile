@@ -30,12 +30,20 @@ export const cart_get = function (prov, dis, ward) {
             const cartId = getState().generalReducer.CartId;
             // const cartId =
             //     'B9B2B8323256D8EFE9AC17C54C0BDCB083043C0DD6EAADB449CA8DEBB91C342A';
+            let provID = location.ProvinceId;
+            let disID = location.DistrictId;
+            let wardID = location.WardId;
+            if (prov > 0) {
+                provID = prov;
+                disID = dis > 0 ? dis : 0;
+                wardID = ward > 0 ? ward : 0;
+            }
             const bodyApi = {
                 token: cartId,
                 us: '',
-                provinceId: prov > 0 ? prov : location.ProvinceId,
-                districtId: dis > 0 ? dis : location.DistrictId,
-                wardId: ward > 0 ? ward : location.WardId,
+                provinceId: provID,
+                districtId: disID,
+                wardId: wardID,
                 storeId: location.StoreId,
                 data: {
                     cartId
@@ -72,7 +80,6 @@ export const cart_get = function (prov, dis, ward) {
 export const cart_submit = function (Cart) {
     Cart.ValidateToken = MD5(`${Cart.CartId}bhx@123`);
     Cart.IsAdding = false;
-    Cart.IsEditing = false;
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
