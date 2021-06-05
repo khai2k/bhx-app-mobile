@@ -499,10 +499,8 @@ const UserInfoCart = (props) => {
                                         getTimeFirst !== undefined &&
                                         getTimeFirst.id !== ''
                                     ) {
-                                        //settimeSelected(getTimeFirst.id);
+                                        settimeSelected(getTimeFirst.id);
                                     }
-                                    console.log('getTimeFirst: ' + getTimeFirst);
-                                    console.log('listDeliTime: ' + listDeliTime);
                                 }
                             } else {
                                 setcurDateDeli(null);
@@ -608,7 +606,7 @@ const UserInfoCart = (props) => {
                 disabled: true
             }
         ];
-        if (isActive) {
+        if (isActive)
             curDateDeli?.TimeList.forEach((element) => {
                 let statusTime = buildMessageDeliveryTime(element);
                 var temp =
@@ -626,7 +624,6 @@ const UserInfoCart = (props) => {
                     '}';
                 listDeliTime.push(JSON.parse(temp));
             });
-        }
         return (
             <DropDownPicker2
                 open={isVisibleTimePicker}
