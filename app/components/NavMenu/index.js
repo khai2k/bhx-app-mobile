@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -11,9 +11,7 @@ const NavMenu = () => {
 
     // Get data Menu từ redux
     const menuData = useSelector((state) => state.generalReducer.Menu);
-    const categoryIdActive = useSelector(
-        (state) => state.categoryReducer.Info.Id
-    );
+    const categoryActive = useSelector((state) => state.categoryReducer.Info);
 
     // Danh sách cate
     const [listCate, setListCate] = useState(menuData);
@@ -25,9 +23,36 @@ const NavMenu = () => {
     const [selectedCateChild, setSelectedCateChild] = useState('');
     const [isHasSearch, setIsHasSearch] = useState(false);
 
+    // Danh sách vị trí các cate
+    const [listCateChildPosition, setListCateChildPosition] = useState([]);
+    const refContainer = useRef(null);
+
+    // function ScrollTo() {
+    //     const positionChild = listCateChildPosition
+    //         .filter((element) => {
+    //             return (
+    //                 element.parentId ===
+    //                 (categoryActive.ParentIds &&
+    //                     categoryActive.ParentIds.shift()?.toString())
+    //             );
+    //         })
+    //         .shift();
+    //     refContainer?.current?.scrollTo({
+    //         x: 0,
+    //         y: positionChild?.position,
+    //         animated: true
+    //     });
+    // }
+
     useEffect(() => {
-        setSelectedCateChild(categoryIdActive?.toString());
-    }, [categoryIdActive]);
+        // ScrollTo();
+        setSelectedCateChild(categoryActive.Id?.toString());
+        setCateFilter(
+            (categoryActive.ParentIds &&
+                categoryActive.ParentIds.shift()?.toString()) ||
+                '8686'
+        );
+    }, [categoryActive]);
 
     return (
         <View style={styles.container}>
@@ -36,6 +61,8 @@ const NavMenu = () => {
                 cateFilter={cateFilter}
                 setCateFilter={setCateFilter}
                 navigation={navigation}
+                refContainer={refContainer}
+                listCateChildPosition={listCateChildPosition}
             />
             <NavCateChild
                 search={search}
@@ -50,6 +77,9 @@ const NavMenu = () => {
                 setListCate={setListCate}
                 setSearch={setSearch}
                 navigation={navigation}
+                listCateChildPosition={listCateChildPosition}
+                setListCateChildPosition={setListCateChildPosition}
+                refContainer={refContainer}
             />
         </View>
     );

@@ -5,6 +5,9 @@ import { ImageNavMenu } from '../../images';
 
 // Render danh sách cate cha
 const NavCateParent = (props) => {
+    function handleClickHome() {
+        props.navigation.navigate('Product');
+    }
     return (
         <View style={styles.navLeft}>
             <View style={styles.navLeftTop}>
@@ -19,7 +22,7 @@ const NavCateParent = (props) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.btnHome}
-                    onPress={() => props.navigation.navigate('Product')}>
+                    onPress={() => handleClickHome()}>
                     <Image
                         source={ImageNavMenu.imgIconHome}
                         style={styles.iconHome}
@@ -30,6 +33,8 @@ const NavCateParent = (props) => {
                 masterData={props.masterData}
                 cateFilter={props.cateFilter}
                 setCateFilter={props.setCateFilter}
+                refContainer={props.refContainer}
+                listCateChildPosition={props.listCateChildPosition}
             />
         </View>
     );
@@ -41,23 +46,38 @@ const RenderListCateParent = (props) => {
             style={styles.navLeftBottom}
             data={props.masterData}
             keyExtractor={(item) => item.ReferenceId}
+            scrollEnabled={false}
             renderItem={(item) => {
                 return (
-                    <RenderCateItem
-                        item={item}
-                        cateFilter={props.cateFilter}
-                        setCateFilter={props.setCateFilter}
-                    />
+                    item.item.ReferenceId !== '-1' && (
+                        <RenderCateItem
+                            item={item}
+                            cateFilter={props.cateFilter}
+                            setCateFilter={props.setCateFilter}
+                            refContainer={props.refContainer}
+                            listCateChildPosition={props.listCateChildPosition}
+                        />
+                    )
                 );
             }}
         />
     );
 };
 
-const RenderCateItem = (props) => {
+const RenderCateItem = React.memo((props) => {
     const { item } = props.item;
     const handleSelectCateParent = (id) => {
         props.setCateFilter(id);
+        const positionChild = props.listCateChildPosition
+            .filter((element) => {
+                return element.parentId === id;
+            })
+            .shift();
+        props.refContainer?.current?.scrollTo({
+            x: 0,
+            y: positionChild?.position,
+            animated: true
+        });
     };
     return (
         <TouchableOpacity
@@ -68,11 +88,9 @@ const RenderCateItem = (props) => {
             onPress={() => {
                 handleSelectCateParent(item.ReferenceId);
             }}>
-            {item.ReferenceId !== '-1' && (
-                <Text style={styles.txtCate}>{item.Text}</Text>
-            )}
+            <Text style={styles.txtCate}>{item.Text}</Text>
         </TouchableOpacity>
     );
-};
+});
 
 export default NavCateParent;
