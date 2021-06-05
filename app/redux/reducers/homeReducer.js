@@ -19,17 +19,20 @@ const homeReducer = function (state = _state.homeState, action) {
                 ListLineProducts: action.homeData.Value,
                 MaxPage: action.homeData.OtherData.MaxPage
             };
-        case _action.homeAction.LOAD_MORE_HOME_DATA:
+        case _action.homeAction.LOAD_MORE_HOME_DATA: {
+            // reset pageIndex = 0 cho từng line
+            const dataLines = action.homeData.Value.map((item) => {
+                item.PageIndex = 0;
+                return item;
+            });
             return {
                 ...state,
-                ListLineProducts: [
-                    ...state.ListLineProducts,
-                    ...action.homeData.Value
-                ],
+                ListLineProducts: [...state.ListLineProducts, ...dataLines],
                 GroupMenuString: action.homeData.OtherData.GroupMenuString,
                 IsNextGroup: action.homeData.OtherData.IsNextGroup,
                 PageIndexLine: action.homeData.pageIndex + 1
             };
+        }
         case _action.homeAction.LOAD_MORE_PRODUCTS: {
             const dataListLineProducts = state.ListLineProducts.map(
                 (element) => {

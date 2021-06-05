@@ -17,6 +17,8 @@ import styles from './style';
 import ProductBox from '../../components/ProductBox/ProductBox';
 import SliderTitle from './SliderTitle';
 
+const PAGE_SIZE = 9;
+
 const RenderLine = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -152,7 +154,7 @@ const RenderLine = (props) => {
                         );
                     })}
                 </View>
-                {Products.length > 9 && (
+                {Products.length !== 9 && (
                     <View style={styles.boxCategory}>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
@@ -183,7 +185,7 @@ const RenderLine = (props) => {
                 )}
                 {Products !== null &&
                     Products.length > 0 &&
-                    PromotionCount > 0 && (
+                    PromotionCount > PAGE_SIZE && (
                         <TouchableOpacity
                             onPress={() => {
                                 selectedId > 0

@@ -95,7 +95,6 @@ export function isEmptyObjectOrNull(obj) {
         return true;
     }
     const keys = Object.keys(obj);
-    console.log(keys.length);
     return keys.length === 0 || obj === null;
 }
 
