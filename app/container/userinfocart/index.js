@@ -33,6 +33,7 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import DropDownPicker2 from 'react-native-dropdown-picker';
 
 import {
     ModalContent,
@@ -50,9 +51,11 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    useEffect(() => {}, curDateDeli);
+    useEffect(() => {
+        console.log(curDateDeli);
+    }, curDateDeli);
     useEffect(() => {}, timeSelected);
-
+    useEffect(() => {}, dateSelected);
 
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
@@ -74,7 +77,7 @@ const UserInfoCart = (props) => {
     const getCart = (prov, dis, ward) => {
         setisLoading(true);
         setshipdatetime(null);
-        setdateSelected('-1');
+        setdateSelectedValue('-1');
         settimeSelected('-1');
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
@@ -107,9 +110,12 @@ const UserInfoCart = (props) => {
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
+
+    //Delivery Date and Time State
     const [curDateDeli, setcurDateDeli] = useState(null);
 
     const [dateSelected, setdateSelected] = useState('');
+    const [dateSelectedValue, setdateSelectedValue] = useState('-1');
     const [timeSelected, settimeSelected] = useState('');
 
     // Xuất Hóa Đơn
@@ -153,9 +159,7 @@ const UserInfoCart = (props) => {
         );
         const modalPortalId = ModalPortal.show(
             <View>
-                 <ModalContent>
-                    {html}
-                </ModalContent>
+                <ModalContent>{html}</ModalContent>
                 <ModalFooter>
                     <ModalButton
                         style={[
@@ -276,12 +280,20 @@ const UserInfoCart = (props) => {
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
         cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
-        if (dateSelected == '' || dateSelected == null) {
+        if (
+            dateSelected == '' ||
+            dateSelected == null ||
+            dateSelected == '-1'
+        ) {
             return 'Vui lòng chọn ngày nhận hàng';
         }
         cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
         cartmodel.SelectedShipTimeList[0].IsDateSelectedByCus = true;
-        if (timeSelected == '' || timeSelected == null) {
+        if (
+            timeSelected == '' ||
+            timeSelected == null ||
+            timeSelected == '-1'
+        ) {
             return 'Vui lòng chọn thời gian nhận hàng';
         }
         //cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
@@ -380,6 +392,9 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
 
+    let controllerDate;
+    let controllerTime;
+
     const chosenDeliDate = () => {
         const isActive =
             shipdatetime !== undefined &&
@@ -409,73 +424,177 @@ const UserInfoCart = (props) => {
             });
         }
         return (
-            <DropDownPicker
+            <DropDownPicker2
+                open={isVisibleDatePicker}
+                value={dateSelectedValue}
+                defaultValue={dateSelected}
+                listMode="SCROLLVIEW"
+                containerStyle={{
+                    width: '95%',
+                    marginHorizontal: 10,
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        dateSelectedValue == '' ||
+                        dateSelectedValue == null ||
+                        dateSelectedValue == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
+                }}
+                labelStyle={{
+                    color: isActive ? '#000' : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                zIndex={30}
                 items={listDeliDate}
-                placeholder={'Ngày nhận'}
-                disabled={isActive == false}
-                zIndex={20}
-                arrowColor={'#007842'}
-                defaultValue={'-1'}
-                containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
                     styles.borderRadius,
                     {
-                        backgroundColor: '#fff',
                         borderColor:
-                            dateSelected == '' ||
-                            dateSelected == null ||
-                            dateSelected == '-1'
+                            dateSelectedValue == '' ||
+                            dateSelectedValue == null ||
+                            dateSelectedValue == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={200}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                activeLabelStyle={{
-                    color: '#39739d'
-                }}
-                labelStyle={{
-                    fontSize: 14,
-                    textAlign: 'left',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
-                isVisible={isVisibleDatePicker}
+                setOpen={setisVisibleDatePicker}
+                disabled={isActive == false}
+                setValue={setdateSelectedValue}
                 onOpen={() => {
                     setisVisibleDatePicker(true);
                     setisVisibleTimePicker(false);
                 }}
                 onClose={() => {
                     setisVisibleDatePicker(false);
+                    setisVisibleTimePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    if (itemValue.value > 0) {
-                        setcurDateDeli(
-                            shipdatetime[0]?.DateList[itemIndex - 1]
+                onChangeValue={(value) => {
+                    setdateSelectedValue(value);
+                    if (shipdatetime != null) {
+                        var temp = shipdatetime[0]?.DateList.find(
+                            (x) => x.timeid == value
                         );
-                        setdateSelected(
-                            shipdatetime[0]?.DateList[itemIndex - 1]?.id
-                        );
-                    } else {
-                        setcurDateDeli(null);
-                        setdateSelected('');
+                        if (value == -1 || temp !== undefined) {
+                            console.log(temp);
+
+                            if (value !== '' && value !== '-1') {
+                                if (temp !== undefined) {
+                                    setdateSelected(temp.id);
+                                    setcurDateDeli(temp);
+                                    let getTimeFirst = temp?.TimeList?.find(
+                                        (x) => x.disabled == false
+                                    );
+                                    if (
+                                        getTimeFirst !== undefined &&
+                                        getTimeFirst.id !== ''
+                                    ) {
+                                        settimeSelected(getTimeFirst.id);
+                                    }
+                                }
+                            } else {
+                                setcurDateDeli(null);
+                                setdateSelected('-1');
+                                settimeSelected('-1');
+                            }
+                            //controllerTime.reset();
+                        }
                     }
-                    settimeSelected('-1');
-                    console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
+            // <DropDownPicker
+            //     items={listDeliDate}
+            //     placeholder={'Ngày nhận'}
+            //     disabled={isActive == false}
+            //     zIndex={20}
+            //     controller={(instance) => (controllerDate = instance)}
+            //     arrowColor={'#007842'}
+            //     defaultValue={'-1'}
+            //     containerStyle={{ height: 50, marginHorizontal: 10 }}
+            //     style={[
+            //         styles.borderRadius,
+            //         {
+            //             borderColor:
+            //                 dateSelected == '' ||
+            //                 dateSelected == null ||
+            //                 dateSelected == '-1'
+            //                     ? '#ff001f'
+            //                     : '#8F9BB3'
+            //         }
+            //     ]}
+            //     dropDownMaxHeight={200}
+            //     itemStyle={{
+            //         justifyContent: 'flex-start'
+            //     }}
+            //     activeLabelStyle={{
+            //         color: '#39739d'
+            //     }}
+            //     labelStyle={{
+            //         fontSize: 14,
+            //         textAlign: 'left',
+            //         color: '#000'
+            //     }}
+            //     dropDownStyle={{
+            //         backgroundColor: '#fff',
+            //         borderBottomLeftRadius: 10,
+            //         borderBottomRightRadius: 10
+            //     }}
+            //     isVisible={isVisibleDatePicker}
+            //     onOpen={() => {
+            //         setisVisibleDatePicker(true);
+            //         setisVisibleTimePicker(false);
+            //     }}
+            //     onClose={() => {
+            //         setisVisibleDatePicker(false);
+            //         setisVisibleTimePicker(false);
+            //     }}
+            //     onChangeItem={(itemValue, itemIndex) => {
+            //         console.log(itemValue.value > 0);
+            //         if (itemValue.value !== '' && itemValue.value !== '-1') {
+            //             setdateSelected(
+            //                 shipdatetime[0]?.DateList[itemIndex - 1]?.id
+            //             );
+            //             setcurDateDeli(
+            //                 shipdatetime[0]?.DateList[itemIndex - 1]
+            //             );
+            //         } else {
+            //             setcurDateDeli(null);
+            //             setdateSelected('-1');
+            //         }
+            //         controllerTime.reset();
+            //         settimeSelected('-1');
+            //         console.log('itemValue.value: ' + itemValue.value + 'dateSelected: ' + dateSelected + 'curDateDeli: ' + curDateDeli);
+            //         console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
+            //     }}
+            // />
         );
     };
-    const chosenDeliTime = (datelist) => {
-        const isActive =
-            datelist?.curDateDeli?.TimeList !== null &&
-            datelist?.curDateDeli?.TimeList?.length > 0;
+
+    const buildMessageDeliveryTime = (element) => {
+        let statusDeli = element.deliverytext;
+        if (helper.isEmptyOrNull(statusDeli)) {
+            statusDeli = '';
+        } else statusDeli = ' (' + statusDeli + ')';
+        let typeDeli = '';
+        if (element.deliverytypeid == 261) {
+            typeDeli = ' (khung giao 2h)';
+        } else if (element.deliverytypeid == 141) {
+            typeDeli = ' (khung giao 4h)';
+        }
+        return statusDeli + typeDeli;
+    };
+    const chosenDeliTime = () => {
+        const isActive = curDateDeli?.TimeList?.length > 0;
         const listDeliTime = [
             {
                 label: 'Thời gian nhận',
@@ -488,12 +607,14 @@ const UserInfoCart = (props) => {
             }
         ];
         if (isActive)
-            datelist?.curDateDeli?.TimeList.forEach((element) => {
+            curDateDeli?.TimeList.forEach((element) => {
+                let statusTime = buildMessageDeliveryTime(element);
                 var temp =
                     '{"label":"' +
                     element.timetext +
                     ' - Phí: ' +
                     helper.formatMoney(element.shippingcost) +
+                    statusTime +
                     '","value": "' +
                     element.id +
                     '","disabled": ' +
@@ -504,29 +625,49 @@ const UserInfoCart = (props) => {
                 listDeliTime.push(JSON.parse(temp));
             });
         return (
-            <DropDownPicker
+            <DropDownPicker2
+                open={isVisibleTimePicker}
+                value={timeSelected}
+                defaultValue={timeSelected}
+                zIndex={20}
                 items={listDeliTime}
-                zIndex={30}
-                disabled={isActive == false}
-                defaultValue={'-1'}
-                activeLabelStyle={{
-                    color: '#1B6EAA'
+                containerStyle={{
+                    width: '95%',
+                    marginHorizontal: 10,
+                    marginBottom: 10
+                }}
+                listMode="SCROLLVIEW"
+                maxHeight={300}
+                scrollViewProps={{
+                    scrollEnabled: true
+                }}
+                showBadgeDot={true}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        timeSelected == '' ||
+                        timeSelected == null ||
+                        timeSelected == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
                 }}
                 labelStyle={{
-                    fontSize: 14,
-                    textAlign: 'left',
-                    color: '#000'
+                    color: isActive ? '#000' : '#8F9BB3'
                 }}
-                containerStyle={{
-                    height: 50,
-                    marginHorizontal: 10,
-                    marginTop: 10
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
                 }}
-                activeValue={timeSelected}
                 style={[
                     styles.borderRadius,
                     {
                         backgroundColor: '#fff',
+                        fontSize: 13,
                         borderColor:
                             timeSelected == '' ||
                             timeSelected == null ||
@@ -535,16 +676,14 @@ const UserInfoCart = (props) => {
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={300}
-                itemStyle={{
-                    justifyContent: 'flex-start',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
+                setOpen={setisVisibleTimePicker}
+                disabled={
+                    isActive == false ||
+                    dateSelectedValue == '' ||
+                    dateSelectedValue == null ||
+                    dateSelectedValue == '-1'
+                }
+                setValue={settimeSelected}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
                     setisVisibleDatePicker(false);
@@ -553,12 +692,8 @@ const UserInfoCart = (props) => {
                     setisVisibleTimePicker(false);
                     setisVisibleDatePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    //debugger;
-                    if (itemValue.disabled == true) {
-                        settimeSelected('-1');
-                        setisVisibleTimePicker(true);
-                    } else settimeSelected(itemValue.value);
+                onChangeValue={(value) => {
+                    settimeSelected(value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -567,6 +702,71 @@ const UserInfoCart = (props) => {
                     );
                 }}
             />
+            // <DropDownPicker
+            //     placeholder={'Thời gian nhận'}
+            //     items={listDeliTime}
+            //     zIndex={30}
+            //     isVisible={isVisibleTimePicker}
+            //     controller={(instance) => (controllerTime = instance)}
+            //     disabled={isActive == false || helper.isEmptyOrNull(dateSelected) || dateSelected == '-1' || curDateDeli == null}
+            //     defaultValue={timeSelected}
+            //     activeLabelStyle={{
+            //         color: '#1B6EAA'
+            //     }}
+            //     labelStyle={{
+            //         fontSize: 13,
+            //         textAlign: 'left',
+            //         color: '#000'
+            //     }}
+            //     containerStyle={{
+            //         height: 50,
+            //         marginHorizontal: 10,
+            //         marginTop: 10
+            //     }}
+            //     style={[
+            //         styles.borderRadius,
+            //         {
+            //             backgroundColor: '#fff',
+            //             borderColor:
+            //                 timeSelected == '' ||
+            //                 timeSelected == null ||
+            //                 timeSelected == '-1'
+            //                     ? '#ff001f'
+            //                     : '#8F9BB3'
+            //         }
+            //     ]}
+            //     dropDownMaxHeight={300}
+            //     itemStyle={{
+            //         justifyContent: 'flex-start',
+            //         color: '#000'
+            //     }}
+            //     dropDownStyle={{
+            //         backgroundColor: '#fff',
+            //         borderBottomLeftRadius: 10,
+            //         borderBottomRightRadius: 10
+            //     }}
+            //     onOpen={() => {
+            //         setisVisibleTimePicker(true);
+            //         setisVisibleDatePicker(false);
+            //     }}
+            //     onClose={() => {
+            //         setisVisibleTimePicker(false);
+            //         setisVisibleDatePicker(false);
+            //     }}
+            //     onChangeItem={(itemValue, itemIndex) => {
+            //         //debugger;
+            //         if (itemValue.disabled == true) {
+            //             settimeSelected('-1');
+            //             setisVisibleTimePicker(true);
+            //         } else settimeSelected(itemValue.value);
+            //         console.log(
+            //             'timeSelected ' +
+            //                 timeSelected +
+            //                 'dateSelected ' +
+            //                 dateSelected
+            //         );
+            //     }}
+            // />
         );
     };
 
@@ -1038,6 +1238,12 @@ const UserInfoCart = (props) => {
             </View>
         );
     };
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+        { label: 'Apple', value: 'apple' },
+        { label: 'Banana', value: 'banana' }
+    ]);
 
     return (
         <View>
@@ -1167,6 +1373,7 @@ const UserInfoCart = (props) => {
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
+                        placeholderTextColor="#999"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1187,6 +1394,10 @@ const UserInfoCart = (props) => {
                                 value={isSelectedDeliAtDoor}
                                 onValueChange={setSelectedDeliAtDoor}
                                 style={styles.checkbox}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                             />
                             <Text style={styles.label}>
                                 Yêu cầu giao tận cửa chung cư, văn phòng
@@ -1203,6 +1414,10 @@ const UserInfoCart = (props) => {
                                         cartUserInfo.OthersName = '';
                                         handleErrorCusNameOther('');
                                     }
+                                }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
                                 }}
                                 style={styles.checkbox}
                             />
@@ -1222,10 +1437,15 @@ const UserInfoCart = (props) => {
 
                 {chosenDeliDate()}
 
-                {chosenDeliTime({ curDateDeli })}
+                {chosenDeliTime()}
 
-                <View style={{ padding: 10 }}>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+                <View style={[styles.sectionInput, { zIndex: 10 }]}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            marginVertical: 10
+                        }}>
                         Mua thêm để miễn phí giao với đơn trên 100.000đ (còn 5
                         lần)
                         <Text
@@ -1245,6 +1465,7 @@ const UserInfoCart = (props) => {
                             value={isSelectedXHD}
                             onValueChange={setSelectedXHD}
                             style={styles.checkbox}
+                            tintColors={{ true: '#008848', false: '#008848' }}
                         />
                         <Text style={styles.label}>Xuất hóa đơn công ty</Text>
                     </View>
@@ -1263,6 +1484,7 @@ const UserInfoCart = (props) => {
                                 Note: value
                             }));
                         }}
+                        placeholderTextColor="#999"
                     />
                 </View>
                 <View style={styles.blockPadding}></View>

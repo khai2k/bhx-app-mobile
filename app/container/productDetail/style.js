@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     container: {
-        marginBottom: 10
+        marginBottom: 10,
+        paddingVertical: 10
     },
     Image: {
         height: 20,

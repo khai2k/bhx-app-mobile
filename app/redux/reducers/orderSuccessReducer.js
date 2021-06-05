@@ -1,8 +1,8 @@
-import * as _state from './state';
-import * as _action from './action';
+import * as _store from '../store/orderSuccessStore';
+import * as _action from '../actions/orderSuccessAction';
 
 const orderSuccessReducer = function (
-    state = _state.orderSuccessState,
+    state = _store.orderSuccessState,
     action
 ) {
     switch (action.type) {
