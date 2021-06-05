@@ -492,13 +492,24 @@ const UserInfoCart = (props) => {
                                 if (temp !== undefined) {
                                     setdateSelected(temp.id);
                                     setcurDateDeli(temp);
+                                    let getTimeFirst = temp?.TimeList?.find(
+                                        (x) => x.disabled == false
+                                    );
+                                    if (
+                                        getTimeFirst !== undefined &&
+                                        getTimeFirst.id !== ''
+                                    ) {
+                                        //settimeSelected(getTimeFirst.id);
+                                    }
+                                    console.log('getTimeFirst: ' + getTimeFirst);
+                                    console.log('listDeliTime: ' + listDeliTime);
                                 }
                             } else {
                                 setcurDateDeli(null);
                                 setdateSelected('-1');
+                                settimeSelected('-1');
                             }
                             //controllerTime.reset();
-                            settimeSelected('-1');
                         }
                     }
                 }}
@@ -615,12 +626,6 @@ const UserInfoCart = (props) => {
                     '}';
                 listDeliTime.push(JSON.parse(temp));
             });
-            var getTimeFirst = listDeliTime.find((x) => x.disabled == false);
-            // if (getTimeFirst !== undefined && getTimeFirst.value !== '') {
-            //     settimeSelected(getTimeFirst.value);
-            // }
-            console.log('getTimeFirst: ' + getTimeFirst);
-            console.log('listDeliTime: ' + listDeliTime);
         }
         return (
             <DropDownPicker2
