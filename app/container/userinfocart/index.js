@@ -443,6 +443,9 @@ const UserInfoCart = (props) => {
                             ? '#ff001f'
                             : '#8F9BB3'
                 }}
+                labelStyle={{
+                    color: isActive ? '#000' : '#8F9BB3'
+                }}
                 selectedItemLabelStyle={{
                     color: '#1B6EAA'
                 }}
@@ -569,7 +572,10 @@ const UserInfoCart = (props) => {
     };
 
     const buildMessageDeliveryTime = (element) => {
-        let statusDeli = ' (hết nhân viên đi giao) ';
+        let statusDeli = element.deliverytext;
+        if (helper.isEmptyOrNull(statusDeli)) {
+            statusDeli = '';
+        } else statusDeli = ' (' + statusDeli + ')';
         let typeDeli = '';
         if (element.deliverytypeid == 261) {
             typeDeli = ' (khung giao 2h)';
@@ -591,7 +597,7 @@ const UserInfoCart = (props) => {
                 disabled: true
             }
         ];
-        if (isActive)
+        if (isActive) {
             curDateDeli?.TimeList.forEach((element) => {
                 let statusTime = buildMessageDeliveryTime(element);
                 var temp =
@@ -609,6 +615,13 @@ const UserInfoCart = (props) => {
                     '}';
                 listDeliTime.push(JSON.parse(temp));
             });
+            var getTimeFirst = listDeliTime.find((x) => x.disabled == false);
+            // if (getTimeFirst !== undefined && getTimeFirst.value !== '') {
+            //     settimeSelected(getTimeFirst.value);
+            // }
+            console.log('getTimeFirst: ' + getTimeFirst);
+            console.log('listDeliTime: ' + listDeliTime);
+        }
         return (
             <DropDownPicker2
                 open={isVisibleTimePicker}
@@ -621,6 +634,12 @@ const UserInfoCart = (props) => {
                     marginHorizontal: 10,
                     marginBottom: 10
                 }}
+                listMode="SCROLLVIEW"
+                maxHeight={300}
+                scrollViewProps={{
+                    scrollEnabled: true
+                }}
+                showBadgeDot={true}
                 listItemLabelStyle={{
                     fontSize: 12
                 }}
@@ -635,6 +654,9 @@ const UserInfoCart = (props) => {
                         timeSelected == '-1'
                             ? '#ff001f'
                             : '#8F9BB3'
+                }}
+                labelStyle={{
+                    color: isActive ? '#000' : '#8F9BB3'
                 }}
                 selectedItemLabelStyle={{
                     color: '#1B6EAA'
