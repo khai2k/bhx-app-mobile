@@ -26,6 +26,7 @@ const ListLineTitle = (props) => {
                     data={props.listCate}
                     keyExtractor={(item) => item.Id}
                     initialNumToRender={20}
+                    snapToAlignment="center"
                     renderItem={({ item, index }) => (
                         <TouchableOpacity
                             onPress={() => props.scrollToLine(index)}>

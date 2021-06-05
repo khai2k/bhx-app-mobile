@@ -15,11 +15,27 @@ import { useNavigation } from '@react-navigation/native';
 import { helper } from '@app/common';
 import styles from './style';
 import ProductBox from '../../components/ProductBox/ProductBox';
+import SliderTitle from './SliderTitle';
 
 const RenderLine = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const actionHome = bindActionCreators(homeCreator, dispatch);
+
+    const listTitle = [
+        {
+            titleId: 1,
+            name: '5 lần free ship cho khách hàng mới'
+        },
+        {
+            titleId: 2,
+            name: 'THỊT, CÁ, TRỨNG, RAU CỦ'
+        },
+        {
+            titleId: 3,
+            name: 'Hơn 10k sản phẩm đang kinh doanh'
+        }
+    ];
 
     const {
         Products,
@@ -82,6 +98,7 @@ const RenderLine = (props) => {
             {/* Danh sách cate line fresh 8686 */}
             {CategoryId === 8686 && (
                 <View style={styles.boxCategory}>
+                    <SliderTitle listTitle={listTitle} />
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal

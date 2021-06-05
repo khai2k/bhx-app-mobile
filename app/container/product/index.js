@@ -4,7 +4,8 @@ import {
     View,
     ActivityIndicator,
     ScrollView,
-    SafeAreaView
+    SafeAreaView,
+    FlatList
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, LoadingCart } from '@app/components';
@@ -12,34 +13,17 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from '@app/redux/actions/homeAction';
 import ListCategories from './ListCategories';
 import ListLineTitle from './ListLineTitle';
-import SliderTitle from './SliderTitle';
 import RenderLine from './RenderLine';
 import styles from './style';
 
 class Product extends PureComponent {
-    ref = createRef();
-
-    listTitle = [
-        {
-            titleId: 1,
-            name: '5 lần free ship cho khách hàng mới'
-        },
-        {
-            titleId: 2,
-            name: 'THỊT, CÁ, TRỨNG, RAU CỦ'
-        },
-        {
-            titleId: 3,
-            name: 'Hơn 10k sản phẩm đang kinh doanh'
-        }
-    ];
+    scrollList = createRef();
 
     constructor(props) {
         super(props);
         this.state = {
             isLoadingAPI: false,
             firstLoading: true,
-            lineLocations: [],
             cateIndexSelected: 0,
             isShowCatelines: false
         };
@@ -55,17 +39,6 @@ class Product extends PureComponent {
         this.setState({ firstLoading: false });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (
-            prevProps.homeData.ListLineProducts !=
-                this.props.homeData.ListLineProducts &&
-            prevProps.homeData.ListLineProducts.length ===
-                this.props.homeData.ListLineProducts.length
-        ) {
-            this.setState({ lineLocations: [] });
-        }
-    }
-
     handleScroll = (event) => {
         const scrollY = event.nativeEvent.contentOffset.y;
         // Show list cate thường mua khi scroll top
@@ -74,22 +47,6 @@ class Product extends PureComponent {
         } else if (!this.state.isShowCatelines) {
             this.setState({ isShowCatelines: true });
         }
-        // Active cate line đang chọn
-        const activeIndex = this.state.lineLocations.findIndex(
-            (e) => e > scrollY
-        );
-        const cloneCateIndexSelected = this.state.cateIndexSelected;
-        this.setState({
-            cateIndexSelected:
-                activeIndex < 0
-                    ? cloneCateIndexSelected <
-                      this.state.lineLocations.length - 1
-                        ? cloneCateIndexSelected + 1
-                        : cloneCateIndexSelected
-                    : activeIndex === 0
-                    ? 0
-                    : activeIndex - 1
-        });
 
         // Lúc scroll thì lấy tiếp các line sau
         if (this.props.homeData.IsNextGroup && !this.state.isLoadingAPI) {
@@ -110,14 +67,17 @@ class Product extends PureComponent {
     };
 
     scrollToLine = (lineIndex) => {
-        const locationY =
-            lineIndex === 0 ? 0 : this.state.lineLocations[lineIndex];
-        this.ref.scrollTo({
-            x: 0,
-            y: locationY,
-            animated: true
+        this.scrollList.current.scrollToIndex({
+            animated: true,
+            index: lineIndex
         });
         this.setState({ cateIndexSelected: lineIndex });
+    };
+
+    onViewableItemsChanged = ({ viewableItems, changed }) => {
+        this.setState({
+            cateIndexSelected: viewableItems[0].index
+        });
     };
 
     render() {
@@ -150,45 +110,26 @@ class Product extends PureComponent {
                             selectedIndex={this.state.cateIndexSelected}
                         />
                     )}
-
-                    <ScrollView
-                        ref={(scroll) => {
-                            this.ref = scroll;
-                        }}
+                    <FlatList
+                        ref={this.scrollList}
                         style={styles.body}
-                        onScroll={this.handleScroll}>
-                        <SliderTitle listTitle={this.listTitle} />
-
-                        {/* Render line */}
-                        {this.props.homeData.ListLineProducts?.map(
-                            (lineItem) => {
-                                return (
-                                    <View
-                                        onLayout={(event) => {
-                                            const { layout } =
-                                                event.nativeEvent;
-                                            this.setState({
-                                                lineLocations: [
-                                                    ...this.state.lineLocations,
-                                                    layout.y
-                                                ]
-                                            });
-                                        }}>
-                                        <RenderLine
-                                            key={`line_${lineItem.CategoryId}`}
-                                            lineItem={lineItem}
-                                            action={this.props}
-                                        />
-                                    </View>
-                                );
-                            }
-                        )}
+                        onScroll={this.handleScroll}
+                        data={this.props.homeData.ListLineProducts}
+                        keyExtractor={(item) => item.CategoryId}
+                        onViewableItemsChanged={this.onViewableItemsChanged}
+                        renderItem={({ item, index }) => (
+                            <RenderLine
+                                key={`line_${item.CategoryId}`}
+                                lineItem={item}
+                                action={this.props}
+                            />
+                        )}>
                         <ActivityIndicator
                             animating={this.state.showLoading}
                             size="large"
                             color="#008848"
                         />
-                    </ScrollView>
+                    </FlatList>
                 </SafeAreaView>
             );
         }
