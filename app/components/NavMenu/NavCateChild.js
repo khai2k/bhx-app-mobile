@@ -1,11 +1,25 @@
-import React, { useEffect } from 'react';
-import { View, FlatList, TouchableOpacity, Image, Text } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, Image, Text, ScrollView } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { styles } from './styles';
 import CategorySearch from './CategorySearch';
 import { ImageNavMenu } from '../../images';
 
 // Render danh sách cate con
 const NavCateChild = React.memo((props) => {
+    function handleOnScroll(event) {
+        const positionScreen = parseInt(
+            event.nativeEvent?.contentOffset?.y,
+            10
+        );
+        const dataPosition = props.listCateChildPosition
+            ?.filter((element) => {
+                return positionScreen >= element.position;
+            })
+            .slice(-1);
+        props.setCateFilter(dataPosition?.shift()?.parentId);
+    }
+
     return (
         <View style={styles.navRight}>
             <CategorySearch
@@ -15,115 +29,119 @@ const NavCateChild = React.memo((props) => {
                 setListCate={props.setListCate}
                 setSearch={props.setSearch}
             />
-            <RenderListCatesChild
-                listCate={props.listCate}
-                cateFilter={props.cateFilter}
-                setCateFilter={props.setCateFilter}
-                selectedCateChild={props.selectedCateChild}
-                setSelectedCateChild={props.setSelectedCateChild}
-                navigation={props.navigation}
-            />
+            <View style={styles.contentBottomRight}>
+                {!props.isHasSearch && (
+                    <ScrollView
+                        ref={props.refContainer}
+                        onMomentumScrollEnd={(e) => handleOnScroll(e)}
+                        showsVerticalScrollIndicator={false}
+                        scrollEventThrottle={16}>
+                        {props.listCate?.map((element) => {
+                            return (
+                                <RenderListCatesChild
+                                    key={element.ReferenceId}
+                                    listCate={element}
+                                    cateFilter={props.cateFilter}
+                                    setCateFilter={props.setCateFilter}
+                                    selectedCateChild={props.selectedCateChild}
+                                    setSelectedCateChild={
+                                        props.setSelectedCateChild
+                                    }
+                                    navigation={props.navigation}
+                                    listCateChildPosition={
+                                        props.listCateChildPosition
+                                    }
+                                    setListCateChildPosition={
+                                        props.setListCateChildPosition
+                                    }
+                                    parentId={element.ReferenceId}
+                                />
+                            );
+                        })}
+                    </ScrollView>
+                )}
+                {props.isHasSearch && (
+                    <FlatList
+                        numColumns={3}
+                        windowSize={60}
+                        data={props.listCate}
+                        keyExtractor={(item) => item.ReferenceId}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={(item) => {
+                            return (
+                                <RenderCateChildItem
+                                    key={item.ReferenceId}
+                                    item={item.item}
+                                    cateParent={props.parentId}
+                                    cateFilter={props.cateFilter}
+                                    setCateFilter={props.setCateFilter}
+                                    selectedCateChild={props.selectedCateChild}
+                                    setSelectedCateChild={
+                                        props.setSelectedCateChild
+                                    }
+                                    navigation={props.navigation}
+                                />
+                            );
+                        }}
+                    />
+                )}
+            </View>
         </View>
     );
 });
 
 // Render cate con
 const RenderListCatesChild = React.memo((props) => {
-    const refContainer = React.useRef(null);
-    const idCateOld = ['8686'];
-
-    const lstCateChild = [];
-    props.listCate?.filter((value) => {
-        return (
-            value.data.length > 0 &&
-            value.data.map((element) => {
-                return (
-                    element.ReferenceId !== '-1' && lstCateChild.push(element)
-                );
-            })
-        );
-    });
-
-    useEffect(() => {
-        const index = lstCateChild?.findIndex((ele) => {
-            const arrParent = ele.ParentId?.split(',');
-            return arrParent && arrParent[0] === props.cateFilter;
-        });
-        index >= 0 &&
-            refContainer?.current?.scrollToOffset({
-                animated: true,
-                offset: (index / 3) * 115
-            });
-    }, [props.cateFilter]);
-
-    function displayLineEachCate(parent) {
-        if (idCateOld.includes(parent)) {
-            return false;
-        } else {
-            idCateOld.push(parent);
-            return true;
-        }
+    function onLayout(event) {
+        const { y } = event.nativeEvent.layout;
+        props.setListCateChildPosition([
+            ...props.listCateChildPosition,
+            ...[{ parentId: props.parentId, position: parseInt(y, 10) }]
+        ]);
     }
-
     return (
-        <FlatList
-            style={styles.navRightBottom}
-            numColumns="3"
-            windowSize={60}
-            keyExtractor={(item) => item.ReferenceId}
-            data={lstCateChild}
-            ref={refContainer}
-            getItemLayout={(data, index) => ({
-                length: 100,
-                offset: (index / 3) * 80,
-                index
-            })}
-            renderItem={(item) => {
-                const arrParent = item.item.ParentId?.split(',');
+        <View
+            onLayout={(event) => onLayout(event)}
+            style={[
+                styles.navRightBottom,
+                props.cateFilter !== props.parentId && styles.listOpacity
+            ]}>
+            {props.listCate.data?.map((element) => {
                 return (
                     <RenderCateChildItem
-                        item={item}
-                        cateParent={arrParent && arrParent[0]}
+                        key={element.ReferenceId}
+                        item={element}
+                        cateParent={props.parentId}
                         cateFilter={props.cateFilter}
                         setCateFilter={props.setCateFilter}
                         selectedCateChild={props.selectedCateChild}
                         setSelectedCateChild={props.setSelectedCateChild}
                         navigation={props.navigation}
-                        isShow={arrParent && displayLineEachCate(arrParent[0])}
                     />
                 );
-            }}
-        />
+            })}
+        </View>
     );
 });
 
 const RenderCateChildItem = React.memo((props) => {
-    const { item } = props.item;
     const handleSelectCateChild = (id, cateParent) => {
         props.setSelectedCateChild(id);
         props.setCateFilter(cateParent);
-        props.navigation.navigate('Group', { url: item.Url });
+        props.navigation.navigate('Group', { url: props.item.Url });
     };
-
-    function displayActive() {
-        // if (props.cateParent !== props.cateFilter) {
-        //     console.log('nonActive');
-        //     return styles.itemCateChild;
-        // } else {
-        //     console.log('Active');
-        //     return styles.itemCateChildActive;
-        // }
-        return styles.itemCateChildActive;
-    }
 
     return (
         <View>
             <TouchableOpacity
-                style={displayActive()}
+                style={styles.itemCateChild}
                 onPress={() =>
-                    handleSelectCateChild(item.ReferenceId, props.cateParent)
+                    handleSelectCateChild(
+                        props.item.ReferenceId,
+                        props.cateParent
+                    )
                 }>
-                {props.selectedCateChild === item.ReferenceId && (
+                {props.selectedCateChild === props.item.ReferenceId && (
                     <Image
                         style={styles.iconChecked}
                         source={ImageNavMenu.imgIconCheck}
@@ -131,15 +149,15 @@ const RenderCateChildItem = React.memo((props) => {
                 )}
                 <Image
                     style={styles.iconCateChild}
-                    source={{ uri: `https://${item.ImgUrl}` }}
+                    source={{ uri: `https://${props.item.ImgUrl}` }}
                 />
                 <Text
                     style={[
                         styles.txtCateChild,
-                        props.selectedCateChild === item.ReferenceId &&
+                        props.selectedCateChild === props.item.ReferenceId &&
                             styles.txtCateChildActive
                     ]}>
-                    {item.Text}
+                    {props.item.Text}
                 </Text>
             </TouchableOpacity>
         </View>
