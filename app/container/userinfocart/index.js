@@ -7,7 +7,6 @@ import HTML from 'react-native-render-html';
 import {
     Text,
     View,
-    Picker,
     TextInput,
     StatusBar,
     Image,
@@ -17,6 +16,7 @@ import {
     ActivityIndicator,
     Modal
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -45,7 +45,7 @@ import {
 
 const UserInfoCart = (props) => {
     useEffect(() => {
-        getCart();
+        getCart(location.ProvinceId > 0 ? location.ProvinceId : 0);
     }, []);
 
     useEffect(() => {}, isLoading);
@@ -116,7 +116,7 @@ const UserInfoCart = (props) => {
 
     const [dateSelected, setdateSelected] = useState('');
     const [dateSelectedValue, setdateSelectedValue] = useState('-1');
-    const [timeSelected, settimeSelected] = useState('');
+    const [timeSelected, settimeSelected] = useState('-1');
 
     // Xuất Hóa Đơn
     const [isSelectedXHD, setSelectedXHD] = useState(false);
@@ -191,7 +191,7 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    this.props.navigation.navigate('OrderSuccess');
+                    return props.navigation.navigate('OrderSuccess');
                 } else alert(res.Message);
             });
             return;
@@ -205,26 +205,6 @@ const UserInfoCart = (props) => {
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
 
-        if (isSelectedXHD) {
-            cartmodel.Cart.IsGetBill = isSelectedXHD;
-            if (helper.isEmptyOrNull(companyName)) {
-                return 'Vui lòng nhập tên Công ty!';
-            }
-            cartmodel.Cart.CompanyName = companyName;
-            if (helper.isEmptyOrNull(companyAddress)) {
-                return 'Vui lòng nhập địa chỉ Công ty!';
-            }
-            cartmodel.Cart.CompanyAddress = companyAddress;
-            if (helper.isEmptyOrNull(companyTax)) {
-                return 'Vui lòng nhập Mã số thuế!';
-            }
-            cartmodel.Cart.CompanyTaxNumber = companyTax;
-        } else {
-            cartmodel.Cart.IsGetBill = false;
-            cartmodel.Cart.CompanyName = '';
-            cartmodel.Cart.CompanyAddress = '';
-            cartmodel.Cart.CompanyTaxNumber = '';
-        }
         if (isSelectedCallOther) {
             cartmodel.Cart.IsCallOthers = isSelectedCallOther;
             cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
@@ -300,6 +280,26 @@ const UserInfoCart = (props) => {
         let errSelectTime = SelectTime(0, timeSelected);
         if (errSelectTime !== '') {
             return errSelectTime;
+        }
+        if (isSelectedXHD) {
+            cartmodel.Cart.IsGetBill = isSelectedXHD;
+            if (helper.isEmptyOrNull(companyName)) {
+                return 'Vui lòng nhập tên Công ty!';
+            }
+            cartmodel.Cart.CompanyName = companyName;
+            if (helper.isEmptyOrNull(companyAddress)) {
+                return 'Vui lòng nhập địa chỉ Công ty!';
+            }
+            cartmodel.Cart.CompanyAddress = companyAddress;
+            if (helper.isEmptyOrNull(companyTax)) {
+                return 'Vui lòng nhập Mã số thuế!';
+            }
+            cartmodel.Cart.CompanyTaxNumber = companyTax;
+        } else {
+            cartmodel.Cart.IsGetBill = false;
+            cartmodel.Cart.CompanyName = '';
+            cartmodel.Cart.CompanyAddress = '';
+            cartmodel.Cart.CompanyTaxNumber = '';
         }
         return '';
     };
@@ -407,7 +407,7 @@ const UserInfoCart = (props) => {
                 value: '-1',
                 selected:
                     dateSelected === null ||
-                    dateSelected === null ||
+                    dateSelected === '' ||
                     dateSelected == '-1',
                 disabled: true
             }
@@ -430,8 +430,8 @@ const UserInfoCart = (props) => {
                 defaultValue={dateSelected}
                 listMode="SCROLLVIEW"
                 containerStyle={{
-                    width: '95%',
-                    marginHorizontal: 10,
+                    // width: '95%',
+                    // marginHorizontal: 10,
                     marginBottom: 10
                 }}
                 dropDownContainerStyle={{
@@ -511,72 +511,7 @@ const UserInfoCart = (props) => {
                         }
                     }
                 }}
-            />
-            // <DropDownPicker
-            //     items={listDeliDate}
-            //     placeholder={'Ngày nhận'}
-            //     disabled={isActive == false}
-            //     zIndex={20}
-            //     controller={(instance) => (controllerDate = instance)}
-            //     arrowColor={'#007842'}
-            //     defaultValue={'-1'}
-            //     containerStyle={{ height: 50, marginHorizontal: 10 }}
-            //     style={[
-            //         styles.borderRadius,
-            //         {
-            //             borderColor:
-            //                 dateSelected == '' ||
-            //                 dateSelected == null ||
-            //                 dateSelected == '-1'
-            //                     ? '#ff001f'
-            //                     : '#8F9BB3'
-            //         }
-            //     ]}
-            //     dropDownMaxHeight={200}
-            //     itemStyle={{
-            //         justifyContent: 'flex-start'
-            //     }}
-            //     activeLabelStyle={{
-            //         color: '#39739d'
-            //     }}
-            //     labelStyle={{
-            //         fontSize: 14,
-            //         textAlign: 'left',
-            //         color: '#000'
-            //     }}
-            //     dropDownStyle={{
-            //         backgroundColor: '#fff',
-            //         borderBottomLeftRadius: 10,
-            //         borderBottomRightRadius: 10
-            //     }}
-            //     isVisible={isVisibleDatePicker}
-            //     onOpen={() => {
-            //         setisVisibleDatePicker(true);
-            //         setisVisibleTimePicker(false);
-            //     }}
-            //     onClose={() => {
-            //         setisVisibleDatePicker(false);
-            //         setisVisibleTimePicker(false);
-            //     }}
-            //     onChangeItem={(itemValue, itemIndex) => {
-            //         console.log(itemValue.value > 0);
-            //         if (itemValue.value !== '' && itemValue.value !== '-1') {
-            //             setdateSelected(
-            //                 shipdatetime[0]?.DateList[itemIndex - 1]?.id
-            //             );
-            //             setcurDateDeli(
-            //                 shipdatetime[0]?.DateList[itemIndex - 1]
-            //             );
-            //         } else {
-            //             setcurDateDeli(null);
-            //             setdateSelected('-1');
-            //         }
-            //         controllerTime.reset();
-            //         settimeSelected('-1');
-            //         console.log('itemValue.value: ' + itemValue.value + 'dateSelected: ' + dateSelected + 'curDateDeli: ' + curDateDeli);
-            //         console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
-            //     }}
-            // />
+            />            
         );
     };
 
@@ -632,8 +567,8 @@ const UserInfoCart = (props) => {
                 zIndex={20}
                 items={listDeliTime}
                 containerStyle={{
-                    width: '95%',
-                    marginHorizontal: 10,
+                    // width: '95%',
+                    // marginHorizontal: 10,
                     marginBottom: 10
                 }}
                 listMode="SCROLLVIEW"
@@ -701,72 +636,7 @@ const UserInfoCart = (props) => {
                             dateSelected
                     );
                 }}
-            />
-            // <DropDownPicker
-            //     placeholder={'Thời gian nhận'}
-            //     items={listDeliTime}
-            //     zIndex={30}
-            //     isVisible={isVisibleTimePicker}
-            //     controller={(instance) => (controllerTime = instance)}
-            //     disabled={isActive == false || helper.isEmptyOrNull(dateSelected) || dateSelected == '-1' || curDateDeli == null}
-            //     defaultValue={timeSelected}
-            //     activeLabelStyle={{
-            //         color: '#1B6EAA'
-            //     }}
-            //     labelStyle={{
-            //         fontSize: 13,
-            //         textAlign: 'left',
-            //         color: '#000'
-            //     }}
-            //     containerStyle={{
-            //         height: 50,
-            //         marginHorizontal: 10,
-            //         marginTop: 10
-            //     }}
-            //     style={[
-            //         styles.borderRadius,
-            //         {
-            //             backgroundColor: '#fff',
-            //             borderColor:
-            //                 timeSelected == '' ||
-            //                 timeSelected == null ||
-            //                 timeSelected == '-1'
-            //                     ? '#ff001f'
-            //                     : '#8F9BB3'
-            //         }
-            //     ]}
-            //     dropDownMaxHeight={300}
-            //     itemStyle={{
-            //         justifyContent: 'flex-start',
-            //         color: '#000'
-            //     }}
-            //     dropDownStyle={{
-            //         backgroundColor: '#fff',
-            //         borderBottomLeftRadius: 10,
-            //         borderBottomRightRadius: 10
-            //     }}
-            //     onOpen={() => {
-            //         setisVisibleTimePicker(true);
-            //         setisVisibleDatePicker(false);
-            //     }}
-            //     onClose={() => {
-            //         setisVisibleTimePicker(false);
-            //         setisVisibleDatePicker(false);
-            //     }}
-            //     onChangeItem={(itemValue, itemIndex) => {
-            //         //debugger;
-            //         if (itemValue.disabled == true) {
-            //             settimeSelected('-1');
-            //             setisVisibleTimePicker(true);
-            //         } else settimeSelected(itemValue.value);
-            //         console.log(
-            //             'timeSelected ' +
-            //                 timeSelected +
-            //                 'dateSelected ' +
-            //                 dateSelected
-            //         );
-            //     }}
-            // />
+            />            
         );
     };
 
@@ -961,14 +831,15 @@ const UserInfoCart = (props) => {
             apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
                 .then((response) => {
                     setLstProv(response.Value);
-                    // if (location !== null && location.ProvinceId > 0) {
-                    //     setprovinceSelected(location.ProvinceId);
-                    //     getLstDis(location.ProvinceId);
-                    //     setCartUserInfo((previousState) => ({
-                    //         ...previousState,
-                    //         ShipProvince: location.ProvinceId
-                    //     }));
-                    // }
+                    if (location !== null && location.ProvinceId > 0) {
+                        setprovinceSelected(location.ProvinceId);
+                        getLstDis(location.ProvinceId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipProvince: location.ProvinceId
+                        }));
+                    }
+                    setEnableWard(false);
                 })
                 .catch((err) => {});
         };
@@ -1057,6 +928,7 @@ const UserInfoCart = (props) => {
                                 label="Tỉnh thành"
                                 value="-1"
                                 color="#C2C2C2"
+                                enabled={false}
                             />
                             {lstProv !== null &&
                                 lstProv.length > 0 &&
@@ -1066,6 +938,9 @@ const UserInfoCart = (props) => {
                                             label={prov.ProvinceFullName}
                                             value={prov.ProvinceId}
                                             key={prov.ProvinceId}
+                                            enabled={prov.ProvinceId > 0}
+                                            color="#000"
+                                            style={{width: '100%', backgroundColor: '#fff'}}
                                         />
                                     );
                                 })}
@@ -1108,6 +983,7 @@ const UserInfoCart = (props) => {
                                 label="Quận, huyện"
                                 value="-1"
                                 color="#C2C2C2"
+                                enabled={false}
                             />
                             {lstDis !== null &&
                                 lstDis.length > 0 &&
@@ -1117,6 +993,9 @@ const UserInfoCart = (props) => {
                                             label={dis.Item2}
                                             value={dis.Item1}
                                             key={dis.Item1}
+                                            enabled={dis.Item1 > 0}
+                                            color="#000"
+                                            style={{width: '100%', backgroundColor: '#fff'}}
                                         />
                                     );
                                 })}
@@ -1162,6 +1041,7 @@ const UserInfoCart = (props) => {
                             label="Phường, Xã"
                             value="-1"
                             color="#C2C2C2"
+                            enabled={false}
                         />
                         {lstWard !== null &&
                             lstWard.length > 0 &&
@@ -1171,6 +1051,9 @@ const UserInfoCart = (props) => {
                                         label={ward.Item2}
                                         value={ward.Item1}
                                         key={ward.Item1}
+                                        enabled={ward.Item1 > 0}
+                                        color="#000"
+                                        style={{width: '100%', backgroundColor: '#fff'}}
                                     />
                                 );
                             })}
@@ -1238,12 +1121,6 @@ const UserInfoCart = (props) => {
             </View>
         );
     };
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: 'Apple', value: 'apple' },
-        { label: 'Banana', value: 'banana' }
-    ]);
 
     return (
         <View>
@@ -1435,9 +1312,10 @@ const UserInfoCart = (props) => {
                     </Text>
                 </View>
 
-                {chosenDeliDate()}
-
-                {chosenDeliTime()}
+                <View style={{backgroundColor: '#fff', zIndex: 30, paddingHorizontal: 10}}>       
+                    {chosenDeliDate()}
+                    {chosenDeliTime()}
+                </View>
 
                 <View style={[styles.sectionInput, { zIndex: 10 }]}>
                     <Text
