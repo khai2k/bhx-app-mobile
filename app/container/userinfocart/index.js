@@ -14,9 +14,9 @@ import {
     Alert,
     Dimensions,
     ActivityIndicator,
-    Modal
+    Modal,
+    Picker
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -511,7 +511,7 @@ const UserInfoCart = (props) => {
                         }
                     }
                 }}
-            />            
+            />
         );
     };
 
@@ -636,7 +636,7 @@ const UserInfoCart = (props) => {
                             dateSelected
                     );
                 }}
-            />            
+            />
         );
     };
 
@@ -905,7 +905,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
-                            mode={'dropdown'}
+                            mode={'dialog'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -940,7 +940,10 @@ const UserInfoCart = (props) => {
                                             key={prov.ProvinceId}
                                             enabled={prov.ProvinceId > 0}
                                             color="#000"
-                                            style={{width: '100%', backgroundColor: '#fff'}}
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#fff'
+                                            }}
                                         />
                                     );
                                 })}
@@ -964,7 +967,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
-                            mode={'dropdown'}
+                            mode={'dialog'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -995,7 +998,10 @@ const UserInfoCart = (props) => {
                                             key={dis.Item1}
                                             enabled={dis.Item1 > 0}
                                             color="#000"
-                                            style={{width: '100%', backgroundColor: '#fff'}}
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#fff'
+                                            }}
                                         />
                                     );
                                 })}
@@ -1053,7 +1059,10 @@ const UserInfoCart = (props) => {
                                         key={ward.Item1}
                                         enabled={ward.Item1 > 0}
                                         color="#000"
-                                        style={{width: '100%', backgroundColor: '#fff'}}
+                                        style={{
+                                            width: '100%',
+                                            backgroundColor: '#fff'
+                                        }}
                                     />
                                 );
                             })}
@@ -1312,7 +1321,12 @@ const UserInfoCart = (props) => {
                     </Text>
                 </View>
 
-                <View style={{backgroundColor: '#fff', zIndex: 30, paddingHorizontal: 10}}>       
+                <View
+                    style={{
+                        backgroundColor: '#fff',
+                        zIndex: 30,
+                        paddingHorizontal: 10
+                    }}>
                     {chosenDeliDate()}
                     {chosenDeliTime()}
                 </View>
