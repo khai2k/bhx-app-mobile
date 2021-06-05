@@ -11,6 +11,7 @@ import { Header, LoadingCart } from '@app/components';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from '@app/redux/actions/homeAction';
 import ListCategories from './ListCategories';
+import ListLineTitle from './ListLineTitle';
 import SliderTitle from './SliderTitle';
 import RenderLine from './RenderLine';
 import styles from './style';
@@ -39,19 +40,57 @@ class Product extends PureComponent {
             isLoadingAPI: false,
             firstLoading: true,
             lineLocations: [],
-            cateIndexSelected: 0
+            cateIndexSelected: 0,
+            isShowCatelines: false
         };
     }
 
     async componentDidMount() {
+        // Lấy danh sách cate
+        this.props.actionHome.getListCategories();
+        // lấy danh sách tên cate line
+        this.props.actionHome.getCateLines();
         // Hàm gọi lấy 3 line đầu tiên
         await this.props.actionHome.getHomeData();
-        // Lấy danh sách cate
-        await this.props.actionHome.getListCategories();
         this.setState({ firstLoading: false });
     }
 
-    handleScroll = () => {
+    componentDidUpdate(prevProps, prevState) {
+        if (
+            prevProps.homeData.ListLineProducts !=
+                this.props.homeData.ListLineProducts &&
+            prevProps.homeData.ListLineProducts.length ===
+                this.props.homeData.ListLineProducts.length
+        ) {
+            this.setState({ lineLocations: [] });
+        }
+    }
+
+    handleScroll = (event) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+        // Show list cate thường mua khi scroll top
+        if (scrollY === 0) {
+            this.setState({ isShowCatelines: false });
+        } else if (!this.state.isShowCatelines) {
+            this.setState({ isShowCatelines: true });
+        }
+        // Active cate line đang chọn
+        const activeIndex = this.state.lineLocations.findIndex(
+            (e) => e > scrollY
+        );
+        const cloneCateIndexSelected = this.state.cateIndexSelected;
+        this.setState({
+            cateIndexSelected:
+                activeIndex < 0
+                    ? cloneCateIndexSelected <
+                      this.state.lineLocations.length - 1
+                        ? cloneCateIndexSelected + 1
+                        : cloneCateIndexSelected
+                    : activeIndex === 0
+                    ? 0
+                    : activeIndex - 1
+        });
+
         // Lúc scroll thì lấy tiếp các line sau
         if (this.props.homeData.IsNextGroup && !this.state.isLoadingAPI) {
             this.setState({
@@ -71,9 +110,11 @@ class Product extends PureComponent {
     };
 
     scrollToLine = (lineIndex) => {
+        const locationY =
+            lineIndex === 0 ? 0 : this.state.lineLocations[lineIndex];
         this.ref.scrollTo({
             x: 0,
-            y: this.state.lineLocations[lineIndex],
+            y: locationY,
             animated: true
         });
         this.setState({ cateIndexSelected: lineIndex });
@@ -97,11 +138,19 @@ class Product extends PureComponent {
             return (
                 <SafeAreaView>
                     <Header navigation={this.props.navigation} />
-                    <ListCategories
-                        listCate={this.props.homeData.ListCategories}
-                        scrollToLine={this.scrollToLine}
-                        selectedIndex={this.state.cateIndexSelected}
-                    />
+                    {!this.state.isShowCatelines && (
+                        <ListCategories
+                            listCate={this.props.homeData.ListCategories}
+                        />
+                    )}
+                    {this.state.isShowCatelines && (
+                        <ListLineTitle
+                            listCate={this.props.homeData.CateLines}
+                            scrollToLine={this.scrollToLine}
+                            selectedIndex={this.state.cateIndexSelected}
+                        />
+                    )}
+
                     <ScrollView
                         ref={(scroll) => {
                             this.ref = scroll;

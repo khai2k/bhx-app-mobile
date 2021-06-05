@@ -59,6 +59,18 @@ const ProductBox = (props) => {
         return true;
     };
 
+    // check có show cận date ko
+    const isShowExpired = () => {
+        return (
+            !helper.isEmptyObjectOrNull(props.bhxProduct.Sales) &&
+            !helper.isEmptyObjectOrNull(
+                props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+            ) &&
+            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
+                .StockQuantityNew >= 1
+        );
+    };
+
     const boxLabel = () => {
         if (props.bhxProduct.MaxQuantityOnBill > 0) {
             return (
@@ -239,10 +251,7 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
-                        !helper.isEmptyOrNull(
-                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
-                        )
+                        isShowExpired()
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -260,10 +269,7 @@ const ProductBox = (props) => {
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
-                {!helper.isEmptyOrNull(props.bhxProduct.Sales) &&
-                !helper.isEmptyOrNull(
-                    props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
-                ) ? (
+                {isShowExpired() && (
                     <TouchableOpacity
                         onPress={() => {
                             addToCart(
@@ -308,7 +314,7 @@ const ProductBox = (props) => {
                                   )}
                         </Text>
                     </TouchableOpacity>
-                ) : null}
+                )}
             </TouchableOpacity>
             <View
                 onPress={() => {
@@ -322,10 +328,7 @@ const ProductBox = (props) => {
                 <View
                     className="productInfo"
                     style={
-                        !helper.isEmptyOrNull(props.bhxProduct.Sales) &&
-                        !helper.isEmptyOrNull(
-                            props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
-                        )
+                        isShowExpired()
                             ? styles.productInfoExpired
                             : styles.productInfo
                     }>
@@ -346,10 +349,7 @@ const ProductBox = (props) => {
                         handleInputNumber={handleInputNumber}
                     />
                 </View>
-                {!helper.isEmptyOrNull(props.bhxProduct.Sales) &&
-                !helper.isEmptyOrNull(
-                    props.bhxProduct.Sales[props.bhxProduct.ExpStoreId]
-                ) ? (
+                {isShowExpired() && (
                     <TouchableOpacity
                         onPress={() => {
                             addToCart(
@@ -394,7 +394,7 @@ const ProductBox = (props) => {
                                   )}
                         </Text>
                     </TouchableOpacity>
-                ) : null}
+                )}
             </View>
         </View>
     );

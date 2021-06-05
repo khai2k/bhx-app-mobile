@@ -1,5 +1,6 @@
 export const homeState = {
     ListCategories: [],
+    CateLines: [],
     ListLineProducts: [],
     LineSeason: {},
     LineExpired: {},

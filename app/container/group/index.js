@@ -20,21 +20,9 @@ class Group extends PureComponent {
     }
 
     async componentDidMount() {
-        const option = {
-            params: {
-                categoryUrl: this.props.route.params.url,
-                provinceId: !helper.isEmptyOrNull(this.locationInfo)
-                    ? this.locationInfo.ProvinceId
-                    : 3,
-                storeId: !helper.isEmptyOrNull(this.locationInfo)
-                    ? this.locationInfo.StoreId
-                    : 6463,
-                phone: 0,
-                isMobile: 'true',
-                clearcache: ''
-            }
-        };
-        await this.props.actionCategory.category_get(option);
+        await this.props.actionCategory.category_get(
+            this.props.route.params.url
+        );
         this.setState({ isLoading: false });
     }
 

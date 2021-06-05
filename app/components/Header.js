@@ -199,7 +199,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         fontSize: Typography.FONT_SIZE_10,
         marginLeft: 5,
-        marginRight: 5
+        marginRight: 5,
+        justifyContent: 'space-around'
     },
     headerContainer: {
         alignItems: 'center',
@@ -228,7 +229,6 @@ const styles = StyleSheet.create({
     input: {
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'space-between',
         paddingLeft: 5
     },
     // eslint-disable-next-line react-native/no-color-literals

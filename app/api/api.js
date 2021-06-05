@@ -14,6 +14,7 @@ export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 
 // Home
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
+export const GET_CATE_LINES = `${API_BASE}Home/CateLines`;
 export const GET_HOME_DATA = `${API_BASE}Home/GetHomeData`;
 export const LOAD_MORE_PRODUCTS = `${API_BASE}Home/AjSockPriceBox`;
 export const LOAD_MORE_HOME_DATA = `${API_BASE}Home/LoadMoreHomeData`;

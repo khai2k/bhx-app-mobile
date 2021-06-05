@@ -1,6 +1,7 @@
 import { apiBase, METHOD, API_CONST } from '@app/api';
 
 const GET_LIST_CATEGORIES = 'GET_LIST_CATEGORIES';
+const GET_CATE_LINES = 'GET_CATE_LINES';
 const GET_HOME_DATA = 'GET_HOME_DATA';
 const LOAD_MORE_HOME_DATA = 'LOAD_MORE_HOME_DATA';
 const LOAD_MORE_PRODUCTS = 'LOAD_MORE_PRODUCTS';
@@ -9,6 +10,7 @@ const GET_FRESH_PRODUCTS = 'GET_FRESH_PRODUCTS';
 
 export const homeAction = {
     GET_LIST_CATEGORIES,
+    GET_CATE_LINES,
     GET_HOME_DATA,
     LOAD_MORE_HOME_DATA,
     LOAD_MORE_PRODUCTS,
@@ -41,6 +43,43 @@ export const getListCategories = () => {
                         dispatch({
                             type: GET_LIST_CATEGORIES,
                             listCategories
+                        });
+                        resolve(response);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
+        });
+    };
+};
+
+export const getCateLines = () => {
+    return (dispatch, getState) => {
+        const location = getState().locationReducer.Location.LocationInfo;
+        return new Promise((resolve, reject) => {
+            const bodyApi = {
+                phone: '',
+                provinceId: location.ProvinceId,
+                storeId: location.StoreId,
+                clearcache: ''
+            };
+            apiBase(
+                API_CONST.GET_CATE_LINES,
+                METHOD.GET,
+                {},
+                { params: bodyApi }
+            )
+                .then((response) => {
+                    console.log('GET_CATE_LINES Data:', response);
+                    if (response.ResultCode > 0) {
+                        reject(response);
+                    } else {
+                        const cateLines = response.Value;
+                        dispatch({
+                            type: GET_CATE_LINES,
+                            cateLines
                         });
                         resolve(response);
                     }

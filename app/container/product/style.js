@@ -5,7 +5,8 @@ const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: Colors.LINK_WATER_2
+        backgroundColor: Colors.LINK_WATER_2,
+        marginBottom: 70
     },
     boxCategory: {
         marginBottom: 5,

@@ -8,6 +8,11 @@ const homeReducer = function (state = _state.homeState, action) {
                 ...state,
                 ListCategories: action.listCategories
             };
+        case _action.homeAction.GET_CATE_LINES:
+            return {
+                ...state,
+                CateLines: action.cateLines
+            };
         case _action.homeAction.GET_HOME_DATA:
             return {
                 ...state,

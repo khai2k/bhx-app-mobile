@@ -6,10 +6,15 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 const ListCategories = (props) => {
     if (props.listCate != null && props.listCate.length > 0) {
+        const navigation = useNavigation();
+        const handleSelectCateChild = (groupUrl) => {
+            navigation.navigate('Group', { url: groupUrl });
+        };
         return (
             <SafeAreaView style={styles.boxCategory}>
                 <FlatList
@@ -17,16 +22,11 @@ const ListCategories = (props) => {
                     horizontal
                     data={props.listCate}
                     keyExtractor={(item) => item.Id}
-                    renderItem={({ item, index }) => (
+                    renderItem={({ item }) => (
                         <TouchableOpacity
-                            onPress={() => props.scrollToLine(index)}>
+                            onPress={() => handleSelectCateChild(item.Url)}>
                             <View>
-                                <Text
-                                    style={[
-                                        styles.categoryItem,
-                                        props.selectedIndex === index &&
-                                            styles.selectedCategoryItem
-                                    ]}>
+                                <Text style={styles.categoryItem}>
                                     {item.Name}
                                 </Text>
                             </View>
@@ -40,4 +40,4 @@ const ListCategories = (props) => {
     }
 };
 
-export default ListCategories;
+export default React.memo(ListCategories);

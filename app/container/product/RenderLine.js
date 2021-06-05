@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     View,
     Text,
@@ -37,52 +37,44 @@ const RenderLine = (props) => {
     const [isClickViewmore, setIsClickViewmore] = useState(false); // check click xem them
 
     // lấy danh sách cate line fresh
-    if (CategoryId === 8686 && !helper.isEmptyOrNull(CategoryIds)) {
-        props.lineItem.Categorys?.map((item) => {
+    if (CategoryId === 8686 && !helper.isEmptyOrNull(Categorys)) {
+        Categorys?.map((item) => {
             return categoriesIdFresh.push(item.Id);
         });
     }
 
     // Chỉ lấy 9 productid đầu truyền vô excludeProductIds
-    function Get9ProductId() {
+    const Get9ProductId = () => {
         const excludeProductIds = [];
         const get9LastProduct = Products.slice(0, 9);
         get9LastProduct?.map((item) => {
             return excludeProductIds.push(item.Id);
         });
         return excludeProductIds;
-    }
+    };
 
     // Xem thêm sản phẩm của các lines
     function GenMoreProduct() {
         const excludeProductIds = Get9ProductId();
 
-        actionHome
-            .loadMoreProducts(
-                PageIndex,
-                CategoryIds.toString(),
-                excludeProductIds.toString(),
-                CategoryId
-            )
-            .then((res) => {
-                Alert.alert(res);
-            });
+        actionHome.loadMoreProducts(
+            PageIndex,
+            CategoryIds.toString(),
+            excludeProductIds.toString(),
+            CategoryId
+        );
     }
 
     function GetProductFreshCate(categoryId, categoryIds, index) {
         const excludeProductIds = index > 0 ? Get9ProductId() : [];
-        actionHome
-            .loadMoreFreshProducts(
-                index,
-                categoryIds.toString(),
-                excludeProductIds.toString(),
-                categoryId,
-                categoriesIdFresh.toString(),
-                CategoryId
-            )
-            .then((res) => {
-                Alert.alert(res);
-            });
+        actionHome.loadMoreFreshProducts(
+            index,
+            categoryIds.toString(),
+            excludeProductIds.toString(),
+            categoryId,
+            categoriesIdFresh.toString(),
+            CategoryId
+        );
     }
 
     return (
@@ -143,7 +135,7 @@ const RenderLine = (props) => {
                         );
                     })}
                 </View>
-                {PageIndex > 0 && (
+                {Products.length > 9 && (
                     <View style={styles.boxCategory}>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
