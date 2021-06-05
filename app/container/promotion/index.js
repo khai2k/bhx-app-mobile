@@ -78,13 +78,18 @@ const Promotion = React.memo(() => {
     // Lấy vị trí các group cate để scroll
     function getPosition() {
         const positionFirstLine = 730;
+        const heightLineExpired = 425; // Tạm
         const heightEachLine = 550;
         const index = listGroupCate?.findIndex((ele) => {
             return ele.CategoryId === groupCateFilter;
         });
 
         if (index >= 0) {
-            return positionFirstLine + (index - 2) * heightEachLine;
+            return (
+                positionFirstLine +
+                heightLineExpired +
+                (index - 2) * heightEachLine
+            );
         } else {
             return 0;
         }
