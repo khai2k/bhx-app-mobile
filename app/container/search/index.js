@@ -1,79 +1,73 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { SafeAreaView, ActivityIndicator, View, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { SafeAreaView, ActivityIndicator } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
 import * as searchCreator from '@app/redux/actions/searchAction';
-import { helper } from '@app/common';
+import { useNavigation } from '@react-navigation/native';
 import Product from './Product';
 
-class Search extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: true
-        };
-    }
+const Search = (props) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const actionSearch = bindActionCreators(searchCreator, dispatch);
 
-    async componentDidMount() {
-        const option = {
-            key: this.props.route.params.url,
-            provinceId: !helper.isEmptyOrNull(this.locationInfo)
-                ? this.locationInfo.ProvinceId
-                : 3,
-            storeId: !helper.isEmptyOrNull(this.locationInfo)
-                ? this.locationInfo.StoreId
-                : 6463,
-            phone: '',
-            checkpromotion: true
-        };
-        await this.props.actionSearch.search_get(option);
-        this.setState({ isLoading: false });
-    }
+    const searchInfo = useSelector((state) => state.searchReducer);
+    const {
+        Filter,
+        Products,
+        OtherData,
+        OtherDataAjax,
+        SelectedBrand,
+        SelectedProps,
+        SelectedSort,
+        OEMProducts
+    } = searchInfo;
 
-    render() {
-        return this.state.isLoading ? (
-            <SafeAreaView style={{ flex: 1 }}>
-                <Header />
-                <ActivityIndicator
-                    style={{ marginTop: 50 }}
-                    size="large"
-                    color={Colors.GREEN_KEY}
-                />
-            </SafeAreaView>
-        ) : (
-            <SafeAreaView style={{ flex: 1 }}>
-                <Header />
-                <Product
-                    brands={this.props.searchInfo.Filter.Manufactures}
-                    properties={this.props.searchInfo.Filter.Categories}
-                    sort={this.props.searchInfo.Filter.FilterSorts}
-                    products={this.props.searchInfo.Products}
-                    info={this.props.searchInfo.Filter.Query}
-                    otherData={this.props.searchInfo.OtherData}
-                    otherDataAjax={this.props.searchInfo.OtherDataAjax}
-                    selectedBrand={this.props.searchInfo.SelectedBrand}
-                    selectedProps={this.props.searchInfo.SelectedProps}
-                    selectedSort={this.props.searchInfo.SelectedSort}
-                    oemProducts={this.props.searchInfo.OEMProducts}
-                />
-            </SafeAreaView>
-        );
-    }
-}
+    const locationInfo = useSelector(
+        (state) => state.locationReducer.Location.LocationInfo
+    );
 
-const mapStateToProps = (state) => {
-    return {
-        searchInfo: state.searchReducer,
-        locationInfo: state.locationReducer.Location.LocationInfo
-    };
+    useEffect(async () => {
+        setIsLoading(true);
+        await actionSearch.search_get(props.route.params.url).then((res) => {
+            if (res.HttpCode === 302) {
+                navigation.navigate('Group', { url: res.Message });
+            } else {
+                setIsLoading(false);
+            }
+        });
+    }, [locationInfo]);
+
+    return isLoading ? (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Header />
+            <ActivityIndicator
+                style={{ marginTop: 50 }}
+                size="large"
+                color={Colors.GREEN_KEY}
+            />
+        </SafeAreaView>
+    ) : (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Header />
+            <Product
+                brands={Filter.Manufactures}
+                properties={Filter.Categories}
+                sort={Filter.FilterSorts}
+                products={Products}
+                info={Filter.Query}
+                otherData={OtherData}
+                otherDataAjax={OtherDataAjax}
+                selectedBrand={SelectedBrand}
+                selectedProps={SelectedProps}
+                selectedSort={SelectedSort}
+                oemProducts={OEMProducts}
+            />
+        </SafeAreaView>
+    );
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actionSearch: bindActionCreators(searchCreator, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default React.memo(Search);

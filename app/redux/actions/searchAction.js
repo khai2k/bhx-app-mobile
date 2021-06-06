@@ -14,10 +14,18 @@ export const searchAction = {
     SELECT_SORT
 };
 
-export const search_get = function (body) {
+export const search_get = function (url) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
-            apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, body)
+            const location = getState().locationReducer.Location.LocationInfo;
+            const option = {
+                key: url,
+                provinceId: location.ProvinceId,
+                storeId: location.StoreId,
+                phone: '',
+                checkpromotion: false
+            };
+            apiBase(API_CONST.API_SEARCH_GET, METHOD.POST, option)
                 .then((response) => {
                     console.log('SEARCH_GET Data:', response);
                     if (response.HttpCode !== 200) {

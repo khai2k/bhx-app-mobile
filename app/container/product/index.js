@@ -1,199 +1,135 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {
-    View,
-    ActivityIndicator,
-    ScrollView,
-    SafeAreaView
-} from 'react-native';
+import React, { createRef, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, ActivityIndicator, SafeAreaView, FlatList } from 'react-native';
 import { bindActionCreators } from 'redux';
-import { apiBase, METHOD, API_CONST } from '@app/api';
 import { Header, LoadingCart } from '@app/components';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from '@app/redux/actions/homeAction';
-import ListCategories from './ListCategories';
-import SliderTitle from './SliderTitle';
+import ListCategoriesView from './ListCategories';
+import ListLineTitle from './ListLineTitle';
 import RenderLine from './RenderLine';
 import styles from './style';
 
-class Product extends Component {
-    listTitle = [
-        {
-            titleId: 1,
-            name: '5 lần free ship cho khách hàng mới'
-        },
-        {
-            titleId: 2,
-            name: 'THỊT, CÁ, TRỨNG, RAU CỦ'
-        },
-        {
-            titleId: 3,
-            name: 'Hơn 10k sản phẩm đang kinh doanh'
-        }
-    ];
+const Product = () => {
+    const scrollList = createRef();
+    const dispatch = useDispatch();
+    const actionHome = bindActionCreators(homeCreator, dispatch);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            loadingLine: true, // Check xem còn line nào cần load ra nữa hay ko. dựa vô field IsNextGroup api trả ra
-            pageIndexLine: 0,
-            maxPageLine: 0, // Truyền vô hàm loadmore line, lấy từ hàm GetHomeData -> MaxPage
-            homeData: [],
-            listCategories: [],
-            isLoading: true, // Check xem đang đợi gọi api hay ko, tránh bị loop,
-            showLoading: true,
-            firstLoading: true
-        };
-    }
+    const [isLoadingAPI, setIsLoadingAPI] = useState(false);
+    const [firstLoading, setFirstLoading] = useState(true);
+    const [cateIndexSelected, setCateIndexSelected] = useState(0);
+    const [isShowCatelines, setIsShowCatelines] = useState(false);
 
-    componentDidMount() {
-        // Hàm gọi lấy 3 line đầu tiên
-        const bodyApi = {
-            provinceId: 3,
-            storeId: 6463,
-            userId: 0,
-            phone: '',
-            clearcache: 'null',
-            IsMobile: true
-        };
-        const self = this;
+    const homeData = useSelector((state) => state.homeReducer);
+    const {
+        IsNextGroup,
+        PageIndexLine,
+        ListCategories,
+        CateLines,
+        ListLineProducts
+    } = homeData;
 
-        apiBase(API_CONST.GET_LIST_PRODUCT, METHOD.GET, {}, { params: bodyApi })
-            .then((response) => {
-                self.setState({
-                    homeData: response.Value,
-                    maxPageLine: response.OtherData?.MaxPage,
-                    showLoading: false,
-                    firstLoading: false
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    const locationInfo = useSelector(
+        (state) => state.locationReducer.Location.LocationInfo
+    );
 
+    useEffect(async () => {
+        setFirstLoading(true);
+        setCateIndexSelected(0);
+        setIsShowCatelines(false);
         // Lấy danh sách cate
-        const queryCate = {
-            phone: '',
-            isMobile: true,
-            storeId: 6463,
-            clearcache: ''
-        };
-        apiBase(
-            API_CONST.GET_LIST_CATEGORIES,
-            METHOD.GET,
-            {},
-            { params: queryCate }
-        )
-            .then((response) => {
-                console.log('GET_LIST_CATEGORIES Data:', response);
-                self.setState({
-                    listCategories: response.Value
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
+        actionHome.getListCategories();
+        // lấy danh sách tên cate line
+        actionHome.getCateLines();
+        // Hàm gọi lấy 3 line đầu tiên
+        await actionHome.getHomeData();
+        setFirstLoading(false);
+    }, [locationInfo]);
 
-    handleScroll = () => {
+    const handleScroll = (event) => {
+        const scrollY = event.nativeEvent.contentOffset.y;
+        // Show list cate thường mua khi scroll top
+        if (scrollY === 0) {
+            setIsShowCatelines(false);
+        } else if (!isShowCatelines) {
+            setIsShowCatelines(true);
+        }
+
         // Lúc scroll thì lấy tiếp các line sau
-        if (this.state.loadingLine) {
-            const self = this;
-            const bodyApi = {
-                phone: '',
-                isMobile: true,
-                storeId: 6463,
-                pageIndex: self.state.pageIndexLine,
-                pageSize: 3,
-                provinceId: 3,
-                maxPage: self.state.maxPageLine,
-                clearcache: ''
-            };
-            if (self.state.isLoading) {
-                self.setState({ isLoading: false, showLoading: true });
-                apiBase(
-                    API_CONST.GET_MORE_LINE,
-                    METHOD.GET,
-                    {},
-                    { params: bodyApi }
-                )
-                    .then((response) => {
-                        response !== null &&
-                            response.Value !== null &&
-                            self.setState({
-                                homeData: [
-                                    ...self.state.homeData,
-                                    ...response.Value
-                                ],
-                                loadingLine: response.OtherData?.IsNextGroup,
-                                pageIndexLine: self.state.pageIndexLine + 1,
-                                isLoading: true,
-                                showLoading: false
-                            });
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                    });
-            }
+        if (IsNextGroup && !isLoadingAPI) {
+            setIsLoadingAPI(true);
+            actionHome
+                .loadMoreHomeData(PageIndexLine)
+                .then((response) => {
+                    setIsLoadingAPI(false);
+                })
+                .catch((error) => {
+                    setIsLoadingAPI(false);
+                    console.log(error);
+                });
         }
     };
 
-    render() {
-        if (this.state.firstLoading) {
-            return (
-                <View
-                    style={{
-                        backgroundColor: Colors.WHITE
-                    }}>
-                    <Header navigation={this.props.navigation} />
-                    <LoadingCart />
-                    <LoadingCart />
-                    <LoadingCart />
-                    <LoadingCart />
-                </View>
-            );
-        } else {
-            return (
-                <SafeAreaView>
-                    <Header navigation={this.props.navigation} />
-                    <ListCategories listCate={this.state.listCategories} />
-                    <ScrollView
-                        style={styles.body}
-                        onScroll={this.handleScroll}>
-                        <SliderTitle listTitle={this.listTitle} />
+    const scrollToLine = (lineIndex) => {
+        scrollList.current.scrollToIndex({
+            animated: true,
+            index: lineIndex
+        });
+        setCateIndexSelected(lineIndex);
+    };
 
-                        {/* Render line */}
-                        {this.state.homeData?.map((lineItem) => {
-                            return (
-                                <RenderLine
-                                    key={`line_${lineItem.CategoryId}`}
-                                    lineItem={lineItem}
-                                    action={this.props}
-                                />
-                            );
-                        })}
-                        <ActivityIndicator
-                            animating={this.state.showLoading}
-                            size="large"
-                            color="#008848"
+    const onViewRef = React.useRef((viewableItems) => {
+        setCateIndexSelected(viewableItems.changed[0].index);
+    });
+    const viewConfigRef = React.useRef({
+        viewAreaCoveragePercentThreshold: 90
+    });
+
+    if (firstLoading) {
+        return (
+            <View
+                style={{
+                    backgroundColor: Colors.WHITE
+                }}>
+                <Header />
+                <LoadingCart />
+                <LoadingCart />
+                <LoadingCart />
+                <LoadingCart />
+            </View>
+        );
+    } else {
+        return (
+            <SafeAreaView>
+                <Header />
+                {!isShowCatelines && (
+                    <ListCategoriesView listCate={ListCategories} />
+                )}
+                {isShowCatelines && (
+                    <ListLineTitle
+                        listCate={CateLines}
+                        scrollToLine={scrollToLine}
+                        selectedIndex={cateIndexSelected}
+                    />
+                )}
+                <FlatList
+                    ref={scrollList}
+                    style={styles.body}
+                    onScroll={handleScroll}
+                    data={ListLineProducts}
+                    keyExtractor={(item) => item.CategoryId}
+                    onViewableItemsChanged={onViewRef.current}
+                    viewabilityConfig={viewConfigRef.current}
+                    renderItem={({ item, index }) => (
+                        <RenderLine
+                            key={`line_${item.CategoryId}`}
+                            lineItem={item}
                         />
-                    </ScrollView>
-                </SafeAreaView>
-            );
-        }
+                    )}>
+                    <ActivityIndicator animating size="large" color="#008848" />
+                </FlatList>
+            </SafeAreaView>
+        );
     }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        HomeReducer: state.homeReducer
-    };
 };
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actionHome: bindActionCreators(homeCreator, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default React.memo(Product);

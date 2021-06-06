@@ -14,9 +14,20 @@ export const categoryAction = {
     SELECT_SORT
 };
 
-export const category_get = function (option) {
+export const category_get = function (url) {
     return (dispatch, getState) => {
         return new Promise((resolve, reject) => {
+            const location = getState().locationReducer.Location.LocationInfo;
+            const option = {
+                params: {
+                    categoryUrl: url,
+                    provinceId: location.ProvinceId,
+                    storeId: location.StoreId,
+                    phone: 0,
+                    isMobile: 'true',
+                    clearcache: ''
+                }
+            };
             apiBase(API_CONST.API_CATEGORY_GET, METHOD.GET, null, option)
                 .then((response) => {
                     console.log('CATEGORY_GET Data:', response);

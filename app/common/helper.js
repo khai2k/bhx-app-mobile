@@ -1,4 +1,5 @@
 import RNFS from 'react-native-fs';
+import moment from 'moment';
 
 export function isObject(obj) {
     return obj !== undefined && obj !== null && obj.constructor === Object;
@@ -94,7 +95,6 @@ export function isEmptyObjectOrNull(obj) {
         return true;
     }
     const keys = Object.keys(obj);
-    console.log(keys.length);
     return keys.length === 0 || obj === null;
 }
 
@@ -170,3 +170,27 @@ export function removeVietnameseTones(str) {
     // );
     return str;
 }
+export const checkMinDate = (dateTime) => {
+    if (isEmptyOrNull(dateTime) || dateTime === '0001-01-01T00:00:00') {
+        return true;
+    }
+    return false;
+};
+export const formatExpiredDate = (expiredDateStr) => {
+    const expiredDate = moment(expiredDateStr);
+    const nowDate = moment();
+    const diffDay = Math.abs(nowDate.diff(expiredDate, 'days'));
+    if (diffDay < 1) {
+        return '';
+    }
+    if (diffDay > 365) {
+        return `HSD còn ${Math.floor(diffDay / 365)} năm`;
+    }
+    if (diffDay > 1095) {
+        return 'HSD còn hơn 3 năm';
+    }
+    if (diffDay <= 365 && diffDay > 90) {
+        return `HSD còn ${Math.floor(diffDay / 30)} tháng`;
+    }
+    return `HSD còn ${diffDay} ngày`;
+};

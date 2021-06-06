@@ -10,6 +10,7 @@ import {
 import { Colors } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
+import { useSelector } from 'react-redux';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const OEMProduct = (props) => {
@@ -25,13 +26,17 @@ const OEMProduct = (props) => {
     }, [Products]);
     const [remainProducts, setRemainProducts] = useState(TotalOEM);
 
+    const locationInfo = useSelector(
+        (state) => state.locationReducer?.Location.LocationInfo
+    );
+
     const loadMoreProducts = () => {
         const bodyApi = {
             strOEMBrands: StrOEMBrands,
             pageSize,
             pageIndex,
-            provinceId: 3,
-            storeId: 6463,
+            provinceId: locationInfo.ProvinceId,
+            storeId: locationInfo.StoreId,
             strExclude: Exclude
         };
         console.log('Start call api');
