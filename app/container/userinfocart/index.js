@@ -14,9 +14,9 @@ import {
     Alert,
     Dimensions,
     ActivityIndicator,
-    Modal
+    Modal,
+    Picker
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
