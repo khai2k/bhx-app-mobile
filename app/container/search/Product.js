@@ -99,7 +99,7 @@ const Product = (props) => {
         );
     };
     const footer = () => {
-        return remainProducts > 0 ? (
+        return remainProducts > PageSize ? (
             <View>
                 <TouchableOpacity
                     onPress={loadMoreProducts}

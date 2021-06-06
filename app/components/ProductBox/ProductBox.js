@@ -178,11 +178,7 @@ const ProductBox = (props) => {
                     if (res.ResultCode > 0) {
                         alertAPI(res.Message);
                     } else {
-                        console.log(`End addToCart ${props.bhxProduct.Id}`);
                         await actionCart.cart_get_simple();
-                        console.log(
-                            `End update addToCart cartSimple ${props.bhxProduct.Id}`
-                        );
                     }
                 })
                 .catch((error) => {
