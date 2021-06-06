@@ -1,151 +1,135 @@
-import React, { createRef, PureComponent } from 'react';
-import { connect } from 'react-redux';
-import {
-    View,
-    ActivityIndicator,
-    ScrollView,
-    SafeAreaView,
-    FlatList
-} from 'react-native';
+import React, { createRef, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { View, ActivityIndicator, SafeAreaView, FlatList } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header, LoadingCart } from '@app/components';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import * as homeCreator from '@app/redux/actions/homeAction';
-import ListCategories from './ListCategories';
+import ListCategoriesView from './ListCategories';
 import ListLineTitle from './ListLineTitle';
 import RenderLine from './RenderLine';
 import styles from './style';
 
-class Product extends PureComponent {
-    scrollList = createRef();
+const Product = () => {
+    const scrollList = createRef();
+    const dispatch = useDispatch();
+    const actionHome = bindActionCreators(homeCreator, dispatch);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoadingAPI: false,
-            firstLoading: true,
-            cateIndexSelected: 0,
-            isShowCatelines: false
-        };
-    }
+    const [isLoadingAPI, setIsLoadingAPI] = useState(false);
+    const [firstLoading, setFirstLoading] = useState(true);
+    const [cateIndexSelected, setCateIndexSelected] = useState(0);
+    const [isShowCatelines, setIsShowCatelines] = useState(false);
 
-    async componentDidMount() {
+    const homeData = useSelector((state) => state.homeReducer);
+    const {
+        IsNextGroup,
+        PageIndexLine,
+        ListCategories,
+        CateLines,
+        ListLineProducts
+    } = homeData;
+
+    const locationInfo = useSelector(
+        (state) => state.locationReducer.Location.LocationInfo
+    );
+
+    useEffect(async () => {
+        setFirstLoading(true);
+        setCateIndexSelected(0);
+        setIsShowCatelines(false);
         // Lấy danh sách cate
-        this.props.actionHome.getListCategories();
+        actionHome.getListCategories();
         // lấy danh sách tên cate line
-        this.props.actionHome.getCateLines();
+        actionHome.getCateLines();
         // Hàm gọi lấy 3 line đầu tiên
-        await this.props.actionHome.getHomeData();
-        this.setState({ firstLoading: false });
-    }
+        await actionHome.getHomeData();
+        setFirstLoading(false);
+    }, [locationInfo]);
 
-    handleScroll = (event) => {
+    const handleScroll = (event) => {
         const scrollY = event.nativeEvent.contentOffset.y;
         // Show list cate thường mua khi scroll top
         if (scrollY === 0) {
-            this.setState({ isShowCatelines: false });
-        } else if (!this.state.isShowCatelines) {
-            this.setState({ isShowCatelines: true });
+            setIsShowCatelines(false);
+        } else if (!isShowCatelines) {
+            setIsShowCatelines(true);
         }
 
         // Lúc scroll thì lấy tiếp các line sau
-        if (this.props.homeData.IsNextGroup && !this.state.isLoadingAPI) {
-            this.setState({
-                isLoadingAPI: true
-            });
-            this.props.actionHome
-                .loadMoreHomeData(this.props.homeData.PageIndexLine)
+        if (IsNextGroup && !isLoadingAPI) {
+            setIsLoadingAPI(true);
+            actionHome
+                .loadMoreHomeData(PageIndexLine)
                 .then((response) => {
-                    this.setState({
-                        isLoadingAPI: false
-                    });
+                    setIsLoadingAPI(false);
                 })
                 .catch((error) => {
+                    setIsLoadingAPI(false);
                     console.log(error);
                 });
         }
     };
 
-    scrollToLine = (lineIndex) => {
-        this.scrollList.current.scrollToIndex({
+    const scrollToLine = (lineIndex) => {
+        scrollList.current.scrollToIndex({
             animated: true,
             index: lineIndex
         });
-        this.setState({ cateIndexSelected: lineIndex });
+        setCateIndexSelected(lineIndex);
     };
 
-    onViewableItemsChanged = ({ viewableItems, changed }) => {
-        this.setState({
-            cateIndexSelected: viewableItems[0].index
-        });
-    };
+    const onViewRef = React.useRef((viewableItems) => {
+        setCateIndexSelected(viewableItems.changed[0].index);
+    });
+    const viewConfigRef = React.useRef({
+        viewAreaCoveragePercentThreshold: 90
+    });
 
-    render() {
-        if (this.state.firstLoading) {
-            return (
-                <View
-                    style={{
-                        backgroundColor: Colors.WHITE
-                    }}>
-                    <Header navigation={this.props.navigation} />
-                    <LoadingCart />
-                    <LoadingCart />
-                    <LoadingCart />
-                    <LoadingCart />
-                </View>
-            );
-        } else {
-            return (
-                <SafeAreaView>
-                    <Header navigation={this.props.navigation} />
-                    {!this.state.isShowCatelines && (
-                        <ListCategories
-                            listCate={this.props.homeData.ListCategories}
+    if (firstLoading) {
+        return (
+            <View
+                style={{
+                    backgroundColor: Colors.WHITE
+                }}>
+                <Header />
+                <LoadingCart />
+                <LoadingCart />
+                <LoadingCart />
+                <LoadingCart />
+            </View>
+        );
+    } else {
+        return (
+            <SafeAreaView>
+                <Header />
+                {!isShowCatelines && (
+                    <ListCategoriesView listCate={ListCategories} />
+                )}
+                {isShowCatelines && (
+                    <ListLineTitle
+                        listCate={CateLines}
+                        scrollToLine={scrollToLine}
+                        selectedIndex={cateIndexSelected}
+                    />
+                )}
+                <FlatList
+                    ref={scrollList}
+                    style={styles.body}
+                    onScroll={handleScroll}
+                    data={ListLineProducts}
+                    keyExtractor={(item) => item.CategoryId}
+                    onViewableItemsChanged={onViewRef.current}
+                    viewabilityConfig={viewConfigRef.current}
+                    renderItem={({ item, index }) => (
+                        <RenderLine
+                            key={`line_${item.CategoryId}`}
+                            lineItem={item}
                         />
-                    )}
-                    {this.state.isShowCatelines && (
-                        <ListLineTitle
-                            listCate={this.props.homeData.CateLines}
-                            scrollToLine={this.scrollToLine}
-                            selectedIndex={this.state.cateIndexSelected}
-                        />
-                    )}
-                    <FlatList
-                        ref={this.scrollList}
-                        style={styles.body}
-                        onScroll={this.handleScroll}
-                        data={this.props.homeData.ListLineProducts}
-                        keyExtractor={(item) => item.CategoryId}
-                        onViewableItemsChanged={this.onViewableItemsChanged}
-                        renderItem={({ item, index }) => (
-                            <RenderLine
-                                key={`line_${item.CategoryId}`}
-                                lineItem={item}
-                                action={this.props}
-                            />
-                        )}>
-                        <ActivityIndicator
-                            animating={this.state.showLoading}
-                            size="large"
-                            color="#008848"
-                        />
-                    </FlatList>
-                </SafeAreaView>
-            );
-        }
+                    )}>
+                    <ActivityIndicator animating size="large" color="#008848" />
+                </FlatList>
+            </SafeAreaView>
+        );
     }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        homeData: state.homeReducer
-    };
 };
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actionHome: bindActionCreators(homeCreator, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Product);
+export default React.memo(Product);

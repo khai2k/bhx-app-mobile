@@ -6,15 +6,18 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
+import { helper } from '@app/common';
 import styles from './style';
 
 const ListLineTitle = (props) => {
     const scrollList = useRef();
     useEffect(() => {
-        scrollList.current.scrollToIndex({
-            animated: true,
-            index: props.selectedIndex
-        });
+        if (helper.isNumber(props.selectedIndex)) {
+            scrollList.current.scrollToIndex({
+                animated: true,
+                index: props.selectedIndex
+            });
+        }
     }, [props.selectedIndex]);
     if (props.listCate != null && props.listCate.length > 0) {
         return (
