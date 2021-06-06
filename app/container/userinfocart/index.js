@@ -7,7 +7,6 @@ import HTML from 'react-native-render-html';
 import {
     Text,
     View,
-    Picker,
     TextInput,
     StatusBar,
     Image,
@@ -15,7 +14,8 @@ import {
     Alert,
     Dimensions,
     ActivityIndicator,
-    Modal
+    Modal,
+    Picker
 } from 'react-native';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
@@ -33,6 +33,7 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import DropDownPicker2 from 'react-native-dropdown-picker';
 
 import {
     ModalContent,
@@ -44,15 +45,17 @@ import {
 
 const UserInfoCart = (props) => {
     useEffect(() => {
-        getCart();
+        getCart(location.ProvinceId > 0 ? location.ProvinceId : 0);
     }, []);
 
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
 
-    useEffect(() => {}, curDateDeli);
+    useEffect(() => {
+        console.log(curDateDeli);
+    }, curDateDeli);
     useEffect(() => {}, timeSelected);
-
+    useEffect(() => {}, dateSelected);
 
     const windowWidth = Math.round(Dimensions.get('window').width);
     const windowHeight = Math.round(Dimensions.get('window').height);
@@ -74,7 +77,7 @@ const UserInfoCart = (props) => {
     const getCart = (prov, dis, ward) => {
         setisLoading(true);
         setshipdatetime(null);
-        setdateSelected('-1');
+        setdateSelectedValue('-1');
         settimeSelected('-1');
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
@@ -107,10 +110,13 @@ const UserInfoCart = (props) => {
 
     const [isSelectedDeliAtDoor, setSelectedDeliAtDoor] = useState(false);
     const [isSelectedCallOther, setSelectedCallOther] = useState(false);
+
+    //Delivery Date and Time State
     const [curDateDeli, setcurDateDeli] = useState(null);
 
     const [dateSelected, setdateSelected] = useState('');
-    const [timeSelected, settimeSelected] = useState('');
+    const [dateSelectedValue, setdateSelectedValue] = useState('-1');
+    const [timeSelected, settimeSelected] = useState('-1');
 
     // Xuất Hóa Đơn
     const [isSelectedXHD, setSelectedXHD] = useState(false);
@@ -153,9 +159,7 @@ const UserInfoCart = (props) => {
         );
         const modalPortalId = ModalPortal.show(
             <View>
-                 <ModalContent>
-                    {html}
-                </ModalContent>
+                <ModalContent>{html}</ModalContent>
                 <ModalFooter>
                     <ModalButton
                         style={[
@@ -187,7 +191,7 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    this.props.navigation.navigate('OrderSuccess');
+                    return props.navigation.navigate('OrderSuccess');
                 } else alert(res.Message);
             });
             return;
@@ -201,26 +205,6 @@ const UserInfoCart = (props) => {
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
 
-        if (isSelectedXHD) {
-            cartmodel.Cart.IsGetBill = isSelectedXHD;
-            if (helper.isEmptyOrNull(companyName)) {
-                return 'Vui lòng nhập tên Công ty!';
-            }
-            cartmodel.Cart.CompanyName = companyName;
-            if (helper.isEmptyOrNull(companyAddress)) {
-                return 'Vui lòng nhập địa chỉ Công ty!';
-            }
-            cartmodel.Cart.CompanyAddress = companyAddress;
-            if (helper.isEmptyOrNull(companyTax)) {
-                return 'Vui lòng nhập Mã số thuế!';
-            }
-            cartmodel.Cart.CompanyTaxNumber = companyTax;
-        } else {
-            cartmodel.Cart.IsGetBill = false;
-            cartmodel.Cart.CompanyName = '';
-            cartmodel.Cart.CompanyAddress = '';
-            cartmodel.Cart.CompanyTaxNumber = '';
-        }
         if (isSelectedCallOther) {
             cartmodel.Cart.IsCallOthers = isSelectedCallOther;
             cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
@@ -276,18 +260,46 @@ const UserInfoCart = (props) => {
             return CONST_STRINGERR.EMPTY_SHIPADDRESS;
         }
         cartmodel.Cart.ShipAddress = cartUserInfo.ShipAddress;
-        if (dateSelected == '' || dateSelected == null) {
+        if (
+            dateSelected == '' ||
+            dateSelected == null ||
+            dateSelected == '-1'
+        ) {
             return 'Vui lòng chọn ngày nhận hàng';
         }
         cartmodel.SelectedShipTimeList[0].DateSelected = dateSelected;
         cartmodel.SelectedShipTimeList[0].IsDateSelectedByCus = true;
-        if (timeSelected == '' || timeSelected == null) {
+        if (
+            timeSelected == '' ||
+            timeSelected == null ||
+            timeSelected == '-1'
+        ) {
             return 'Vui lòng chọn thời gian nhận hàng';
         }
         //cartmodel.SelectedShipTimeList[0].TimeSelected = timeSelected;
         let errSelectTime = SelectTime(0, timeSelected);
         if (errSelectTime !== '') {
             return errSelectTime;
+        }
+        if (isSelectedXHD) {
+            cartmodel.Cart.IsGetBill = isSelectedXHD;
+            if (helper.isEmptyOrNull(companyName)) {
+                return 'Vui lòng nhập tên Công ty!';
+            }
+            cartmodel.Cart.CompanyName = companyName;
+            if (helper.isEmptyOrNull(companyAddress)) {
+                return 'Vui lòng nhập địa chỉ Công ty!';
+            }
+            cartmodel.Cart.CompanyAddress = companyAddress;
+            if (helper.isEmptyOrNull(companyTax)) {
+                return 'Vui lòng nhập Mã số thuế!';
+            }
+            cartmodel.Cart.CompanyTaxNumber = companyTax;
+        } else {
+            cartmodel.Cart.IsGetBill = false;
+            cartmodel.Cart.CompanyName = '';
+            cartmodel.Cart.CompanyAddress = '';
+            cartmodel.Cart.CompanyTaxNumber = '';
         }
         return '';
     };
@@ -380,7 +392,6 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
 
-
     let controllerDate;
     let controllerTime;
 
@@ -396,7 +407,7 @@ const UserInfoCart = (props) => {
                 value: '-1',
                 selected:
                     dateSelected === null ||
-                    dateSelected === null ||
+                    dateSelected === '' ||
                     dateSelected == '-1',
                 disabled: true
             }
@@ -413,44 +424,53 @@ const UserInfoCart = (props) => {
             });
         }
         return (
-            <DropDownPicker
+            <DropDownPicker2
+                open={isVisibleDatePicker}
+                value={dateSelectedValue}
+                defaultValue={dateSelected}
+                listMode="SCROLLVIEW"
+                containerStyle={{
+                    // width: '95%',
+                    // marginHorizontal: 10,
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        dateSelectedValue == '' ||
+                        dateSelectedValue == null ||
+                        dateSelectedValue == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
+                }}
+                labelStyle={{
+                    color: isActive ? '#000' : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                zIndex={30}
                 items={listDeliDate}
-                placeholder={'Ngày nhận'}
-                disabled={isActive == false}
-                zIndex={20}
-                controller={instance => controllerDate = instance}
-                arrowColor={'#007842'}
-                defaultValue={'-1'}
-                containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
                     styles.borderRadius,
                     {
                         borderColor:
-                            dateSelected == '' ||
-                            dateSelected == null ||
-                            dateSelected == '-1'
+                            dateSelectedValue == '' ||
+                            dateSelectedValue == null ||
+                            dateSelectedValue == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={200}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                activeLabelStyle={{
-                    color: '#39739d'
-                }}
-                labelStyle={{
-                    fontSize: 14,
-                    textAlign: 'left',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
-                isVisible={isVisibleDatePicker}
+                setOpen={setisVisibleDatePicker}
+                disabled={isActive == false}
+                setValue={setdateSelectedValue}
                 onOpen={() => {
                     setisVisibleDatePicker(true);
                     setisVisibleTimePicker(false);
@@ -459,29 +479,57 @@ const UserInfoCart = (props) => {
                     setisVisibleDatePicker(false);
                     setisVisibleTimePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    if (itemValue.value > 0) {
-                        setcurDateDeli(
-                            shipdatetime[0]?.DateList[itemIndex - 1]
+                onChangeValue={(value) => {
+                    setdateSelectedValue(value);
+                    if (shipdatetime != null) {
+                        var temp = shipdatetime[0]?.DateList.find(
+                            (x) => x.timeid == value
                         );
-                        setdateSelected(
-                            shipdatetime[0]?.DateList[itemIndex - 1]?.id
-                        );
-                    } else {
-                        setcurDateDeli(null);
-                        setdateSelected('');
+                        if (value == -1 || temp !== undefined) {
+                            console.log(temp);
+
+                            if (value !== '' && value !== '-1') {
+                                if (temp !== undefined) {
+                                    setdateSelected(temp.id);
+                                    setcurDateDeli(temp);
+                                    let getTimeFirst = temp?.TimeList?.find(
+                                        (x) => x.disabled == false
+                                    );
+                                    if (
+                                        getTimeFirst !== undefined &&
+                                        getTimeFirst.id !== ''
+                                    ) {
+                                        settimeSelected(getTimeFirst.id);
+                                    }
+                                }
+                            } else {
+                                setcurDateDeli(null);
+                                setdateSelected('-1');
+                                settimeSelected('-1');
+                            }
+                            //controllerTime.reset();
+                        }
                     }
-                    settimeSelected('-1');
-                     controllerTime.reset()
-                    console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
         );
     };
-    const chosenDeliTime = (datelist) => {
-        const isActive =
-            datelist?.curDateDeli?.TimeList !== null &&
-            datelist?.curDateDeli?.TimeList?.length > 0;
+
+    const buildMessageDeliveryTime = (element) => {
+        let statusDeli = element.deliverytext;
+        if (helper.isEmptyOrNull(statusDeli)) {
+            statusDeli = '';
+        } else statusDeli = ' (' + statusDeli + ')';
+        let typeDeli = '';
+        if (element.deliverytypeid == 261) {
+            typeDeli = ' (khung giao 2h)';
+        } else if (element.deliverytypeid == 141) {
+            typeDeli = ' (khung giao 4h)';
+        }
+        return statusDeli + typeDeli;
+    };
+    const chosenDeliTime = () => {
+        const isActive = curDateDeli?.TimeList?.length > 0;
         const listDeliTime = [
             {
                 label: 'Thời gian nhận',
@@ -494,12 +542,14 @@ const UserInfoCart = (props) => {
             }
         ];
         if (isActive)
-            datelist?.curDateDeli?.TimeList.forEach((element) => {
+            curDateDeli?.TimeList.forEach((element) => {
+                let statusTime = buildMessageDeliveryTime(element);
                 var temp =
                     '{"label":"' +
                     element.timetext +
                     ' - Phí: ' +
                     helper.formatMoney(element.shippingcost) +
+                    statusTime +
                     '","value": "' +
                     element.id +
                     '","disabled": ' +
@@ -510,31 +560,49 @@ const UserInfoCart = (props) => {
                 listDeliTime.push(JSON.parse(temp));
             });
         return (
-            <DropDownPicker
-                placeholder={'Thời gian nhận'}
-                items={listDeliTime}
-                zIndex={30}
-                isVisible={isVisibleTimePicker}
-                controller={instance => controllerTime = instance}
-                disabled={isActive == false}
+            <DropDownPicker2
+                open={isVisibleTimePicker}
+                value={timeSelected}
                 defaultValue={timeSelected}
-                activeLabelStyle={{
-                    color: '#1B6EAA'
+                zIndex={20}
+                items={listDeliTime}
+                containerStyle={{
+                    // width: '95%',
+                    // marginHorizontal: 10,
+                    marginBottom: 10
+                }}
+                listMode="SCROLLVIEW"
+                maxHeight={300}
+                scrollViewProps={{
+                    scrollEnabled: true
+                }}
+                showBadgeDot={true}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        timeSelected == '' ||
+                        timeSelected == null ||
+                        timeSelected == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
                 }}
                 labelStyle={{
-                    fontSize: 14,
-                    textAlign: 'left',
-                    color: '#000'
+                    color: isActive ? '#000' : '#8F9BB3'
                 }}
-                containerStyle={{
-                    height: 50,
-                    marginHorizontal: 10,
-                    marginTop: 10
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
                 }}
                 style={[
                     styles.borderRadius,
                     {
                         backgroundColor: '#fff',
+                        fontSize: 13,
                         borderColor:
                             timeSelected == '' ||
                             timeSelected == null ||
@@ -543,16 +611,14 @@ const UserInfoCart = (props) => {
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={300}
-                itemStyle={{
-                    justifyContent: 'flex-start',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
+                setOpen={setisVisibleTimePicker}
+                disabled={
+                    isActive == false ||
+                    dateSelectedValue == '' ||
+                    dateSelectedValue == null ||
+                    dateSelectedValue == '-1'
+                }
+                setValue={settimeSelected}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
                     setisVisibleDatePicker(false);
@@ -561,12 +627,8 @@ const UserInfoCart = (props) => {
                     setisVisibleTimePicker(false);
                     setisVisibleDatePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    //debugger;
-                    if (itemValue.disabled == true) {
-                        settimeSelected('-1');
-                        setisVisibleTimePicker(true);
-                    } else settimeSelected(itemValue.value);
+                onChangeValue={(value) => {
+                    settimeSelected(value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -769,14 +831,15 @@ const UserInfoCart = (props) => {
             apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
                 .then((response) => {
                     setLstProv(response.Value);
-                    // if (location !== null && location.ProvinceId > 0) {
-                    //     setprovinceSelected(location.ProvinceId);
-                    //     getLstDis(location.ProvinceId);
-                    //     setCartUserInfo((previousState) => ({
-                    //         ...previousState,
-                    //         ShipProvince: location.ProvinceId
-                    //     }));
-                    // }
+                    if (location !== null && location.ProvinceId > 0) {
+                        setprovinceSelected(location.ProvinceId);
+                        getLstDis(location.ProvinceId);
+                        setCartUserInfo((previousState) => ({
+                            ...previousState,
+                            ShipProvince: location.ProvinceId
+                        }));
+                    }
+                    setEnableWard(false);
                 })
                 .catch((err) => {});
         };
@@ -842,7 +905,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
-                            mode={'dropdown'}
+                            mode={'dialog'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -865,6 +928,7 @@ const UserInfoCart = (props) => {
                                 label="Tỉnh thành"
                                 value="-1"
                                 color="#C2C2C2"
+                                enabled={false}
                             />
                             {lstProv !== null &&
                                 lstProv.length > 0 &&
@@ -874,6 +938,12 @@ const UserInfoCart = (props) => {
                                             label={prov.ProvinceFullName}
                                             value={prov.ProvinceId}
                                             key={prov.ProvinceId}
+                                            enabled={prov.ProvinceId > 0}
+                                            color="#000"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#fff'
+                                            }}
                                         />
                                     );
                                 })}
@@ -897,7 +967,7 @@ const UserInfoCart = (props) => {
                         <Picker
                             selectedValue={districtSelected}
                             enabled={enableDis}
-                            mode={'dropdown'}
+                            mode={'dialog'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -916,6 +986,7 @@ const UserInfoCart = (props) => {
                                 label="Quận, huyện"
                                 value="-1"
                                 color="#C2C2C2"
+                                enabled={false}
                             />
                             {lstDis !== null &&
                                 lstDis.length > 0 &&
@@ -925,6 +996,12 @@ const UserInfoCart = (props) => {
                                             label={dis.Item2}
                                             value={dis.Item1}
                                             key={dis.Item1}
+                                            enabled={dis.Item1 > 0}
+                                            color="#000"
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#fff'
+                                            }}
                                         />
                                     );
                                 })}
@@ -970,6 +1047,7 @@ const UserInfoCart = (props) => {
                             label="Phường, Xã"
                             value="-1"
                             color="#C2C2C2"
+                            enabled={false}
                         />
                         {lstWard !== null &&
                             lstWard.length > 0 &&
@@ -979,6 +1057,12 @@ const UserInfoCart = (props) => {
                                         label={ward.Item2}
                                         value={ward.Item1}
                                         key={ward.Item1}
+                                        enabled={ward.Item1 > 0}
+                                        color="#000"
+                                        style={{
+                                            width: '100%',
+                                            backgroundColor: '#fff'
+                                        }}
                                     />
                                 );
                             })}
@@ -1175,7 +1259,7 @@ const UserInfoCart = (props) => {
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
-                        placeholderTextColor='#999'
+                        placeholderTextColor="#999"
                         value={cartUserInfo?.ShipAddress}
                         onChangeText={(value) => {
                             setCartUserInfo((previousState) => ({
@@ -1196,7 +1280,10 @@ const UserInfoCart = (props) => {
                                 value={isSelectedDeliAtDoor}
                                 onValueChange={setSelectedDeliAtDoor}
                                 style={styles.checkbox}
-                                tintColors={{ true: '#008848', false: '#008848' }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                             />
                             <Text style={styles.label}>
                                 Yêu cầu giao tận cửa chung cư, văn phòng
@@ -1214,7 +1301,10 @@ const UserInfoCart = (props) => {
                                         handleErrorCusNameOther('');
                                     }
                                 }}
-                                tintColors={{ true: '#008848', false: '#008848' }}
+                                tintColors={{
+                                    true: '#008848',
+                                    false: '#008848'
+                                }}
                                 style={styles.checkbox}
                             />
                             <Text style={styles.label}>
@@ -1231,12 +1321,23 @@ const UserInfoCart = (props) => {
                     </Text>
                 </View>
 
-                {chosenDeliDate()}
+                <View
+                    style={{
+                        backgroundColor: '#fff',
+                        zIndex: 30,
+                        paddingHorizontal: 10
+                    }}>
+                    {chosenDeliDate()}
+                    {chosenDeliTime()}
+                </View>
 
-                {chosenDeliTime({ curDateDeli })}
-
-                <View style={{ padding: 10 }}>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+                <View style={[styles.sectionInput, { zIndex: 10 }]}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            marginVertical: 10
+                        }}>
                         Mua thêm để miễn phí giao với đơn trên 100.000đ (còn 5
                         lần)
                         <Text
@@ -1275,7 +1376,7 @@ const UserInfoCart = (props) => {
                                 Note: value
                             }));
                         }}
-                        placeholderTextColor='#999'
+                        placeholderTextColor="#999"
                     />
                 </View>
                 <View style={styles.blockPadding}></View>

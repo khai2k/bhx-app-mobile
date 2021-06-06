@@ -14,7 +14,6 @@ const ListCategories = (props) => {
         const navigation = useNavigation();
         const handleSelectCateChild = (groupUrl) => {
             navigation.navigate('Group', { url: groupUrl });
-            console.log('groupUrl', groupUrl);
         };
         return (
             <SafeAreaView style={styles.boxCategory}>
@@ -41,4 +40,4 @@ const ListCategories = (props) => {
     }
 };
 
-export default ListCategories;
+export default React.memo(ListCategories);

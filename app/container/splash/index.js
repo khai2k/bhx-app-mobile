@@ -117,7 +117,7 @@ class Splash extends Component {
 
     componentDidMount() {
         this.getCurrentLocation();
-        this.notificationSubscriber();
+        // this.notificationSubscriber();
         Storage.getItem(CONST_STORAGE.CARTID).then((res) => {
             console.log('CONST_STORAGE.CARTID', res);
             this.props.actionGeneral.setCartId(res);

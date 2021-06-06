@@ -47,7 +47,6 @@ const BoxOption = (props) => {
         return `1 ${Unit} ${BaseValue}`;
     };
     const ShortName = getShortName();
-
     const [numberItems, setNumberItems] = useState(1);
     const [buyButtonVisible, setBuyButtonVisible] = useState(false);
     const handleInputNumber = (number) => {
@@ -59,7 +58,7 @@ const BoxOption = (props) => {
     const [guildId, setGuildId] = useState('');
 
     const checkFillButtonBuy = () => {
-        const idProduct = exchangeProduct.Id;
+        const idProduct = Info.Id;
         if (
             !helper.isEmptyOrNull(cart) &&
             !helper.isEmptyOrNull(cart.ProInCart) &&
@@ -162,7 +161,7 @@ const BoxOption = (props) => {
             <View>
                 {buyButtonVisible ? (
                     <BuyBox
-                        bhxProduct={exchangeProduct}
+                        bhxProduct={Info}
                         isPageExpired={false}
                         selectedBuy
                         numberItems={numberItems}
@@ -231,7 +230,9 @@ const BoxOption = (props) => {
                     disabled={webStatusId !== 3}
                     onPress={() => {
                         if (webStatusId === 3) {
+                            // setNumberItems(1);
                             addToCart(Info.Id);
+                            setBuyButtonVisible(true);
                         }
                     }}>
                     {renderTopBox()}
