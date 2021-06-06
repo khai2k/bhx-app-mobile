@@ -14,9 +14,9 @@ import {
     Alert,
     Dimensions,
     ActivityIndicator,
-    Modal,
-    Picker
+    Modal
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -906,6 +906,7 @@ const UserInfoCart = (props) => {
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
                             mode={'dialog'}
+                            dropdownIconColor={'#008848'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -968,6 +969,7 @@ const UserInfoCart = (props) => {
                             selectedValue={districtSelected}
                             enabled={enableDis}
                             mode={'dialog'}
+                            dropdownIconColor={'#008848'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -1025,7 +1027,9 @@ const UserInfoCart = (props) => {
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
+
                         mode={'dropdown'}
+                        dropdownIconColor={'#008848'}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
                             setCartUserInfo((previousState) => ({

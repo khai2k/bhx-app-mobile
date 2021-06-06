@@ -98,6 +98,7 @@ export const cart_submit = function (Cart) {
 
             apiBase(API_CONST.API_REQUEST_SUBMIT_CART, METHOD.POST, bodyApi)
                 .then((response) => {
+                    debugger;
                     console.log('CART_SUBMIT Data:', response);
                     const cartInfo = response.Value;
                     dispatch({
@@ -107,6 +108,7 @@ export const cart_submit = function (Cart) {
                     resolve(response);
                 })
                 .catch((error) => {
+                    debugger;
                     console.log(error);
                     reject(error);
                 });
