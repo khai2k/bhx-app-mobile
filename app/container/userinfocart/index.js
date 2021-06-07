@@ -1009,6 +1009,9 @@ const UserInfoCart = (props) => {
                 listParentContainerStyle={{
                     zIndex: 99
                 }}
+                labelProps={{
+                    numberOfLines: 2
+                }}
                 labelStyle={{
                     fontSize: 12,
                     color:
