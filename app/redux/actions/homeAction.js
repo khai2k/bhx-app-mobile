@@ -274,3 +274,12 @@ export const loadMoreFreshProducts = (
         });
     };
 };
+export const fetchAll = function () {
+    return async (dispatch) => {
+        await Promise.all([
+            dispatch(getListCategories()),
+            dispatch(getCateLines()),
+            dispatch(getHomeData())
+        ]);
+    };
+};
