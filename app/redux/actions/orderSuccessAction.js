@@ -10,23 +10,24 @@ export const orderSuccessAction = {
 
 const key = 'E5346AA38792A';
 
-var phone;
-var tokenCancel;
-var cartId;
-var orderIdCancel;
+let phone;
+let tokenCancel;
+let cartId;
+let orderIdCancel;
 
 export const orderSuccess_get = function (orderId) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
+            debugger;
             const bodyApi = {
                 ProvinceId: location.provinceId,
                 DistrictId: location.DistrictId,
                 WardId: location.WardId,
                 StoreId: location.StoreId,
                 Sc: '',
-                OrderId: 43652170,
-                // OrderId:  orderId ,
+                //  OrderId: 43652170,
+                OrderId: orderId,
                 KeyAppCancel: key
             };
             apiBase(
