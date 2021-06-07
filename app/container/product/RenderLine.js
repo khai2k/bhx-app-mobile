@@ -52,8 +52,6 @@ const RenderLine = (props) => {
     const categoriesIdFresh = []; // list category id fresh
     const [virtualChildCateIds, setVirtualChildCateIds] = useState([]); // child category fresh id
     const [selectedId, setSelectedId] = useState(0); // category fresh active
-    const [isClickCateFresh, setIsClickCateFresh] = useState(false); // check click category fresh
-    const [isClickViewmore, setIsClickViewmore] = useState(false); // check click xem them
 
     // lấy danh sách cate line fresh
     if (CategoryId === 8686 && !helper.isEmptyObjectOrNull(Categorys)) {
