@@ -98,7 +98,7 @@ const UserInfoCart = (props) => {
         ShipWard: 0,
         ShipAddress: '',
         IsCallOthers: false,
-        OthersGenderCall: '',
+        OthersGenderCall: '1',
         OthersPhone: '',
         OthersName: '',
         IsGetBill: false,
@@ -191,7 +191,7 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    return props.navigation.navigate('OrderSuccess');
+                    return props.navigation.navigate('OrderSuccess', {orderId: res.Value.OrderId});
                 } else alert(res.Message);
             });
             return;
@@ -906,6 +906,7 @@ const UserInfoCart = (props) => {
                             selectedValue={provinceSelected}
                             style={{ height: 50, width: 150, color: '#000' }}
                             mode={'dialog'}
+                            dropdownIconColor={'#008848'}
                             onValueChange={(itemValue, itemIndex) => {
                                 setprovinceSelected(itemValue);
 
@@ -968,6 +969,7 @@ const UserInfoCart = (props) => {
                             selectedValue={districtSelected}
                             enabled={enableDis}
                             mode={'dialog'}
+                            dropdownIconColor={'#008848'}
                             style={{
                                 height: 50,
                                 width: 150,
@@ -1025,7 +1027,9 @@ const UserInfoCart = (props) => {
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
+
                         mode={'dropdown'}
+                        dropdownIconColor={'#008848'}
                         onValueChange={(itemValue, itemIndex) => {
                             setwardSelected(itemValue);
                             setCartUserInfo((previousState) => ({
