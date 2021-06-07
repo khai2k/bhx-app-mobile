@@ -13,18 +13,20 @@ const key = 'E5346AA38792A';
 var phone;
 var tokenCancel;
 var cartId;
+var orderIdCancel;
 
-export const orderSuccess_get = function () {
+export const orderSuccess_get = function (orderId) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            // const location = getState().locationReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
-                Sc: '5CE8F8D0132ECB9A2B60366813E44BD3',
+                ProvinceId: location.provinceId,
+                DistrictId: location.DistrictId,
+                WardId: location.WardId,
+                StoreId: location.StoreId,
+                Sc: '',
                 OrderId: 43652170,
+                // OrderId:  orderId ,
                 KeyAppCancel: key
             };
             apiBase(
@@ -38,6 +40,7 @@ export const orderSuccess_get = function () {
                     phone = orderInfo.Detail.ContactPhone;
                     tokenCancel = orderInfo.TokenCancel;
                     cartId = orderInfo.CartView.Cart.CartId;
+                    orderIdCancel = orderInfo.OrderId;
                     dispatch({
                         type: ORDER_SUCCESS_GET,
                         orderInfo
@@ -55,17 +58,17 @@ export const orderSuccess_get = function () {
 export const orderSuccess_cancel = function () {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
-            // const location = getState().locationReducer.Location.LocationInfo;
+            const location = getState().locationReducer.Location.LocationInfo;
             const bodyApi = {
                 token: '',
                 us: '',
-                ProvinceId: 3,
-                DistrictId: 2087,
-                WardId: 27125,
-                StoreId: 6463,
+                ProvinceId: location.provinceId,
+                DistrictId: location.DistrictId,
+                WardId: location.WardId,
+                StoreId: location.StoreId,
                 data: {
                     cartid: cartId,
-                    orderid: 43652170,
+                    orderid: orderIdCancel,
                     phonenumber: phone,
                     tokencancel: tokenCancel,
                     keyappcancel: key

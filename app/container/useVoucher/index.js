@@ -261,7 +261,6 @@ class UseVoucher extends Component {
     }
 
     validatePhone(phone) {
-        console.log('dmmmmm', phone);
         if (helper.isPhoneNumber(phone) == false) {
             showMessage({
                 message: 'Số điện thoại không hợp lệ',
@@ -331,6 +330,13 @@ class UseVoucher extends Component {
                                                     ? itemVoucher.VoucherAmount /
                                                           1000 +
                                                       'K'
+                                                    : null}
+                                                {itemVoucher.CouponCode &&
+                                                itemVoucher.VoucherAmount >=
+                                                    1000
+                                                    ? itemVoucher.VoucherAmount /
+                                                          1000 +
+                                                      '%'
                                                     : itemVoucher.VoucherAmount +
                                                       '%'}
                                             </Text>
@@ -462,7 +468,8 @@ class UseVoucher extends Component {
             return (
                 <>
                     {this._renderVoucherLine()}
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.goBack()}>
                         <View style={styles.submitButton}>
                             <Text style={styles.submitButtonText}>Áp dụng</Text>
                             <View style={styles.submitPrice}>
