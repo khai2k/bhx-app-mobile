@@ -67,7 +67,9 @@ const homeReducer = function (state = _state.homeState, action) {
                                 Products: action.dataLoadMore.Value,
                                 PageIndex: 1,
                                 PromotionCount:
-                                    action.dataLoadMore.OtherData.TotalRest
+                                    action.dataLoadMore.OtherData.TotalRest,
+                                FreshCategorys:
+                                    action.dataLoadMore.OtherData.Chldcate
                             };
                         } else {
                             return {
