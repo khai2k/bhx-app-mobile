@@ -59,7 +59,12 @@ const ProductArticle = (props) => {
                         </TouchableOpacity>
                     </View>
 
-                    <ScrollView>
+                    <ScrollView
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'white',
+                            paddingVertical: 10
+                        }}>
                         <View
                             style={{
                                 paddingHorizontal: 10,
@@ -94,9 +99,12 @@ const ProductArticle = (props) => {
                             <View>
                                 <View
                                     style={{
-                                        padding: 10,
-                                        backgroundColor: COLOR.WHITE,
-                                        flex: 1
+                                        height: 10,
+                                        backgroundColor: '#f5f8fd'
+                                    }}></View>
+                                <View
+                                    style={{
+                                        padding: 10
                                     }}>
                                     <Text
                                         style={{
@@ -117,7 +125,6 @@ const ProductArticle = (props) => {
                                 </View>
                                 <View
                                     style={{
-                                        flex: 1,
                                         backgroundColor: 'white',
                                         padding: 10
                                     }}>
@@ -146,7 +153,11 @@ const ProductArticle = (props) => {
                             </View>
                         )}
                     </ScrollView>
-                    <View style={{ paddingVertical: 10, alignItems: 'center' }}>
+                    <View
+                        style={{
+                            paddingVertical: 10,
+                            alignItems: 'center'
+                        }}>
                         <ScrollView>
                             {isExchangeProduct ? (
                                 <GroupBoxOption
@@ -253,7 +264,8 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: '#f5f8fd',
-        flex: 1
+        flex: 1,
+        flexDirection: 'column'
     },
     product_info: {},
     row_info: {
