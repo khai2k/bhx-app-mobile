@@ -191,7 +191,9 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    return props.navigation.navigate('OrderSuccess', {orderId: res.Value.OrderId});
+                    return props.navigation.navigate('OrderSuccess', {
+                        orderId: res.Value.OrderId
+                    });
                 } else alert(res.Message);
             });
             return;
@@ -1027,7 +1029,6 @@ const UserInfoCart = (props) => {
                     <Picker
                         selectedValue={wardSelected}
                         enabled={enableWard}
-
                         mode={'dropdown'}
                         dropdownIconColor={'#008848'}
                         onValueChange={(itemValue, itemIndex) => {
