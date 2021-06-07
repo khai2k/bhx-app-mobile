@@ -190,7 +190,6 @@ const UserInfoCart = (props) => {
             setisLoading(true);
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
-                debugger;
                 if (res.HttpCode == 200) {
                     return props.navigation.navigate('OrderSuccess', {orderId: res.Value.OrderId});
                 } else alert(res.Message);
