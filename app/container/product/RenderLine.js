@@ -46,7 +46,8 @@ const RenderLine = (props) => {
         Categorys,
         PageIndex,
         ListCategories,
-        PromotionCount
+        PromotionCount,
+        FreshCategorys
     } = props.lineItem; // list product
     const categoriesIdFresh = []; // list category id fresh
     const [virtualChildCateIds, setVirtualChildCateIds] = useState([]); // child category fresh id
@@ -55,11 +56,18 @@ const RenderLine = (props) => {
     const [isClickViewmore, setIsClickViewmore] = useState(false); // check click xem them
 
     // lấy danh sách cate line fresh
-    if (CategoryId === 8686 && !helper.isEmptyOrNull(Categorys)) {
-        Categorys?.map((item) => {
+    if (CategoryId === 8686 && !helper.isEmptyObjectOrNull(Categorys)) {
+        Categorys.map((item) => {
             return categoriesIdFresh.push(item.Id);
         });
     }
+
+    // xoá subcate fresh hết hàng
+    const listCateFresh = () => {
+        if (CategoryId === 8686 && !helper.isEmptyObjectOrNull(Categorys)) {
+            return Categorys.filter((item) => item.Quantity > 0);
+        }
+    };
 
     // Chỉ lấy 9 productid đầu truyền vô excludeProductIds
     const Get9ProductId = () => {
@@ -104,7 +112,7 @@ const RenderLine = (props) => {
                     <FlatList
                         showsHorizontalScrollIndicator={false}
                         horizontal
-                        data={props.lineItem.Categorys}
+                        data={listCateFresh()}
                         keyExtractor={(item) => item.Id}
                         renderItem={({ item }) => (
                             <TouchableOpacity
@@ -159,7 +167,11 @@ const RenderLine = (props) => {
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal
-                            data={Categorys}
+                            data={
+                                !helper.isEmptyObjectOrNull(FreshCategorys)
+                                    ? FreshCategorys
+                                    : Categorys
+                            }
                             keyExtractor={(item) => item.Id}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
@@ -185,7 +197,7 @@ const RenderLine = (props) => {
                 )}
                 {Products !== null &&
                     Products.length > 0 &&
-                    PromotionCount > PAGE_SIZE && (
+                    PromotionCount > 0 && (
                         <TouchableOpacity
                             onPress={() => {
                                 selectedId > 0

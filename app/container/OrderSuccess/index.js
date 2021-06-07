@@ -21,7 +21,9 @@ import styles from './style';
 class OrderSuccess extends Component {
     constructor(props) {
         super(props);
+        debugger;
         this.state = {
+            orderId: this.props.route.params.orderId, // orderId nhận từ trang thông tin giỏ hàng
             doneIcon: true,
             checkBox1: false,
             checkBox2: false,
@@ -38,7 +40,7 @@ class OrderSuccess extends Component {
 
     get_order_success() {
         this.props.actionOrderSuccess
-            .orderSuccess_get()
+            .orderSuccess_get(this.state.orderId)
             .then((res) => {
                 this.setState({
                     totalPrice: res.Value.Total,
