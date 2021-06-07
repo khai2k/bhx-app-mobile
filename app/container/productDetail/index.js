@@ -23,17 +23,17 @@ class ProductDetail extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <ScrollView>
-                    {this.props.Is_loading === true ? (
-                        <View style={{ flex: 1 }}>
-                            <LoadingCart />
-                            <LoadingCart />
-                            <LoadingCart />
-                            <LoadingCart />
-                        </View>
-                    ) : (
-                        <View>
-                            <Header />
+                {this.props.Is_loading === true ? (
+                    <View style={{ flex: 1 }}>
+                        <LoadingCart />
+                        <LoadingCart />
+                        <LoadingCart />
+                        <LoadingCart />
+                    </View>
+                ) : (
+                    <View>
+                        <Header />
+                        <ScrollView>
                             <ProductGallery
                                 Gallery_product={this.props.Gallery_product}
                             />
@@ -53,9 +53,9 @@ class ProductDetail extends Component {
                                     }}
                                 />
                             )}
-                        </View>
-                    )}
-                </ScrollView>
+                        </ScrollView>
+                    </View>
+                )}
             </View>
         );
     }
