@@ -21,7 +21,6 @@ import styles from './style';
 class OrderSuccess extends Component {
     constructor(props) {
         super(props);
-        debugger;
         this.state = {
             orderId: this.props.route.params.orderId, // orderId nhận từ trang thông tin giỏ hàng
             doneIcon: true,
@@ -56,10 +55,10 @@ class OrderSuccess extends Component {
 
     cancel_order() {
         this.props.actionOrderSuccess
-            .orderSuccess_cancel()
+            .orderSuccess_cancel(this.state.orderId)
             .then((res) => {
                 showMessage({
-                    message: res.Message,
+                    message: res.Value,
                     type: 'default',
                     backgroundColor: '#222B45',
                     icon: 'success'
@@ -154,7 +153,7 @@ class OrderSuccess extends Component {
                     </Text>
                     <TouchableOpacity
                         onPress={() =>
-                            this.props.navigation.navigate('UseVoucher')
+                            this.props.navigation.navigate('UnderConstruction')
                         }>
                         <View style={styles.PMHbox}>
                             <Text style={styles.PHMText}>
