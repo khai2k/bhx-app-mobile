@@ -23,17 +23,17 @@ class ProductDetail extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <ScrollView>
-                    {this.props.Is_loading === true ? (
-                        <View style={{ flex: 1 }}>
-                            <LoadingCart />
-                            <LoadingCart />
-                            <LoadingCart />
-                            <LoadingCart />
-                        </View>
-                    ) : (
-                        <View>
-                            <Header />
+                {this.props.Is_loading === true ? (
+                    <View style={{ flex: 1 }}>
+                        <LoadingCart />
+                        <LoadingCart />
+                        <LoadingCart />
+                        <LoadingCart />
+                    </View>
+                ) : (
+                    <View>
+                        <Header />
+                        <ScrollView styles={{ flex: 1 }}>
                             <ProductGallery
                                 Gallery_product={this.props.Gallery_product}
                             />
@@ -45,17 +45,19 @@ class ProductDetail extends Component {
                                 relativeProducts={this.props.Product_relative}
                             />
                             {!helper.isEmptyOrNull(this.props.Box_banner) && (
-                                <Image
-                                    style={{ width: '100%', height: 80 }}
-                                    resizeMode="cover"
-                                    source={{
-                                        uri: this.props.Box_banner.Image
-                                    }}
-                                />
+                                <View style={{ flex: 1, marginBottom: 100 }}>
+                                    <Image
+                                        style={{ width: '100%', height: 100 }}
+                                        resizeMode="contain"
+                                        source={{
+                                            uri: this.props.Box_banner.Image
+                                        }}
+                                    />
+                                </View>
                             )}
-                        </View>
-                    )}
-                </ScrollView>
+                        </ScrollView>
+                    </View>
+                )}
             </View>
         );
     }

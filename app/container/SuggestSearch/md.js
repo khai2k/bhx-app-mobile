@@ -55,7 +55,7 @@ const SuggestSearchModal = () => {
 
     // check đã chọn location chưa
     const checkReminderLocation = () => {
-        if (helper.IsEmptyObject(locationInfo)) {
+        if (helper.isEmptyObjectOrNull(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }

@@ -4,7 +4,8 @@ import {
     View,
     SafeAreaView,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 } from 'react-native';
 import { helper } from '@app/common';
 import styles from './style';
@@ -13,7 +14,7 @@ const ListLineTitle = (props) => {
     const scrollList = useRef();
     useEffect(() => {
         if (helper.isNumber(props.selectedIndex)) {
-            scrollList.current.scrollToIndex({
+            scrollList.current?.scrollToIndex({
                 animated: true,
                 index: props.selectedIndex
             });
@@ -28,8 +29,20 @@ const ListLineTitle = (props) => {
                     horizontal
                     data={props.listCate}
                     keyExtractor={(item) => item.Id}
-                    initialNumToRender={20}
+                    initialScrollIndex={props.selectedIndex}
+                    onScrollToIndexFailed={(info) => {
+                        const wait = new Promise((resolve) =>
+                            setTimeout(resolve, 500)
+                        );
+                        wait.then(() => {
+                            scrollList.current?.scrollToIndex({
+                                index: info.index,
+                                animated: true
+                            });
+                        });
+                    }}
                     snapToAlignment="center"
+                    snapToInterval={Dimensions.get('window').width / 2}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity
                             onPress={() => props.scrollToLine(index)}>

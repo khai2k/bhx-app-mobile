@@ -37,12 +37,7 @@ const Product = () => {
         setFirstLoading(true);
         setCateIndexSelected(0);
         setIsShowCatelines(false);
-        // Lấy danh sách cate
-        actionHome.getListCategories();
-        // lấy danh sách tên cate line
-        actionHome.getCateLines();
-        // Hàm gọi lấy 3 line đầu tiên
-        await actionHome.getHomeData();
+        await actionHome.fetchAll();
         setFirstLoading(false);
     }, [locationInfo]);
 

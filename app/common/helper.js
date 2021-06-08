@@ -71,6 +71,9 @@ export function isInstanced(obj) {
 }
 
 export const isEmpty = (obj) => {
+    if (obj === null || obj === undefined) {
+        return true;
+    }
     return !Object.keys(obj).every((key) => hasProperty(obj, key));
 };
 export const isPhoneNumber = (obj) => {
@@ -91,7 +94,7 @@ export function isEmptyOrNull(obj) {
 }
 
 export function isEmptyObjectOrNull(obj) {
-    if (obj === null) {
+    if (obj === null || obj === undefined) {
         return true;
     }
     const keys = Object.keys(obj);

@@ -32,7 +32,7 @@ export const STORES = `${API_BASE}Home/Stores`;
 
 // OrderSuccess
 export const API_REQUEST_GET_ORDER_SUCCESS = `${API_BASE}Order/OrderResult`;
-export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancelorder`;
+export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancleorder`;
 
 // Location
 export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;

@@ -10,10 +10,9 @@ export const orderSuccessAction = {
 
 const key = 'E5346AA38792A';
 
-var phone;
-var tokenCancel;
-var cartId;
-var orderIdCancel;
+let phone;
+let tokenCancel;
+let cartId;
 
 export const orderSuccess_get = function (orderId) {
     return (dispatch, getState) => {
@@ -25,8 +24,7 @@ export const orderSuccess_get = function (orderId) {
                 WardId: location.WardId,
                 StoreId: location.StoreId,
                 Sc: '',
-                OrderId: 43652170,
-                // OrderId:  orderId ,
+                OrderId: orderId,
                 KeyAppCancel: key
             };
             apiBase(
@@ -40,7 +38,6 @@ export const orderSuccess_get = function (orderId) {
                     phone = orderInfo.Detail.ContactPhone;
                     tokenCancel = orderInfo.TokenCancel;
                     cartId = orderInfo.CartView.Cart.CartId;
-                    orderIdCancel = orderInfo.OrderId;
                     dispatch({
                         type: ORDER_SUCCESS_GET,
                         orderInfo
@@ -55,7 +52,7 @@ export const orderSuccess_get = function (orderId) {
     };
 };
 
-export const orderSuccess_cancel = function () {
+export const orderSuccess_cancel = function (orderId) {
     return (dispatch, getState) => {
         return new Promise(async (resolve, reject) => {
             const location = getState().locationReducer.Location.LocationInfo;
@@ -68,7 +65,7 @@ export const orderSuccess_cancel = function () {
                 StoreId: location.StoreId,
                 data: {
                     cartid: cartId,
-                    orderid: orderIdCancel,
+                    orderid: orderId,
                     phonenumber: phone,
                     tokencancel: tokenCancel,
                     keyappcancel: key

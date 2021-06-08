@@ -18,14 +18,13 @@ export const productDetailAction = {
 
 export const get_gallery_product = function (productId, location) {
     const { ProvinceId, StoreId } = location;
-    console.log(ProvinceId, StoreId, '++++++++++++++++++++++++');
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             const bodyApi = {
                 productId,
                 provinceId: ProvinceId,
                 storeId: StoreId,
-                phone: '0328131471',
+                phone: '',
                 isMobile: true,
                 clearcache: ''
             };
@@ -37,7 +36,6 @@ export const get_gallery_product = function (productId, location) {
             )
                 .then((response) => {
                     const data = response.Value.productGalleriesItem;
-                    console.log(data.length, '---------------------------');
                     dispatch({
                         type: GET_GALLERY_PRODUCT,
                         data
@@ -45,14 +43,12 @@ export const get_gallery_product = function (productId, location) {
                     resolve(response);
                 })
                 .catch((error) => {
-                    console.log(error);
                     reject(error);
                 });
         });
     };
 };
 export const get_product_detail = function (productId, location) {
-    console.log('====', productId);
     const { ProvinceId, StoreId } = location;
     return (dispatch) => {
         return new Promise((resolve, reject) => {
@@ -168,7 +164,6 @@ export const get_box_banner = function (productId, location) {
             )
                 .then((response) => {
                     const data = response.Value;
-                    console.log('api-get_box');
                     dispatch({
                         type: GET_BOX_BANNER,
                         data
@@ -176,7 +171,6 @@ export const get_box_banner = function (productId, location) {
                     resolve(response);
                 })
                 .catch((error) => {
-                    console.log(error, 'zzzzzzzzzz');
                     reject(error);
                 });
         });

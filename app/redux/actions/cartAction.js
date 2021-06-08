@@ -98,7 +98,6 @@ export const cart_submit = function (Cart) {
 
             apiBase(API_CONST.API_REQUEST_SUBMIT_CART, METHOD.POST, bodyApi)
                 .then((response) => {
-                    debugger;
                     console.log('CART_SUBMIT Data:', response);
                     const cartInfo = response.Value;
                     dispatch({
@@ -108,7 +107,6 @@ export const cart_submit = function (Cart) {
                     resolve(response);
                 })
                 .catch((error) => {
-                    debugger;
                     console.log(error);
                     reject(error);
                 });
@@ -256,14 +254,7 @@ export const cart_add_item_product = function (
                 provinceId: location.ProvinceId,
                 districtId: location.DistrictId,
                 wardId: location.WardId,
-                storeId:
-                    expStoreId > 0
-                        ? expStoreId
-                        : !helper.isEmptyOrNull(location) &&
-                          !helper.isEmptyOrNull(location) &&
-                          !helper.isEmptyOrNull(location.StoreId)
-                        ? location.StoreId
-                        : 6815,
+                storeId: expStoreId > 0 ? expStoreId : location.StoreId,
                 data: {
                     cartId,
                     productId: prodId,
