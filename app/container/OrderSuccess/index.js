@@ -42,6 +42,7 @@ class OrderSuccess extends Component {
             .orderSuccess_get(this.state.orderId)
             .then((res) => {
                 this.setState({
+                    orderId: res.Value.OrderId,
                     totalPrice: res.Value.Total,
                     deliveryTime: res.Value.DeliveryTextTime,
                     infoOrder: res.Value.Detail,
@@ -82,6 +83,9 @@ class OrderSuccess extends Component {
                 <Text>Người đặt: {this.state.infoOrder.CustomerName}, </Text>
                 <Text style={{ fontWeight: 'bold' }}>
                     {this.state.infoOrder.ContactPhone}
+                </Text>
+                <Text style={{ fontStyle: 'italic' }}>
+                    {'     '}#{this.state.orderId}
                 </Text>
             </View>
         );
