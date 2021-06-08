@@ -22,7 +22,7 @@ const ListLineTitle = (props) => {
     }, [props.selectedIndex]);
     if (props.listCate != null && props.listCate.length > 0) {
         return (
-            <SafeAreaView style={styles.boxCategory}>
+            <View style={styles.boxCategory}>
                 <FlatList
                     ref={scrollList}
                     showsHorizontalScrollIndicator={false}
@@ -59,7 +59,7 @@ const ListLineTitle = (props) => {
                         </TouchableOpacity>
                     )}
                 />
-            </SafeAreaView>
+            </View>
         );
     } else {
         return null;

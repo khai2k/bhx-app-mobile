@@ -16,7 +16,7 @@ const ListCategories = (props) => {
             navigation.navigate('Group', { url: groupUrl });
         };
         return (
-            <SafeAreaView style={styles.boxCategory}>
+            <View style={styles.boxCategory}>
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     horizontal
@@ -33,7 +33,7 @@ const ListCategories = (props) => {
                         </TouchableOpacity>
                     )}
                 />
-            </SafeAreaView>
+            </View>
         );
     } else {
         return null;

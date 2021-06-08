@@ -507,7 +507,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y95K4W8YH6;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/..",
@@ -527,8 +530,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.enbhxonline;
 				PRODUCT_NAME = BhxOnline;
+				PROVISIONING_PROFILE_SPECIFIER = MWG_BHXONLINE_ENTERPRISE;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -541,7 +545,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y95K4W8YH6;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -562,8 +569,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.enbhxonline;
 				PRODUCT_NAME = BhxOnline;
+				PROVISIONING_PROFILE_SPECIFIER = MWG_BHXONLINE_ENTERPRISE;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -577,7 +585,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODEPUSH_KEY = 2UhNHkZk6bHuG651zEhjvne8zd984ksvOXqog;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y95K4W8YH6;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/..",
@@ -597,8 +608,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.bhxonline;
+				PRODUCT_BUNDLE_IDENTIFIER = mwg.tgdd.enbhxonline;
 				PRODUCT_NAME = BhxOnline;
+				PROVISIONING_PROFILE_SPECIFIER = MWG_BHXONLINE_ENTERPRISE;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -738,7 +750,7 @@
 				04409D51263D05DD001C2A35 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Staging;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BhxOnline" */ = {
 			isa = XCConfigurationList;
@@ -748,7 +760,7 @@
 				04409D50263D05DD001C2A35 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Staging;
 		};
 /* End XCConfigurationList section */
 	};

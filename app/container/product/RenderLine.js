@@ -148,7 +148,7 @@ const RenderLine = (props) => {
             )}
 
             {/* Render Product */}
-            <SafeAreaView style={styles.productList}>
+            <View style={styles.productList}>
                 <View style={styles.boxLines}>
                     {Products?.map((item) => {
                         return (
@@ -227,7 +227,7 @@ const RenderLine = (props) => {
                             </View>
                         </TouchableOpacity>
                     )}
-            </SafeAreaView>
+            </View>
         </View>
     );
 };

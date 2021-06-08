@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     boxCategory: {
         marginBottom: 5,
         paddingRight: 5
+        
     },
     boxLine: {
         width: '33.33%'
