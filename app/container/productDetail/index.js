@@ -33,7 +33,7 @@ class ProductDetail extends Component {
                 ) : (
                     <View>
                         <Header />
-                        <ScrollView>
+                        <ScrollView styles={{ flex: 1 }}>
                             <ProductGallery
                                 Gallery_product={this.props.Gallery_product}
                             />
@@ -45,13 +45,15 @@ class ProductDetail extends Component {
                                 relativeProducts={this.props.Product_relative}
                             />
                             {!helper.isEmptyOrNull(this.props.Box_banner) && (
-                                <Image
-                                    style={{ width: '100%', height: 80 }}
-                                    resizeMode="cover"
-                                    source={{
-                                        uri: this.props.Box_banner.Image
-                                    }}
-                                />
+                                <View style={{ flex: 1, marginBottom: 100 }}>
+                                    <Image
+                                        style={{ width: '100%', height: 100 }}
+                                        resizeMode="contain"
+                                        source={{
+                                            uri: this.props.Box_banner.Image
+                                        }}
+                                    />
+                                </View>
                             )}
                         </ScrollView>
                     </View>

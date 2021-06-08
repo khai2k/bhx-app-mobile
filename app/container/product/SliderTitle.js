@@ -41,4 +41,4 @@ const SliderTitle = (props) => {
     }
 };
 
-export default SliderTitle;
+export default React.memo(SliderTitle);

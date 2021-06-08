@@ -52,7 +52,7 @@ const ProductBox = (props) => {
         (state) => state.locationReducer.Location.LocationInfo
     );
     const checkReminderLocation = () => {
-        if (helper.IsEmptyObject(locationInfo)) {
+        if (helper.isEmptyObjectOrNull(locationInfo)) {
             actionLocation.showReminderLocation(true);
             return false;
         }
