@@ -127,6 +127,47 @@ const ModalLocation = (props) => {
         }
     };
 
+    const setLocation = (objLocation) => {
+        return apiBase(
+            API_CONST.API_LOCATION_GETSTORE,
+            METHOD.GET,
+            {},
+            {
+                params: {
+                    ProvinceId: chooseProvinceId,
+                    DistrictId: chooseDistrictId,
+                    WardId: objLocation.WardId
+                }
+            }
+        )
+            .then((response) => {
+                const tmpData = response.Value;
+                const tmpMdLocal = {
+                    ProvinceId: chooseProvinceId,
+                    ProvinceFullName: chooseProvinceFullName,
+                    ProvinceShortName: chooseProvinceShortName,
+
+                    DistrictId: chooseDistrictId,
+                    DistrictName: chooseDistrictName,
+
+                    WardId: objLocation.WardId,
+                    WardName: objLocation.WardName,
+
+                    StoreId: tmpData,
+
+                    FullAddress:
+                        objLocation.WardName !== ''
+                            ? `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
+                            : `${chooseDistrictName}, ${chooseProvinceFullName}`
+                };
+                dispatchlocation_SaveChooseLocation(tmpMdLocal);
+                changeModalVisibleCallback(false);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     const changeStep = (_step, objLocation) => {
         SliderGotTo(_step);
         if (_step === 0) {
@@ -149,46 +190,17 @@ const ModalLocation = (props) => {
                 objLocation.DistrictId
             );
         } else if (_step === 3) {
-            apiBase(
-                API_CONST.API_LOCATION_GETSTORE,
-                METHOD.GET,
-                {},
-                {
-                    params: {
-                        ProvinceId: chooseProvinceId,
-                        DistrictId: chooseDistrictId,
-                        WardId: objLocation.WardId
-                    }
-                }
-            )
-                .then((response) => {
-                    const tmpData = response.Value;
-                    const tmpMdLocal = {
-                        ProvinceId: chooseProvinceId,
-                        ProvinceFullName: chooseProvinceFullName,
-                        ProvinceShortName: chooseProvinceShortName,
-
-                        DistrictId: chooseDistrictId,
-                        DistrictName: chooseDistrictName,
-
-                        WardId: objLocation.WardId,
-                        WardName: objLocation.WardName,
-
-                        StoreId: tmpData,
-
-                        FullAddress: `${objLocation.WardName}, ${chooseDistrictName}, ${chooseProvinceFullName}`
-                    };
-                    dispatchlocation_SaveChooseLocation(tmpMdLocal);
-                    changeModalVisibleCallback(false);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            setLocation(objLocation);
         }
     };
 
     const checkbackorclose = () => {
-        if (step > 0) {
+        if (step === 2) {
+            setLocation({ WardId: 0, WardName: '' }).then(() => {
+                console.log('set data');
+                changeModalVisibleCallback(false);
+            });
+        } else if (step > 0) {
             SliderGotTo(step - 1);
         } else {
             changeModalVisibleCallback(false);
@@ -242,7 +254,7 @@ const ModalLocation = (props) => {
                         </View>
                         <TouchableOpacity
                             style={styles.chooseProvince_Button}
-                            onPress={() => changeModalVisibleCallback(false)}>
+                            onPress={() => checkbackorclose()}>
                             <Icon name="times" size={12} color="#fff" />
                         </TouchableOpacity>
                     </View>
