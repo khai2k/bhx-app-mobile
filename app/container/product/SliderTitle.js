@@ -6,7 +6,7 @@ import styles from './style';
 const SliderTitle = (props) => {
     if (props.listTitle != null && props.listTitle.length > 0) {
         return (
-            <SafeAreaView style={styles.boxTitle}>
+            <View style={styles.boxTitle}>
                 <Image
                     style={styles.imgTitle}
                     source={{
@@ -34,11 +34,11 @@ const SliderTitle = (props) => {
                         </View>
                     )}
                 />
-            </SafeAreaView>
+            </View>
         );
     } else {
         return null;
     }
 };
 
-export default SliderTitle;
+export default React.memo(SliderTitle);

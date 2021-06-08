@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     },
     blockPadding: {
         backgroundColor: '#F5F8FD',
-        height: 20
+        height: 20,
+        zIndex: 1
     },
     borderRadius: {
         borderBottomLeftRadius: 8,
@@ -65,7 +66,10 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     checkbox: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        height: 25,
+        marginRight: 5,
+        width: 25
     },
     checkboxContainer: {
         flexDirection: 'row'
@@ -86,8 +90,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         paddingLeft: 10,
-        paddingRight: 10,
-        position: 'relative'
+        paddingRight: 10
     },
     floatingBox: {
         borderColor: '#D6E0F5',
@@ -147,7 +150,8 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 10,
         textAlignVertical: 'top',
-        width: '100%'
+        width: '100%',
+        zIndex: 1
     },
     label: {
         margin: 8
@@ -174,11 +178,10 @@ const styles = StyleSheet.create({
         marginBottom: 0
     },
     provAndDic: {
-        display: 'flex',
+        alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 10,
-        width: '100%'
+        marginTop: 10
     },
     provBox: {
         borderRadius: 8,
@@ -217,11 +220,14 @@ const styles = StyleSheet.create({
     },
     sectionInput: {
         backgroundColor: '#fff',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        zIndex: 10
     },
     sectionInputTop: {
         backgroundColor: '#fff',
-        padding: 10
+        padding: 10,
+        position: 'relative',
+        zIndex: 1
     },
     stepTitle: {
         fontSize: 17,
@@ -264,7 +270,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         display: 'flex',
-        marginTop: 10,
         paddingLeft: 10,
         paddingRight: 10,
         width: '100%'

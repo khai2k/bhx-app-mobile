@@ -7,7 +7,6 @@ import HTML from 'react-native-render-html';
 import {
     Text,
     View,
-    Picker,
     TextInput,
     StatusBar,
     Image,
@@ -15,7 +14,8 @@ import {
     Alert,
     Dimensions,
     ActivityIndicator,
-    Modal
+    Modal,
+    Picker
 } from 'react-native';
 import { Colors } from '@app/styles';
 import CheckBox from '@react-native-community/checkbox';
@@ -33,6 +33,7 @@ import { apiBase, METHOD, API_CONST } from '@app/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-custom-dropdown';
+import DropDownPicker2 from 'react-native-dropdown-picker';
 
 import {
     ModalContent,
@@ -44,12 +45,13 @@ import {
 
 const UserInfoCart = (props) => {
     useEffect(() => {
-        getCart();
+        getCart(location.ProvinceId > 0 ? location.ProvinceId : 0);
+        getLstProv();
     }, []);
 
     useEffect(() => {}, isLoading);
     useEffect(() => {}, cartmodel);
-
+    useEffect(() => {}, shipdatetime);
     useEffect(() => {
         console.log(curDateDeli);
     }, curDateDeli);
@@ -76,7 +78,7 @@ const UserInfoCart = (props) => {
     const getCart = (prov, dis, ward) => {
         setisLoading(true);
         setshipdatetime(null);
-        setdateSelected('-1');
+        setdateSelectedValue('-1');
         settimeSelected('-1');
         actionCart.cart_get(prov, dis, ward).then((res) => {
             setisLoading(false);
@@ -97,7 +99,7 @@ const UserInfoCart = (props) => {
         ShipWard: 0,
         ShipAddress: '',
         IsCallOthers: false,
-        OthersGenderCall: '',
+        OthersGenderCall: '1',
         OthersPhone: '',
         OthersName: '',
         IsGetBill: false,
@@ -114,7 +116,8 @@ const UserInfoCart = (props) => {
     const [curDateDeli, setcurDateDeli] = useState(null);
 
     const [dateSelected, setdateSelected] = useState('');
-    const [timeSelected, settimeSelected] = useState('');
+    const [dateSelectedValue, setdateSelectedValue] = useState('-1');
+    const [timeSelected, settimeSelected] = useState('-1');
 
     // Xuất Hóa Đơn
     const [isSelectedXHD, setSelectedXHD] = useState(false);
@@ -145,6 +148,16 @@ const UserInfoCart = (props) => {
     const [provinceSelected, setprovinceSelected] = useState(-1);
     const [districtSelected, setdistrictSelected] = useState(-1);
     const [wardSelected, setwardSelected] = useState(-1);
+    const [enableDis, setEnableDis] = useState(false);
+    const [enableWard, setEnableWard] = useState(false);
+    const [lstProv, setLstProv] = useState(null);
+    const [lstDis, setLstDis] = useState(null);
+    const [lstWard, setLstWard] = useState(null);
+    const [isVisibleProvincePicker, setisVisibleProvincePicker] =
+        useState(false);
+    const [isVisibleDistrictPicker, setisVisibleDistrictPicker] =
+        useState(false);
+    const [isVisibleWardPicker, setisVisibleWardPicker] = useState(false);
 
     const alert = (message) => {
         const html = (
@@ -189,7 +202,9 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    this.props.navigation.navigate('OrderSuccess');
+                    return props.navigation.navigate('OrderSuccess', {
+                        orderId: res.Value.OrderId
+                    });
                 } else alert(res.Message);
             });
             return;
@@ -203,26 +218,6 @@ const UserInfoCart = (props) => {
         cartmodel.Cart.CustomerGender = cartUserInfo.CustomerGender;
         cartmodel.Cart.Note = cartUserInfo.Note;
 
-        if (isSelectedXHD) {
-            cartmodel.Cart.IsGetBill = isSelectedXHD;
-            if (helper.isEmptyOrNull(companyName)) {
-                return 'Vui lòng nhập tên Công ty!';
-            }
-            cartmodel.Cart.CompanyName = companyName;
-            if (helper.isEmptyOrNull(companyAddress)) {
-                return 'Vui lòng nhập địa chỉ Công ty!';
-            }
-            cartmodel.Cart.CompanyAddress = companyAddress;
-            if (helper.isEmptyOrNull(companyTax)) {
-                return 'Vui lòng nhập Mã số thuế!';
-            }
-            cartmodel.Cart.CompanyTaxNumber = companyTax;
-        } else {
-            cartmodel.Cart.IsGetBill = false;
-            cartmodel.Cart.CompanyName = '';
-            cartmodel.Cart.CompanyAddress = '';
-            cartmodel.Cart.CompanyTaxNumber = '';
-        }
         if (isSelectedCallOther) {
             cartmodel.Cart.IsCallOthers = isSelectedCallOther;
             cartmodel.Cart.OthersGenderCall = cartUserInfo.OthersGenderCall;
@@ -299,6 +294,26 @@ const UserInfoCart = (props) => {
         if (errSelectTime !== '') {
             return errSelectTime;
         }
+        if (isSelectedXHD) {
+            cartmodel.Cart.IsGetBill = isSelectedXHD;
+            if (helper.isEmptyOrNull(companyName)) {
+                return 'Vui lòng nhập tên Công ty!';
+            }
+            cartmodel.Cart.CompanyName = companyName;
+            if (helper.isEmptyOrNull(companyAddress)) {
+                return 'Vui lòng nhập địa chỉ Công ty!';
+            }
+            cartmodel.Cart.CompanyAddress = companyAddress;
+            if (helper.isEmptyOrNull(companyTax)) {
+                return 'Vui lòng nhập Mã số thuế!';
+            }
+            cartmodel.Cart.CompanyTaxNumber = companyTax;
+        } else {
+            cartmodel.Cart.IsGetBill = false;
+            cartmodel.Cart.CompanyName = '';
+            cartmodel.Cart.CompanyAddress = '';
+            cartmodel.Cart.CompanyTaxNumber = '';
+        }
         return '';
     };
 
@@ -311,6 +326,7 @@ const UserInfoCart = (props) => {
 
     const SelectTime = (index, timevalue) => {
         //debugger;
+
         if (
             cartmodel == null ||
             cartmodel.ProfileItems.Count == 0 ||
@@ -390,9 +406,6 @@ const UserInfoCart = (props) => {
     useEffect(() => {}, isVisibleDatePicker);
     useEffect(() => {}, isVisibleTimePicker);
 
-    let controllerDate;
-    let controllerTime;
-
     const chosenDeliDate = () => {
         const isActive =
             shipdatetime !== undefined &&
@@ -405,7 +418,7 @@ const UserInfoCart = (props) => {
                 value: '-1',
                 selected:
                     dateSelected === null ||
-                    dateSelected === null ||
+                    dateSelected === '' ||
                     dateSelected == '-1',
                 disabled: true
             }
@@ -422,44 +435,54 @@ const UserInfoCart = (props) => {
             });
         }
         return (
-            <DropDownPicker
+            <DropDownPicker2
+                open={isVisibleDatePicker}
+                value={dateSelectedValue}
+                defaultValue={dateSelected}
+                listMode="SCROLLVIEW"
+                containerStyle={{
+                    // width: '95%',
+                    // marginHorizontal: 10,
+                    zIndex: 50,
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        dateSelectedValue == '' ||
+                        dateSelectedValue == null ||
+                        dateSelectedValue == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
+                }}
+                labelStyle={{
+                    color: isActive ? '#000' : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
                 items={listDeliDate}
-                placeholder={'Ngày nhận'}
-                disabled={isActive == false}
-                zIndex={20}
-                controller={(instance) => (controllerDate = instance)}
-                arrowColor={'#007842'}
-                defaultValue={'-1'}
-                containerStyle={{ height: 50, marginHorizontal: 10 }}
                 style={[
                     styles.borderRadius,
                     {
+                        zIndex: 30,
                         borderColor:
-                            dateSelected == '' ||
-                            dateSelected == null ||
-                            dateSelected == '-1'
+                            dateSelectedValue == '' ||
+                            dateSelectedValue == null ||
+                            dateSelectedValue == '-1'
                                 ? '#ff001f'
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={200}
-                itemStyle={{
-                    justifyContent: 'flex-start'
-                }}
-                activeLabelStyle={{
-                    color: '#39739d'
-                }}
-                labelStyle={{
-                    fontSize: 14,
-                    textAlign: 'left',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
-                isVisible={isVisibleDatePicker}
+                setOpen={setisVisibleDatePicker}
+                disabled={isActive == false}
+                setValue={setdateSelectedValue}
                 onOpen={() => {
                     setisVisibleDatePicker(true);
                     setisVisibleTimePicker(false);
@@ -468,31 +491,47 @@ const UserInfoCart = (props) => {
                     setisVisibleDatePicker(false);
                     setisVisibleTimePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    console.log(itemValue.value > 0);
-                    settimeSelected('-1');
-                    controllerTime.reset();
-                    debugger;
-                    if (itemValue.value !== '' && itemValue.value !== '-1') {
-                        setdateSelected(
-                            shipdatetime[0]?.DateList[itemIndex - 1]?.id
+                onChangeValue={(value) => {
+                    setdateSelectedValue(value);
+                    if (shipdatetime != null) {
+                        var temp = shipdatetime[0]?.DateList.find(
+                            (x) => x.timeid == value
                         );
-                        setcurDateDeli(
-                            shipdatetime[0]?.DateList[itemIndex - 1]
-                        );
-                    } else {
-                        setcurDateDeli(null);
-                        setdateSelected('-1');
+                        if (value == -1 || temp !== undefined) {
+                            console.log(temp);
+
+                            if (value !== '' && value !== '-1') {
+                                if (temp !== undefined) {
+                                    setdateSelected(temp.id);
+                                    setcurDateDeli(temp);
+                                    let getTimeFirst = temp?.TimeList?.find(
+                                        (x) => x.disabled == false
+                                    );
+                                    if (
+                                        getTimeFirst !== undefined &&
+                                        getTimeFirst.id !== ''
+                                    ) {
+                                        settimeSelected(getTimeFirst.id);
+                                    }
+                                }
+                            } else {
+                                setcurDateDeli(null);
+                                setdateSelected('-1');
+                                settimeSelected('-1');
+                            }
+                            //controllerTime.reset();
+                        }
                     }
-                    console.log('itemValue.value: ' + itemValue.value + 'dateSelected: ' + dateSelected + 'curDateDeli: ' + curDateDeli);
-                    console.log(shipdatetime[0]?.DateList[itemIndex - 1]);
                 }}
             />
         );
     };
 
     const buildMessageDeliveryTime = (element) => {
-        let statusDeli = ' (hết nhân viên đi giao) ';
+        let statusDeli = element.deliverytext;
+        if (helper.isEmptyOrNull(statusDeli)) {
+            statusDeli = '';
+        } else statusDeli = ' (' + statusDeli + ')';
         let typeDeli = '';
         if (element.deliverytypeid == 261) {
             typeDeli = ' (khung giao 2h)';
@@ -533,31 +572,55 @@ const UserInfoCart = (props) => {
                 listDeliTime.push(JSON.parse(temp));
             });
         return (
-            <DropDownPicker
-                placeholder={'Thời gian nhận'}
+            <DropDownPicker2
+                open={isVisibleTimePicker}
+                value={timeSelected}
+                defaultValue={timeSelected}
                 items={listDeliTime}
-                zIndex={30}
-                isVisible={isVisibleTimePicker}
-                controller={(instance) => (controllerTime = instance)}
-                disabled={dateSelected == null || dateSelected == '' || dateSelected == '-1'}
-                defaultValue={'-1'}
-                activeLabelStyle={{
-                    color: '#1B6EAA'
-                }}
-                labelStyle={{
-                    fontSize: 13,
-                    textAlign: 'left',
-                    color: '#000'
-                }}
                 containerStyle={{
-                    height: 50,
-                    marginHorizontal: 10,
-                    marginTop: 10
+                    // width: '95%',
+                    // marginHorizontal: 10,
+                    zIndex: 40,
+                    marginBottom: 10
+                }}
+                listMode="SCROLLVIEW"
+                maxHeight={300}
+                scrollViewProps={{
+                    scrollEnabled: true
+                }}
+                showBadgeDot={true}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor:
+                        timeSelected == '' ||
+                        timeSelected == null ||
+                        timeSelected == '-1'
+                            ? '#ff001f'
+                            : '#8F9BB3'
+                }}
+                dropDownDirection={'BOTTOM'}
+                labelStyle={{
+                    color:
+                        helper.isEmptyOrNull(timeSelected) == false &&
+                        timeSelected !== '-1'
+                            ? '#000'
+                            : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
                 }}
                 style={[
                     styles.borderRadius,
                     {
+                        zIndex: 20,
                         backgroundColor: '#fff',
+                        fontSize: 13,
                         borderColor:
                             timeSelected == '' ||
                             timeSelected == null ||
@@ -566,16 +629,14 @@ const UserInfoCart = (props) => {
                                 : '#8F9BB3'
                     }
                 ]}
-                dropDownMaxHeight={300}
-                itemStyle={{
-                    justifyContent: 'flex-start',
-                    color: '#000'
-                }}
-                dropDownStyle={{
-                    backgroundColor: '#fff',
-                    borderBottomLeftRadius: 10,
-                    borderBottomRightRadius: 10
-                }}
+                setOpen={setisVisibleTimePicker}
+                disabled={
+                    isActive == false ||
+                    dateSelectedValue == '' ||
+                    dateSelectedValue == null ||
+                    dateSelectedValue == '-1'
+                }
+                setValue={settimeSelected}
                 onOpen={() => {
                     setisVisibleTimePicker(true);
                     setisVisibleDatePicker(false);
@@ -584,12 +645,8 @@ const UserInfoCart = (props) => {
                     setisVisibleTimePicker(false);
                     setisVisibleDatePicker(false);
                 }}
-                onChangeItem={(itemValue, itemIndex) => {
-                    //debugger;
-                    if (itemValue.disabled == true) {
-                        settimeSelected('-1');
-                        setisVisibleTimePicker(true);
-                    } else settimeSelected(itemValue.value);
+                onChangeValue={(value) => {
+                    settimeSelected(value);
                     console.log(
                         'timeSelected ' +
                             timeSelected +
@@ -776,246 +833,6 @@ const UserInfoCart = (props) => {
         }
     };
 
-    const UserProvAndDis = (location) => {
-        useEffect(() => {
-            getLstProv();
-        }, []);
-
-        const [enableDis, setEnableDis] = useState(false);
-        const [enableWard, setEnableWard] = useState(false);
-
-        const [lstProv, setLstProv] = useState(null);
-        const [lstDis, setLstDis] = useState(null);
-        const [lstWard, setLstWard] = useState(null);
-
-        const getLstProv = function () {
-            apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
-                .then((response) => {
-                    setLstProv(response.Value);
-                    // if (location !== null && location.ProvinceId > 0) {
-                    //     setprovinceSelected(location.ProvinceId);
-                    //     getLstDis(location.ProvinceId);
-                    //     setCartUserInfo((previousState) => ({
-                    //         ...previousState,
-                    //         ShipProvince: location.ProvinceId
-                    //     }));
-                    // }
-                })
-                .catch((err) => {});
-        };
-
-        const getLstDis = (provinceId, onManualSelect = false) => {
-            apiBase(
-                API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
-                METHOD.GET,
-                {},
-                { params: { provinceId, clearcache: '' } }
-            )
-                .then((response) => {
-                    setLstDis(response.Value);
-                    setprovinceSelected(provinceId);
-                    setEnableDis(provinceId > 0);
-                    // if (provinceId > 0 && location?.DistrictId > 0 && !onManualSelect) {
-                    //     setdistrictSelected(location.DistrictId);
-                    //     getLstWard(provinceId, location.DistrictId);
-                    //     setCartUserInfo((previousState) => ({
-                    //         ...previousState,
-                    //         ShipDistrict: location.DistrictId
-                    //     }));
-                    // } else setEnableWard(false);
-                    setEnableWard(false);
-                })
-                .catch(() => {});
-        };
-        const getLstWard = (ProvinceId, DistrictId, onManualSelect = false) => {
-            apiBase(
-                API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
-                METHOD.GET,
-                {},
-                { params: { ProvinceId, DistrictId, clearcache: 'empty' } }
-            )
-                .then((response) => {
-                    setLstWard(response.Value);
-                    setEnableWard(true);
-                    setwardSelected(-1);
-                    // if (location?.WardId > 0 && !onManualSelect) {
-                    //     setwardSelected(location?.WardId);
-                    //     setCartUserInfo((previousState) => ({
-                    //         ...previousState,
-                    //         ShipWard: location.WardId
-                    //     }));
-                    // }
-                })
-                .catch(() => {});
-        };
-
-        return (
-            <View>
-                <View style={styles.provAndDic}>
-                    <View
-                        style={[
-                            styles.provBox,
-                            {
-                                borderColor:
-                                    provinceSelected <= 0
-                                        ? '#ff001f'
-                                        : '#D6E0F5'
-                            }
-                        ]}>
-                        <Picker
-                            selectedValue={provinceSelected}
-                            style={{ height: 50, width: 150, color: '#000' }}
-                            mode={'dropdown'}
-                            onValueChange={(itemValue, itemIndex) => {
-                                setprovinceSelected(itemValue);
-
-                                // reset ward
-                                setLstWard(null);
-                                setwardSelected(false);
-                                setEnableWard(false);
-
-                                //reset district
-                                setEnableDis(false);
-                                getLstDis(itemValue, true);
-                                setdistrictSelected(false);
-                                setCartUserInfo((previousState) => ({
-                                    ...previousState,
-                                    ShipProvince: itemValue > 0 ? itemValue : 0
-                                }));
-                                getCart(itemValue);
-                            }}>
-                            <Picker.Item
-                                label="Tỉnh thành"
-                                value="-1"
-                                color="#C2C2C2"
-                            />
-                            {lstProv !== null &&
-                                lstProv.length > 0 &&
-                                lstProv.map((prov) => {
-                                    return (
-                                        <Picker.Item
-                                            label={prov.ProvinceFullName}
-                                            value={prov.ProvinceId}
-                                            key={prov.ProvinceId}
-                                        />
-                                    );
-                                })}
-                        </Picker>
-                        {/* {provinceSelected <= 0 && (
-                            <Text style={[styles.textErr, styles.textErrAbs]}>
-                                {CONST_STRINGERR.ERR_PROVINCE}
-                            </Text>
-                        )} */}
-                    </View>
-                    <View
-                        style={[
-                            styles.disBox,
-                            {
-                                borderColor:
-                                    districtSelected <= 0
-                                        ? '#ff001f'
-                                        : '#D6E0F5'
-                            }
-                        ]}>
-                        <Picker
-                            selectedValue={districtSelected}
-                            enabled={enableDis}
-                            mode={'dropdown'}
-                            style={{
-                                height: 50,
-                                width: 150,
-                                color: enableDis ? '#000' : '#C2C2C2'
-                            }}
-                            onValueChange={(itemValue, itemIndex) => {
-                                getLstWard(provinceSelected, itemValue, true);
-                                setdistrictSelected(itemValue);
-                                setCartUserInfo((previousState) => ({
-                                    ...previousState,
-                                    ShipDistrict: itemValue > 0 ? itemValue : 0
-                                }));
-                                getCart(provinceSelected, itemValue);
-                            }}>
-                            <Picker.Item
-                                label="Quận, huyện"
-                                value="-1"
-                                color="#C2C2C2"
-                            />
-                            {lstDis !== null &&
-                                lstDis.length > 0 &&
-                                lstDis.map((dis) => {
-                                    return (
-                                        <Picker.Item
-                                            label={dis.Item2}
-                                            value={dis.Item1}
-                                            key={dis.Item1}
-                                        />
-                                    );
-                                })}
-                        </Picker>
-
-                        {/* {districtSelected <= 0 && (
-                            <Text style={[styles.textErr, styles.textErrAbs]}>
-                                {CONST_STRINGERR.ERR_DISTRICT}
-                            </Text>
-                        )} */}
-                    </View>
-                </View>
-                <View
-                    style={[
-                        styles.wardBox,
-                        {
-                            borderColor:
-                                wardSelected <= 0 ? '#ff001f' : '#D6E0F5'
-                        }
-                    ]}>
-                    <Picker
-                        selectedValue={wardSelected}
-                        enabled={enableWard}
-                        mode={'dropdown'}
-                        onValueChange={(itemValue, itemIndex) => {
-                            setwardSelected(itemValue);
-                            setCartUserInfo((previousState) => ({
-                                ...previousState,
-                                ShipWard: itemValue > 0 ? itemValue : 0
-                            }));
-                            getCart(
-                                provinceSelected,
-                                districtSelected,
-                                wardSelected
-                            );
-                        }}
-                        style={{
-                            height: 50,
-                            width: '100%',
-                            color: enableWard ? '#000' : '#C2C2C2'
-                        }}>
-                        <Picker.Item
-                            label="Phường, Xã"
-                            value="-1"
-                            color="#C2C2C2"
-                        />
-                        {lstWard !== null &&
-                            lstWard.length > 0 &&
-                            lstWard.map((ward) => {
-                                return (
-                                    <Picker.Item
-                                        label={ward.Item2}
-                                        value={ward.Item1}
-                                        key={ward.Item1}
-                                    />
-                                );
-                            })}
-                    </Picker>
-                    {/* {wardSelected <= 0 && (
-                        <Text style={[styles.textErr, styles.textErrAbs]}>
-                            {CONST_STRINGERR.ERR_WARD}
-                        </Text>
-                    )} */}
-                </View>
-            </View>
-        );
-    };
-
     const SexRadio = (props) => {
         const [sex, setSex] = useState([
             {
@@ -1070,6 +887,315 @@ const UserInfoCart = (props) => {
         );
     };
 
+    const provincePicker = (provinceID) => {
+        const lstProvinceData = [
+            {
+                label: 'Tỉnh thành',
+                value: -1,
+                selected: provinceSelected <= 0,
+                disabled: true
+            }
+        ];
+        if (lstProv !== null && lstProv.length > 0) {
+            lstProv.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.ProvinceFullName +
+                    '","value": ' +
+                    element.ProvinceId +
+                    '}';
+                lstProvinceData.push(JSON.parse(temp));
+            });
+            console.log(lstProvinceData);
+        }
+        return (
+            <DropDownPicker2
+                value={provinceSelected}
+                defaultValue={provinceSelected}
+                listMode="SCROLLVIEW"
+                containerStyle={{
+                    width: 150,
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: provinceSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                }}
+                listParentContainerStyle={{
+                    zIndex: 99
+                }}
+                labelStyle={{
+                    fontSize: 12,
+                    color: provinceSelected > 0 ? '#000' : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                zIndex={30}
+                items={lstProvinceData}
+                style={[
+                    styles.provBox,
+                    {
+                        height: 50,
+                        color: '#000',
+                        borderColor:
+                            provinceSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                    }
+                ]}
+                disabled={false}
+                setValue={setprovinceSelected}
+                open={isVisibleProvincePicker}
+                setOpen={setisVisibleProvincePicker}
+                onChangeValue={(itemValue) => {
+                    setprovinceSelected(itemValue);
+
+                    // reset ward
+                    setLstWard(null);
+                    setwardSelected(-1);
+                    setEnableWard(false);
+
+                    //reset district
+                    setEnableDis(false);
+                    getLstDis(itemValue, true);
+                    setdistrictSelected(-1);
+                    setCartUserInfo((previousState) => ({
+                        ...previousState,
+                        ShipProvince: itemValue > 0 ? itemValue : 0
+                    }));
+                    getCart(itemValue);
+                }}
+            />
+        );
+    };
+    const districtPicker = () => {
+        const lstDistrictData = [
+            {
+                label: 'Quận huyện',
+                value: -1,
+                selected: districtSelected <= 0,
+                disabled: true
+            }
+        ];
+        if (lstDis !== null && lstDis.length > 0) {
+            lstDis.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.Item2 +
+                    '","value": ' +
+                    element.Item1 +
+                    '}';
+                lstDistrictData.push(JSON.parse(temp));
+            });
+            console.log(lstDistrictData);
+        }
+        return (
+            <DropDownPicker2
+                value={districtSelected}
+                defaultValue={districtSelected}
+                listMode="SCROLLVIEW"
+                containerStyle={{
+                    width: 150,
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor: districtSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                }}
+                listParentContainerStyle={{
+                    zIndex: 99
+                }}
+                labelStyle={{
+                    fontSize: 12,
+                    color:
+                        districtSelected > 0 ||
+                        (lstDis !== null && lstDis.length > 0)
+                            ? '#000'
+                            : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                zIndex={30}
+                items={lstDistrictData}
+                style={[
+                    styles.disBox,
+                    {
+                        height: 50,
+                        color: '#000',
+                        borderColor:
+                            districtSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                    }
+                ]}
+                disabled={false}
+                setValue={setdistrictSelected}
+                open={isVisibleDistrictPicker}
+                setOpen={setisVisibleDistrictPicker}
+                onChangeValue={(itemValue) => {
+                    getLstWard(provinceSelected, itemValue, true);
+                    setdistrictSelected(itemValue);
+                    setCartUserInfo((previousState) => ({
+                        ...previousState,
+                        ShipDistrict: itemValue > 0 ? itemValue : 0
+                    }));
+                    getCart(provinceSelected, itemValue);
+                }}
+            />
+        );
+    };
+    const wardPicker = () => {
+        const lstWardData = [
+            {
+                label: 'Phường, xã',
+                value: -1,
+                selected: wardSelected <= 0,
+                disabled: true
+            }
+        ];
+        if (lstWard !== null && lstWard.length > 0) {
+            lstWard.forEach((element) => {
+                var temp =
+                    '{"label":"' +
+                    element.Item2 +
+                    '","value": ' +
+                    element.Item1 +
+                    '}';
+                lstWardData.push(JSON.parse(temp));
+            });
+            console.log(lstWardData);
+        }
+        return (
+            <DropDownPicker2
+                value={wardSelected}
+                defaultValue={wardSelected}
+                listMode="MODAL"
+                containerStyle={{
+                    width: '100%',
+                    marginBottom: 10
+                }}
+                dropDownContainerStyle={{
+                    borderColor: '#8F9BB3',
+                    borderColor: wardSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                }}
+                dropDownDirection={'BOTTOM'}
+                listParentContainerStyle={{
+                    zIndex: 99
+                }}
+                labelStyle={{
+                    fontSize: 12,
+                    color:
+                        wardSelected > 0 ||
+                        (lstWard !== null && lstWard.length > 0)
+                            ? '#000'
+                            : '#8F9BB3'
+                }}
+                selectedItemLabelStyle={{
+                    color: '#1B6EAA'
+                }}
+                listItemLabelStyle={{
+                    fontSize: 12
+                }}
+                disabledItemLabelStyle={{
+                    color: '#8F9BB3'
+                }}
+                zIndex={20}
+                items={lstWardData}
+                style={[
+                    styles.wardBox,
+                    {
+                        height: 50,
+                        color: '#000',
+                        borderColor: wardSelected <= 0 ? '#ff001f' : '#D6E0F5'
+                    }
+                ]}
+                disabled={enableWard == false}
+                setValue={setwardSelected}
+                open={isVisibleWardPicker}
+                setOpen={setisVisibleWardPicker}
+                onChangeValue={(itemValue) => {
+                    setwardSelected(itemValue);
+                    setCartUserInfo((previousState) => ({
+                        ...previousState,
+                        ShipWard: itemValue > 0 ? itemValue : 0
+                    }));
+                    getCart(provinceSelected, districtSelected, wardSelected);
+                }}
+            />
+        );
+    };
+    const getLstProv = function () {
+        apiBase(API_CONST.API_LOCATION_GETALLPROVINCE, METHOD.GET, {})
+            .then((response) => {
+                setLstProv(response.Value);
+                if (location !== null && location.ProvinceId > 0) {
+                    setprovinceSelected(location.ProvinceId);
+                    getLstDis(location.ProvinceId);
+                    setCartUserInfo((previousState) => ({
+                        ...previousState,
+                        ShipProvince: location.ProvinceId
+                    }));
+                }
+                setEnableWard(false);
+                setwardSelected(-1);
+            })
+            .catch((err) => {});
+    };
+
+    const getLstDis = (provinceId, onManualSelect = false) => {
+        apiBase(
+            API_CONST.API_LOCATION_GETDICTRICTBYPROVINCE,
+            METHOD.GET,
+            {},
+            { params: { provinceId, clearcache: '' } }
+        )
+            .then((response) => {
+                setLstDis(response.Value);
+                setprovinceSelected(provinceId);
+                setEnableDis(provinceId > 0);
+                // if (provinceId > 0 && location?.DistrictId > 0 && !onManualSelect) {
+                //     setdistrictSelected(location.DistrictId);
+                //     getLstWard(provinceId, location.DistrictId);
+                //     setCartUserInfo((previousState) => ({
+                //         ...previousState,
+                //         ShipDistrict: location.DistrictId
+                //     }));
+                // } else setEnableWard(false);
+                setEnableWard(false);
+                setwardSelected(-1);
+            })
+            .catch(() => {});
+    };
+    const getLstWard = (ProvinceId, DistrictId, onManualSelect = false) => {
+        apiBase(
+            API_CONST.API_LOCATION_GETWARDBYDICANDPROVINCE,
+            METHOD.GET,
+            {},
+            { params: { ProvinceId, DistrictId, clearcache: 'empty' } }
+        )
+            .then((response) => {
+                setLstWard(response.Value);
+                setEnableWard(true);
+                setwardSelected(-1);
+                // if (location?.WardId > 0 && !onManualSelect) {
+                //     setwardSelected(location?.WardId);
+                //     setCartUserInfo((previousState) => ({
+                //         ...previousState,
+                //         ShipWard: location.WardId
+                //     }));
+                // }
+            })
+            .catch(() => {});
+    };
     return (
         <View>
             <Header />
@@ -1194,7 +1320,29 @@ const UserInfoCart = (props) => {
                     {helper.isEmptyOrNull(cusNameErrMessage) == false && (
                         <Text style={styles.textErr}>{cusNameErrMessage}</Text>
                     )}
-                    {UserProvAndDis(location)}
+
+                    <View style={styles.provAndDic}>
+                        {provincePicker(location?.provinceId)}
+                        {/* {provinceSelected <= 0 && (
+                            <Text style={[styles.textErr, styles.textErrAbs]}>
+                                {CONST_STRINGERR.ERR_PROVINCE}
+                            </Text>
+                        )} */}
+
+                        {districtPicker()}
+                        {/* {districtSelected <= 0 && (
+                            <Text style={[styles.textErr, styles.textErrAbs]}>
+                                {CONST_STRINGERR.ERR_DISTRICT}
+                            </Text>
+                        )} */}
+                    </View>
+
+                    {wardPicker()}
+                    {/* {wardSelected <= 0 && (
+                        <Text style={[styles.textErr, styles.textErrAbs]}>
+                            {CONST_STRINGERR.ERR_WARD}
+                        </Text>
+                    )} */}
                     <TextInput
                         style={[styles.inputBox, styles.marginTop]}
                         placeholder="Số nhà, tên đường"
@@ -1260,12 +1408,23 @@ const UserInfoCart = (props) => {
                     </Text>
                 </View>
 
-                {chosenDeliDate()}
+                <View
+                    style={{
+                        backgroundColor: '#fff',
+                        zIndex: 30,
+                        paddingHorizontal: 10
+                    }}>
+                    {chosenDeliDate()}
+                    {chosenDeliTime()}
+                </View>
 
-                {chosenDeliTime()}
-
-                <View style={{ padding: 10 }}>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+                <View style={[styles.sectionInput, { zIndex: 10 }]}>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            marginVertical: 10
+                        }}>
                         Mua thêm để miễn phí giao với đơn trên 100.000đ (còn 5
                         lần)
                         <Text

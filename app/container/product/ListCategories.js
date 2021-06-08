@@ -14,10 +14,9 @@ const ListCategories = (props) => {
         const navigation = useNavigation();
         const handleSelectCateChild = (groupUrl) => {
             navigation.navigate('Group', { url: groupUrl });
-            console.log('groupUrl', groupUrl);
         };
         return (
-            <SafeAreaView style={styles.boxCategory}>
+            <View style={styles.boxCategory}>
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     horizontal
@@ -34,11 +33,11 @@ const ListCategories = (props) => {
                         </TouchableOpacity>
                     )}
                 />
-            </SafeAreaView>
+            </View>
         );
     } else {
         return null;
     }
 };
 
-export default ListCategories;
+export default React.memo(ListCategories);

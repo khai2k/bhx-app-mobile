@@ -20,6 +20,7 @@ import OrderSuccess from '../container/OrderSuccess';
 import SuggestSearch from '../container/SuggestSearch/md';
 import UseVoucher from '../container/useVoucher';
 import { UnderConstruction, NavMenu } from '../components';
+import { Colors } from '../styles';
 
 const MainStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -184,7 +185,7 @@ class MainTabComponent extends Component {
                     }
                 })}
                 tabBarOptions={{
-                    activeTintColor: 'red',
+                    activeTintColor: Colors.GREEN_KEY,
                     inactiveTintColor: 'gray'
                 }}>
                 <Tab.Screen

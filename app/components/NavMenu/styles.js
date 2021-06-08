@@ -33,6 +33,9 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingTop: 60
     },
+    contentBottomRight: {
+        paddingBottom: 100
+    },
     iconCateChild: {
         height: 50,
         resizeMode: 'contain',
@@ -95,25 +98,18 @@ export const styles = StyleSheet.create({
         height: 100,
         justifyContent: 'center',
         marginBottom: 15,
-        opacity: 0.5,
         paddingTop: 10,
         position: 'relative',
-        width: 80
-    },
-    itemCateChildActive: {
-        alignItems: 'center',
-        height: 100,
-        justifyContent: 'center',
-        marginBottom: 15,
-        paddingTop: 10,
-        position: 'relative',
-        width: 80
+        width: 75
     },
     lineEachCate: {
         backgroundColor: Colors.RED,
         height: 20,
         position: 'relative',
         width: '100%'
+    },
+    listOpacity: {
+        opacity: 0.5
     },
     navLeft: {
         flex: 2
@@ -134,8 +130,7 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 8,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 10,
-        paddingBottom: 20
+        paddingBottom: 10
     },
     navRightTop: {
         flexDirection: 'row',

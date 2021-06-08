@@ -14,14 +14,25 @@ export const API_GET_CATEGORY_NAVIGATION = `${API_BASE}/shared/GetNavigation`;
 
 // Home
 export const GET_LIST_CATEGORIES = `${API_BASE}Home/ListCategories`;
-export const GET_LIST_PRODUCT = `${API_BASE}Home/GetHomeData`;
-export const GET_MORE_LIST_PRODUCT = `${API_BASE}Home/AjSockPriceBox`;
-export const GET_MORE_LINE = `${API_BASE}Home/LoadMoreHomeData`;
+export const GET_CATE_LINES = `${API_BASE}Home/CateLines`;
+export const GET_HOME_DATA = `${API_BASE}Home/GetHomeData`;
+export const LOAD_MORE_PRODUCTS = `${API_BASE}Home/AjSockPriceBox`;
+export const LOAD_MORE_HOME_DATA = `${API_BASE}Home/LoadMoreHomeData`;
 export const GET_FRESH_PRODUCTS = `${API_BASE}Home/AjGetFreshProducts`;
+export const LINE_SEASON = `${API_BASE}Home/LineSeason`;
+export const LINE_EXPIRED = `${API_BASE}Home/LineExpired`;
+export const LINE_PERSONALIZE = `${API_BASE}Home/LinePersonalize`;
+export const LINE_PERSONALIZE_LOAD_MORE = `${API_BASE}Home/LinePersonalizeLoadMore`;
+export const GET_CATE_PARENT = `${API_BASE}Home/AjGetCateParent`;
+export const SLIDE_BANNER = `${API_BASE}Home/SlideBanner`;
+export const BANNER_NEW_YEAR_2020 = `${API_BASE}Home/BannerNewYear2020`;
+export const BANNER_4K_FARM = `${API_BASE}Home/Banner4kfarm`;
+export const TIPS = `${API_BASE}Home/Tips`;
+export const STORES = `${API_BASE}Home/Stores`;
 
 // OrderSuccess
 export const API_REQUEST_GET_ORDER_SUCCESS = `${API_BASE}Order/OrderResult`;
-export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancelorder`;
+export const API_REQUEST_CANCEL_ORDER_SUCCESS = `${API_BASE}Order/cancleorder`;
 
 // Location
 export const API_LOCATION_GETBYCOORDINATES = `${API_BASE}/shared/GetLocationByCoordinates`;

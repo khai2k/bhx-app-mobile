@@ -12,8 +12,7 @@ import {
     TouchableOpacity,
     Image,
     FlatList,
-    ActivityIndicator,
-    Alert
+    ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
@@ -23,17 +22,19 @@ import HTML from 'react-native-render-html';
 //  import * as cartCreator from '@app/container/cart/action';
 import * as cartCreator from '@app/redux/actions/cartAction';
 import { helper } from '@app/common';
+import { ModalPortal, ModalContent } from 'react-native-modals';
+import * as locationCreator from '@app/redux/actions/locationAction';
 import DelayInputCmp from '../../components/DelayInput';
 
 const SuggestSearchModal = () => {
     useEffect(() => {
         setObjSearch({
             Phrase: '',
-            ProvinceId: locationinfo?.ProvinceId,
-            StoreId: 0,
+            ProvinceId: locationInfo?.ProvinceId,
+            StoreId: locationInfo?.StoreId,
             Phone: ''
         });
-    }, [locationinfo]);
+    }, [locationInfo]);
 
     // Init
     const navigation = useNavigation();
@@ -47,9 +48,20 @@ const SuggestSearchModal = () => {
     const [lstSuggest, setlstSuggest] = useState(null);
 
     // Redux
-    const locationinfo = useSelector(
+    const locationInfo = useSelector(
         (state) => state.locationReducer.Location.LocationInfo
     );
+    const actionLocation = bindActionCreators(locationCreator, dispatch);
+
+    // check đã chọn location chưa
+    const checkReminderLocation = () => {
+        if (helper.isEmptyObjectOrNull(locationInfo)) {
+            actionLocation.showReminderLocation(true);
+            return false;
+        }
+        return true;
+    };
+
     const dispatch = useDispatch();
     const actionCart = bindActionCreators(cartCreator, dispatch);
 
@@ -168,21 +180,40 @@ const SuggestSearchModal = () => {
             </View>
         );
     };
-    const addToCart = (productID, expStoreId) => {
-        actionCart
-            .cart_add_item_product(productID, 1, true, expStoreId)
-            .then(async (res) => {
-                console.log('cart_add_item_product');
-                console.log(res);
-                if (res.ResultCode > 0) {
-                    Alert.alert('', res.messages);
-                } else {
-                    await actionCart.cart_get_simple();
+    const addToCart = async (productID, expStoreId) => {
+        const checkLocation = await checkReminderLocation();
+        checkLocation &&
+            actionCart
+                .cart_add_item_product(productID, 1, true, expStoreId)
+                .then(async (res) => {
+                    console.log('cart_add_item_product');
+                    console.log(res);
+                    if (res.ResultCode > 0) {
+                        alertAPI(res.Message);
+                    } else {
+                        await actionCart.cart_get_simple();
+                    }
+                })
+                .catch((error) => {
+                    alertAPI(error);
+                });
+    };
+    const alertAPI = (messages) => {
+        const alertModal = ModalPortal.show(
+            <ModalContent>
+                <HTML source={{ html: messages }} />
+            </ModalContent>,
+            {
+                animationDuration: 0,
+                width: 0.8,
+                onTouchOutside: () => {
+                    ModalPortal.dismiss(alertModal);
+                },
+                onHardwareBackPress: () => {
+                    return true;
                 }
-            })
-            .catch((error) => {
-                Alert.alert('', error);
-            });
+            }
+        );
     };
 
     // Callback

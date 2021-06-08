@@ -22,6 +22,7 @@ class OrderSuccess extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            orderId: this.props.route.params.orderId, // orderId nhận từ trang thông tin giỏ hàng
             doneIcon: true,
             checkBox1: false,
             checkBox2: false,
@@ -38,9 +39,10 @@ class OrderSuccess extends Component {
 
     get_order_success() {
         this.props.actionOrderSuccess
-            .orderSuccess_get()
+            .orderSuccess_get(this.state.orderId)
             .then((res) => {
                 this.setState({
+                    orderId: res.Value.OrderId,
                     totalPrice: res.Value.Total,
                     deliveryTime: res.Value.DeliveryTextTime,
                     infoOrder: res.Value.Detail,
@@ -54,10 +56,10 @@ class OrderSuccess extends Component {
 
     cancel_order() {
         this.props.actionOrderSuccess
-            .orderSuccess_cancel()
+            .orderSuccess_cancel(this.state.orderId)
             .then((res) => {
                 showMessage({
-                    message: res.Message,
+                    message: res.Value,
                     type: 'default',
                     backgroundColor: '#222B45',
                     icon: 'success'
@@ -79,8 +81,11 @@ class OrderSuccess extends Component {
             <View style={styles.infoLine}>
                 <View style={styles.dot} />
                 <Text>Người đặt: {this.state.infoOrder.CustomerName}, </Text>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text style={{ fontWeight: 'bold' }} selectable>
                     {this.state.infoOrder.ContactPhone}
+                </Text>
+                <Text style={{ fontStyle: 'italic' }} selectable>
+                    {'     '}#{this.state.orderId}
                 </Text>
             </View>
         );
@@ -152,7 +157,7 @@ class OrderSuccess extends Component {
                     </Text>
                     <TouchableOpacity
                         onPress={() =>
-                            this.props.navigation.navigate('UseVoucher')
+                            this.props.navigation.navigate('UnderConstruction')
                         }>
                         <View style={styles.PMHbox}>
                             <Text style={styles.PHMText}>

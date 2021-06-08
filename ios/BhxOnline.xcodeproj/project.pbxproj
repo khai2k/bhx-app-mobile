@@ -746,7 +746,7 @@
 				04409D51263D05DD001C2A35 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Staging;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BhxOnline" */ = {
 			isa = XCConfigurationList;
@@ -756,7 +756,7 @@
 				04409D50263D05DD001C2A35 /* Staging */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Staging;
 		};
 /* End XCConfigurationList section */
 	};

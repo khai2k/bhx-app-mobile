@@ -204,7 +204,7 @@ const FilterPopup = (props) => {
                                                             }>
                                                             {propValue.Value}
                                                         </Text>
-                                                        {popupSelectedProps.includes(
+                                                        {popupSelectedProps?.includes(
                                                             `${propValue.PropertyID}:${propValue.ValueID}`
                                                         ) ? (
                                                             <Image

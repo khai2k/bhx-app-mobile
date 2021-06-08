@@ -12,6 +12,7 @@ import { Colors, Typography } from '@app/styles';
 import { apiBase, METHOD, API_CONST } from '@app/api';
 import { helper } from '@app/common';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useSelector } from 'react-redux';
 import ProductBox from '../../components/ProductBox/ProductBox';
 
 const Product = (props) => {
@@ -37,10 +38,14 @@ const Product = (props) => {
         }
     }, [Products]);
 
+    const locationInfo = useSelector(
+        (state) => state.locationReducer?.Location.LocationInfo
+    );
+
     const loadMoreProducts = () => {
         const bodyApi = {
-            provinceId: 3,
-            storeId: 6463,
+            provinceId: locationInfo.ProvinceId,
+            storeId: locationInfo.StoreId,
             data: {
                 categoryId: props.info.Id,
                 selectedBrandId: props.selectedBrand,

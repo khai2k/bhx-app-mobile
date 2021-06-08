@@ -5,11 +5,13 @@ const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     body: {
-        backgroundColor: Colors.LINK_WATER_2
+        backgroundColor: Colors.LINK_WATER_2,
+        marginBottom: 70
     },
     boxCategory: {
         marginBottom: 5,
         paddingRight: 5
+        
     },
     boxLine: {
         width: '33.33%'
@@ -68,6 +70,10 @@ const styles = StyleSheet.create({
     },
     productList: {
         flex: 1
+    },
+    selectedCategoryItem: {
+        backgroundColor: Colors.TROPICAL_RAIN_FOREST,
+        color: Colors.TURBO
     },
     slideItem: {
         alignContent: 'center',
