@@ -81,10 +81,10 @@ class OrderSuccess extends Component {
             <View style={styles.infoLine}>
                 <View style={styles.dot} />
                 <Text>Người đặt: {this.state.infoOrder.CustomerName}, </Text>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text style={{ fontWeight: 'bold' }} selectable>
                     {this.state.infoOrder.ContactPhone}
                 </Text>
-                <Text style={{ fontStyle: 'italic' }}>
+                <Text style={{ fontStyle: 'italic' }} selectable>
                     {'     '}#{this.state.orderId}
                 </Text>
             </View>
