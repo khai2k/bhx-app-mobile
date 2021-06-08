@@ -4,6 +4,7 @@ import {
     Text,
     TouchableOpacity,
     ScrollView,
+    SafeAreaView,
     RefreshControl
 } from 'react-native';
 import { bindActionCreators } from 'redux';

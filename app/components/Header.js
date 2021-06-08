@@ -66,7 +66,7 @@ const Header = () => {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView edges={['top']}>
             <View style={styles.headerContainer}>
                 <TouchableOpacity
                     style={styles.boxlogo}

@@ -21,7 +21,7 @@ class App extends Component {
             <SafeAreaProvider>
                 <View style={styles.container}>
                     <StatusBar
-                        // barStyle="hight-content" //ios chỗ này dark hoặc light hen ae
+                        //barStyle="hight-dark" //ios chỗ này dark hoặc light hen ae
                         barStyle="light"
                         translucent
                         backgroundColor={Colors.GREEN_KEY}

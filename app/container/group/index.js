@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, ActivityIndicator } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Header } from '@app/components';
 import { Colors } from '@app/styles';
@@ -43,16 +43,16 @@ const Group = (props) => {
     };
 
     return isLoading ? (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <Header />
             <ActivityIndicator
                 style={[styles.loading, isLoading && styles.loadingActive]}
                 size="large"
                 color={Colors.GREEN_KEY}
             />
-        </SafeAreaView>
+        </View>
     ) : (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <Header />
             <Filter
                 brands={Brands}
@@ -72,7 +72,7 @@ const Group = (props) => {
                 onRefresh={refreshGroup}
                 isLoading={isLoading}
             />
-        </SafeAreaView>
+        </View>
     );
 };
 
