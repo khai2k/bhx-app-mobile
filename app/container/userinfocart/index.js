@@ -202,10 +202,15 @@ const UserInfoCart = (props) => {
             actionCart.cart_submit(cartmodel).then((res) => {
                 setisLoading(false);
                 if (res.HttpCode == 200) {
-                    return props.navigation.navigate('OrderSuccess', {
-                        orderId: res.Value.OrderId
-                    });
+                    return props.navigation
+                        .navigate('OrderSuccess', {
+                            orderId: res.Value.OrderId
+                        });
                 } else alert(res.Message);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert(error);
             });
             return;
         } else alert(formError);
