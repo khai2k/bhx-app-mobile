@@ -1086,6 +1086,7 @@ const UserInfoCart = (props) => {
                     width: '100%',
                     marginBottom: 10
                 }}
+                label="Phường, xã"
                 dropDownContainerStyle={{
                     borderColor: '#8F9BB3',
                     borderColor: wardSelected <= 0 ? '#ff001f' : '#D6E0F5'

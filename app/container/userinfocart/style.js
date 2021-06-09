@@ -72,7 +72,9 @@ const styles = StyleSheet.create({
         width: 25
     },
     checkboxContainer: {
-        flexDirection: 'row'
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 8
     },
     container: {
         backgroundColor: '#fff',
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     label: {
-        margin: 8
+        marginLeft: 5
     },
     logoback: {
         height: 10,
