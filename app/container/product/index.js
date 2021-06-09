@@ -95,7 +95,7 @@ const Product = () => {
         );
     } else {
         return (
-            <SafeAreaView>
+            <View>
                 <Header />
                 {!isShowCatelines && (
                     <ListCategoriesView listCate={ListCategories} />
@@ -108,22 +108,25 @@ const Product = () => {
                     />
                 )}
                 <FlatList
-                    ref={scrollList}
-                    style={styles.body}
-                    onScroll={handleScroll}
-                    data={ListLineProducts}
-                    keyExtractor={(item) => item.CategoryId}
-                    onViewableItemsChanged={onViewRef.current}
-                    viewabilityConfig={viewConfigRef.current}
-                    renderItem={({ item, index }) => (
-                        <RenderLine
-                            key={`line_${item.CategoryId}`}
-                            lineItem={item}
-                        />
-                    )}>
-                    <ActivityIndicator animating size="large" color="#008848" />
-                </FlatList>
-            </SafeAreaView>
+                        ref={scrollList}
+                        style={styles.body}
+                        onScroll={handleScroll}
+                        data={ListLineProducts}
+                        keyExtractor={(item) => item.CategoryId}
+                        onViewableItemsChanged={onViewRef.current}
+                        viewabilityConfig={viewConfigRef.current}
+                        renderItem={({ item, index }) => (
+                            <RenderLine
+                                key={`line_${item.CategoryId}`}
+                                lineItem={item}
+                            />
+                        )}>
+                        <ActivityIndicator animating size="large" color="#008848" />
+                    </FlatList>
+                <SafeAreaView edges={['bottom']}>
+                    
+                </SafeAreaView>
+            </View>
         );
     }
 };

@@ -12,8 +12,7 @@ import {
     TouchableOpacity,
     Image,
     FlatList,
-    ActivityIndicator,
-    Alert
+    ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { apiBase, METHOD, API_CONST } from '@app/api';
